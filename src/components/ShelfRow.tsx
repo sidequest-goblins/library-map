@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import "./ShelfRow.css";
 
 export type Spine = {
@@ -141,7 +141,7 @@ export default function ShelfRow({
             }}
             onPointerCancel={(e) => {
               const el = scrollerRef.current;
-              
+
               if (el && drag.current.pointerId === e.pointerId) {
                 el.releasePointerCapture(e.pointerId);
               }
