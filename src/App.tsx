@@ -71,7 +71,14 @@ export default function App() {
         </button>
       </header>
 
-      <BookcaseView title={selectedBookcase.bookcase} shelves={shelves} />
+      {shelves.length > 0 ? (
+        <BookcaseView title={selectedBookcase.bookcase} shelves={shelves} />
+      ) : (
+        <section className="emptyBookcase">
+          <h2>{selectedBookcase.bookcase}</h2>
+          <p>No books added here yet.</p>
+        </section>
+      )}
     </main>
   );
 }
