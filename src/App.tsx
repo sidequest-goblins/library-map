@@ -99,6 +99,22 @@ const bookcases: Bookcase[] = [
   },
 ];
 
+async function clearAppCache() {
+  if ("caches" in window) {
+    const cacheNames = await caches.keys();
+    await Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName)));
+  }
+
+  if ("serviceWorker" in navigator) {
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(
+      registrations.map((registration) => registration.unregister())
+    );
+  }
+
+  window.location.reload();
+}
+
 export default function App() {
   const [selectedBookcaseId, setSelectedBookcaseId] = useState(bookcases[0].id);
 
@@ -130,6 +146,9 @@ export default function App() {
             ))}
           </select>
         </label>
+        <button type="button" className="cacheButton" onClick={clearAppCache}>
+          Clear cache
+        </button>
       </header>
 
       <BookcaseView title={selectedBookcase.title} shelves={selectedBookcase.shelves} />

@@ -58,3 +58,19 @@
   color: inherit;
   background: #1a1a1a;
 }
+
+.cacheButton {
+  width: fit-content;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 0.55rem 0.75rem;
+  font: inherit;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+}
+
+.cacheButton:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
