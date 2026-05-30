@@ -1,0 +1,156 @@
+:root {
+  /* tweak these later */
+  --shelfHeight: 140px;
+  --spineGap: 6px;
+  --spineRadius: 8px;
+}
+
+.shelfRow {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  user-select: none;
+  overflow: hidden;
+}
+
+.shelfLabel {
+  font-size: 12px;
+  opacity: 0.7;
+  margin: 6px 0 6px 6px;
+}
+
+.shelfRowInner {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.spineViewport {
+  position: relative;
+  flex: 1 1 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.spineScroller {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: var(--shelfHeight);
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spineGap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 10px 10px 6px 10px;
+  cursor: grab;
+
+  /* iOS momentum scrolling */
+  -webkit-overflow-scrolling: touch;
+
+  /* scroll snap makes it feel “shelf-y” */
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 10px;
+
+  /* hide scrollbar where possible */
+  scrollbar-width: none;
+  scrollbar-gutter: stable;
+  touch-action: none;
+  overscroll-behavior-x: contain;
+}
+.spineScroller:active {
+  cursor: grabbing;
+}
+.spineScroller::-webkit-scrollbar {
+  display: none;
+}
+
+.spine {
+  height: calc(var(--shelfHeight) - 14px);
+  border: 1px solid rgba(0,0,0,0.25);
+  border-radius: var(--spineRadius);
+  background: rgba(255,255,255,0.7);
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+
+  /* snap per spine */
+  scroll-snap-align: start;
+
+  /* make text vertical-ish without needing rotation math per character */
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.spine-s { width: 22px; }
+.spine-m { width: 30px; }
+.spine-l { width: 38px; }
+
+.spine-short {
+  height: calc(var(--shelfHeight) - 20px);
+}
+
+.spine-medium {
+  height: calc(var(--shelfHeight) - 10px);
+}
+
+.spine-tall {
+  height: calc(var(--shelfHeight) - 0px);
+}
+
+.spineText {
+  font-size: 13px;
+  line-height: 1;
+  padding: 6px 4px;
+  max-height: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.9;
+}
+
+/* Fades */
+.fadeLeft,
+.fadeRight {
+  position: absolute;
+  top: 0;
+  height: var(--shelfHeight);
+  pointer-events: none;
+  width: 34px;
+}
+
+.fadeLeft {
+  left: 0;
+  background: linear-gradient(to right, rgba(255,255,255,0.95), rgba(255,255,255,0));
+}
+
+.fadeRight {
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 6px;
+  background: linear-gradient(to left, rgba(255,255,255,0.95), rgba(255,255,255,0));
+}
+
+.ellipsis {
+  font-size: 20px;
+  opacity: 0.55;
+  transform: translateY(-2px);
+}
+
+/* Shelf “board” line */
+.shelfBoard {
+  height: 10px;
+  margin: 6px 0 0 0;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.12);
+}

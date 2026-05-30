@@ -1,0 +1,60 @@
+#root {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.appShell {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.appHeader {
+  display: grid;
+  gap: 1rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.25rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.65;
+}
+
+.appHeader h1 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 4rem);
+  line-height: 1;
+}
+
+.bookcaseMeta {
+  margin: 0.5rem 0 0;
+  opacity: 0.75;
+}
+
+.bookcasePicker {
+  display: grid;
+  gap: 0.35rem;
+  width: min(100%, 320px);
+}
+
+.bookcasePicker span {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.bookcasePicker select {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+  color: inherit;
+  background: #1a1a1a;
+}
