@@ -72,9 +72,10 @@
 
 .spine {
   height: calc(var(--shelfHeight) - 14px);
-  border: 1px solid rgba(0,0,0,0.25);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--spineRadius);
-  background: rgba(255,255,255,0.6);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.9);
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
@@ -82,10 +83,8 @@
   padding: 0;
   cursor: pointer;
 
-  /* snap per spine */
   scroll-snap-align: start;
 
-  /* make text vertical-ish without needing rotation math per character */
   writing-mode: vertical-rl;
   text-orientation: mixed;
 }
@@ -107,6 +106,7 @@
 }
 
 .spineText {
+  color: inherit;
   font-size: 13px;
   line-height: 1;
   padding: 6px 4px;
@@ -115,6 +115,14 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   opacity: 0.9;
+}
+
+.spine,
+.spine:visited,
+.spine:hover,
+.spine:active,
+.spine:focus {
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* Fades */
