@@ -5,12 +5,17 @@ export type Book = {
   title: string;
   author: string;
   authorSort: string;
+  firstName?: string;
+  lastName?: string;
+  genre?: string;
+  publisher?: string;
   series?: string;
-  seriesNumber?: number;
+  seriesNumber?: number | string;
   room: string;
   bookcase: string;
   shelf: string;
-  row: ShelfRow;
+  row: string;
+  rawShelf?: string;
   notes?: string;
 };
 

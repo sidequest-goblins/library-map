@@ -34,8 +34,6 @@ function sortBooksForShelf(books: Book[]): Book[] {
   return [...books].sort((a, b) => {
     return (
       a.authorSort.localeCompare(b.authorSort) ||
-      (a.series ?? "").localeCompare(b.series ?? "") ||
-      (a.seriesNumber ?? 0) - (b.seriesNumber ?? 0) ||
       a.title.localeCompare(b.title)
     );
   });
@@ -92,6 +90,43 @@ export function getShelvesForBookcase(
       spines: sortBooksForShelf(groupBooks).map(bookToSpine),
     };
   });
+}
+
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+export function getBookcasesFromBooks(books: Book[]): Bookcase[] {
+  const seen = new Map<string, Bookcase>();
+
+  books.forEach((book) => {
+    if (!book.bookcase) return;
+
+    const key = `${book.room}|${book.bookcase}`;
+
+    if (!seen.has(key)) {
+      seen.set(key, {
+        bookcaseId: slugify(key),
+        room: book.room,
+        bookcase: book.bookcase,
+        displayName: book.room
+          ? `${book.bookcase} (${book.room})`
+          : book.bookcase,
+        hasRisers: false,
+        sortOrder: seen.size + 1,
+      });
+    }
+  });
+
+  return Array.from(seen.values()).sort(
+    (a, b) =>
+      a.room.localeCompare(b.room) ||
+      a.bookcase.localeCompare(b.bookcase)
+  );
 }
 
 function normalizeSearchText(value: unknown): string {

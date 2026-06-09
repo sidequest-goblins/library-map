@@ -169,6 +169,94 @@
   font-size: 0.9rem;
 }
 
+.paginationControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.paginationControls button {
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  padding: 0.55rem 0.85rem;
+  font: inherit;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+}
+
+.paginationControls button:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.paginationControls button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.paginationControls span {
+  opacity: 0.7;
+  font-size: 0.9rem;
+}
+
+.searchResultButton {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.searchResultButton:hover {
+  border-color: rgba(255, 255, 255, 0.38);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.bookDetailPanel {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.backButton {
+  width: fit-content;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  padding: 0.55rem 0.85rem;
+  font: inherit;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+}
+
+.backButton:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.bookDetailCard {
+  display: grid;
+  gap: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.bookDetailCard h2,
+.bookDetailCard p {
+  margin: 0;
+}
+
+.detailLabel {
+  margin: 0 0 0.25rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.6;
+}
+
 .cacheButton {
   width: fit-content;
   border-radius: 10px;
