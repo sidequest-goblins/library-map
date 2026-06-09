@@ -12,6 +12,8 @@ const bookcases = [...demoBookcases].sort(
   (a, b) => a.sortOrder - b.sortOrder
 );
 
+type AppTab = "search" | "map" | "list";
+
 async function clearAppCache() {
   if ("caches" in window) {
     const cacheNames = await caches.keys();
@@ -32,6 +34,7 @@ export default function App() {
   const [selectedBookcaseId, setSelectedBookcaseId] = useState(
     bookcases[0].bookcaseId
   );
+  const [activeTab, setActiveTab] = useState<AppTab>("search");
   const [searchQuery, setSearchQuery] = useState("");
 
   const selectedBookcase =
@@ -45,85 +48,159 @@ export default function App() {
     [searchQuery]
   );
 
-const isSearching = searchQuery.trim().length > 0;
+  const sortedBooks = useMemo(
+    () =>
+      [...demoBooks].sort(
+        (a, b) =>
+          a.authorSort.localeCompare(b.authorSort) ||
+          a.title.localeCompare(b.title)
+      ),
+    []
+  );
 
   return (
     <main className="appShell">
       <header className="appHeader">
         <div>
           <p className="eyebrow">Library Map</p>
-          <h1>{selectedBookcase.bookcase}</h1>
+          <h1>
+            {activeTab === "map"
+              ? selectedBookcase.bookcase
+              : activeTab === "search"
+                ? "Search"
+                : "Book List"}
+          </h1>
           <p className="bookcaseMeta">
-            {selectedBookcase.room} ·{" "}
-            {selectedBookcase.hasRisers ? "Has risers" : "No risers"}
+            {activeTab === "map"
+              ? `${selectedBookcase.room} · ${
+                  selectedBookcase.hasRisers ? "Has risers" : "No risers"
+                }`
+              : `${demoBooks.length} demo books loaded`}
           </p>
         </div>
 
-        <label className="bookcasePicker">
-          <span>Bookcase</span>
-          <select
-            value={selectedBookcaseId}
-            onChange={(event) => setSelectedBookcaseId(event.target.value)}
+        <nav className="appTabs" aria-label="Library views">
+          <button
+            type="button"
+            className={activeTab === "search" ? "appTab active" : "appTab"}
+            onClick={() => setActiveTab("search")}
           >
-            {bookcases.map((bookcase) => (
-              <option
-                key={bookcase.bookcaseId}
-                value={bookcase.bookcaseId}
-              >
-                {bookcase.displayName}
-              </option>
-            ))}
-          </select>
-        </label>
+            Search
+          </button>
 
-        <label className="librarySearch">
-          <span>Search books</span>
-          <input
-            type="search"
-            value={searchQuery}
-            onChange={(event) => setSearchQuery(event.target.value)}
-            placeholder="Title, author, series, location..."
-          />
-        </label>
+          <button
+            type="button"
+            className={activeTab === "list" ? "appTab active" : "appTab"}
+            onClick={() => setActiveTab("list")}
+          >
+            List
+          </button>
+
+          <button
+            type="button"
+            className={activeTab === "map" ? "appTab active" : "appTab"}
+            onClick={() => setActiveTab("map")}
+          >
+            Map
+          </button>
+        </nav>
+
+        {activeTab === "map" ? (
+          <label className="bookcasePicker">
+            <span>Bookcase</span>
+            <select
+              value={selectedBookcaseId}
+              onChange={(event) => setSelectedBookcaseId(event.target.value)}
+            >
+              {bookcases.map((bookcase) => (
+                <option key={bookcase.bookcaseId} value={bookcase.bookcaseId}>
+                  {bookcase.displayName}
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : null}
 
         <button type="button" className="cacheButton" onClick={clearAppCache}>
           Clear cache
         </button>
       </header>
 
-      {isSearching ? (
-        <section className="searchResults">
-          <div className="searchResultsHeader">
-            <h2>Search results</h2>
-            <p>
-              {searchResults.length === 1
-                ? "1 book found"
-                : `${searchResults.length} books found`}
-            </p>
-          </div>
+      {activeTab === "search" ? (
+        <section className="searchPanel">
+          <label className="librarySearch">
+            <span>Search books</span>
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Title, author, series, location..."
+            />
+          </label>
 
-          {searchResults.length > 0 ? (
-            <div className="searchResultList">
-              {searchResults.map((book) => (
-                <article key={book.bookId} className="searchResultCard">
-                  <h3>{book.title}</h3>
-                  <p className="searchResultAuthor">{book.author}</p>
-                  <p className="searchResultLocation">
-                    {book.room} · {book.bookcase} · {book.shelf}
-                    {book.row !== "Main" ? ` · ${book.row}` : ""}
-                  </p>
-                  {book.series ? (
-                    <p className="searchResultSeries">
-                      {book.series}
-                      {book.seriesNumber ? ` #${book.seriesNumber}` : ""}
-                    </p>
-                  ) : null}
-                </article>
-              ))}
+          {searchQuery.trim().length > 0 ? (
+            <div className="searchResults">
+              <div className="searchResultsHeader">
+                <h2>Search results</h2>
+                <p>
+                  {searchResults.length === 1
+                    ? "1 book found"
+                    : `${searchResults.length} books found`}
+                </p>
+              </div>
+
+              {searchResults.length > 0 ? (
+                <div className="searchResultList">
+                  {searchResults.map((book) => (
+                    <article key={book.bookId} className="searchResultCard">
+                      <h3>{book.title}</h3>
+                      <p className="searchResultAuthor">{book.author}</p>
+                      <p className="searchResultLocation">
+                        {book.room} · {book.bookcase} · {book.shelf}
+                        {book.row !== "Main" ? ` · ${book.row}` : ""}
+                      </p>
+                      {book.series ? (
+                        <p className="searchResultSeries">
+                          {book.series}
+                          {book.seriesNumber ? ` #${book.seriesNumber}` : ""}
+                        </p>
+                      ) : null}
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <p className="emptySearch">No books match that search.</p>
+              )}
             </div>
           ) : (
-            <p className="emptySearch">No books match that search.</p>
+            <p className="emptySearch">Type something to search your library.</p>
           )}
+        </section>
+      ) : activeTab === "list" ? (
+        <section className="listPanel">
+          <div className="searchResultsHeader">
+            <h2>All books</h2>
+            <p>{sortedBooks.length} books</p>
+          </div>
+
+          <div className="searchResultList">
+            {sortedBooks.map((book) => (
+              <article key={book.bookId} className="searchResultCard">
+                <h3>{book.title}</h3>
+                <p className="searchResultAuthor">{book.author}</p>
+                <p className="searchResultLocation">
+                  {book.room} · {book.bookcase} · {book.shelf}
+                  {book.row !== "Main" ? ` · ${book.row}` : ""}
+                </p>
+                {book.series ? (
+                  <p className="searchResultSeries">
+                    {book.series}
+                    {book.seriesNumber ? ` #${book.seriesNumber}` : ""}
+                  </p>
+                ) : null}
+              </article>
+            ))}
+          </div>
         </section>
       ) : shelves.length > 0 ? (
         <BookcaseView title={selectedBookcase.bookcase} shelves={shelves} />

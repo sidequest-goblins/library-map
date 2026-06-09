@@ -19,6 +19,33 @@
   gap: 1rem;
 }
 
+.appTabs {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.1rem;
+}
+
+.appTab {
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  padding: 0.55rem 0.85rem;
+  font: inherit;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.appTab:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.appTab.active {
+  border-color: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.16);
+}
+
 .eyebrow {
   margin: 0 0 0.25rem;
   font-size: 0.75rem;
@@ -79,6 +106,13 @@
   font: inherit;
   color: inherit;
   background: #1a1a1a;
+}
+
+.searchPanel,
+.listPanel {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
 }
 
 .searchResults {
