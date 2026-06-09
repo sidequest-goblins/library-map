@@ -59,6 +59,83 @@
   background: #1a1a1a;
 }
 
+.librarySearch {
+  display: grid;
+  gap: 0.35rem;
+  width: min(100%, 420px);
+}
+
+.librarySearch span {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.librarySearch input {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+  color: inherit;
+  background: #1a1a1a;
+}
+
+.searchResults {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.searchResultsHeader {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.searchResultsHeader h2 {
+  margin: 0;
+}
+
+.searchResultsHeader p {
+  margin: 0;
+  opacity: 0.7;
+}
+
+.searchResultList {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.searchResultCard {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.searchResultCard h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+}
+
+.searchResultCard p {
+  margin: 0.2rem 0 0;
+}
+
+.searchResultAuthor {
+  opacity: 0.85;
+}
+
+.searchResultLocation,
+.searchResultSeries,
+.emptySearch {
+  opacity: 0.65;
+  font-size: 0.9rem;
+}
+
 .cacheButton {
   width: fit-content;
   border-radius: 10px;

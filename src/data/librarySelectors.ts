@@ -93,3 +93,42 @@ export function getShelvesForBookcase(
     };
   });
 }
+
+function normalizeSearchText(value: unknown): string {
+  return String(value ?? "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .trim();
+}
+
+export function getSearchableBookText(book: Book): string {
+  return normalizeSearchText([
+    book.title,
+    book.author,
+    book.authorSort,
+    book.series,
+    book.seriesNumber,
+    book.room,
+    book.bookcase,
+    book.shelf,
+    book.row,
+    book.notes,
+  ].join(" "));
+}
+
+export function searchBooks(books: Book[], query: string): Book[] {
+  const normalizedQuery = normalizeSearchText(query);
+
+  if (!normalizedQuery) {
+    return [];
+  }
+
+  const queryWords = normalizedQuery.split(/\s+/).filter(Boolean);
+
+  return books.filter((book) => {
+    const searchableText = getSearchableBookText(book);
+
+    return queryWords.every((word) => searchableText.includes(word));
+  });
+}
