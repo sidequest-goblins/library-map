@@ -12,7 +12,7 @@ const bookcases = [...demoBookcases].sort(
   (a, b) => a.sortOrder - b.sortOrder
 );
 
-type AppTab = "search" | "map" | "list";
+type AppTab = "search" | "map";
 
 async function clearAppCache() {
   if ("caches" in window) {
@@ -48,28 +48,12 @@ export default function App() {
     [searchQuery]
   );
 
-  const sortedBooks = useMemo(
-    () =>
-      [...demoBooks].sort(
-        (a, b) =>
-          a.authorSort.localeCompare(b.authorSort) ||
-          a.title.localeCompare(b.title)
-      ),
-    []
-  );
-
   return (
     <main className="appShell">
       <header className="appHeader">
         <div>
           <p className="eyebrow">Library Map</p>
-          <h1>
-            {activeTab === "map"
-              ? selectedBookcase.bookcase
-              : activeTab === "search"
-                ? "Search"
-                : "Book List"}
-          </h1>
+          <h1>{activeTab === "map" ? selectedBookcase.bookcase : "Search"}</h1>
           <p className="bookcaseMeta">
             {activeTab === "map"
               ? `${selectedBookcase.room} · ${
@@ -86,14 +70,6 @@ export default function App() {
             onClick={() => setActiveTab("search")}
           >
             Search
-          </button>
-
-          <button
-            type="button"
-            className={activeTab === "list" ? "appTab active" : "appTab"}
-            onClick={() => setActiveTab("list")}
-          >
-            List
           </button>
 
           <button
@@ -175,32 +151,6 @@ export default function App() {
           ) : (
             <p className="emptySearch">Type something to search your library.</p>
           )}
-        </section>
-      ) : activeTab === "list" ? (
-        <section className="listPanel">
-          <div className="searchResultsHeader">
-            <h2>All books</h2>
-            <p>{sortedBooks.length} books</p>
-          </div>
-
-          <div className="searchResultList">
-            {sortedBooks.map((book) => (
-              <article key={book.bookId} className="searchResultCard">
-                <h3>{book.title}</h3>
-                <p className="searchResultAuthor">{book.author}</p>
-                <p className="searchResultLocation">
-                  {book.room} · {book.bookcase} · {book.shelf}
-                  {book.row !== "Main" ? ` · ${book.row}` : ""}
-                </p>
-                {book.series ? (
-                  <p className="searchResultSeries">
-                    {book.series}
-                    {book.seriesNumber ? ` #${book.seriesNumber}` : ""}
-                  </p>
-                ) : null}
-              </article>
-            ))}
-          </div>
         </section>
       ) : shelves.length > 0 ? (
         <BookcaseView title={selectedBookcase.bookcase} shelves={shelves} />
