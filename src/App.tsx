@@ -43,7 +43,7 @@ export default function App() {
   useEffect(() => {
     async function loadBooks() {
       try {
-        const response = await fetch("/data/library-books.json");
+        const response = await fetch(`${import.meta.env.BASE_URL}data/library-books.json`);
 
         if (!response.ok) {
           throw new Error(`Failed to load library data: ${response.status}`);
