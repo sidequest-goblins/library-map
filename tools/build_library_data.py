@@ -11,17 +11,16 @@ OUTPUT_DIR = Path("C:/library_app/library-map/public/data")
 BOOKS_OUTPUT_PATH = OUTPUT_DIR / "library-books.json"
 META_OUTPUT_PATH = OUTPUT_DIR / "library-meta.json"
 
-BOOKCASE_ROOM_OVERRIDES = {
-    "Living Room": "Living Room",
-    "Office": "Office",
-    "Rainbow": "Living Room",
-    "Hutch": "Bedroom",
-    "Coffee Table": "Living Room",
-    "Yellow Cart": "Living Room",
-    "Star Table": "Living Room",
-    "Bedroom": "Bedroom",
-}
-
+##BOOKCASE_ROOM_OVERRIDES = {
+#    "Living Room": "Living Room",
+#    "Office": "Office",
+#    "Rainbow": "Living Room",
+#    "Hutch": "Bedroom",
+#    "Coffee Table": "Living Room",
+#    "Yellow Cart": "Living Room",
+#    "Star Table": "Living Room",
+#    "Bedroom": "Bedroom",
+#}
 
 def clean(value: Any) -> str:
     return str(value or "").strip()
@@ -46,11 +45,54 @@ def make_author_sort(first: str, last: str) -> str:
 
     return last or first
 
+def load_bookcase_rooms(workbook) -> dict[str, str]:
+    if "Bookcases" not in workbook.sheetnames:
+        raise ValueError("Could not find required sheet: Bookcases")
 
-def get_room_for_bookcase(bookcase: str) -> str:
+    sheet = workbook["Bookcases"]
+    rows = sheet.iter_rows(values_only=True)
+
+    try:
+        headers = [clean(value) for value in next(rows)]
+    except StopIteration:
+        raise ValueError("The Bookcases sheet is empty.")
+
+    header_indexes = {header: index for index, header in enumerate(headers)}
+
+    required_headers = ["Bookcase", "Room"]
+    missing_headers = [
+        header for header in required_headers if header not in header_indexes
+    ]
+
+    if missing_headers:
+        raise ValueError(
+            "Bookcases sheet is missing expected headers: "
+            + ", ".join(missing_headers)
+            + f"\nFound headers: {headers}"
+        )
+
+    bookcase_rooms = {}
+
+    for row in rows:
+        row_values = list(row)
+
+        def get(header: str) -> str:
+            index = header_indexes[header]
+            if index >= len(row_values):
+                return ""
+            return clean(row_values[index])
+
+        bookcase = get("Bookcase")
+        room = get("Room")
+
+        if bookcase and room:
+            bookcase_rooms[bookcase] = room
+
+    return bookcase_rooms
+
+def get_room_for_bookcase(bookcase: str, bookcase_rooms: dict[str, str]) -> str:
     bookcase = clean(bookcase)
-    return BOOKCASE_ROOM_OVERRIDES.get(bookcase, "")
-
+    return bookcase_rooms.get(bookcase, "")
 
 def parse_shelf(raw_shelf: str) -> tuple[str, str]:
     raw_shelf = clean(raw_shelf)
@@ -65,6 +107,46 @@ def parse_shelf(raw_shelf: str) -> tuple[str, str]:
 
     return shelf, row
 
+def parse_title(raw_title: str) -> dict[str, str | int | None]:
+    title = clean(raw_title)
+
+    # Manga:
+    # "Rurouni Kenshin, Vol. 2"
+    # "Tokyo Ghoul: re, Vol. 14"
+    manga_match = re.match(r"^(.*?),\s*Vol\.\s*(\d+)\s*$", title, re.IGNORECASE)
+    if manga_match:
+        series = manga_match.group(1).strip()
+        series_number = int(manga_match.group(2))
+
+        return {
+            "title": series,
+            "rawTitle": title,
+            "series": series,
+            "seriesNumber": series_number,
+        }
+
+    # Regular books:
+    # "The Hunger Games (The Hunger Games #1)"
+    # "Catching Fire (The Hunger Games #2)"
+    book_match = re.match(r"^(.*?)\s*\((.*?)\s*#\s*(\d+)\)\s*$", title)
+    if book_match:
+        clean_title = book_match.group(1).strip()
+        series = book_match.group(2).strip()
+        series_number = int(book_match.group(3))
+
+        return {
+            "title": clean_title or title,
+            "rawTitle": title,
+            "series": series or None,
+            "seriesNumber": series_number,
+        }
+
+    return {
+        "title": title,
+        "rawTitle": title,
+        "series": None,
+        "seriesNumber": None,
+    }
 
 def make_book_id(index: int, title: str, author_sort: str) -> str:
     slug_source = f"{author_sort}-{title}".lower()
@@ -82,6 +164,7 @@ def main() -> None:
 
     print(f"Loading workbook: {WORKBOOK_PATH}")
     workbook = load_workbook(WORKBOOK_PATH, read_only=True, data_only=True)
+    bookcase_rooms = load_bookcase_rooms(workbook)
 
     sheet = workbook.worksheets[-1]
     print(f"Using last sheet: {sheet.title}")
@@ -116,9 +199,11 @@ def main() -> None:
             + f"\nFound headers: {headers}"
         )
 
+
     books = []
     skipped_blank_rows = 0
     unmapped_bookcases = set()
+    used_bookcases = set()
 
     for row_number, row in enumerate(rows, start=2):
         row_values = list(row)
@@ -129,11 +214,14 @@ def main() -> None:
                 return ""
             return clean(row_values[index])
 
-        title = get("Title")
+        raw_title = get("Title")
 
-        if not title:
+        if not raw_title:
             skipped_blank_rows += 1
             continue
+
+        parsed_title = parse_title(raw_title)
+        title = clean(parsed_title["title"])
 
         first = get("First")
         last = get("Last")
@@ -141,7 +229,10 @@ def main() -> None:
         author_sort = make_author_sort(first, last)
 
         bookcase = get("Bookcase")
-        room = get_room_for_bookcase(bookcase)
+        room = get_room_for_bookcase(bookcase, bookcase_rooms)
+
+        if bookcase:
+            used_bookcases.add(bookcase)
 
         if bookcase and not room:
             unmapped_bookcases.add(bookcase)
@@ -152,6 +243,9 @@ def main() -> None:
         book = {
             "bookId": make_book_id(len(books) + 1, title, author_sort),
             "title": title,
+            "rawTitle": raw_title,
+            "series": parsed_title["series"],
+            "seriesNumber": parsed_title["seriesNumber"],
             "author": author,
             "authorSort": author_sort,
             "firstName": first,
@@ -168,6 +262,11 @@ def main() -> None:
 
         books.append(book)
 
+    unusedBookcases = sorted(
+        bookcase for bookcase in bookcase_rooms
+        if bookcase not in used_bookcases
+    )
+
     meta = {
         "generatedAt": datetime.now(timezone.utc).isoformat(),
         "sourceWorkbook": str(WORKBOOK_PATH),
@@ -175,7 +274,9 @@ def main() -> None:
         "bookCount": len(books),
         "skippedBlankRows": skipped_blank_rows,
         "headers": headers,
-        "bookcaseRoomOverrides": BOOKCASE_ROOM_OVERRIDES,
+        "bookcaseRooms": bookcase_rooms,
+        "usedBookcases": sorted(used_bookcases),
+        "unusedBookcases": unusedBookcases,
         "unmappedBookcases": sorted(unmapped_bookcases),
     }
 

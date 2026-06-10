@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-06-09T04:30:36.544691+00:00",
+  "generatedAt": "2026-06-10T04:26:21.988084+00:00",
   "sourceWorkbook": "C:\\library_app\\source\\LIBRARY.xlsx",
   "sourceSheet": "List View",
-  "bookCount": 820,
+  "bookCount": 828,
   "skippedBlankRows": 0,
   "headers": [
     "Title",
@@ -13,15 +13,26 @@
     "Bookcase",
     "Shelf"
   ],
-  "bookcaseRoomOverrides": {
-    "Living Room": "Living Room",
+  "bookcaseRooms": {
     "Office": "Office",
-    "Rainbow": "Living Room",
-    "Hutch": "Bedroom",
     "Coffee Table": "Living Room",
+    "Living Room": "Living Room",
     "Yellow Cart": "Living Room",
     "Star Table": "Living Room",
+    "Rainbow": "Living Room",
+    "Hutch": "Bedroom",
     "Bedroom": "Bedroom"
   },
+  "usedBookcases": [
+    "Bedroom",
+    "Coffee Table",
+    "Hutch",
+    "Living Room",
+    "Office",
+    "Rainbow",
+    "Star Table",
+    "Yellow Cart"
+  ],
+  "unusedBookcases": [],
   "unmappedBookcases": []
 }
