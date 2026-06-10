@@ -9,6 +9,7 @@ export type Spine = {
   width?: "s" | "m" | "l";
   heightPx?: number;
   fontSizePx?: number;
+  background?: string;
 };
 
 export type ShelfRowProps = {
@@ -161,6 +162,7 @@ export default function ShelfRow({
                     "--spineFontSize": spine.fontSizePx
                       ? `${spine.fontSizePx}px`
                       : undefined,
+                    background: spine.background,
                   } as React.CSSProperties
                 }
                 type="button"

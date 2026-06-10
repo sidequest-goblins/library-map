@@ -93,6 +93,85 @@ const SPINE_PIXELS_PER_CHARACTER = 8;
 const SPINE_TITLE_PADDING = 22;
 const SPINE_SNAP_TO = 8;
 
+const GENRE_SPINE_PALETTES: Record<string, string[]> = {
+  "Manga / Graphic Novels": [
+    "#6a4c93", // purple
+    "#355c7d", // blue
+    "#2a6f62", // teal
+    "#7b3f61", // berry
+    "#9a6a2f", // ochre
+    "#8c4a3f", // brick
+  ],
+
+  Astrology: ["#5d4b73"], // muted violet
+  Classical: ["#7a5c3e"], // walnut
+  "Contemporary Fiction": ["#8c4a3f"], // brick
+  Fantasy: ["#5f7f5a"], // moss green
+  Folklore: ["#8a6f3f"], // antique gold
+  "Foreign Language": ["#51656f"], // slate blue
+  "Historical Fiction": ["#9a6a2f"], // ochre
+  History: ["#6f4e37"], // coffee brown
+  Horror: ["#7a3f4b"], // garnet
+  Humor: ["#8a4f35"], // burnt sienna
+  "LGBTQ+": ["#7b3f61"], // berry
+  "Literary Fiction": ["#4f6f52"], // forest sage
+  Memoir: ["#7a5c3e"], // walnut
+  "Mystery / Thriller": ["#355c7d"], // deep blue
+  Nature: ["#2a6f62"], // deep teal
+  "Poetry / Anthology": ["#6a4c93"], // amethyst
+  Psychology: ["#51656f"], // slate blue
+  Romance: ["#b87b8b"], // dusty rose
+  Science: ["#3f6f6a"], // peacock teal
+  "Science Fiction": ["#4f7f8f"], // blue teal
+  Sexuality: ["#8a4f6f"], // muted mauve
+  "Social Justice / Feminism": ["#8a3f4f"], // cranberry
+  Travel: ["#8a6f3f"], // antique gold
+  "Young Adult": ["#6a4c93"], // purple
+
+  Unknown: ["#746b60"], // warm gray-brown
+};
+
+const AUTO_GENRE_COLORS = [
+  "#5f7f5a", // moss green
+  "#6a4c93", // amethyst
+  "#355c7d", // deep blue
+  "#2a6f62", // deep teal
+  "#7b3f61", // berry
+  "#9a6a2f", // ochre
+  "#8c4a3f", // brick
+  "#7a5c3e", // walnut
+  "#4f6f52", // forest sage
+  "#6f4e37", // coffee brown
+  "#7a3f4b", // garnet
+  "#51656f", // slate blue
+  "#8a6f3f", // antique gold
+  "#5d4b73", // muted violet
+  "#3f6f6a", // peacock teal
+  "#8a4f35", // burnt sienna
+];
+
+function autoColorForGenre(genre: string): string {
+  return AUTO_GENRE_COLORS[hashString(genre) % AUTO_GENRE_COLORS.length];
+}
+
+function spineBackgroundForBook(book: Book): string {
+  const genre = book.genre?.trim();
+
+  if (!genre) return "#746b60";
+
+  const palette =
+    GENRE_SPINE_PALETTES[genre] ?? [autoColorForGenre(genre)];
+
+  const colorKey =
+    book.seriesTitle ??
+    book.series ??
+    book.title ??
+    book.bookId ??
+    "unknown";
+
+  return palette[hashString(colorKey) % palette.length];
+}
+
 function rawSpineHeightForTitle(title: string): number {
   const trimmedTitle = titleWithoutParentheses(title);
   const length = trimmedTitle.length;
@@ -180,6 +259,7 @@ function bookToSpine(book: Book): Spine {
     width: widthForBook(book),
     heightPx: spineHeightForTitle(titleForSpineHeight(book)),
     fontSizePx: fontSizeForSpine(book),
+    background: spineBackgroundForBook(book),
   };
 }
 
