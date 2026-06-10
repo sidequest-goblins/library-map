@@ -119,7 +119,7 @@ def parse_title(raw_title: str) -> dict[str, str | int | None]:
         series_number = int(manga_match.group(2))
 
         return {
-            "title": series,
+            "title": title,
             "rawTitle": title,
             "series": series,
             "seriesNumber": series_number,
