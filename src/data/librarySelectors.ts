@@ -21,6 +21,20 @@ function titleWithoutParentheses(title: string): string {
   return cleaned || title;
 }
 
+function formatTagForSpine(book: Book): string | undefined {
+  const match = book.title.match(/\((Light Novel|Manwha|Manhwa|Manga)\)\s*$/i);
+  if (!match) return undefined;
+
+  const format = match[1].toLowerCase();
+
+  if (format === "light novel") return "LN";
+  if (format === "manga" || format === "manhwa" || format === "manwha") {
+    return "M";
+  }
+
+  return undefined;
+}
+
 function applySpineTitleOverride(title: string): string {
   for (const [fullSeriesTitle, shortSeriesTitle] of Object.entries(
     SPINE_TITLE_OVERRIDES
@@ -42,16 +56,17 @@ const SPINE_TITLE_OVERRIDES: Record<string, string> = {
 };
 
 function titleForSpineDisplay(book: Book): string {
-  // Keep manga volume numbers visible, but remove trailing format tags like:
+  // Keep manga/LN volume numbers visible, but remove trailing format tags like:
   // "Some Title, Vol. 2 (Light Novel)"
   // "Some Title, Vol. 3 (Manwha)"
   const cleaned = book.title
     .replace(/\s*\((Light Novel|Manwha|Manhwa|Manga)\)\s*$/i, "")
     .trim();
 
-  const title = cleaned || book.title;
+  const title = applySpineTitleOverride(cleaned || book.title);
+  const formatTag = formatTagForSpine(book);
 
-  return applySpineTitleOverride(title);
+  return formatTag ? `${title}, ${formatTag}` : title;
 }
 
 function titleForSpineHeight(book: Book): string {
@@ -62,8 +77,11 @@ function titleForSpineHeight(book: Book): string {
       book.title;
 
     const shortenedSeriesTitle = applySpineTitleOverride(baseSeriesTitle);
+    const formatTag = formatTagForSpine(book);
 
-    return `${shortenedSeriesTitle}, Vol. 1`;
+    return formatTag
+      ? `${shortenedSeriesTitle}, Vol. 1 ${formatTag}`
+      : `${shortenedSeriesTitle}, Vol. 1`;
   }
 
   return titleForSpineDisplay(book);
@@ -147,9 +165,10 @@ function fontSizeForSpine(book: Book): number | undefined {
   if (displayRawHeight > SPINE_MAX_HEIGHT) return undefined;
 
   const seriesNumber = Number(book.seriesNumber);
+  const hasFormatTag = Boolean(formatTagForSpine(book));
 
-  // Only nudge double/triple digit volumes.
-  if (seriesNumber < 10) return undefined;
+  // Nudge double/triple digit volumes OR tagged format spines.
+  if (seriesNumber < 10 && !hasFormatTag) return undefined;
 
   return 15;
 }
