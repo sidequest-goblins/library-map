@@ -39,8 +39,9 @@ function spineHeightForTitle(title: string): number {
 
 function widthForBook(book: Book): Spine["width"] {
   const hash = hashString(`${book.bookId}-${book.title}-${book.author}`);
+  const sizingTitle = book.series ?? book.title;
 
-  if (titleWithoutParentheses(book.title).length > 28) return "l";
+  if (titleWithoutParentheses(sizingTitle).length > 28) return "l";
   if (hash % 7 === 0) return "s";
   if (hash % 5 === 0) return "l";
   return "m";
@@ -58,9 +59,9 @@ function sortBooksForShelf(books: Book[]): Book[] {
 function bookToSpine(book: Book): Spine {
   return {
     id: book.bookId,
-    title: titleWithoutParentheses(book.title),
+    title: book.title,
     width: widthForBook(book),
-    heightPx: spineHeightForTitle(book.title),
+    heightPx: spineHeightForTitle(book.series ?? book.title),
   };
 }
 
