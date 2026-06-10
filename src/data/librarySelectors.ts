@@ -21,6 +21,26 @@ function titleWithoutParentheses(title: string): string {
   return cleaned || title;
 }
 
+function applySpineTitleOverride(title: string): string {
+  for (const [fullSeriesTitle, shortSeriesTitle] of Object.entries(
+    SPINE_TITLE_OVERRIDES
+  )) {
+    if (title.startsWith(fullSeriesTitle)) {
+      return title.replace(fullSeriesTitle, shortSeriesTitle);
+    }
+  }
+
+  return title;
+}
+
+const SPINE_TITLE_OVERRIDES: Record<string, string> = {
+  "Demon Slayer: Kimetsu Academy": "Kimetsu Academy",
+  "Demon Slayer: Kimetsu no Yaiba": "Demon Slayer",
+  "Fruits Basket Collector's Edition": "Fruits Basket",
+  "Nightschool: The Weirn Books": "Nightschool",
+  "Tsubasa: RESERVoir CHRoNiCLE": "Tsubasa",
+};
+
 function titleForSpineDisplay(book: Book): string {
   // Keep manga volume numbers visible, but remove trailing format tags like:
   // "Some Title, Vol. 2 (Light Novel)"
@@ -29,7 +49,24 @@ function titleForSpineDisplay(book: Book): string {
     .replace(/\s*\((Light Novel|Manwha|Manhwa|Manga)\)\s*$/i, "")
     .trim();
 
-  return cleaned || book.title;
+  const title = cleaned || book.title;
+
+  return applySpineTitleOverride(title);
+}
+
+function titleForSpineHeight(book: Book): string {
+  if (isVolumeSeriesBook(book)) {
+    const baseSeriesTitle =
+      book.seriesTitle ??
+      book.series?.split("|")[0] ??
+      book.title;
+
+    const shortenedSeriesTitle = applySpineTitleOverride(baseSeriesTitle);
+
+    return `${shortenedSeriesTitle}, Vol. 1`;
+  }
+
+  return titleForSpineDisplay(book);
 }
 
 const SPINE_MIN_HEIGHT = 110;
@@ -97,19 +134,6 @@ function isVolumeSeriesBook(book: Book): boolean {
       book.seriesNumber != null &&
       /,\s*Vol\.\s*\d+/i.test(book.title)
   );
-}
-
-function titleForSpineHeight(book: Book): string {
-  if (isVolumeSeriesBook(book)) {
-    const baseSeriesTitle =
-      book.seriesTitle ??
-      book.series?.split("|")[0] ??
-      book.title;
-
-    return `${baseSeriesTitle}, Vol. 1`;
-  }
-
-  return book.seriesTitle ?? book.series ?? book.title;
 }
 
 function fontSizeForSpine(book: Book): number | undefined {
