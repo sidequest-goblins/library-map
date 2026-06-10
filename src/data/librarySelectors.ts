@@ -26,7 +26,7 @@ function titleForSpineDisplay(book: Book): string {
   // "Some Title, Vol. 2 (Light Novel)"
   // "Some Title, Vol. 3 (Manwha)"
   const cleaned = book.title
-    .replace(/\s*\((Light Novel|Manwha|Manga)\)\s*$/i, "")
+    .replace(/\s*\((Light Novel|Manwha|Manhwa|Manga)\)\s*$/i, "")
     .trim();
 
   return cleaned || book.title;
@@ -94,14 +94,19 @@ function sortBooksForShelf(books: Book[]): Book[] {
 function isVolumeSeriesBook(book: Book): boolean {
   return Boolean(
     book.series &&
-      book.seriesNumber &&
+      book.seriesNumber != null &&
       /,\s*Vol\.\s*\d+/i.test(book.title)
   );
 }
 
 function titleForSpineHeight(book: Book): string {
   if (isVolumeSeriesBook(book)) {
-    return `${book.seriesTitle ?? book.series ?? book.title}, Vol. 1`;
+    const baseSeriesTitle =
+      book.seriesTitle ??
+      book.series?.split("|")[0] ??
+      book.title;
+
+    return `${baseSeriesTitle}, Vol. 1`;
   }
 
   return book.seriesTitle ?? book.series ?? book.title;

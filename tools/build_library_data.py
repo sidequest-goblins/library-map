@@ -114,7 +114,7 @@ def parse_title(raw_title: str) -> dict[str, str | int | None]:
     # "Rurouni Kenshin, Vol. 2"
     # "Tokyo Ghoul: re, Vol. 14"
     volume_match = re.match(
-        r"^(.*?),\s*Vol\.\s*(\d+)(?:\s*\((Light Novel|Manwha|Manga)\))?\s*$",
+        r"^(.*?),\s*Vol\.\s*(\d+)(?:\s*\((Light Novel|Manwha|Manhwa|Manga)\))?\s*$",
         title,
         re.IGNORECASE,
     )
