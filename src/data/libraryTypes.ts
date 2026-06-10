@@ -10,6 +10,8 @@ export type Book = {
   genre?: string;
   publisher?: string;
   series?: string;
+  seriesTitle?: string;
+  seriesFormat?: string;
   seriesNumber?: number | string;
   room: string;
   bookcase: string;

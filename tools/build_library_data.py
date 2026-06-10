@@ -113,15 +113,24 @@ def parse_title(raw_title: str) -> dict[str, str | int | None]:
     # Manga:
     # "Rurouni Kenshin, Vol. 2"
     # "Tokyo Ghoul: re, Vol. 14"
-    manga_match = re.match(r"^(.*?),\s*Vol\.\s*(\d+)\s*$", title, re.IGNORECASE)
-    if manga_match:
-        series = manga_match.group(1).strip()
-        series_number = int(manga_match.group(2))
+    volume_match = re.match(
+        r"^(.*?),\s*Vol\.\s*(\d+)(?:\s*\((Light Novel|Manwha|Manga)\))?\s*$",
+        title,
+        re.IGNORECASE,
+    )
+    if volume_match:
+        series = volume_match.group(1).strip()
+        series_number = int(volume_match.group(2))
+        format_label = volume_match.group(3).strip() if volume_match.group(3) else None
+
+        series_key = f"{series}|{format_label}" if format_label else series
 
         return {
             "title": title,
             "rawTitle": title,
-            "series": series,
+            "series": series_key,
+            "seriesTitle": series,
+            "seriesFormat": format_label,
             "seriesNumber": series_number,
         }
 
@@ -138,6 +147,8 @@ def parse_title(raw_title: str) -> dict[str, str | int | None]:
             "title": clean_title or title,
             "rawTitle": title,
             "series": series or None,
+            "seriesTitle": series or None,
+            "seriesFormat": None,
             "seriesNumber": series_number,
         }
 
@@ -145,6 +156,8 @@ def parse_title(raw_title: str) -> dict[str, str | int | None]:
         "title": title,
         "rawTitle": title,
         "series": None,
+        "seriesTitle": None,
+        "seriesFormat": None,
         "seriesNumber": None,
     }
 

@@ -21,20 +21,38 @@ function titleWithoutParentheses(title: string): string {
   return cleaned || title;
 }
 
-function spineHeightForTitle(title: string): number {
+function titleForSpineDisplay(book: Book): string {
+  // Keep manga volume numbers visible, but remove trailing format tags like:
+  // "Some Title, Vol. 2 (Light Novel)"
+  // "Some Title, Vol. 3 (Manwha)"
+  const cleaned = book.title
+    .replace(/\s*\((Light Novel|Manwha|Manga)\)\s*$/i, "")
+    .trim();
+
+  return cleaned || book.title;
+}
+
+const SPINE_MIN_HEIGHT = 110;
+const SPINE_MAX_HEIGHT = 260;
+const SPINE_PIXELS_PER_CHARACTER = 8;
+const SPINE_TITLE_PADDING = 22;
+const SPINE_SNAP_TO = 8;
+
+function rawSpineHeightForTitle(title: string): number {
   const trimmedTitle = titleWithoutParentheses(title);
   const length = trimmedTitle.length;
 
-  const minHeight = 110;
-  const maxHeight = 260;
-  const pixelsPerCharacter = 8;
-  const titlePadding = 22;
-  const snapTo = 8;
+  return SPINE_TITLE_PADDING + length * SPINE_PIXELS_PER_CHARACTER;
+}
 
-  const rawHeight = titlePadding + length * pixelsPerCharacter;
-  const snappedHeight = Math.ceil(rawHeight / snapTo) * snapTo;
+function spineHeightForTitle(title: string): number {
+  const rawHeight = rawSpineHeightForTitle(title);
+  const snappedHeight = Math.ceil(rawHeight / SPINE_SNAP_TO) * SPINE_SNAP_TO;
 
-  return Math.min(maxHeight, Math.max(minHeight, snappedHeight));
+  return Math.min(
+    SPINE_MAX_HEIGHT,
+    Math.max(SPINE_MIN_HEIGHT, snappedHeight)
+  );
 }
 
 function widthForBook(book: Book): Spine["width"] {
@@ -49,19 +67,71 @@ function widthForBook(book: Book): Spine["width"] {
 
 function sortBooksForShelf(books: Book[]): Book[] {
   return [...books].sort((a, b) => {
-    return (
-      a.authorSort.localeCompare(b.authorSort) ||
-      a.title.localeCompare(b.title)
-    );
+    const authorSort = a.authorSort.localeCompare(b.authorSort);
+
+    if (authorSort) return authorSort;
+
+    const aSeries = a.series ?? "";
+    const bSeries = b.series ?? "";
+
+    if (aSeries && bSeries && aSeries !== bSeries) {
+      return aSeries.localeCompare(bSeries, undefined, { numeric: true });
+    }
+
+    if (aSeries && bSeries && aSeries === bSeries) {
+      const aSeriesNumber = Number(a.seriesNumber);
+      const bSeriesNumber = Number(b.seriesNumber);
+
+      if (!Number.isNaN(aSeriesNumber) && !Number.isNaN(bSeriesNumber)) {
+        return aSeriesNumber - bSeriesNumber;
+      }
+    }
+
+    return a.title.localeCompare(b.title, undefined, { numeric: true });
   });
+}
+
+function isVolumeSeriesBook(book: Book): boolean {
+  return Boolean(
+    book.series &&
+      book.seriesNumber &&
+      /,\s*Vol\.\s*\d+/i.test(book.title)
+  );
+}
+
+function titleForSpineHeight(book: Book): string {
+  if (isVolumeSeriesBook(book)) {
+    return `${book.seriesTitle ?? book.series ?? book.title}, Vol. 1`;
+  }
+
+  return book.seriesTitle ?? book.series ?? book.title;
+}
+
+function fontSizeForSpine(book: Book): number | undefined {
+  if (!isVolumeSeriesBook(book)) return undefined;
+
+  const displayTitle = titleForSpineDisplay(book);
+  const displayRawHeight = rawSpineHeightForTitle(displayTitle);
+
+  // If the full display title would exceed max height anyway,
+  // do NOT shrink it into unreadable dust. Let ellipsis happen.
+  if (displayRawHeight > SPINE_MAX_HEIGHT) return undefined;
+
+  const seriesNumber = Number(book.seriesNumber);
+
+  // Only nudge double/triple digit volumes.
+  if (seriesNumber < 10) return undefined;
+
+  return 15;
 }
 
 function bookToSpine(book: Book): Spine {
   return {
     id: book.bookId,
-    title: book.title,
+    title: titleForSpineDisplay(book),
     width: widthForBook(book),
-    heightPx: spineHeightForTitle(book.series ?? book.title),
+    heightPx: spineHeightForTitle(titleForSpineHeight(book)),
+    fontSizePx: fontSizeForSpine(book),
   };
 }
 
