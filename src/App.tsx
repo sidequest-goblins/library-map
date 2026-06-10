@@ -107,6 +107,54 @@ export default function App() {
     [books, selectedBookId]
   );
 
+  function renderBookDetail(backLabel: string, onBack: () => void) {
+    if (!selectedBook) return null;
+
+    return (
+      <section className="bookDetailPanel">
+        <button type="button" className="backButton" onClick={onBack}>
+          ← {backLabel}
+        </button>
+
+        <div className="bookDetailCard">
+          <div>
+            <p className="detailLabel">Title</p>
+            <h2>{selectedBook.title}</h2>
+          </div>
+
+          <div>
+            <p className="detailLabel">Author</p>
+            <p>{selectedBook.author}</p>
+          </div>
+
+          <div>
+            <p className="detailLabel">Location</p>
+            <p>
+              {selectedBook.bookcase} · {selectedBook.shelf}
+              {selectedBook.row !== "Main" ? ` · ${selectedBook.row}` : ""}
+              {selectedBook.room && selectedBook.room !== selectedBook.bookcase
+                ? ` · ${selectedBook.room}`
+                : ""}
+            </p>
+          </div>
+
+          {selectedBook.genre ? (
+            <div>
+              <p className="detailLabel">Genre</p>
+              <p>{selectedBook.genre}</p>
+            </div>
+          ) : null}
+
+          {selectedBook.publisher ? (
+            <div>
+              <p className="detailLabel">Publisher</p>
+              <p>{selectedBook.publisher}</p>
+            </div>
+          ) : null}
+        </div>
+      </section>
+    );
+  }
   return (
     <main className="appShell">
       <header className="appHeader">
@@ -154,7 +202,10 @@ export default function App() {
             <span>Bookcase</span>
             <select
               value={selectedBookcaseId}
-              onChange={(event) => setSelectedBookcaseId(event.target.value)}
+              onChange={(event) => {
+                setSelectedBookcaseId(event.target.value);
+                setSelectedBookId(null);
+              }}
             >
               {bookcases.map((bookcase) => (
                 <option key={bookcase.bookcaseId} value={bookcase.bookcaseId}>
@@ -179,53 +230,7 @@ export default function App() {
         </section>
       ) : activeTab === "search" ? (
         selectedBook ? (
-          <section className="bookDetailPanel">
-            <button
-              type="button"
-              className="backButton"
-              onClick={() => setSelectedBookId(null)}
-            >
-              ← Back to results
-            </button>
-
-            <div className="bookDetailCard">
-              <div>
-                <p className="detailLabel">Title</p>
-                <h2>{selectedBook.title}</h2>
-              </div>
-
-              <div>
-                <p className="detailLabel">Author</p>
-                <p>{selectedBook.author}</p>
-              </div>
-
-              <div>
-                <p className="detailLabel">Location</p>
-                <p>
-                  {selectedBook.bookcase} · {selectedBook.shelf}
-                  {selectedBook.row !== "Main" ? ` · ${selectedBook.row}` : ""}
-                  {selectedBook.room &&
-                  selectedBook.room !== selectedBook.bookcase
-                    ? ` · ${selectedBook.room}`
-                    : ""}
-                </p>
-              </div>
-
-              {selectedBook.genre ? (
-                <div>
-                  <p className="detailLabel">Genre</p>
-                  <p>{selectedBook.genre}</p>
-                </div>
-              ) : null}
-
-              {selectedBook.publisher ? (
-                <div>
-                  <p className="detailLabel">Publisher</p>
-                  <p>{selectedBook.publisher}</p>
-                </div>
-              ) : null}
-            </div>
-          </section>
+          renderBookDetail("Back to results", () => setSelectedBookId(null))
         ) : (
           <section className="searchPanel">
             <label className="librarySearch">
@@ -313,8 +318,14 @@ export default function App() {
             )}
           </section>
         )
+      ) : selectedBook ? (
+        renderBookDetail("Back to map", () => setSelectedBookId(null))
       ) : selectedBookcase && shelves.length > 0 ? (
-        <BookcaseView title={selectedBookcase.bookcase} shelves={shelves} />
+        <BookcaseView
+          title={selectedBookcase.bookcase}
+          shelves={shelves}
+          onBookSelect={setSelectedBookId}
+        />
       ) : (
         <section className="emptyBookcase">
           <h2>{selectedBookcase?.bookcase ?? "No bookcase selected"}</h2>

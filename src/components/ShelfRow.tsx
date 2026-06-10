@@ -37,6 +37,7 @@ export default function ShelfRow({
     startScrollLeft: 0,
     moved: false,
     pointerId: null as number | null,
+    captured: false,
   });
 
   const widthClass = useMemo(() => {
@@ -96,9 +97,7 @@ export default function ShelfRow({
               drag.current.startScrollLeft = el.scrollLeft;
               drag.current.moved = false;
               drag.current.pointerId = e.pointerId;
-
-              // Capture the pointer to continue receiving events even if it goes outside the element
-              el.setPointerCapture(e.pointerId);
+              drag.current.captured = false;
             }}
             onPointerMove={(e) => {
               const el = scrollerRef.current;
@@ -122,6 +121,11 @@ export default function ShelfRow({
 
               // If horizontal intent, drag-scroll the shelf and prevent page pan
               if (drag.current.locked === "x") {
+                if (!drag.current.captured) {
+                  el.setPointerCapture(e.pointerId);
+                  drag.current.captured = true;
+                }
+
                 e.preventDefault();
                 el.scrollLeft = drag.current.startScrollLeft - dx;
                 drag.current.moved = true;
@@ -132,24 +136,34 @@ export default function ShelfRow({
             onPointerUp={(e) => {
               const el = scrollerRef.current;
 
-              if (el && drag.current.pointerId === e.pointerId) {
+              if (
+                el &&
+                drag.current.pointerId === e.pointerId &&
+                drag.current.captured
+              ) {
                 el.releasePointerCapture(e.pointerId);
               }
 
               drag.current.isDown = false;
               drag.current.locked = "none";
               drag.current.pointerId = null;
+              drag.current.captured = false;
             }}
             onPointerCancel={(e) => {
               const el = scrollerRef.current;
 
-              if (el && drag.current.pointerId === e.pointerId) {
+              if (
+                el &&
+                drag.current.pointerId === e.pointerId &&
+                drag.current.captured
+              ) {
                 el.releasePointerCapture(e.pointerId);
               }
 
               drag.current.isDown = false;
               drag.current.locked = "none";
               drag.current.pointerId = null;
+              drag.current.captured = false;
             }}
           >
             {spines.map((spine) => (

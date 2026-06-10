@@ -9,9 +9,11 @@ export type BookcaseShelf = {
 export default function BookcaseView({
   title = "Bookcase",
   shelves,
+  onBookSelect,
 }: {
   title?: string;
   shelves: BookcaseShelf[];
+  onBookSelect?: (bookId: string) => void;
 }) {
   return (
     <section className="bookcaseView">
@@ -26,7 +28,7 @@ export default function BookcaseView({
             key={s.id}
             shelfLabel={s.label}
             spines={s.spines}
-            onSpineClick={(sp) => alert(`${s.label}: ${sp.title}`)}
+            onSpineClick={(sp) => onBookSelect?.(sp.id)}
           />
         ))}
       </div>
