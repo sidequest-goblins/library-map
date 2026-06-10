@@ -1,9 +1,50 @@
+:root {
+  color: #2f2418;
+  background:
+    radial-gradient(circle at top left, rgba(199, 155, 89, 0.28), transparent 34rem),
+    radial-gradient(circle at top right, rgba(86, 121, 84, 0.22), transparent 30rem),
+    #efe4cf;
+
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+
+  --paper: #fff8e9;
+  --paperSoft: #f7ecd7;
+  --ink: #2f2418;
+  --muted: #6f604b;
+  --green: #526f45;
+  --greenDark: #34482e;
+  --sage: #a9b78d;
+  --brown: #7a4d2b;
+  --brownDark: #4c301e;
+  --gold: #c99a45;
+  --rose: #b86450;
+  --border: rgba(76, 48, 30, 0.18);
+  --shadow: 0 18px 45px rgba(76, 48, 30, 0.16);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
 #root {
   width: 100%;
-  max-width: 1280px;
+  max-width: 1180px;
   margin: 0 auto;
   padding: 1rem;
-  box-sizing: border-box;
   text-align: left;
 }
 
@@ -17,6 +58,36 @@
 .appHeader {
   display: grid;
   gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background:
+    linear-gradient(135deg, rgba(255, 248, 233, 0.95), rgba(247, 236, 215, 0.92)),
+    var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.eyebrow {
+  margin: 0 0 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--green);
+}
+
+.appHeader h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.4rem, 10vw, 5rem);
+  line-height: 0.92;
+  color: var(--brownDark);
+  text-wrap: balance;
+}
+
+.bookcaseMeta {
+  margin: 0.55rem 0 0;
+  color: var(--muted);
 }
 
 .appTabs {
@@ -26,95 +97,77 @@
   padding-bottom: 0.1rem;
 }
 
-.appTab {
+.appTab,
+.paginationControls button,
+.backButton,
+.cacheButton {
+  border: 1px solid rgba(76, 48, 30, 0.2);
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  padding: 0.55rem 0.85rem;
-  font: inherit;
-  color: inherit;
-  background: rgba(255, 255, 255, 0.06);
+  padding: 0.58rem 0.9rem;
+  color: var(--brownDark);
+  background: rgba(255, 248, 233, 0.74);
+  box-shadow: 0 6px 16px rgba(76, 48, 30, 0.08);
   cursor: pointer;
   white-space: nowrap;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease;
 }
 
-.appTab:hover {
-  border-color: rgba(255, 255, 255, 0.45);
+.appTab:hover,
+.paginationControls button:hover:not(:disabled),
+.backButton:hover,
+.cacheButton:hover {
+  transform: translateY(-1px);
+  border-color: rgba(82, 111, 69, 0.42);
+  background: #fffaf0;
+  box-shadow: 0 9px 20px rgba(76, 48, 30, 0.12);
 }
 
 .appTab.active {
-  border-color: rgba(255, 255, 255, 0.65);
-  background: rgba(255, 255, 255, 0.16);
+  color: #fff8e9;
+  border-color: rgba(52, 72, 46, 0.35);
+  background: linear-gradient(135deg, var(--green), var(--greenDark));
 }
 
-.eyebrow {
-  margin: 0 0 0.25rem;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  opacity: 0.65;
-}
-
-.appHeader h1 {
-  margin: 0;
-  font-size: clamp(2rem, 6vw, 4rem);
-  line-height: 1;
-}
-
-.bookcaseMeta {
-  margin: 0.5rem 0 0;
-  opacity: 0.75;
-}
-
-.bookcasePicker {
-  display: grid;
-  gap: 0.35rem;
-  width: min(100%, 320px);
-}
-
-.bookcasePicker span {
-  font-size: 0.8rem;
-  opacity: 0.7;
-}
-
-.bookcasePicker select {
-  width: 100%;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  padding: 0.65rem 0.75rem;
-  font: inherit;
-  color: inherit;
-  background: #1a1a1a;
-}
-
+.bookcasePicker,
 .librarySearch {
   display: grid;
   gap: 0.35rem;
-  width: min(100%, 420px);
+  width: min(100%, 430px);
 }
 
+.bookcasePicker span,
 .librarySearch span {
-  font-size: 0.8rem;
-  opacity: 0.7;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--greenDark);
 }
 
+.bookcasePicker select,
 .librarySearch input {
   width: 100%;
-  box-sizing: border-box;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  padding: 0.65rem 0.75rem;
-  font: inherit;
-  color: inherit;
-  background: #1a1a1a;
+  border: 1px solid rgba(76, 48, 30, 0.22);
+  border-radius: 16px;
+  padding: 0.78rem 0.9rem;
+  color: var(--ink);
+  background: #fffaf0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 
-.searchPanel {
-  display: grid;
-  gap: 1rem;
-  min-width: 0;
+.bookcasePicker select:focus,
+.librarySearch input:focus {
+  outline: 3px solid rgba(201, 154, 69, 0.28);
+  border-color: rgba(82, 111, 69, 0.55);
 }
 
-.searchResults {
+.searchPanel,
+.searchResults,
+.bookDetailPanel {
   display: grid;
   gap: 1rem;
   min-width: 0;
@@ -130,11 +183,13 @@
 
 .searchResultsHeader h2 {
   margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--brownDark);
 }
 
 .searchResultsHeader p {
   margin: 0;
-  opacity: 0.7;
+  color: var(--muted);
 }
 
 .searchResultList {
@@ -142,16 +197,26 @@
   gap: 0.75rem;
 }
 
+.searchResultCard,
+.bookDetailCard,
+.emptyBookcase {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background:
+    linear-gradient(135deg, rgba(255, 248, 233, 0.95), rgba(247, 236, 215, 0.88)),
+    var(--paper);
+  box-shadow: 0 12px 30px rgba(76, 48, 30, 0.1);
+}
+
 .searchResultCard {
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 14px;
-  padding: 0.85rem 1rem;
-  background: rgba(255, 255, 255, 0.05);
+  padding: 0.9rem 1rem;
 }
 
 .searchResultCard h3 {
   margin: 0 0 0.25rem;
-  font-size: 1rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.08rem;
+  color: var(--brownDark);
 }
 
 .searchResultCard p {
@@ -159,14 +224,29 @@
 }
 
 .searchResultAuthor {
-  opacity: 0.85;
+  color: var(--muted);
 }
 
 .searchResultLocation,
 .searchResultSeries,
 .emptySearch {
-  opacity: 0.65;
-  font-size: 0.9rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.searchResultButton {
+  width: 100%;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+}
+
+.searchResultButton:hover {
+  transform: translateY(-1px);
+  border-color: rgba(82, 111, 69, 0.35);
+  background:
+    linear-gradient(135deg, rgba(255, 250, 240, 1), rgba(244, 232, 206, 0.95)),
+    var(--paper);
 }
 
 .paginationControls {
@@ -177,71 +257,31 @@
   justify-content: center;
 }
 
-.paginationControls button {
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  padding: 0.55rem 0.85rem;
-  font: inherit;
-  color: inherit;
-  background: rgba(255, 255, 255, 0.06);
-  cursor: pointer;
-}
-
-.paginationControls button:hover:not(:disabled) {
-  border-color: rgba(255, 255, 255, 0.45);
-}
-
 .paginationControls button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
+  transform: none;
 }
 
 .paginationControls span {
-  opacity: 0.7;
+  color: var(--muted);
   font-size: 0.9rem;
 }
 
-.searchResultButton {
-  width: 100%;
-  text-align: left;
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-}
-
-.searchResultButton:hover {
-  border-color: rgba(255, 255, 255, 0.38);
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.bookDetailPanel {
-  display: grid;
-  gap: 1rem;
-  min-width: 0;
-}
-
-.backButton {
+.backButton,
+.cacheButton {
   width: fit-content;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  padding: 0.55rem 0.85rem;
-  font: inherit;
-  color: inherit;
-  background: rgba(255, 255, 255, 0.06);
-  cursor: pointer;
 }
 
-.backButton:hover {
-  border-color: rgba(255, 255, 255, 0.45);
+.cacheButton {
+  border-radius: 14px;
+  font-size: 0.9rem;
 }
 
 .bookDetailCard {
   display: grid;
   gap: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 16px;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
 }
 
 .bookDetailCard h2,
@@ -249,26 +289,88 @@
   margin: 0;
 }
 
+.bookDetailCard h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--brownDark);
+}
+
 .detailLabel {
   margin: 0 0 0.25rem;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  opacity: 0.6;
+  letter-spacing: 0.14em;
+  color: var(--green);
 }
 
-.cacheButton {
-  width: fit-content;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  padding: 0.55rem 0.75rem;
-  font: inherit;
-  color: inherit;
-  background: rgba(255, 255, 255, 0.06);
-  cursor: pointer;
+.emptyBookcase {
+  padding: 1rem;
 }
 
-.cacheButton:hover {
-  border-color: rgba(255, 255, 255, 0.45);
+.emptyBookcase h2,
+.emptyBookcase p {
+  margin: 0;
 }
 
+.emptyBookcase h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--brownDark);
+}
+
+.emptyBookcase p {
+  margin-top: 0.35rem;
+  color: var(--muted);
+}
+
+.bookcaseView {
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  padding: 1rem;
+  border: 1px solid rgba(76, 48, 30, 0.16);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 248, 233, 0.92), rgba(230, 213, 179, 0.72)),
+    var(--paperSoft);
+  box-shadow: var(--shadow);
+}
+
+.bookcaseViewHeader h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.5rem, 6vw, 2.6rem);
+  color: var(--brownDark);
+}
+
+.bookcaseShelves {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+@media (min-width: 720px) {
+  #root {
+    padding: 1.5rem;
+  }
+
+  .appHeader {
+    grid-template-columns: 1fr auto;
+    align-items: end;
+  }
+
+  .appTabs,
+  .bookcasePicker,
+  .cacheButton {
+    justify-self: end;
+  }
+
+  .bookcasePicker {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}

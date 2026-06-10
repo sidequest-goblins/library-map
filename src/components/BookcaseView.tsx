@@ -14,29 +14,13 @@ export default function BookcaseView({
   shelves: BookcaseShelf[];
 }) {
   return (
-    <div
-      style={{
-        padding: 16,
-        width: "100%",
-        maxWidth: "100%",
-        minWidth: 0,
-        overflow: "hidden",
-        boxSizing: "border-box",
-      }}
-    >
-      <h2 style={{ margin: "0 0 12px 0" }}>{title}</h2>
+    <section className="bookcaseView">
+      <div className="bookcaseViewHeader">
+        <p className="eyebrow">Map view</p>
+        <h2>{title}</h2>
+      </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 18,
-          width: "100%",
-          maxWidth: "100%",
-          minWidth: 0,
-          overflow: "hidden",
-        }}
-      >
+      <div className="bookcaseShelves">
         {shelves.map((s) => (
           <ShelfRow
             key={s.id}
@@ -46,6 +30,6 @@ export default function BookcaseView({
           />
         ))}
       </div>
-    </div>
+    </section>
   );
 }

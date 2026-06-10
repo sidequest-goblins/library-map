@@ -1,8 +1,7 @@
 :root {
-  /* tweak these later */
-  --shelfHeight: 140px;
-  --spineGap: 6px;
-  --spineRadius: 8px;
+  --shelfHeight: 260px;
+  --spineGap: 8px;
+  --spineRadius: 10px;
 }
 
 .shelfRow {
@@ -14,9 +13,17 @@
 }
 
 .shelfLabel {
-  font-size: 12px;
-  opacity: 0.7;
-  margin: 6px 0 6px 6px;
+  width: fit-content;
+  margin: 0 0 0.45rem 0.35rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid rgba(76, 48, 30, 0.14);
+  border-radius: 999px;
+  color: #4c301e;
+  background: rgba(255, 248, 233, 0.72);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .shelfRowInner {
@@ -35,86 +42,126 @@
   max-width: 100%;
   min-width: 0;
   overflow: hidden;
+  border-radius: 12px 12px 8px 12px;
+  background:
+    linear-gradient(to bottom, rgba(68, 43, 27, 0.08), transparent 28%),
+    rgba(255, 248, 233, 0.34);
 }
 
 .spineScroller {
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  height: var(--shelfHeight);
+  height: calc(var(--shelfHeight) + 24px);
   display: flex;
   align-items: flex-end;
   gap: var(--spineGap);
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 10px 10px 6px 10px;
+  padding: 14px 14px 8px 14px;
   cursor: grab;
 
-  /* iOS momentum scrolling */
   -webkit-overflow-scrolling: touch;
-
-  /* scroll snap makes it feel “shelf-y” */
   scroll-snap-type: x mandatory;
-  scroll-padding-left: 10px;
+  scroll-padding-left: 14px;
 
-  /* hide scrollbar where possible */
   scrollbar-width: none;
   scrollbar-gutter: stable;
   touch-action: none;
   overscroll-behavior-x: contain;
 }
+
 .spineScroller:active {
   cursor: grabbing;
 }
+
 .spineScroller::-webkit-scrollbar {
   display: none;
 }
 
 .spine {
-  height: calc(var(--shelfHeight) - 14px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  height: var(--spineHeight, calc(var(--shelfHeight) - 14px));
+  border: 1px solid rgba(255, 248, 233, 0.34);
   border-radius: var(--spineRadius);
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 250, 240, 0.94);
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
   padding: 0;
   cursor: pointer;
-
+  box-shadow:
+    inset 3px 0 0 rgba(255, 255, 255, 0.18),
+    inset -3px 0 0 rgba(0, 0, 0, 0.12),
+    0 7px 12px rgba(76, 48, 30, 0.14);
   scroll-snap-align: start;
-
   writing-mode: vertical-rl;
   text-orientation: mixed;
+  transition:
+    transform 120ms ease,
+    filter 120ms ease;
 }
 
-.spine-s { width: 22px; }
-.spine-m { width: 30px; }
-.spine-l { width: 38px; }
-
-.spine-short {
-  height: calc(var(--shelfHeight) - 20px);
+.spine:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.06);
 }
 
-.spine-medium {
-  height: calc(var(--shelfHeight) - 10px);
+.spine:nth-child(8n + 1) {
+  background: linear-gradient(90deg, #496b3f, #6f8a55);
 }
 
-.spine-tall {
-  height: calc(var(--shelfHeight) - 0px);
+.spine:nth-child(8n + 2) {
+  background: linear-gradient(90deg, #7a4d2b, #a76538);
+}
+
+.spine:nth-child(8n + 3) {
+  background: linear-gradient(90deg, #9f493e, #c56950);
+}
+
+.spine:nth-child(8n + 4) {
+  background: linear-gradient(90deg, #4f6f73, #6f9695);
+}
+
+.spine:nth-child(8n + 5) {
+  background: linear-gradient(90deg, #7d6631, #c99a45);
+}
+
+.spine:nth-child(8n + 6) {
+  background: linear-gradient(90deg, #5f4d7a, #8570a3);
+}
+
+.spine:nth-child(8n + 7) {
+  background: linear-gradient(90deg, #315b4a, #5f8f70);
+}
+
+.spine:nth-child(8n + 8) {
+  background: linear-gradient(90deg, #8b5a34, #c0834b);
+}
+
+.spine-s {
+  width: 36px;
+}
+
+.spine-m {
+  width: 40px;
+}
+
+.spine-l {
+  width: 44px;
 }
 
 .spineText {
   color: inherit;
-  font-size: 13px;
+  font-size: 16px;
   line-height: 1;
-  padding: 6px 4px;
+  padding: 5px 5px;
   max-height: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  opacity: 0.9;
+  opacity: 0.95;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.26);
 }
 
 .spine,
@@ -122,22 +169,26 @@
 .spine:hover,
 .spine:active,
 .spine:focus {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 250, 240, 0.94);
 }
 
-/* Fades */
+.spine:focus-visible {
+  outline: 3px solid rgba(201, 154, 69, 0.42);
+  outline-offset: 2px;
+}
+
 .fadeLeft,
 .fadeRight {
   position: absolute;
   top: 0;
-  height: var(--shelfHeight);
+  height: calc(var(--shelfHeight) + 24px);
   pointer-events: none;
   width: 34px;
 }
 
 .fadeLeft {
   left: 0;
-  background: linear-gradient(to right, rgba(18,18,18,0.95), rgba(18,18,18,0));
+  background: linear-gradient(to right, rgba(247, 236, 215, 0.94), rgba(247, 236, 215, 0));
 }
 
 .fadeRight {
@@ -146,7 +197,7 @@
   align-items: center;
   justify-content: flex-end;
   padding-right: 6px;
-  background: linear-gradient(to left, rgba(18,18,18,0.95), rgba(18,18,18,0));
+  background: linear-gradient(to left, rgba(247, 236, 215, 0.94), rgba(247, 236, 215, 0));
 }
 
 .ellipsis {
@@ -155,10 +206,14 @@
   transform: translateY(-2px);
 }
 
-/* Shelf “board” line */
 .shelfBoard {
-  height: 10px;
-  margin: 6px 0 0 0;
-  border-radius: 6px;
-  background: rgba(0,0,0,0.12);
+  height: 13px;
+  margin: 0;
+  border-radius: 0 0 12px 12px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.12), transparent 18%, rgba(0, 0, 0, 0.12)),
+    linear-gradient(180deg, #9b683b, #5c3b22);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.16),
+    0 7px 14px rgba(76, 48, 30, 0.16);
 }

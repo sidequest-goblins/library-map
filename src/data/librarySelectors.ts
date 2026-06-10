@@ -13,21 +13,37 @@ function hashString(value: string): number {
   return Math.abs(hash);
 }
 
+function titleWithoutParentheses(title: string): string {
+  const cleaned = title
+    .replace(/\s*\([^)]*\)/g, "")
+    .trim();
+
+  return cleaned || title;
+}
+
+function spineHeightForTitle(title: string): number {
+  const trimmedTitle = titleWithoutParentheses(title);
+  const length = trimmedTitle.length;
+
+  const minHeight = 110;
+  const maxHeight = 260;
+  const pixelsPerCharacter = 8;
+  const titlePadding = 22;
+  const snapTo = 8;
+
+  const rawHeight = titlePadding + length * pixelsPerCharacter;
+  const snappedHeight = Math.ceil(rawHeight / snapTo) * snapTo;
+
+  return Math.min(maxHeight, Math.max(minHeight, snappedHeight));
+}
+
 function widthForBook(book: Book): Spine["width"] {
   const hash = hashString(`${book.bookId}-${book.title}-${book.author}`);
 
-  if (book.title.length > 28) return "l";
+  if (titleWithoutParentheses(book.title).length > 28) return "l";
   if (hash % 7 === 0) return "s";
   if (hash % 5 === 0) return "l";
   return "m";
-}
-
-function heightForBook(book: Book): Spine["height"] {
-  const hash = hashString(`${book.author}-${book.title}-${book.bookId}`);
-
-  if (hash % 8 === 0) return "tall";
-  if (hash % 3 === 0) return "short";
-  return "medium";
 }
 
 function sortBooksForShelf(books: Book[]): Book[] {
@@ -42,9 +58,9 @@ function sortBooksForShelf(books: Book[]): Book[] {
 function bookToSpine(book: Book): Spine {
   return {
     id: book.bookId,
-    title: book.title,
+    title: titleWithoutParentheses(book.title),
     width: widthForBook(book),
-    height: heightForBook(book),
+    heightPx: spineHeightForTitle(book.title),
   };
 }
 
@@ -81,15 +97,25 @@ export function getShelvesForBookcase(
     });
   });
 
-  return Array.from(groupedBooks.entries()).map(([groupKey, groupBooks]) => {
-    const firstBook = groupBooks[0];
+  return Array.from(groupedBooks.entries())
+    .sort(([aKey], [bKey]) => {
+      const [aShelf, aRow] = aKey.split("|");
+      const [bShelf, bRow] = bKey.split("|");
 
-    return {
-      id: `${bookcase.bookcaseId}-${groupKey}`,
-      label: firstBook.shelf,
-      spines: sortBooksForShelf(groupBooks).map(bookToSpine),
-    };
-  });
+      return (
+        aShelf.localeCompare(bShelf, undefined, { numeric: true }) ||
+        aRow.localeCompare(bRow)
+      );
+    })
+    .map(([groupKey, groupBooks]) => {
+      const firstBook = groupBooks[0];
+
+      return {
+        id: `${bookcase.bookcaseId}-${groupKey}`,
+        label: firstBook.shelf,
+        spines: sortBooksForShelf(groupBooks).map(bookToSpine),
+      };
+    });
 }
 
 function slugify(value: string): string {

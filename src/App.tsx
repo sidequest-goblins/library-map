@@ -308,7 +308,7 @@ export default function App() {
               </div>
             ) : (
               <p className="emptySearch">
-                Type something to search your library.
+                Search by title, author, genre, publisher, or location.
               </p>
             )}
           </section>

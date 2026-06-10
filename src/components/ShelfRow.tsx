@@ -7,7 +7,7 @@ export type Spine = {
   author?: string;
   // optional: widen some spines for realism (defaults to "m")
   width?: "s" | "m" | "l";
-  height?: "short" | "medium" | "tall";
+  heightPx?: number;
 };
 
 export type ShelfRowProps = {
@@ -20,7 +20,6 @@ export type ShelfRowProps = {
 export default function ShelfRow({
   shelfLabel,
   spines,
-  heightPx = 92,
   onSpineClick,
 }: ShelfRowProps) {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
@@ -75,7 +74,7 @@ export default function ShelfRow({
   }, [spines.length]);
 
   return (
-    <div className={widthClass} style={{ ["--shelfHeight" as any]: `${heightPx}px` }}>
+    <div className={widthClass}>
       {shelfLabel ? <div className="shelfLabel">{shelfLabel}</div> : null}
 
       <div className="shelfRowInner">
@@ -154,7 +153,12 @@ export default function ShelfRow({
             {spines.map((spine) => (
               <button
                 key={spine.id}
-                className={`spine spine-${spine.width ?? "m"} spine-${spine.height ?? "medium"}`}
+                className={`spine spine-${spine.width ?? "m"}`}
+                style={
+                  {
+                    "--spineHeight": spine.heightPx ? `${spine.heightPx}px` : undefined,
+                  } as React.CSSProperties
+                }
                 type="button"
                 onClick={() => {
                   if (drag.current.moved) return; // suppress click after a drag
