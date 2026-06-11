@@ -17,6 +17,7 @@ export type Book = {
   bookcase: string;
   shelf: string;
   row: string;
+  shelfPosition?: number | null;
   rawShelf?: string;
   notes?: string;
 };

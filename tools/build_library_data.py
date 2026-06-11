@@ -9,18 +9,9 @@ from openpyxl import load_workbook
 WORKBOOK_PATH = Path("C:/library_app/source/LIBRARY.xlsx")
 OUTPUT_DIR = Path("C:/library_app/library-map/public/data")
 BOOKS_OUTPUT_PATH = OUTPUT_DIR / "library-books.json"
+CATALOG_OUTPUT_PATH = OUTPUT_DIR / "library-catalog.json"
 META_OUTPUT_PATH = OUTPUT_DIR / "library-meta.json"
-
-##BOOKCASE_ROOM_OVERRIDES = {
-#    "Living Room": "Living Room",
-#    "Office": "Office",
-#    "Rainbow": "Living Room",
-#    "Hutch": "Bedroom",
-#    "Coffee Table": "Living Room",
-#    "Yellow Cart": "Living Room",
-#    "Star Table": "Living Room",
-#    "Bedroom": "Bedroom",
-#}
+CATALOG_REQUIRED_HEADERS = {"first", "last", "title", "jc", "cj"}
 
 def clean(value: Any) -> str:
     return str(value or "").strip()
@@ -45,6 +36,13 @@ def make_author_sort(first: str, last: str) -> str:
 
     return last or first
 
+def checkbox_to_bool(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+
+    text = clean(value).lower()
+    return text in {"true", "yes", "y", "1", "checked", "x"}
+
 def load_bookcase_rooms(workbook) -> dict[str, str]:
     if "Bookcases" not in workbook.sheetnames:
         raise ValueError("Could not find required sheet: Bookcases")
@@ -57,16 +55,16 @@ def load_bookcase_rooms(workbook) -> dict[str, str]:
     except StopIteration:
         raise ValueError("The Bookcases sheet is empty.")
 
-    header_indexes = {header: index for index, header in enumerate(headers)}
+    header_indexes = {normalize_header(header): index for index, header in enumerate(headers)}
 
-    required_headers = ["Bookcase", "Room"]
+    required_headers = ["bookcase", "room"]
     missing_headers = [
         header for header in required_headers if header not in header_indexes
     ]
 
     if missing_headers:
         raise ValueError(
-            "Bookcases sheet is missing expected headers: "
+            "Bookcases sheet is missing expected normalized headers: "
             + ", ".join(missing_headers)
             + f"\nFound headers: {headers}"
         )
@@ -82,8 +80,8 @@ def load_bookcase_rooms(workbook) -> dict[str, str]:
                 return ""
             return clean(row_values[index])
 
-        bookcase = get("Bookcase")
-        room = get("Room")
+        bookcase = get("bookcase")
+        room = get("room")
 
         if bookcase and room:
             bookcase_rooms[bookcase] = room
@@ -94,6 +92,17 @@ def get_room_for_bookcase(bookcase: str, bookcase_rooms: dict[str, str]) -> str:
     bookcase = clean(bookcase)
     return bookcase_rooms.get(bookcase, "")
 
+def parse_optional_int(value: Any) -> int | None:
+    text = clean(value)
+
+    if not text:
+        return None
+
+    try:
+        return int(float(text))
+    except ValueError:
+        return None
+    
 def parse_shelf(raw_shelf: str) -> tuple[str, str]:
     raw_shelf = clean(raw_shelf)
 
@@ -161,6 +170,44 @@ def parse_title(raw_title: str) -> dict[str, str | int | None]:
         "seriesNumber": None,
     }
 
+def normalize_header(value: Any) -> str:
+    return clean(value).lower().replace(" ", "")
+
+
+def find_sheet_with_headers(
+    workbook,
+    required_headers: set[str],
+    label: str,
+):
+    for sheet in workbook.worksheets:
+        rows = sheet.iter_rows(values_only=True)
+
+        try:
+            headers = [clean(value) for value in next(rows)]
+        except StopIteration:
+            continue
+
+        normalized_headers = {normalize_header(header) for header in headers}
+
+        if required_headers.issubset(normalized_headers):
+            return sheet
+
+    raise ValueError(f"Could not find {label} sheet with headers: {required_headers}")
+
+def get_sheet_headers(sheet) -> list[str]:
+    rows = sheet.iter_rows(values_only=True)
+
+    try:
+        return [clean(value) for value in next(rows)]
+    except StopIteration:
+        return []
+
+def is_catalog_sheet(sheet) -> bool:
+    headers = get_sheet_headers(sheet)
+    normalized_headers = {normalize_header(header) for header in headers}
+
+    return CATALOG_REQUIRED_HEADERS.issubset(normalized_headers)
+
 def make_book_id(index: int, title: str, author_sort: str) -> str:
     slug_source = f"{author_sort}-{title}".lower()
     slug = re.sub(r"[^a-z0-9]+", "-", slug_source).strip("-")
@@ -168,6 +215,100 @@ def make_book_id(index: int, title: str, author_sort: str) -> str:
 
     return f"book-{index:05d}-{slug or 'untitled'}"
 
+def make_catalog_key(title: str, author_sort: str) -> str:
+    slug_source = f"{author_sort}-{title}".lower()
+    slug = re.sub(r"[^a-z0-9]+", "-", slug_source).strip("-")
+
+    return slug or "untitled"
+
+def load_catalog_books(workbook) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
+    catalog_books: dict[str, dict[str, Any]] = {}
+    processed_sheets: dict[str, int] = {}
+    skipped_sheets: list[str] = []
+    duplicate_catalog_keys: dict[str, list[dict[str, Any]]] = {}
+
+    for sheet in workbook.worksheets:
+        if not is_catalog_sheet(sheet):
+            skipped_sheets.append(sheet.title)
+            continue
+
+        rows = sheet.iter_rows(values_only=True)
+
+        try:
+            headers = [clean(value) for value in next(rows)]
+        except StopIteration:
+            skipped_sheets.append(sheet.title)
+            continue
+
+        header_indexes = {
+            normalize_header(header): index
+            for index, header in enumerate(headers)
+        }
+
+        def get(row_values: list[Any], header: str) -> Any:
+            index = header_indexes.get(header)
+            if index is None or index >= len(row_values):
+                return ""
+            return row_values[index]
+
+        sheet_count = 0
+
+        for row_number, row in enumerate(rows, start=2):
+            row_values = list(row)
+
+            raw_title = clean(get(row_values, "title"))
+
+            if not raw_title:
+                continue
+
+            parsed_title = parse_title(raw_title)
+            title = clean(parsed_title["title"])
+
+            first = clean(get(row_values, "first"))
+            last = clean(get(row_values, "last"))
+            author = make_author(first, last)
+            author_sort = make_author_sort(first, last)
+
+            catalog_key = make_catalog_key(title, author_sort)
+
+            catalog_book = {
+                "catalogKey": catalog_key,
+                "title": title,
+                "rawTitle": raw_title,
+                "series": parsed_title["series"],
+                "seriesTitle": parsed_title["seriesTitle"],
+                "seriesFormat": parsed_title["seriesFormat"],
+                "seriesNumber": parsed_title["seriesNumber"],
+                "author": author,
+                "authorSort": author_sort,
+                "firstName": first,
+                "lastName": last,
+                "format": clean(get(row_values, "format")),
+                "jc": checkbox_to_bool(get(row_values, "jc")),
+                "cj": checkbox_to_bool(get(row_values, "cj")),
+                "lgbtq": checkbox_to_bool(get(row_values, "lgbtq+")),
+                "sourceSheet": sheet.title,
+                "sourceRow": row_number,
+            }
+
+            if catalog_key in catalog_books:
+                duplicate_catalog_keys.setdefault(catalog_key, [catalog_books[catalog_key]])
+                duplicate_catalog_keys[catalog_key].append(catalog_book)
+
+            catalog_books[catalog_key] = catalog_book
+            sheet_count += 1
+
+        processed_sheets[sheet.title] = sheet_count
+
+    report = {
+        "catalogBookCount": len(catalog_books),
+        "catalogRowsWithTitles": sum(processed_sheets.values()),
+        "processedCatalogSheets": processed_sheets,
+        "skippedCatalogSheets": skipped_sheets,
+        "duplicateCatalogKeys": duplicate_catalog_keys,
+    }
+
+    return catalog_books, report
 
 def main() -> None:
     if not WORKBOOK_PATH.exists():
@@ -179,8 +320,37 @@ def main() -> None:
     workbook = load_workbook(WORKBOOK_PATH, read_only=True, data_only=True)
     bookcase_rooms = load_bookcase_rooms(workbook)
 
-    sheet = workbook.worksheets[-1]
-    print(f"Using last sheet: {sheet.title}")
+    catalog_books, catalog_report = load_catalog_books(workbook)
+
+    print(f"Found {len(catalog_books)} catalog books")
+
+    print("\nProcessed catalog sheets:")
+    for sheet_name, count in catalog_report["processedCatalogSheets"].items():
+        print(f"  - {sheet_name}: {count}")
+
+    print("\nSkipped non-catalog sheets:")
+    for sheet_name in catalog_report["skippedCatalogSheets"]:
+        print(f"  - {sheet_name}")
+
+    if catalog_report["duplicateCatalogKeys"]:
+        print("\nDuplicate catalog keys:")
+        for catalog_key, duplicates in catalog_report["duplicateCatalogKeys"].items():
+            print(f"  - {catalog_key}: {len(duplicates)} rows")
+
+    sheet = find_sheet_with_headers(
+        workbook,
+        required_headers={
+            "title",
+            "first",
+            "last",
+            "genre",
+            "publisher",
+            "bookcase",
+            "shelf",
+        },
+        label="List View",
+    )
+    print(f"Using List View sheet: {sheet.title}")
 
     rows = sheet.iter_rows(values_only=True)
 
@@ -189,16 +359,16 @@ def main() -> None:
     except StopIteration:
         raise ValueError("The List View sheet is empty.")
 
-    header_indexes = {header: index for index, header in enumerate(headers)}
+    header_indexes = {normalize_header(header): index for index, header in enumerate(headers)}
 
     required_headers = [
-        "Title",
-        "First",
-        "Last",
-        "Genre",
-        "Publisher",
-        "Bookcase",
-        "Shelf",
+        "title",
+        "first",
+        "last",
+        "genre",
+        "publisher",
+        "bookcase",
+        "shelf",
     ]
 
     missing_headers = [
@@ -222,12 +392,12 @@ def main() -> None:
         row_values = list(row)
 
         def get(header: str) -> str:
-            index = header_indexes[header]
-            if index >= len(row_values):
+            index = header_indexes.get(header)
+            if index is None or index >= len(row_values):
                 return ""
             return clean(row_values[index])
 
-        raw_title = get("Title")
+        raw_title = get("title")
 
         if not raw_title:
             skipped_blank_rows += 1
@@ -236,12 +406,12 @@ def main() -> None:
         parsed_title = parse_title(raw_title)
         title = clean(parsed_title["title"])
 
-        first = get("First")
-        last = get("Last")
+        first = get("first")
+        last = get("last")
         author = make_author(first, last)
         author_sort = make_author_sort(first, last)
 
-        bookcase = get("Bookcase")
+        bookcase = get("bookcase")
         room = get_room_for_bookcase(bookcase, bookcase_rooms)
 
         if bookcase:
@@ -250,21 +420,22 @@ def main() -> None:
         if bookcase and not room:
             unmapped_bookcases.add(bookcase)
 
-        raw_shelf = get("Shelf")
+        raw_shelf = get("shelf")
         shelf, row_name = parse_shelf(raw_shelf)
 
         book = {
             "bookId": make_book_id(len(books) + 1, title, author_sort),
             "title": title,
             "rawTitle": raw_title,
+            "shelfPosition": parse_optional_int(get("position")),
             "series": parsed_title["series"],
             "seriesNumber": parsed_title["seriesNumber"],
             "author": author,
             "authorSort": author_sort,
             "firstName": first,
             "lastName": last,
-            "genre": get("Genre"),
-            "publisher": get("Publisher"),
+            "genre": get("genre"),
+            "publisher": get("publisher"),
             "room": room,
             "bookcase": bookcase,
             "shelf": shelf,
@@ -291,10 +462,28 @@ def main() -> None:
         "usedBookcases": sorted(used_bookcases),
         "unusedBookcases": unusedBookcases,
         "unmappedBookcases": sorted(unmapped_bookcases),
+        "catalog": catalog_report,
     }
 
     BOOKS_OUTPUT_PATH.write_text(
         json.dumps(books, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    CATALOG_OUTPUT_PATH.write_text(
+        json.dumps(
+            sorted(
+                catalog_books.values(),
+                key=lambda book: (
+                    book["authorSort"].lower(),
+                    book["title"].lower(),
+                    book["sourceSheet"],
+                    book["sourceRow"],
+                ),
+            ),
+            indent=2,
+            ensure_ascii=False,
+        ),
         encoding="utf-8",
     )
 
@@ -304,6 +493,7 @@ def main() -> None:
     )
 
     print(f"Wrote {len(books)} books to {BOOKS_OUTPUT_PATH}")
+    print(f"Wrote {len(catalog_books)} catalog books to {CATALOG_OUTPUT_PATH}")
     print(f"Wrote metadata to {META_OUTPUT_PATH}")
 
     if skipped_blank_rows:

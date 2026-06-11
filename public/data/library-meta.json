@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-06-10T05:19:05.239921+00:00",
+  "generatedAt": "2026-06-11T01:13:39.785197+00:00",
   "sourceWorkbook": "C:\\library_app\\source\\LIBRARY.xlsx",
   "sourceSheet": "List View",
-  "bookCount": 828,
+  "bookCount": 829,
   "skippedBlankRows": 0,
   "headers": [
     "Title",
@@ -11,7 +11,8 @@
     "Genre",
     "Publisher",
     "Bookcase",
-    "Shelf"
+    "Shelf",
+    "Position"
   ],
   "bookcaseRooms": {
     "Office": "Office",
@@ -34,5 +35,28 @@
     "Yellow Cart"
   ],
   "unusedBookcases": [],
-  "unmappedBookcases": []
+  "unmappedBookcases": [],
+  "catalog": {
+    "catalogBookCount": 829,
+    "catalogRowsWithTitles": 829,
+    "processedCatalogSheets": {
+      "A-B": 78,
+      "C-D": 101,
+      "E": 47,
+      "F-G": 84,
+      "H-I": 98,
+      "J-K": 73,
+      "L-M": 77,
+      "N-O": 43,
+      "P-R": 72,
+      "S-T": 76,
+      "U-Z": 80
+    },
+    "skippedCatalogSheets": [
+      "Bookcases",
+      "Total",
+      "List View"
+    ],
+    "duplicateCatalogKeys": {}
+  }
 }

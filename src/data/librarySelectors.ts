@@ -181,6 +181,16 @@ function widthForBook(book: Book): Spine["width"] {
 
 function sortBooksForShelf(books: Book[]): Book[] {
   return [...books].sort((a, b) => {
+    const aShelfPosition = a.shelfPosition;
+    const bShelfPosition = b.shelfPosition;
+
+    if (aShelfPosition != null && bShelfPosition != null) {
+      return aShelfPosition - bShelfPosition;
+    }
+
+    if (aShelfPosition != null) return -1;
+    if (bShelfPosition != null) return 1;
+
     const authorSort = a.authorSort.localeCompare(b.authorSort);
 
     if (authorSort) return authorSort;
@@ -225,7 +235,7 @@ function fontSizeForSpine(book: Book): number | undefined {
 
   const seriesNumber = Number(book.seriesNumber);
 
-  // Nudge double/triple digit volumes OR tagged format spines.
+  // Nudge double/triple digit volumes.
   if (seriesNumber < 10) return undefined;
 
   return 15;
