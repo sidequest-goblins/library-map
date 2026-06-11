@@ -463,6 +463,81 @@ select {
   color: var(--muted);
 }
 
+.mapPanel {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.mapChooser {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(76, 48, 30, 0.16);
+  border-radius: 24px;
+  background:
+    linear-gradient(135deg, rgba(255, 248, 233, 0.95), rgba(247, 236, 215, 0.88)),
+    var(--paper);
+  box-shadow: 0 12px 30px rgba(76, 48, 30, 0.1);
+}
+
+.mapChooserSection {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.mapCardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.65rem;
+}
+
+.mapCard {
+  display: grid;
+  gap: 0.25rem;
+  min-height: 78px;
+  align-content: center;
+  text-align: left;
+  border: 1px solid rgba(76, 48, 30, 0.16);
+  border-radius: 18px;
+  padding: 0.85rem;
+  color: var(--brownDark);
+  background: rgba(255, 250, 240, 0.78);
+  box-shadow: 0 8px 18px rgba(76, 48, 30, 0.08);
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.mapCard:hover {
+  transform: translateY(-1px);
+  border-color: rgba(82, 111, 69, 0.42);
+  background: #fffaf0;
+  box-shadow: 0 10px 22px rgba(76, 48, 30, 0.12);
+}
+
+.mapCardActive {
+  border-color: rgba(52, 72, 46, 0.5);
+  background:
+    linear-gradient(135deg, rgba(169, 183, 141, 0.42), rgba(255, 248, 233, 0.92)),
+    var(--paper);
+}
+
+.mapCardTitle {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.mapCardMeta {
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
 .bookcaseView {
   display: grid;
   gap: 1rem;

@@ -330,7 +330,8 @@ export function getBookcasesFromBooks(books: Book[]): Bookcase[] {
         displayName: book.room
           ? `${book.bookcase} (${book.room})`
           : book.bookcase,
-        hasRisers: false,
+        hasRisers:
+          book.room === "Office" && book.bookcase === "Office",
         sortOrder: seen.size + 1,
       });
     }

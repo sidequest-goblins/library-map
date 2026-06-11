@@ -101,6 +101,7 @@ export default function App() {
   );
   const [loadError, setLoadError] = useState("");
   const [selectedBookcaseId, setSelectedBookcaseId] = useState("");
+  const [selectedRoom, setSelectedRoom] = useState("");
   const [activeTab, setActiveTab] = useState<AppTab>("search");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
@@ -130,22 +131,48 @@ export default function App() {
 
   const bookcases = useMemo(() => getBookcasesFromBooks(books), [books]);
 
-  useEffect(() => {
-    if (bookcases.length === 0) return;
+  const rooms = useMemo(
+    () => Array.from(new Set(bookcases.map((bookcase) => bookcase.room))).sort(),
+    [bookcases]
+  );
 
-    const selectedStillExists = bookcases.some(
+  useEffect(() => {
+    if (!selectedRoom) return;
+
+    const selectedRoomStillExists = rooms.includes(selectedRoom);
+
+    if (!selectedRoomStillExists) {
+      setSelectedRoom("");
+      setSelectedBookcaseId("");
+      setSelectedBookId(null);
+    }
+  }, [rooms, selectedRoom]);
+
+  const bookcasesForSelectedRoom = useMemo(
+    () =>
+      bookcases.filter((bookcase) =>
+        selectedRoom ? bookcase.room === selectedRoom : true
+      ),
+    [bookcases, selectedRoom]
+  );
+
+  useEffect(() => {
+    if (!selectedBookcaseId) return;
+
+    const selectedStillExists = bookcasesForSelectedRoom.some(
       (bookcase) => bookcase.bookcaseId === selectedBookcaseId
     );
 
-    if (!selectedBookcaseId || !selectedStillExists) {
-      setSelectedBookcaseId(bookcases[0].bookcaseId);
+    if (!selectedStillExists) {
+      setSelectedBookcaseId("");
+      setSelectedBookId(null);
     }
-  }, [bookcases, selectedBookcaseId]);
+  }, [bookcasesForSelectedRoom, selectedBookcaseId]);
 
   const selectedBookcase =
-    bookcases.find(
+    bookcasesForSelectedRoom.find(
       (bookcase) => bookcase.bookcaseId === selectedBookcaseId
-    ) ?? bookcases[0];
+    ) ?? null;
 
   const shelves = selectedBookcase
     ? getShelvesForBookcase(books, selectedBookcase)
@@ -250,13 +277,13 @@ export default function App() {
       ? mapShelfGroups[currentMapShelfIndex + 1].books
       : [];  
 
-    useEffect(() => {
-      if (activeTab !== "map") return;
-      if (!selectedBook) return;
-      if (mapDetailBooks.length === 0) return;
+  useEffect(() => {
+    if (activeTab !== "map") return;
+    if (!selectedBook) return;
+    if (mapDetailBooks.length === 0) return;
 
-      preloadBookCovers(mapDetailBooks);
-    }, [activeTab, selectedBook, mapDetailBooks]);
+    preloadBookCovers(mapDetailBooks);
+  }, [activeTab, selectedBook, mapDetailBooks]);
 
   function renderBookDetail(
     backLabel: string,
@@ -267,8 +294,8 @@ export default function App() {
   ) {
     if (!selectedBook) return null;
 
-  const currentDetailIndex =
-    detailBooks?.findIndex((book) => book.bookId === selectedBook.bookId) ?? -1;
+    const currentDetailIndex =
+      detailBooks?.findIndex((book) => book.bookId === selectedBook.bookId) ?? -1;
 
     const previousBook =
       detailBooks && currentDetailIndex > 0
@@ -486,9 +513,9 @@ export default function App() {
           </h1>
           <p className="bookcaseMeta">
             {activeTab === "map" && selectedBookcase
-              ? `${selectedBookcase.room} · ${
-                  selectedBookcase.hasRisers ? "Has risers" : "No risers"
-                }`
+              ? selectedBookcase.hasRisers
+                  ? `${selectedBookcase.bookcase} · Risers`
+                  : selectedBookcase.room
               : `${books.length} books loaded`}
           </p>
         </div>
@@ -515,25 +542,6 @@ export default function App() {
             Map
           </button>
         </nav>
-
-        {activeTab === "map" && selectedBookcase ? (
-          <label className="bookcasePicker">
-            <span>Bookcase</span>
-            <select
-              value={selectedBookcaseId}
-              onChange={(event) => {
-                setSelectedBookcaseId(event.target.value);
-                setSelectedBookId(null);
-              }}
-            >
-              {bookcases.map((bookcase) => (
-                <option key={bookcase.bookcaseId} value={bookcase.bookcaseId}>
-                  {bookcase.displayName}
-                </option>
-              ))}
-            </select>
-          </label>
-        ) : null}
 
         <button type="button" className="cacheButton" onClick={clearAppCache}>
           Clear cache
@@ -645,16 +653,86 @@ export default function App() {
           previousMapShelfBooks,
           nextMapShelfBooks
         )
-      ) : selectedBookcase && shelves.length > 0 ? (
-        <BookcaseView
-          title={selectedBookcase.bookcase}
-          shelves={shelves}
-          onBookSelect={setSelectedBookId}
-        />
       ) : (
-        <section className="emptyBookcase">
-          <h2>{selectedBookcase?.bookcase ?? "No bookcase selected"}</h2>
-          <p>No books added here yet.</p>
+        <section className="mapPanel">
+          <section className="mapChooser" aria-label="Choose a library location">
+            <div className="mapChooserSection">
+              <p className="detailLabel">Choose a room</p>
+
+              <div className="mapCardGrid">
+                {rooms.map((room) => {
+                  const roomBookcaseCount = bookcases.filter(
+                    (bookcase) => bookcase.room === room
+                  ).length;
+
+                  return (
+                    <button
+                      key={room}
+                      type="button"
+                      className={
+                        room === selectedRoom
+                          ? "mapCard mapCardActive"
+                          : "mapCard"
+                      }
+                      onClick={() => {
+                        setSelectedRoom(room);
+                        setSelectedBookcaseId("");
+                        setSelectedBookId(null);
+                      }}
+                    >
+                      <span className="mapCardTitle">{room}</span>
+                      <span className="mapCardMeta">
+                        {roomBookcaseCount} bookcase
+                        {roomBookcaseCount === 1 ? "" : "s"}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {selectedRoom ? (
+              <div className="mapChooserSection">
+                <p className="detailLabel">Choose a bookcase</p>
+
+                <div className="mapCardGrid">
+                  {bookcasesForSelectedRoom.map((bookcase) => (
+                    <button
+                      key={bookcase.bookcaseId}
+                      type="button"
+                      className={
+                        bookcase.bookcaseId === selectedBookcaseId
+                          ? "mapCard mapCardActive"
+                          : "mapCard"
+                      }
+                      onClick={() => {
+                        setSelectedBookcaseId(bookcase.bookcaseId);
+                        setSelectedBookId(null);
+                      }}
+                    >
+                      <span className="mapCardTitle">{bookcase.bookcase}</span>
+                      {bookcase.hasRisers ? (
+                        <span className="mapCardMeta">Risers</span>
+                      ) : null}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </section>
+
+          {selectedBookcase && shelves.length > 0 ? (
+            <BookcaseView
+              title={selectedBookcase.bookcase}
+              shelves={shelves}
+              onBookSelect={setSelectedBookId}
+            />
+          ) : selectedBookcase ? (
+            <section className="emptyBookcase">
+              <h2>{selectedBookcase.bookcase}</h2>
+              <p>No books added here yet.</p>
+            </section>
+          ) : null}
         </section>
       )}
     </main>
