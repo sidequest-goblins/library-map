@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-11T02:08:14.819335+00:00",
+  "generatedAt": "2026-06-11T03:34:47.605001+00:00",
   "sourceWorkbook": "C:\\library_app\\source\\LIBRARY.xlsx",
   "sourceSheet": "List View",
   "bookCount": 829,
@@ -58,5 +58,28 @@
       "List View"
     ],
     "duplicateCatalogKeys": {}
-  }
+  },
+  "coverExtraction": {
+    "outputDir": "C:\\library_app\\library-map\\public\\data\\covers",
+    "publicPath": "/data/covers",
+    "imageExtension": "webp",
+    "webpQuality": 76,
+    "extractedCount": 829,
+    "missingAnchors": [],
+    "missingMediaFiles": [],
+    "conversionErrors": [],
+    "anchorReport": {
+      "totalAnchoredImages": 829,
+      "mappedAnchoredImages": 829,
+      "duplicateAnchorRows": [],
+      "missingMediaTargets": [],
+      "sheetsWithoutDrawings": []
+    },
+    "outputFileCount": 829,
+    "outputTotalBytes": 68948518
+  },
+  "imageInspectionEnabled": false,
+  "images": null,
+  "imagePackage": null,
+  "drawingAnchors": null
 }

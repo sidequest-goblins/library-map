@@ -1,10 +1,18 @@
 import json
+import posixpath
 import re
+import zipfile
+import xml.etree.ElementTree as ET
+from io import BytesIO
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from openpyxl import load_workbook
+from PIL import Image, ImageFile, UnidentifiedImageError
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 WORKBOOK_PATH = Path("C:/library_app/source/LIBRARY.xlsx")
 OUTPUT_DIR = Path("C:/library_app/library-map/public/data")
@@ -12,10 +20,14 @@ BOOKS_OUTPUT_PATH = OUTPUT_DIR / "library-books.json"
 CATALOG_OUTPUT_PATH = OUTPUT_DIR / "library-catalog.json"
 META_OUTPUT_PATH = OUTPUT_DIR / "library-meta.json"
 CATALOG_REQUIRED_HEADERS = {"first", "last", "title", "jc", "cj"}
+DEBUG_IMAGE_INSPECTION = False
+COVER_OUTPUT_DIR = OUTPUT_DIR / "covers"
+COVER_PUBLIC_PATH = "/data/covers"
+COVER_IMAGE_EXTENSION = "webp"
+COVER_WEBP_QUALITY = 76
 
 def clean(value: Any) -> str:
     return str(value or "").strip()
-
 
 def make_author(first: str, last: str) -> str:
     first = clean(first)
@@ -25,7 +37,6 @@ def make_author(first: str, last: str) -> str:
         return f"{first} {last}"
 
     return first or last
-
 
 def make_author_sort(first: str, last: str) -> str:
     first = clean(first)
@@ -173,7 +184,6 @@ def parse_title(raw_title: str) -> dict[str, str | int | None]:
 def normalize_header(value: Any) -> str:
     return clean(value).lower().replace(" ", "")
 
-
 def find_sheet_with_headers(
     workbook,
     required_headers: set[str],
@@ -207,6 +217,785 @@ def is_catalog_sheet(sheet) -> bool:
     normalized_headers = {normalize_header(header) for header in headers}
 
     return CATALOG_REQUIRED_HEADERS.issubset(normalized_headers)
+
+def get_image_anchor_cell(image) -> tuple[int | None, int | None]:
+    anchor = getattr(image, "anchor", None)
+    marker = getattr(anchor, "_from", None)
+
+    if marker is None:
+        return None, None
+
+    # openpyxl stores these as zero-based indexes.
+    return marker.row + 1, marker.col + 1
+
+def get_image_bytes(image) -> bytes:
+    data = image._data
+
+    if callable(data):
+        return data()
+
+    return data
+
+def guess_image_extension(image, image_bytes: bytes) -> str:
+    image_format = clean(getattr(image, "format", "")).lower()
+
+    if image_format in {"jpeg", "jpg"}:
+        return "jpg"
+
+    if image_format == "png":
+        return "png"
+
+    if image_bytes.startswith(b"\x89PNG"):
+        return "png"
+
+    if image_bytes.startswith(b"\xff\xd8"):
+        return "jpg"
+
+    if image_bytes.startswith(b"GIF8"):
+        return "gif"
+
+    return image_format or "unknown"
+
+def inspect_catalog_images(workbook) -> dict[str, Any]:
+    print("\nInspecting embedded catalog images:")
+
+    report: dict[str, Any] = {
+        "totalImages": 0,
+        "totalImageBytes": 0,
+        "imagesBySheet": {},
+        "formats": {},
+        "missingAnchors": [],
+    }
+
+    formats = Counter()
+
+    for sheet in workbook.worksheets:
+        if not is_catalog_sheet(sheet):
+            continue
+
+        images = list(getattr(sheet, "_images", []))
+        sheet_image_bytes = 0
+        anchored_rows: list[int] = []
+
+        print(f"\n  {sheet.title}: {len(images)} image(s)")
+
+        for image_index, image in enumerate(images, start=1):
+            row_number, col_number = get_image_anchor_cell(image)
+            image_bytes = get_image_bytes(image)
+            image_size = len(image_bytes)
+            extension = guess_image_extension(image, image_bytes)
+
+            formats[extension] += 1
+            sheet_image_bytes += image_size
+            report["totalImages"] += 1
+            report["totalImageBytes"] += image_size
+
+            if row_number is not None:
+                anchored_rows.append(row_number)
+            else:
+                report["missingAnchors"].append(
+                    {
+                        "sheet": sheet.title,
+                        "imageIndex": image_index,
+                    }
+                )
+
+            if image_index <= 8:
+                size_kb = image_size / 1024
+                print(
+                    f"    image {image_index}: "
+                    f"row={row_number}, col={col_number}, "
+                    f"format={extension}, size={size_kb:.1f} KB"
+                )
+
+        if len(images) > 8:
+            print(f"    ... {len(images) - 8} more image(s)")
+
+        duplicate_anchor_rows = sorted(
+            row for row, count in Counter(anchored_rows).items() if count > 1
+        )
+
+        report["imagesBySheet"][sheet.title] = {
+            "imageCount": len(images),
+            "imageBytes": sheet_image_bytes,
+            "firstAnchoredRows": anchored_rows[:12],
+            "duplicateAnchorRows": duplicate_anchor_rows,
+            "missingAnchorCount": len(images) - len(anchored_rows),
+        }
+
+        print(f"    first rows: {anchored_rows[:12]}")
+        if duplicate_anchor_rows:
+            print(f"    duplicate anchor rows: {duplicate_anchor_rows}")
+
+    report["formats"] = dict(sorted(formats.items()))
+
+    total_mb = report["totalImageBytes"] / 1024 / 1024
+    print("\nEmbedded image summary:")
+    print(f"  total images: {report['totalImages']}")
+    print(f"  total embedded image size: {total_mb:.2f} MB")
+    print(f"  formats: {report['formats']}")
+
+    if report["missingAnchors"]:
+        print(f"  missing anchors: {len(report['missingAnchors'])}")
+
+    return report
+
+def inspect_workbook_image_package(workbook_path: Path) -> dict[str, Any]:
+    print("\nInspecting workbook package for stored images:")
+
+    report: dict[str, Any] = {
+        "mediaFileCount": 0,
+        "mediaTotalBytes": 0,
+        "mediaExtensions": {},
+        "drawingFileCount": 0,
+        "cellImageRelatedFiles": [],
+        "externalLinkRelatedFiles": [],
+    }
+
+    with zipfile.ZipFile(workbook_path, "r") as archive:
+        names = archive.namelist()
+
+        media_files = [
+            name for name in names
+            if name.startswith("xl/media/")
+        ]
+
+        drawing_files = [
+            name for name in names
+            if name.startswith("xl/drawings/") and name.endswith(".xml")
+        ]
+
+        cell_image_related_files = [
+            name for name in names
+            if "cellimage" in name.lower()
+            or "richdata" in name.lower()
+            or "richvalue" in name.lower()
+        ]
+
+        external_link_related_files = [
+            name for name in names
+            if "external" in name.lower()
+            or "externalLink" in name
+        ]
+
+        extensions = Counter()
+        total_bytes = 0
+
+        for name in media_files:
+            extension = Path(name).suffix.lower().lstrip(".") or "unknown"
+            extensions[extension] += 1
+            total_bytes += archive.getinfo(name).file_size
+
+        report["mediaFileCount"] = len(media_files)
+        report["mediaTotalBytes"] = total_bytes
+        report["mediaExtensions"] = dict(sorted(extensions.items()))
+        report["drawingFileCount"] = len(drawing_files)
+        report["cellImageRelatedFiles"] = cell_image_related_files
+        report["externalLinkRelatedFiles"] = external_link_related_files
+
+        print(f"  xl/media files: {len(media_files)}")
+        print(f"  xl/media total size: {total_bytes / 1024 / 1024:.2f} MB")
+        print(f"  media extensions: {report['mediaExtensions']}")
+        print(f"  drawing xml files: {len(drawing_files)}")
+
+        if media_files:
+            print("  first media files:")
+            for name in media_files[:12]:
+                size_kb = archive.getinfo(name).file_size / 1024
+                print(f"    {name} ({size_kb:.1f} KB)")
+
+            if len(media_files) > 12:
+                print(f"    ... {len(media_files) - 12} more")
+
+        if cell_image_related_files:
+            print("  possible in-cell image / rich data files:")
+            for name in cell_image_related_files[:20]:
+                print(f"    {name}")
+
+            if len(cell_image_related_files) > 20:
+                print(f"    ... {len(cell_image_related_files) - 20} more")
+
+        if external_link_related_files:
+            print("  possible external-link files:")
+            for name in external_link_related_files[:20]:
+                print(f"    {name}")
+
+            if len(external_link_related_files) > 20:
+                print(f"    ... {len(external_link_related_files) - 20} more")
+
+    return report
+
+def normalize_xlsx_path(base_path: str, target: str) -> str:
+    if target.startswith("/"):
+        return target.lstrip("/")
+
+    base_dir = posixpath.dirname(base_path)
+    return posixpath.normpath(posixpath.join(base_dir, target))
+
+def read_xml(archive: zipfile.ZipFile, path: str):
+    return ET.fromstring(archive.read(path))
+
+def get_relationships(archive: zipfile.ZipFile, source_path: str) -> dict[str, str]:
+    source_dir = posixpath.dirname(source_path)
+    source_name = posixpath.basename(source_path)
+    rels_path = posixpath.join(source_dir, "_rels", f"{source_name}.rels")
+
+    if rels_path not in archive.namelist():
+        return {}
+
+    root = read_xml(archive, rels_path)
+
+    relationships: dict[str, str] = {}
+
+    for rel in root:
+        rel_id = rel.attrib.get("Id")
+        target = rel.attrib.get("Target")
+
+        if not rel_id or not target:
+            continue
+
+        relationships[rel_id] = normalize_xlsx_path(source_path, target)
+
+    return relationships
+
+def get_workbook_sheet_paths(archive: zipfile.ZipFile) -> dict[str, str]:
+    namespace = {
+        "main": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
+        "rel": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
+    }
+
+    workbook_path = "xl/workbook.xml"
+    workbook_root = read_xml(archive, workbook_path)
+    workbook_rels = get_relationships(archive, workbook_path)
+
+    sheet_paths: dict[str, str] = {}
+
+    for sheet in workbook_root.findall(".//main:sheet", namespace):
+        sheet_name = sheet.attrib.get("name")
+        rel_id = sheet.attrib.get(f"{{{namespace['rel']}}}id")
+
+        if not sheet_name or not rel_id:
+            continue
+
+        sheet_path = workbook_rels.get(rel_id)
+
+        if sheet_path:
+            sheet_paths[sheet_name] = sheet_path
+
+    return sheet_paths
+
+def build_catalog_rows_by_sheet(
+    catalog_books: dict[str, dict[str, Any]],
+) -> dict[str, dict[int, dict[str, Any]]]:
+    catalog_rows_by_sheet: dict[str, dict[int, dict[str, Any]]] = {}
+
+    for catalog_book in catalog_books.values():
+        source_sheet = catalog_book.get("sourceSheet")
+        source_row = catalog_book.get("sourceRow")
+
+        if not source_sheet or source_row is None:
+            continue
+
+        catalog_rows_by_sheet.setdefault(str(source_sheet), {})[int(source_row)] = catalog_book
+
+    return catalog_rows_by_sheet
+
+def inspect_drawing_image_anchors(
+    workbook_path: Path,
+    catalog_sheet_names: set[str],
+    catalog_books: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    print("\nInspecting drawing anchors for catalog images:")
+
+    namespace = {
+        "xdr": "http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing",
+        "a": "http://schemas.openxmlformats.org/drawingml/2006/main",
+        "rel": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
+    }
+
+    report: dict[str, Any] = {
+        "totalAnchoredImages": 0,
+        "anchorsBySheet": {},
+        "missingDrawingSheets": [],
+        "missingMediaTargets": [],
+        "catalogRowsWithoutAnchoredImages": [],
+        "anchorRowsWithoutCatalogBooks": [],
+        "duplicateMediaPaths": [],
+    }
+
+    catalog_rows_by_sheet = build_catalog_rows_by_sheet(catalog_books)
+
+    media_usage: dict[str, list[dict[str, Any]]] = {}
+
+    with zipfile.ZipFile(workbook_path, "r") as archive:
+        sheet_paths = get_workbook_sheet_paths(archive)
+
+        for sheet_name in sorted(catalog_sheet_names):
+            sheet_path = sheet_paths.get(sheet_name)
+
+            if not sheet_path:
+                report["missingDrawingSheets"].append(sheet_name)
+                print(f"\n  {sheet_name}: no worksheet path found")
+                continue
+
+            sheet_rels = get_relationships(archive, sheet_path)
+            drawing_paths = [
+                target
+                for target in sheet_rels.values()
+                if target.startswith("xl/drawings/") and target.endswith(".xml")
+            ]
+
+            if not drawing_paths:
+                report["missingDrawingSheets"].append(sheet_name)
+                print(f"\n  {sheet_name}: no drawing file linked")
+                continue
+
+            sheet_anchors: list[dict[str, Any]] = []
+
+            for drawing_path in drawing_paths:
+                drawing_root = read_xml(archive, drawing_path)
+                drawing_rels = get_relationships(archive, drawing_path)
+
+                anchor_nodes = (
+                    drawing_root.findall(".//xdr:twoCellAnchor", namespace)
+                    + drawing_root.findall(".//xdr:oneCellAnchor", namespace)
+                    + drawing_root.findall(".//xdr:absoluteAnchor", namespace)
+                )
+
+                for anchor in anchor_nodes:
+                    from_node = anchor.find("xdr:from", namespace)
+
+                    row_number = None
+                    col_number = None
+
+                    if from_node is not None:
+                        row_node = from_node.find("xdr:row", namespace)
+                        col_node = from_node.find("xdr:col", namespace)
+
+                        if row_node is not None and row_node.text is not None:
+                            row_number = int(row_node.text) + 1
+
+                        if col_node is not None and col_node.text is not None:
+                            col_number = int(col_node.text) + 1
+
+                    blip = anchor.find(".//a:blip", namespace)
+                    rel_id = None
+
+                    if blip is not None:
+                        rel_id = blip.attrib.get(f"{{{namespace['rel']}}}embed")
+
+                    media_path = drawing_rels.get(rel_id or "")
+
+                    if not media_path:
+                        report["missingMediaTargets"].append(
+                            {
+                                "sheet": sheet_name,
+                                "drawing": drawing_path,
+                                "row": row_number,
+                                "col": col_number,
+                                "relId": rel_id,
+                            }
+                        )
+
+                    sheet_anchors.append(
+                        {
+                            "row": row_number,
+                            "col": col_number,
+                            "mediaPath": media_path,
+                            "drawingPath": drawing_path,
+                        }
+                    )
+
+                    if media_path:
+                        media_usage.setdefault(media_path, []).append(
+                            {
+                                "sheet": sheet_name,
+                                "row": row_number,
+                                "col": col_number,
+                            }
+                        )
+
+            sheet_anchors.sort(
+                key=lambda item: (
+                    item["row"] if item["row"] is not None else 999999,
+                    item["col"] if item["col"] is not None else 999999,
+                    item["mediaPath"] or "",
+                )
+            )
+
+            duplicate_rows = sorted(
+                row
+                for row, count in Counter(
+                    item["row"] for item in sheet_anchors if item["row"] is not None
+                ).items()
+                if count > 1
+            )
+
+            anchored_rows = {
+                item["row"]
+                for item in sheet_anchors
+                if item["row"] is not None
+            }
+
+            catalog_rows = catalog_rows_by_sheet.get(sheet_name, {})
+
+            missing_cover_rows = sorted(
+                row_number
+                for row_number in catalog_rows
+                if row_number not in anchored_rows
+            )
+
+            extra_anchor_rows = sorted(
+                row_number
+                for row_number in anchored_rows
+                if row_number not in catalog_rows
+            )
+
+            for row_number in missing_cover_rows:
+                catalog_book = catalog_rows[row_number]
+                report["catalogRowsWithoutAnchoredImages"].append(
+                    {
+                        "sheet": sheet_name,
+                        "row": row_number,
+                        "catalogKey": catalog_book["catalogKey"],
+                        "title": catalog_book["title"],
+                        "author": catalog_book["author"],
+                    }
+                )
+
+            for row_number in extra_anchor_rows:
+                report["anchorRowsWithoutCatalogBooks"].append(
+                    {
+                        "sheet": sheet_name,
+                        "row": row_number,
+                    }
+                )
+
+            report["anchorsBySheet"][sheet_name] = {
+                "anchorCount": len(sheet_anchors),
+                "firstAnchors": sheet_anchors[:12],
+                "duplicateRows": duplicate_rows,
+            }
+
+            report["totalAnchoredImages"] += len(sheet_anchors)
+
+            print(f"\n  {sheet_name}: {len(sheet_anchors)} anchored image(s)")
+
+            for anchor in sheet_anchors[:8]:
+                print(
+                    f"    row={anchor['row']}, col={anchor['col']}, "
+                    f"media={anchor['mediaPath']}"
+                )
+
+            if len(sheet_anchors) > 8:
+                print(f"    ... {len(sheet_anchors) - 8} more")
+
+            if duplicate_rows:
+                print(f"    duplicate rows: {duplicate_rows}")
+    duplicate_media_paths = {
+        media_path: usages
+        for media_path, usages in media_usage.items()
+        if len(usages) > 1
+    }
+
+    for media_path, usages in sorted(duplicate_media_paths.items()):
+        report["duplicateMediaPaths"].append(
+            {
+                "mediaPath": media_path,
+                "usages": usages,
+            }
+        )
+
+    print("\nDrawing anchor summary:")
+    print(f"  total anchored images: {report['totalAnchoredImages']}")
+
+    print(f"  unique anchored media files: {len(media_usage)}")
+
+    if report["duplicateMediaPaths"]:
+        print(f"  duplicate/reused media files: {len(report['duplicateMediaPaths'])}")
+
+        for duplicate in report["duplicateMediaPaths"][:10]:
+            print(f"    {duplicate['mediaPath']}")
+            for usage in duplicate["usages"]:
+                print(
+                    f"      {usage['sheet']} row {usage['row']}, col {usage['col']}"
+                )
+
+        if len(report["duplicateMediaPaths"]) > 10:
+            print(f"    ... {len(report['duplicateMediaPaths']) - 10} more")
+
+    if report["missingDrawingSheets"]:
+        print(f"  sheets without drawings: {report['missingDrawingSheets']}")
+
+    if report["missingMediaTargets"]:
+        print(f"  missing media targets: {len(report['missingMediaTargets'])}")
+
+    return report
+
+def collect_catalog_image_media_paths(
+    workbook_path: Path,
+    catalog_sheet_names: set[str],
+) -> tuple[dict[tuple[str, int], str], dict[str, Any]]:
+    namespace = {
+        "xdr": "http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing",
+        "a": "http://schemas.openxmlformats.org/drawingml/2006/main",
+        "rel": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
+    }
+
+    image_media_by_row: dict[tuple[str, int], str] = {}
+
+    report: dict[str, Any] = {
+        "totalAnchoredImages": 0,
+        "mappedAnchoredImages": 0,
+        "duplicateAnchorRows": [],
+        "missingMediaTargets": [],
+        "sheetsWithoutDrawings": [],
+    }
+
+    with zipfile.ZipFile(workbook_path, "r") as archive:
+        sheet_paths = get_workbook_sheet_paths(archive)
+
+        for sheet_name in sorted(catalog_sheet_names):
+            sheet_path = sheet_paths.get(sheet_name)
+
+            if not sheet_path:
+                report["sheetsWithoutDrawings"].append(sheet_name)
+                continue
+
+            sheet_rels = get_relationships(archive, sheet_path)
+            drawing_paths = [
+                target
+                for target in sheet_rels.values()
+                if target.startswith("xl/drawings/") and target.endswith(".xml")
+            ]
+
+            if not drawing_paths:
+                report["sheetsWithoutDrawings"].append(sheet_name)
+                continue
+
+            for drawing_path in drawing_paths:
+                drawing_root = read_xml(archive, drawing_path)
+                drawing_rels = get_relationships(archive, drawing_path)
+
+                anchor_nodes = (
+                    drawing_root.findall(".//xdr:twoCellAnchor", namespace)
+                    + drawing_root.findall(".//xdr:oneCellAnchor", namespace)
+                    + drawing_root.findall(".//xdr:absoluteAnchor", namespace)
+                )
+
+                for anchor in anchor_nodes:
+                    report["totalAnchoredImages"] += 1
+
+                    from_node = anchor.find("xdr:from", namespace)
+
+                    if from_node is None:
+                        continue
+
+                    row_node = from_node.find("xdr:row", namespace)
+
+                    if row_node is None or row_node.text is None:
+                        continue
+
+                    row_number = int(row_node.text) + 1
+
+                    blip = anchor.find(".//a:blip", namespace)
+                    rel_id = None
+
+                    if blip is not None:
+                        rel_id = blip.attrib.get(f"{{{namespace['rel']}}}embed")
+
+                    media_path = drawing_rels.get(rel_id or "")
+
+                    if not media_path:
+                        report["missingMediaTargets"].append(
+                            {
+                                "sheet": sheet_name,
+                                "row": row_number,
+                                "drawingPath": drawing_path,
+                                "relId": rel_id,
+                            }
+                        )
+                        continue
+
+                    key = (sheet_name, row_number)
+
+                    if key in image_media_by_row:
+                        report["duplicateAnchorRows"].append(
+                            {
+                                "sheet": sheet_name,
+                                "row": row_number,
+                                "firstMediaPath": image_media_by_row[key],
+                                "secondMediaPath": media_path,
+                            }
+                        )
+                        continue
+
+                    image_media_by_row[key] = media_path
+                    report["mappedAnchoredImages"] += 1
+
+    return image_media_by_row, report
+
+def convert_image_bytes_to_webp(image_bytes: bytes, output_path: Path) -> None:
+    with Image.open(BytesIO(image_bytes)) as image:
+        # For GIFs, use the first frame. This should be fine for a cover/placeholder.
+        try:
+            image.seek(0)
+        except EOFError:
+            pass
+
+        has_transparency = (
+            image.mode in {"RGBA", "LA"}
+            or "transparency" in image.info
+        )
+
+        if has_transparency:
+            image = image.convert("RGBA")
+        else:
+            image = image.convert("RGB")
+
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        image.save(
+            output_path,
+            "WEBP",
+            quality=COVER_WEBP_QUALITY,
+            method=6,
+        )
+
+def make_cover_public_path(catalog_key: str) -> str:
+    return f"{COVER_PUBLIC_PATH}/{catalog_key}.{COVER_IMAGE_EXTENSION}"
+
+def extract_catalog_cover_images(
+    workbook_path: Path,
+    catalog_books: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    print("\nExtracting catalog cover images:")
+
+    catalog_sheet_names = {
+        str(book["sourceSheet"])
+        for book in catalog_books.values()
+        if book.get("sourceSheet")
+    }
+
+    image_media_by_row, anchor_report = collect_catalog_image_media_paths(
+        workbook_path,
+        catalog_sheet_names,
+    )
+
+    COVER_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Avoid stale covers hanging around after catalog changes.
+    for old_cover in COVER_OUTPUT_DIR.glob(f"*.{COVER_IMAGE_EXTENSION}"):
+        old_cover.unlink()
+
+    report: dict[str, Any] = {
+        "outputDir": str(COVER_OUTPUT_DIR),
+        "publicPath": COVER_PUBLIC_PATH,
+        "imageExtension": COVER_IMAGE_EXTENSION,
+        "webpQuality": COVER_WEBP_QUALITY,
+        "extractedCount": 0,
+        "missingAnchors": [],
+        "missingMediaFiles": [],
+        "conversionErrors": [],
+        "anchorReport": anchor_report,
+    }
+
+    with zipfile.ZipFile(workbook_path, "r") as archive:
+        archive_names = set(archive.namelist())
+        total_catalog_books = len(catalog_books)
+
+        for index, catalog_book in enumerate(catalog_books.values(), start=1):
+            if index == 1 or index % 50 == 0 or index == total_catalog_books:
+                percent = index / total_catalog_books * 100
+                print(f"  converting covers: {index}/{total_catalog_books} ({percent:.0f}%)")
+
+            source_sheet = catalog_book.get("sourceSheet")
+            source_row = catalog_book.get("sourceRow")
+            catalog_key = catalog_book["catalogKey"]
+
+            if not source_sheet or source_row is None:
+                report["missingAnchors"].append(
+                    {
+                        "catalogKey": catalog_key,
+                        "title": catalog_book["title"],
+                        "author": catalog_book["author"],
+                        "reason": "missing sourceSheet/sourceRow",
+                    }
+                )
+                catalog_book["coverImage"] = None
+                continue
+
+            media_path = image_media_by_row.get((str(source_sheet), int(source_row)))
+
+            if not media_path:
+                report["missingAnchors"].append(
+                    {
+                        "catalogKey": catalog_key,
+                        "title": catalog_book["title"],
+                        "author": catalog_book["author"],
+                        "sourceSheet": source_sheet,
+                        "sourceRow": source_row,
+                    }
+                )
+                catalog_book["coverImage"] = None
+                continue
+
+            if media_path not in archive_names:
+                report["missingMediaFiles"].append(
+                    {
+                        "catalogKey": catalog_key,
+                        "title": catalog_book["title"],
+                        "author": catalog_book["author"],
+                        "sourceSheet": source_sheet,
+                        "sourceRow": source_row,
+                        "mediaPath": media_path,
+                    }
+                )
+                catalog_book["coverImage"] = None
+                continue
+
+            output_path = COVER_OUTPUT_DIR / f"{catalog_key}.{COVER_IMAGE_EXTENSION}"
+
+            try:
+                image_bytes = archive.read(media_path)
+                convert_image_bytes_to_webp(image_bytes, output_path)
+            except (OSError, UnidentifiedImageError, ValueError) as error:
+                report["conversionErrors"].append(
+                    {
+                        "catalogKey": catalog_key,
+                        "title": catalog_book["title"],
+                        "author": catalog_book["author"],
+                        "sourceSheet": source_sheet,
+                        "sourceRow": source_row,
+                        "mediaPath": media_path,
+                        "error": str(error),
+                    }
+                )
+                catalog_book["coverImage"] = None
+                continue
+
+            catalog_book["coverImage"] = make_cover_public_path(catalog_key)
+            report["extractedCount"] += 1
+
+    output_files = list(COVER_OUTPUT_DIR.glob(f"*.{COVER_IMAGE_EXTENSION}"))
+    output_bytes = sum(path.stat().st_size for path in output_files)
+
+    report["outputFileCount"] = len(output_files)
+    report["outputTotalBytes"] = output_bytes
+
+    print(f"  extracted covers: {report['extractedCount']}")
+    print(f"  output files: {report['outputFileCount']}")
+    print(f"  output size: {output_bytes / 1024 / 1024:.2f} MB")
+
+    if report["missingAnchors"]:
+        print(f"  missing anchors: {len(report['missingAnchors'])}")
+
+    if report["missingMediaFiles"]:
+        print(f"  missing media files: {len(report['missingMediaFiles'])}")
+
+    if report["conversionErrors"]:
+        print(f"  conversion errors: {len(report['conversionErrors'])}")
+
+    return report
 
 def make_book_id(index: int, title: str, author_sort: str) -> str:
     slug_source = f"{author_sort}-{title}".lower()
@@ -318,10 +1107,35 @@ def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     print(f"Loading workbook: {WORKBOOK_PATH}")
-    workbook = load_workbook(WORKBOOK_PATH, read_only=True, data_only=True)
-    bookcase_rooms = load_bookcase_rooms(workbook)
+    workbook = load_workbook(WORKBOOK_PATH, data_only=True)
 
+    bookcase_rooms = load_bookcase_rooms(workbook)
     catalog_books, catalog_report = load_catalog_books(workbook)
+
+    cover_extraction_report = extract_catalog_cover_images(
+        WORKBOOK_PATH,
+        catalog_books,
+    )
+
+    if DEBUG_IMAGE_INSPECTION:
+        image_report = inspect_catalog_images(workbook)
+        image_package_report = inspect_workbook_image_package(WORKBOOK_PATH)
+
+        catalog_sheet_names = {
+            sheet.title
+            for sheet in workbook.worksheets
+            if is_catalog_sheet(sheet)
+        }
+
+        drawing_anchor_report = inspect_drawing_image_anchors(
+            WORKBOOK_PATH,
+            catalog_sheet_names,
+            catalog_books,
+        )
+    else:
+        image_report = None
+        image_package_report = None
+        drawing_anchor_report = None
 
     print(f"Found {len(catalog_books)} catalog books")
 
@@ -473,6 +1287,11 @@ def main() -> None:
         "unusedBookcases": unusedBookcases,
         "unmappedBookcases": sorted(unmapped_bookcases),
         "catalog": catalog_report,
+        "coverExtraction": cover_extraction_report,
+        "imageInspectionEnabled": DEBUG_IMAGE_INSPECTION,
+        "images": image_report,
+        "imagePackage": image_package_report,
+        "drawingAnchors": drawing_anchor_report,
     }
 
     BOOKS_OUTPUT_PATH.write_text(
