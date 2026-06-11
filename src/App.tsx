@@ -38,6 +38,26 @@ function publicAssetPath(path: string | null | undefined): string | undefined {
   return `${cleanBase}${cleanPath}`;
 }
 
+const preloadedCoverUrls = new Set<string>();
+
+function preloadCoverImage(path: string | null | undefined) {
+  const src = publicAssetPath(path);
+
+  if (!src) return;
+  if (preloadedCoverUrls.has(src)) return;
+
+  const img = new Image();
+  img.src = src;
+
+  preloadedCoverUrls.add(src);
+}
+
+function preloadBookCovers(booksToPreload: Book[]) {
+  booksToPreload.forEach((book) => {
+    preloadCoverImage(book.coverImage);
+  });
+}
+
 export default function App() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loadStatus, setLoadStatus] = useState<"loading" | "ready" | "error">(
@@ -163,6 +183,14 @@ export default function App() {
     });
   }, [books, selectedBook, selectedBookcase]);
 
+    useEffect(() => {
+      if (activeTab !== "map") return;
+      if (!selectedBook) return;
+      if (mapDetailBooks.length === 0) return;
+
+      preloadBookCovers(mapDetailBooks);
+    }, [activeTab, selectedBook, mapDetailBooks]);
+
   function renderBookDetail(
     backLabel: string,
     onBack: () => void,
@@ -239,7 +267,8 @@ export default function App() {
                   className="bookCoverImage"
                   src={publicAssetPath(selectedBook.coverImage)}
                   alt={`Cover of ${selectedBook.title}`}
-                  loading="lazy"
+                  loading="eager"
+                  decoding="async"
                 />
               ) : (
                 <div className="bookCoverPlaceholder" aria-hidden="true">
