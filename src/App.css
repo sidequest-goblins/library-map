@@ -308,16 +308,36 @@ select {
   gap: 1rem;
 }
 
+.bookCoverFrame {
+  display: inline-grid;
+  place-items: center;
+  align-self: start;
+  width: fit-content;
+  max-width: 240px;
+  border: 1px solid rgba(76, 48, 30, 0.16);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(82, 111, 69, 0.08), rgba(201, 154, 69, 0.1)),
+    rgba(255, 250, 240, 0.72);
+  overflow: hidden;
+}
+
+.bookCoverImage {
+  display: block;
+  width: auto;
+  max-width: 240px;
+  max-height: 340px;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(76, 48, 30, 0.18);
+}
+
 .bookCoverPlaceholder {
   display: grid;
   place-items: center;
+  width: 100%;
   min-height: 220px;
-  border: 1px dashed rgba(76, 48, 30, 0.25);
-  border-radius: 18px;
   color: var(--muted);
-  background:
-    linear-gradient(135deg, rgba(82, 111, 69, 0.1), rgba(201, 154, 69, 0.12)),
-    rgba(255, 250, 240, 0.72);
   text-align: center;
   font-size: 0.9rem;
   font-weight: 700;
@@ -471,6 +491,11 @@ select {
 
   .bookCoverPlaceholder {
     min-height: 320px;
+  }
+
+  .bookCoverImage {
+    max-width: 240px;
+    max-height: 340px;
   }
 
   .detailGrid {

@@ -28,6 +28,16 @@ async function clearAppCache() {
   window.location.reload();
 }
 
+function publicAssetPath(path: string | null | undefined): string | undefined {
+  if (!path) return undefined;
+
+  const base = import.meta.env.BASE_URL;
+  const cleanBase = base.endsWith("/") ? base : `${base}/`;
+  const cleanPath = path.replace(/^\/+/, "");
+
+  return `${cleanBase}${cleanPath}`;
+}
+
 export default function App() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loadStatus, setLoadStatus] = useState<"loading" | "ready" | "error">(
@@ -132,8 +142,19 @@ export default function App() {
 
         <article className="bookDetailCard">
           <div className="bookDetailHero">
-            <div className="bookCoverPlaceholder" aria-hidden="true">
-              <span>Cover coming later</span>
+            <div className="bookCoverFrame">
+              {selectedBook.coverImage ? (
+                <img
+                  className="bookCoverImage"
+                  src={publicAssetPath(selectedBook.coverImage)}
+                  alt={`Cover of ${selectedBook.title}`}
+                  loading="lazy"
+                />
+              ) : (
+                <div className="bookCoverPlaceholder" aria-hidden="true">
+                  <span>Cover coming later</span>
+                </div>
+              )}
             </div>
 
             <div className="bookDetailTitleBlock">
