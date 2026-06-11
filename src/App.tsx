@@ -58,6 +58,42 @@ function preloadBookCovers(booksToPreload: Book[]) {
   });
 }
 
+function sortBooksForDetailShelf(booksToSort: Book[]): Book[] {
+  return [...booksToSort].sort((a, b) => {
+    const aPosition = a.shelfPosition;
+    const bPosition = b.shelfPosition;
+
+    if (aPosition != null && bPosition != null) {
+      return aPosition - bPosition;
+    }
+
+    if (aPosition != null) return -1;
+    if (bPosition != null) return 1;
+
+    const authorSort = a.authorSort.localeCompare(b.authorSort);
+
+    if (authorSort) return authorSort;
+
+    const aSeries = a.series ?? "";
+    const bSeries = b.series ?? "";
+
+    if (aSeries && bSeries && aSeries !== bSeries) {
+      return aSeries.localeCompare(bSeries, undefined, { numeric: true });
+    }
+
+    if (aSeries && bSeries && aSeries === bSeries) {
+      const aSeriesNumber = Number(a.seriesNumber);
+      const bSeriesNumber = Number(b.seriesNumber);
+
+      if (!Number.isNaN(aSeriesNumber) && !Number.isNaN(bSeriesNumber)) {
+        return aSeriesNumber - bSeriesNumber;
+      }
+    }
+
+    return a.title.localeCompare(b.title, undefined, { numeric: true });
+  });
+}
+
 export default function App() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loadStatus, setLoadStatus] = useState<"loading" | "ready" | "error">(
@@ -148,40 +184,71 @@ export default function App() {
         book.row === selectedBook.row
     );
 
-    return [...matchingShelfBooks].sort((a, b) => {
-      const aPosition = a.shelfPosition;
-      const bPosition = b.shelfPosition;
-
-      if (aPosition != null && bPosition != null) {
-        return aPosition - bPosition;
-      }
-
-      if (aPosition != null) return -1;
-      if (bPosition != null) return 1;
-
-      const authorSort = a.authorSort.localeCompare(b.authorSort);
-
-      if (authorSort) return authorSort;
-
-      const aSeries = a.series ?? "";
-      const bSeries = b.series ?? "";
-
-      if (aSeries && bSeries && aSeries !== bSeries) {
-        return aSeries.localeCompare(bSeries, undefined, { numeric: true });
-      }
-
-      if (aSeries && bSeries && aSeries === bSeries) {
-        const aSeriesNumber = Number(a.seriesNumber);
-        const bSeriesNumber = Number(b.seriesNumber);
-
-        if (!Number.isNaN(aSeriesNumber) && !Number.isNaN(bSeriesNumber)) {
-          return aSeriesNumber - bSeriesNumber;
-        }
-      }
-
-      return a.title.localeCompare(b.title, undefined, { numeric: true });
-    });
+    return sortBooksForDetailShelf(matchingShelfBooks);
   }, [books, selectedBook, selectedBookcase]);
+
+  const mapShelfGroups = useMemo(() => {
+    if (!selectedBook || !selectedBookcase) return [];
+
+    const booksForSelectedBookcase = books.filter(
+      (book) =>
+        book.room === selectedBookcase.room &&
+        book.bookcase === selectedBookcase.bookcase
+    );
+
+    const groupedBooks = new Map<string, Book[]>();
+
+    booksForSelectedBookcase.forEach((book) => {
+      const groupKey = `${book.shelf}|${book.row}`;
+
+      if (!groupedBooks.has(groupKey)) {
+        groupedBooks.set(groupKey, []);
+      }
+
+      groupedBooks.get(groupKey)?.push(book);
+    });
+
+    return Array.from(groupedBooks.entries())
+      .sort(([aKey], [bKey]) => {
+        const [aShelf, aRow] = aKey.split("|");
+        const [bShelf, bRow] = bKey.split("|");
+
+        return (
+          aShelf.localeCompare(bShelf, undefined, { numeric: true }) ||
+          aRow.localeCompare(bRow)
+        );
+      })
+      .map(([groupKey, groupBooks]) => {
+        const firstBook = groupBooks[0];
+
+        return {
+          groupKey,
+          shelf: firstBook.shelf,
+          row: firstBook.row,
+          books: sortBooksForDetailShelf(groupBooks),
+        };
+      });
+  }, [books, selectedBook, selectedBookcase]);
+
+  const currentMapShelfIndex = useMemo(() => {
+    if (!selectedBook) return -1;
+
+    return mapShelfGroups.findIndex(
+      (shelfGroup) =>
+        shelfGroup.shelf === selectedBook.shelf &&
+        shelfGroup.row === selectedBook.row
+    );
+  }, [mapShelfGroups, selectedBook]);
+
+  const previousMapShelfBooks =
+    currentMapShelfIndex > 0
+      ? mapShelfGroups[currentMapShelfIndex - 1].books
+      : [];
+
+  const nextMapShelfBooks =
+    currentMapShelfIndex >= 0 && currentMapShelfIndex < mapShelfGroups.length - 1
+      ? mapShelfGroups[currentMapShelfIndex + 1].books
+      : [];  
 
     useEffect(() => {
       if (activeTab !== "map") return;
@@ -194,11 +261,13 @@ export default function App() {
   function renderBookDetail(
     backLabel: string,
     onBack: () => void,
-    detailBooks?: Book[]
+    detailBooks?: Book[],
+    previousShelfBooks?: Book[],
+    nextShelfBooks?: Book[]
   ) {
     if (!selectedBook) return null;
 
-    const currentDetailIndex =
+  const currentDetailIndex =
     detailBooks?.findIndex((book) => book.bookId === selectedBook.bookId) ?? -1;
 
     const previousBook =
@@ -207,11 +276,26 @@ export default function App() {
         : null;
 
     const nextBook =
-      detailBooks && currentDetailIndex >= 0 && currentDetailIndex < detailBooks.length - 1
+      detailBooks &&
+      currentDetailIndex >= 0 &&
+      currentDetailIndex < detailBooks.length - 1
         ? detailBooks[currentDetailIndex + 1]
         : null;
 
-    const showDetailNav = Boolean(detailBooks && detailBooks.length > 1);
+    const previousShelfBook =
+      previousShelfBooks && previousShelfBooks.length > 0
+        ? previousShelfBooks[previousShelfBooks.length - 1]
+        : null;
+
+    const nextShelfBook =
+      nextShelfBooks && nextShelfBooks.length > 0
+        ? nextShelfBooks[0]
+        : null;
+
+    const showDetailNav = Boolean(
+      detailBooks &&
+        (detailBooks.length > 1 || previousShelfBook || nextShelfBook)
+    );
 
     const locationParts = [
       selectedBook.room && selectedBook.room !== selectedBook.bookcase
@@ -238,23 +322,37 @@ export default function App() {
             <button
               type="button"
               className="detailNavButton"
-              onClick={() => previousBook && setSelectedBookId(previousBook.bookId)}
-              disabled={!previousBook}
+              onClick={() => {
+                const targetBook = previousBook ?? previousShelfBook;
+
+                if (targetBook) {
+                  setSelectedBookId(targetBook.bookId);
+                }
+              }}
+              disabled={!previousBook && !previousShelfBook}
             >
-              ← Previous
+              {previousBook ? "← Previous" : "← Previous shelf"}
             </button>
 
             <span className="detailNavCount">
-              Shelf · {currentDetailIndex + 1} of {detailBooks?.length}
+              {selectedBook.shelf}
+              {selectedBook.row !== "Main" ? ` · ${selectedBook.row}` : ""} ·{" "}
+              {currentDetailIndex + 1} of {detailBooks?.length}
             </span>
 
             <button
               type="button"
               className="detailNavButton"
-              onClick={() => nextBook && setSelectedBookId(nextBook.bookId)}
-              disabled={!nextBook}
+              onClick={() => {
+                const targetBook = nextBook ?? nextShelfBook;
+
+                if (targetBook) {
+                  setSelectedBookId(targetBook.bookId);
+                }
+              }}
+              disabled={!nextBook && !nextShelfBook}
             >
-              Next →
+              {nextBook ? "Next →" : "Next shelf →"}
             </button>
           </div>
         ) : null}
@@ -540,7 +638,13 @@ export default function App() {
           </section>
         )
       ) : selectedBook ? (
-        renderBookDetail("Back to map", () => setSelectedBookId(null), mapDetailBooks)
+        renderBookDetail(
+          "Back to map",
+          () => setSelectedBookId(null),
+          mapDetailBooks,
+          previousMapShelfBooks,
+          nextMapShelfBooks
+        )
       ) : selectedBookcase && shelves.length > 0 ? (
         <BookcaseView
           title={selectedBookcase.bookcase}
