@@ -117,8 +117,73 @@ export default function App() {
     [books, selectedBookId]
   );
 
-  function renderBookDetail(backLabel: string, onBack: () => void) {
+  const mapDetailBooks = useMemo(() => {
+    if (!selectedBook || !selectedBookcase) return [];
+
+    const matchingShelfBooks = books.filter(
+      (book) =>
+        book.room === selectedBook.room &&
+        book.bookcase === selectedBook.bookcase &&
+        book.shelf === selectedBook.shelf &&
+        book.row === selectedBook.row
+    );
+
+    return [...matchingShelfBooks].sort((a, b) => {
+      const aPosition = a.shelfPosition;
+      const bPosition = b.shelfPosition;
+
+      if (aPosition != null && bPosition != null) {
+        return aPosition - bPosition;
+      }
+
+      if (aPosition != null) return -1;
+      if (bPosition != null) return 1;
+
+      const authorSort = a.authorSort.localeCompare(b.authorSort);
+
+      if (authorSort) return authorSort;
+
+      const aSeries = a.series ?? "";
+      const bSeries = b.series ?? "";
+
+      if (aSeries && bSeries && aSeries !== bSeries) {
+        return aSeries.localeCompare(bSeries, undefined, { numeric: true });
+      }
+
+      if (aSeries && bSeries && aSeries === bSeries) {
+        const aSeriesNumber = Number(a.seriesNumber);
+        const bSeriesNumber = Number(b.seriesNumber);
+
+        if (!Number.isNaN(aSeriesNumber) && !Number.isNaN(bSeriesNumber)) {
+          return aSeriesNumber - bSeriesNumber;
+        }
+      }
+
+      return a.title.localeCompare(b.title, undefined, { numeric: true });
+    });
+  }, [books, selectedBook, selectedBookcase]);
+
+  function renderBookDetail(
+    backLabel: string,
+    onBack: () => void,
+    detailBooks?: Book[]
+  ) {
     if (!selectedBook) return null;
+
+    const currentDetailIndex =
+    detailBooks?.findIndex((book) => book.bookId === selectedBook.bookId) ?? -1;
+
+    const previousBook =
+      detailBooks && currentDetailIndex > 0
+        ? detailBooks[currentDetailIndex - 1]
+        : null;
+
+    const nextBook =
+      detailBooks && currentDetailIndex >= 0 && currentDetailIndex < detailBooks.length - 1
+        ? detailBooks[currentDetailIndex + 1]
+        : null;
+
+    const showDetailNav = Boolean(detailBooks && detailBooks.length > 1);
 
     const locationParts = [
       selectedBook.room && selectedBook.room !== selectedBook.bookcase
@@ -139,6 +204,32 @@ export default function App() {
         <button type="button" className="backButton" onClick={onBack}>
           ← {backLabel}
         </button>
+
+        {showDetailNav ? (
+          <div className="detailNavControls" aria-label="Book detail navigation">
+            <button
+              type="button"
+              className="detailNavButton"
+              onClick={() => previousBook && setSelectedBookId(previousBook.bookId)}
+              disabled={!previousBook}
+            >
+              ← Previous
+            </button>
+
+            <span className="detailNavCount">
+              Shelf · {currentDetailIndex + 1} of {detailBooks?.length}
+            </span>
+
+            <button
+              type="button"
+              className="detailNavButton"
+              onClick={() => nextBook && setSelectedBookId(nextBook.bookId)}
+              disabled={!nextBook}
+            >
+              Next →
+            </button>
+          </div>
+        ) : null}
 
         <article className="bookDetailCard">
           <div className="bookDetailHero">
@@ -420,7 +511,7 @@ export default function App() {
           </section>
         )
       ) : selectedBook ? (
-        renderBookDetail("Back to map", () => setSelectedBookId(null))
+        renderBookDetail("Back to map", () => setSelectedBookId(null), mapDetailBooks)
       ) : selectedBookcase && shelves.length > 0 ? (
         <BookcaseView
           title={selectedBookcase.bookcase}
