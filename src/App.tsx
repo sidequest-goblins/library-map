@@ -110,48 +110,128 @@ export default function App() {
   function renderBookDetail(backLabel: string, onBack: () => void) {
     if (!selectedBook) return null;
 
+    const locationParts = [
+      selectedBook.room && selectedBook.room !== selectedBook.bookcase
+        ? selectedBook.room
+        : "",
+      selectedBook.bookcase,
+      selectedBook.shelf,
+      selectedBook.row !== "Main" ? selectedBook.row : "",
+    ].filter(Boolean);
+
+    const readBy = [
+      selectedBook.cj ? "CJ" : "",
+      selectedBook.jc ? "JC" : "",
+    ].filter(Boolean);
+
     return (
       <section className="bookDetailPanel">
         <button type="button" className="backButton" onClick={onBack}>
           ← {backLabel}
         </button>
 
-        <div className="bookDetailCard">
-          <div>
-            <p className="detailLabel">Title</p>
-            <h2>{selectedBook.title}</h2>
-          </div>
-
-          <div>
-            <p className="detailLabel">Author</p>
-            <p>{selectedBook.author}</p>
-          </div>
-
-          <div>
-            <p className="detailLabel">Location</p>
-            <p>
-              {selectedBook.bookcase} · {selectedBook.shelf}
-              {selectedBook.row !== "Main" ? ` · ${selectedBook.row}` : ""}
-              {selectedBook.room && selectedBook.room !== selectedBook.bookcase
-                ? ` · ${selectedBook.room}`
-                : ""}
-            </p>
-          </div>
-
-          {selectedBook.genre ? (
-            <div>
-              <p className="detailLabel">Genre</p>
-              <p>{selectedBook.genre}</p>
+        <article className="bookDetailCard">
+          <div className="bookDetailHero">
+            <div className="bookCoverPlaceholder" aria-hidden="true">
+              <span>Cover coming later</span>
             </div>
-          ) : null}
 
-          {selectedBook.publisher ? (
-            <div>
-              <p className="detailLabel">Publisher</p>
-              <p>{selectedBook.publisher}</p>
+            <div className="bookDetailTitleBlock">
+              <p className="eyebrow">Book detail</p>
+              <h2>{selectedBook.title}</h2>
+              <p className="bookDetailAuthor">{selectedBook.author}</p>
+
+              <div className="detailChips" aria-label="Book tags">
+                {selectedBook.format ? (
+                  <span className="detailChip">{selectedBook.format}</span>
+                ) : null}
+
+                {selectedBook.lgbtq ? (
+                  <span className="detailChip">LGBTQ+</span>
+                ) : null}
+
+                {selectedBook.seriesTitle ? (
+                  <span className="detailChip">Series</span>
+                ) : null}
+              </div>
             </div>
-          ) : null}
-        </div>
+          </div>
+
+          <div className="bookDetailSections">
+            <section className="detailSection">
+              <p className="detailLabel">Location</p>
+              <dl className="detailGrid">
+                <div>
+                  <dt>Place</dt>
+                  <dd>{locationParts.join(" · ")}</dd>
+                </div>
+
+                {selectedBook.shelfPosition != null ? (
+                  <div>
+                    <dt>Position</dt>
+                    <dd>{selectedBook.shelfPosition}</dd>
+                  </div>
+                ) : null}
+              </dl>
+            </section>
+
+            <section className="detailSection">
+              <p className="detailLabel">Book details</p>
+              <dl className="detailGrid">
+                {selectedBook.genre ? (
+                  <div>
+                    <dt>Genre</dt>
+                    <dd>{selectedBook.genre}</dd>
+                  </div>
+                ) : null}
+
+                {selectedBook.publisher ? (
+                  <div>
+                    <dt>Publisher</dt>
+                    <dd>{selectedBook.publisher}</dd>
+                  </div>
+                ) : null}
+
+                {selectedBook.format ? (
+                  <div>
+                    <dt>Format</dt>
+                    <dd>{selectedBook.format}</dd>
+                  </div>
+                ) : null}
+
+                {selectedBook.seriesTitle ? (
+                  <div>
+                    <dt>Series</dt>
+                    <dd>
+                      {selectedBook.seriesTitle}
+                      {selectedBook.seriesNumber != null
+                        ? ` #${selectedBook.seriesNumber}`
+                        : ""}
+                    </dd>
+                  </div>
+                ) : null}
+              </dl>
+            </section>
+
+            <section className="detailSection">
+              <p className="detailLabel">Read by</p>
+
+              {readBy.length > 0 ? (
+                <div className="readStatusList">
+                  {selectedBook.cj ? (
+                    <span className="readStatusChip">CJ ✓</span>
+                  ) : null}
+
+                  {selectedBook.jc ? (
+                    <span className="readStatusChip">JC ✓</span>
+                  ) : null}
+                </div>
+              ) : (
+                <p className="detailMuted">Not marked read yet.</p>
+              )}
+            </section>
+          </div>
+        </article>
       </section>
     );
   }

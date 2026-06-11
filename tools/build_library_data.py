@@ -275,6 +275,7 @@ def load_catalog_books(workbook) -> tuple[dict[str, dict[str, Any]], dict[str, A
                 "catalogKey": catalog_key,
                 "title": title,
                 "rawTitle": raw_title,
+                "coverImage": None,
                 "series": parsed_title["series"],
                 "seriesTitle": parsed_title["seriesTitle"],
                 "seriesFormat": parsed_title["seriesFormat"],
@@ -414,6 +415,9 @@ def main() -> None:
         bookcase = get("bookcase")
         room = get_room_for_bookcase(bookcase, bookcase_rooms)
 
+        catalog_key = make_catalog_key(title, author_sort)
+        catalog_match = catalog_books.get(catalog_key)
+
         if bookcase:
             used_bookcases.add(bookcase)
 
@@ -436,6 +440,12 @@ def main() -> None:
             "lastName": last,
             "genre": get("genre"),
             "publisher": get("publisher"),
+            "catalogKey": catalog_key,
+            "format": catalog_match["format"] if catalog_match else "",
+            "jc": catalog_match["jc"] if catalog_match else False,
+            "cj": catalog_match["cj"] if catalog_match else False,
+            "lgbtq": catalog_match["lgbtq"] if catalog_match else False,
+            "coverImage": catalog_match.get("coverImage") if catalog_match else None,
             "room": room,
             "bookcase": bookcase,
             "shelf": shelf,
