@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-06-11T03:34:47.605001+00:00",
+  "generatedAt": "2026-06-13T03:30:44.270651+00:00",
   "sourceWorkbook": "C:\\library_app\\source\\LIBRARY.xlsx",
   "sourceSheet": "List View",
-  "bookCount": 829,
+  "bookCount": 847,
   "skippedBlankRows": 0,
   "headers": [
     "Title",
@@ -37,19 +37,19 @@
   "unusedBookcases": [],
   "unmappedBookcases": [],
   "catalog": {
-    "catalogBookCount": 829,
-    "catalogRowsWithTitles": 829,
+    "catalogBookCount": 847,
+    "catalogRowsWithTitles": 847,
     "processedCatalogSheets": {
-      "A-B": 78,
+      "A-B": 79,
       "C-D": 101,
       "E": 47,
       "F-G": 84,
-      "H-I": 98,
+      "H-I": 103,
       "J-K": 73,
-      "L-M": 77,
-      "N-O": 43,
-      "P-R": 72,
-      "S-T": 76,
+      "L-M": 79,
+      "N-O": 44,
+      "P-R": 73,
+      "S-T": 84,
       "U-Z": 80
     },
     "skippedCatalogSheets": [
@@ -64,19 +64,19 @@
     "publicPath": "/data/covers",
     "imageExtension": "webp",
     "webpQuality": 76,
-    "extractedCount": 829,
+    "extractedCount": 847,
     "missingAnchors": [],
     "missingMediaFiles": [],
     "conversionErrors": [],
     "anchorReport": {
-      "totalAnchoredImages": 829,
-      "mappedAnchoredImages": 829,
+      "totalAnchoredImages": 847,
+      "mappedAnchoredImages": 847,
       "duplicateAnchorRows": [],
       "missingMediaTargets": [],
       "sheetsWithoutDrawings": []
     },
-    "outputFileCount": 829,
-    "outputTotalBytes": 68948518
+    "outputFileCount": 847,
+    "outputTotalBytes": 70265132
   },
   "imageInspectionEnabled": false,
   "images": null,
