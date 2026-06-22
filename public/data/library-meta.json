@@ -1,13 +1,15 @@
 {
-  "generatedAt": "2026-06-13T03:30:44.270651+00:00",
+  "generatedAt": "2026-06-22T04:39:09.930278+00:00",
   "sourceWorkbook": "C:\\library_app\\source\\LIBRARY.xlsx",
   "sourceSheet": "List View",
-  "bookCount": 847,
+  "bookCount": 895,
   "skippedBlankRows": 0,
   "headers": [
+    "LGBTQ+",
     "Title",
     "First",
     "Last",
+    "",
     "Genre",
     "Publisher",
     "Bookcase",
@@ -20,6 +22,7 @@
     "Living Room": "Living Room",
     "Yellow Cart": "Living Room",
     "Star Table": "Living Room",
+    "TV Stand": "Living Room",
     "Rainbow": "Living Room",
     "Hutch": "Bedroom",
     "Bedroom": "Bedroom"
@@ -32,30 +35,32 @@
     "Office",
     "Rainbow",
     "Star Table",
+    "TV Stand",
     "Yellow Cart"
   ],
   "unusedBookcases": [],
   "unmappedBookcases": [],
   "catalog": {
-    "catalogBookCount": 847,
-    "catalogRowsWithTitles": 847,
+    "catalogBookCount": 895,
+    "catalogRowsWithTitles": 895,
     "processedCatalogSheets": {
-      "A-B": 79,
-      "C-D": 101,
-      "E": 47,
-      "F-G": 84,
-      "H-I": 103,
-      "J-K": 73,
-      "L-M": 79,
-      "N-O": 44,
-      "P-R": 73,
-      "S-T": 84,
-      "U-Z": 80
+      "A-B": 84,
+      "C-D": 103,
+      "E": 50,
+      "F-G": 86,
+      "H-I": 108,
+      "J-K": 78,
+      "L-M": 88,
+      "N-O": 46,
+      "P-R": 82,
+      "S-T": 89,
+      "U-Z": 81
     },
     "skippedCatalogSheets": [
       "Bookcases",
       "Total",
-      "List View"
+      "List View",
+      "To Buy"
     ],
     "duplicateCatalogKeys": {}
   },
@@ -64,19 +69,19 @@
     "publicPath": "/data/covers",
     "imageExtension": "webp",
     "webpQuality": 76,
-    "extractedCount": 847,
+    "extractedCount": 895,
     "missingAnchors": [],
     "missingMediaFiles": [],
     "conversionErrors": [],
     "anchorReport": {
-      "totalAnchoredImages": 847,
-      "mappedAnchoredImages": 847,
+      "totalAnchoredImages": 895,
+      "mappedAnchoredImages": 895,
       "duplicateAnchorRows": [],
       "missingMediaTargets": [],
       "sheetsWithoutDrawings": []
     },
-    "outputFileCount": 847,
-    "outputTotalBytes": 70265132
+    "outputFileCount": 895,
+    "outputTotalBytes": 75403712
   },
   "imageInspectionEnabled": false,
   "images": null,

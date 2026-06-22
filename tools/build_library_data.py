@@ -1,3 +1,4 @@
+import hashlib
 import json
 import posixpath
 import re
@@ -25,25 +26,53 @@ COVER_OUTPUT_DIR = OUTPUT_DIR / "covers"
 COVER_PUBLIC_PATH = "/data/covers"
 COVER_IMAGE_EXTENSION = "webp"
 COVER_WEBP_QUALITY = 76
+COVER_CACHE_PATH = OUTPUT_DIR / "library-cover-cache.json"
+COVER_CACHE_VERSION = 1
 
 def clean(value: Any) -> str:
     return str(value or "").strip()
 
+def split_name_parts(value: str) -> list[str]:
+    return [part.strip() for part in clean(value).split(";") if part.strip()]
+
 def make_author(first: str, last: str) -> str:
-    first = clean(first)
-    last = clean(last)
+    first_parts = split_name_parts(first)
+    last_parts = split_name_parts(last)
 
-    if first and last:
-        return f"{first} {last}"
+    if not first_parts and not last_parts:
+        return ""
 
-    return first or last
+    max_count = max(len(first_parts), len(last_parts))
+
+    authors: list[str] = []
+
+    for index in range(max_count):
+        first_part = first_parts[index] if index < len(first_parts) else ""
+        last_part = last_parts[index] if index < len(last_parts) else ""
+
+        if first_part and last_part:
+            authors.append(f"{first_part} {last_part}")
+        else:
+            authors.append(first_part or last_part)
+
+    return "; ".join(authors)
 
 def make_author_sort(first: str, last: str) -> str:
+    first_parts = split_name_parts(first)
+    last_parts = split_name_parts(last)
+
     first = clean(first)
     last = clean(last)
 
-    if first and last:
-        return f"{last}, {first}"
+    # Keep alphabetical sorting based on the first listed last name.
+    if first_parts and last_parts:
+        return f"{last_parts[0]}, {first_parts[0]}"
+
+    if last_parts:
+        return last_parts[0]
+
+    if first_parts:
+        return first_parts[0]
 
     return last or first
 
@@ -864,6 +893,52 @@ def convert_image_bytes_to_webp(image_bytes: bytes, output_path: Path) -> None:
 def make_cover_public_path(catalog_key: str) -> str:
     return f"{COVER_PUBLIC_PATH}/{catalog_key}.{COVER_IMAGE_EXTENSION}"
 
+def make_cover_output_path(catalog_key: str) -> Path:
+    return COVER_OUTPUT_DIR / f"{catalog_key}.{COVER_IMAGE_EXTENSION}"
+
+
+def hash_image_bytes(image_bytes: bytes) -> str:
+    return hashlib.sha256(image_bytes).hexdigest()
+
+
+def load_cover_cache() -> dict[str, Any]:
+    if not COVER_CACHE_PATH.exists():
+        return {
+            "version": COVER_CACHE_VERSION,
+            "covers": {},
+        }
+
+    try:
+        cache = json.loads(COVER_CACHE_PATH.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {
+            "version": COVER_CACHE_VERSION,
+            "covers": {},
+        }
+
+    if cache.get("version") != COVER_CACHE_VERSION:
+        return {
+            "version": COVER_CACHE_VERSION,
+            "covers": {},
+        }
+
+    covers = cache.get("covers")
+
+    if not isinstance(covers, dict):
+        covers = {}
+
+    return {
+        "version": COVER_CACHE_VERSION,
+        "covers": covers,
+    }
+
+
+def write_cover_cache(cache: dict[str, Any]) -> None:
+    COVER_CACHE_PATH.write_text(
+        json.dumps(cache, indent=2, ensure_ascii=False, sort_keys=True),
+        encoding="utf-8",
+    )
+
 def extract_catalog_cover_images(
     workbook_path: Path,
     catalog_books: dict[str, dict[str, Any]],
@@ -883,16 +958,22 @@ def extract_catalog_cover_images(
 
     COVER_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    # Avoid stale covers hanging around after catalog changes.
-    for old_cover in COVER_OUTPUT_DIR.glob(f"*.{COVER_IMAGE_EXTENSION}"):
-        old_cover.unlink()
+    cover_cache = load_cover_cache()
+    cached_covers: dict[str, Any] = cover_cache["covers"]
+    next_cached_covers: dict[str, Any] = {}
+
+    active_cover_filenames: set[str] = set()
 
     report: dict[str, Any] = {
         "outputDir": str(COVER_OUTPUT_DIR),
         "publicPath": COVER_PUBLIC_PATH,
         "imageExtension": COVER_IMAGE_EXTENSION,
         "webpQuality": COVER_WEBP_QUALITY,
+        "cachePath": str(COVER_CACHE_PATH),
         "extractedCount": 0,
+        "convertedCount": 0,
+        "cachedCount": 0,
+        "deletedStaleCount": 0,
         "missingAnchors": [],
         "missingMediaFiles": [],
         "conversionErrors": [],
@@ -906,7 +987,7 @@ def extract_catalog_cover_images(
         for index, catalog_book in enumerate(catalog_books.values(), start=1):
             if index == 1 or index % 50 == 0 or index == total_catalog_books:
                 percent = index / total_catalog_books * 100
-                print(f"  converting covers: {index}/{total_catalog_books} ({percent:.0f}%)")
+                print(f"  checking covers: {index}/{total_catalog_books} ({percent:.0f}%)")
 
             source_sheet = catalog_book.get("sourceSheet")
             source_row = catalog_book.get("sourceRow")
@@ -953,11 +1034,46 @@ def extract_catalog_cover_images(
                 catalog_book["coverImage"] = None
                 continue
 
-            output_path = COVER_OUTPUT_DIR / f"{catalog_key}.{COVER_IMAGE_EXTENSION}"
+            output_path = make_cover_output_path(catalog_key)
+            public_path = make_cover_public_path(catalog_key)
+            active_cover_filenames.add(output_path.name)
 
             try:
                 image_bytes = archive.read(media_path)
-                convert_image_bytes_to_webp(image_bytes, output_path)
+                image_hash = hash_image_bytes(image_bytes)
+
+                previous_cache_entry = cached_covers.get(catalog_key, {})
+
+                can_reuse_cover = (
+                    output_path.exists()
+                    and previous_cache_entry.get("imageHash") == image_hash
+                    and previous_cache_entry.get("imageExtension") == COVER_IMAGE_EXTENSION
+                    and previous_cache_entry.get("webpQuality") == COVER_WEBP_QUALITY
+                )
+
+                if can_reuse_cover:
+                    report["cachedCount"] += 1
+                else:
+                    convert_image_bytes_to_webp(image_bytes, output_path)
+                    report["convertedCount"] += 1
+
+                catalog_book["coverImage"] = public_path
+                report["extractedCount"] += 1
+
+                next_cached_covers[catalog_key] = {
+                    "catalogKey": catalog_key,
+                    "title": catalog_book["title"],
+                    "author": catalog_book["author"],
+                    "sourceSheet": source_sheet,
+                    "sourceRow": source_row,
+                    "mediaPath": media_path,
+                    "imageHash": image_hash,
+                    "imageExtension": COVER_IMAGE_EXTENSION,
+                    "webpQuality": COVER_WEBP_QUALITY,
+                    "outputFilename": output_path.name,
+                    "publicPath": public_path,
+                }
+
             except (OSError, UnidentifiedImageError, ValueError) as error:
                 report["conversionErrors"].append(
                     {
@@ -973,8 +1089,18 @@ def extract_catalog_cover_images(
                 catalog_book["coverImage"] = None
                 continue
 
-            catalog_book["coverImage"] = make_cover_public_path(catalog_key)
-            report["extractedCount"] += 1
+    # Delete stale covers after processing, instead of deleting everything upfront.
+    for old_cover in COVER_OUTPUT_DIR.glob(f"*.{COVER_IMAGE_EXTENSION}"):
+        if old_cover.name not in active_cover_filenames:
+            old_cover.unlink()
+            report["deletedStaleCount"] += 1
+
+    cover_cache = {
+        "version": COVER_CACHE_VERSION,
+        "generatedAt": datetime.now(timezone.utc).isoformat(),
+        "covers": next_cached_covers,
+    }
+    write_cover_cache(cover_cache)
 
     output_files = list(COVER_OUTPUT_DIR.glob(f"*.{COVER_IMAGE_EXTENSION}"))
     output_bytes = sum(path.stat().st_size for path in output_files)
@@ -982,7 +1108,10 @@ def extract_catalog_cover_images(
     report["outputFileCount"] = len(output_files)
     report["outputTotalBytes"] = output_bytes
 
-    print(f"  extracted covers: {report['extractedCount']}")
+    print(f"  covers available: {report['extractedCount']}")
+    print(f"  converted covers: {report['convertedCount']}")
+    print(f"  reused cached covers: {report['cachedCount']}")
+    print(f"  deleted stale covers: {report['deletedStaleCount']}")
     print(f"  output files: {report['outputFileCount']}")
     print(f"  output size: {output_bytes / 1024 / 1024:.2f} MB")
 
