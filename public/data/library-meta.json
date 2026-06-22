@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-22T04:39:09.930278+00:00",
+  "generatedAt": "2026-06-22T05:12:11.709710+00:00",
   "sourceWorkbook": "C:\\library_app\\source\\LIBRARY.xlsx",
   "sourceSheet": "List View",
   "bookCount": 895,
@@ -60,6 +60,7 @@
       "Bookcases",
       "Total",
       "List View",
+      "Dropdowns",
       "To Buy"
     ],
     "duplicateCatalogKeys": {}
@@ -69,7 +70,11 @@
     "publicPath": "/data/covers",
     "imageExtension": "webp",
     "webpQuality": 76,
+    "cachePath": "C:\\library_app\\library-map\\public\\data\\library-cover-cache.json",
     "extractedCount": 895,
+    "convertedCount": 0,
+    "cachedCount": 895,
+    "deletedStaleCount": 0,
     "missingAnchors": [],
     "missingMediaFiles": [],
     "conversionErrors": [],
