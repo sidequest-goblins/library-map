@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-22T05:12:11.709710+00:00",
-  "sourceWorkbook": "C:\\library_app\\source\\LIBRARY.xlsx",
+  "generatedAt": "2026-06-24T21:22:39.012106+00:00",
+  "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "sourceSheet": "List View",
   "bookCount": 895,
   "skippedBlankRows": 0,
@@ -9,12 +9,14 @@
     "Title",
     "First",
     "Last",
-    "",
     "Genre",
+    "Subgenre",
     "Publisher",
     "Bookcase",
     "Shelf",
-    "Position"
+    "Position",
+    "Series Sort",
+    "Volume Sort"
   ],
   "bookcaseRooms": {
     "Office": "Office",
@@ -22,8 +24,8 @@
     "Living Room": "Living Room",
     "Yellow Cart": "Living Room",
     "Star Table": "Living Room",
-    "TV Stand": "Living Room",
     "Rainbow": "Living Room",
+    "TV Stand": "Living Room",
     "Hutch": "Bedroom",
     "Bedroom": "Bedroom"
   },
@@ -44,8 +46,8 @@
     "catalogBookCount": 895,
     "catalogRowsWithTitles": 895,
     "processedCatalogSheets": {
-      "A-B": 84,
-      "C-D": 103,
+      "A-B": 85,
+      "C-D": 102,
       "E": 50,
       "F-G": 86,
       "H-I": 108,
@@ -57,11 +59,10 @@
       "U-Z": 81
     },
     "skippedCatalogSheets": [
-      "Bookcases",
       "Total",
       "List View",
-      "Dropdowns",
-      "To Buy"
+      "To Buy",
+      "Bookcases"
     ],
     "duplicateCatalogKeys": {}
   },
@@ -72,9 +73,9 @@
     "webpQuality": 76,
     "cachePath": "C:\\library_app\\library-map\\public\\data\\library-cover-cache.json",
     "extractedCount": 895,
-    "convertedCount": 0,
-    "cachedCount": 895,
-    "deletedStaleCount": 0,
+    "convertedCount": 52,
+    "cachedCount": 843,
+    "deletedStaleCount": 9,
     "missingAnchors": [],
     "missingMediaFiles": [],
     "conversionErrors": [],
@@ -86,7 +87,7 @@
       "sheetsWithoutDrawings": []
     },
     "outputFileCount": 895,
-    "outputTotalBytes": 75403712
+    "outputTotalBytes": 75420924
   },
   "imageInspectionEnabled": false,
   "images": null,

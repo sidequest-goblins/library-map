@@ -15,7 +15,7 @@ from PIL import Image, ImageFile, UnidentifiedImageError
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-WORKBOOK_PATH = Path("C:/library_app/source/LIBRARY.xlsx")
+WORKBOOK_PATH = Path("C:/Users/cjade/OneDrive/Shared Workbooks/MyLibrary/LIBRARY.xlsx")
 OUTPUT_DIR = Path("C:/library_app/library-map/public/data")
 BOOKS_OUTPUT_PATH = OUTPUT_DIR / "library-books.json"
 CATALOG_OUTPUT_PATH = OUTPUT_DIR / "library-catalog.json"
@@ -142,6 +142,12 @@ def parse_optional_int(value: Any) -> int | None:
         return int(float(text))
     except ValueError:
         return None
+
+SeriesNumber = int | float
+
+def parse_series_number(value: str) -> SeriesNumber:
+    number = float(value)
+    return int(number) if number.is_integer() else number
     
 def parse_shelf(raw_shelf: str) -> tuple[str, str]:
     raw_shelf = clean(raw_shelf)
@@ -156,20 +162,23 @@ def parse_shelf(raw_shelf: str) -> tuple[str, str]:
 
     return shelf, row
 
-def parse_title(raw_title: str) -> dict[str, str | int | None]:
+def parse_title(raw_title: str) -> dict[str, str | SeriesNumber | None]:
     title = clean(raw_title)
 
     # Manga:
     # "Rurouni Kenshin, Vol. 2"
     # "Tokyo Ghoul: re, Vol. 14"
+    # Also supports decimals/ranges like:
+    # "Series, Vol. 0.5"
+    # "Series, Vol. 12.5-14.15"
     volume_match = re.match(
-        r"^(.*?),\s*Vol\.\s*(\d+)(?:\s*\((Light Novel|Manwha|Manhwa|Manga)\))?\s*$",
+        r"^(.*?),\s*Vol\.?\s*(\d+(?:\.\d+)?)(?:\s*-\s*\d+(?:\.\d+)?)?(?:\s*\((Light Novel|Manwha|Manhwa|Manga)\))?\s*$",
         title,
         re.IGNORECASE,
     )
     if volume_match:
         series = volume_match.group(1).strip()
-        series_number = int(volume_match.group(2))
+        series_number = parse_series_number(volume_match.group(2))
         format_label = volume_match.group(3).strip() if volume_match.group(3) else None
 
         series_key = f"{series}|{format_label}" if format_label else series
@@ -185,12 +194,19 @@ def parse_title(raw_title: str) -> dict[str, str | int | None]:
 
     # Regular books:
     # "The Hunger Games (The Hunger Games #1)"
-    # "Catching Fire (The Hunger Games #2)"
-    book_match = re.match(r"^(.*?)\s*\((.*?)\s*#\s*(\d+)\)\s*$", title)
+    # "Queen B (HMRC #0.5)"
+    # "Goblin Crimes (Some Series #12.5-14.15)"
+    #
+    # For ranges, seriesNumber uses the first number.
+    # Example: #12.5-14.15 -> 12.5
+    book_match = re.match(
+        r"^(.*?)\s*\((.*?)\s*#\s*(\d+(?:\.\d+)?)(?:\s*-\s*\d+(?:\.\d+)?)?\)\s*$",
+        title,
+    )
     if book_match:
         clean_title = book_match.group(1).strip()
         series = book_match.group(2).strip()
-        series_number = int(book_match.group(3))
+        series_number = parse_series_number(book_match.group(3))
 
         return {
             "title": clean_title or title,
@@ -1382,6 +1398,7 @@ def main() -> None:
             "firstName": first,
             "lastName": last,
             "genre": get("genre"),
+            "subgenre": get("subgenre"),
             "publisher": get("publisher"),
             "catalogKey": catalog_key,
             "format": catalog_match["format"] if catalog_match else "",
