@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import "./App.css";
 
 import BookcaseView from "./components/BookcaseView";
@@ -10,6 +10,13 @@ import {
 import type { Book } from "./data/libraryTypes";
 
 type AppTab = "search" | "map";
+
+type MapReturnPosition = {
+  windowScrollY: number;
+  shelfScrollerId?: string;
+  shelfScrollLeft?: number;
+};
+
 const SEARCH_PAGE_SIZE = 25;
 
 async function clearAppCache() {
@@ -106,6 +113,43 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
   const [searchPage, setSearchPage] = useState(1);
+  const mapReturnPositionRef = useRef<MapReturnPosition | null>(null);
+
+  function openMapBookDetail(
+    bookId: string,
+    mapPosition?: Pick<MapReturnPosition, "shelfScrollerId" | "shelfScrollLeft">
+  ) {
+    mapReturnPositionRef.current = {
+      windowScrollY: window.scrollY,
+      shelfScrollerId: mapPosition?.shelfScrollerId,
+      shelfScrollLeft: mapPosition?.shelfScrollLeft,
+    };
+
+    setSelectedBookId(bookId);
+  }
+
+  function backToMapFromDetail() {
+    const returnPosition = mapReturnPositionRef.current;
+
+    setSelectedBookId(null);
+
+    window.requestAnimationFrame(() => {
+      if (returnPosition?.shelfScrollerId) {
+        const shelfScroller = document.getElementById(
+          returnPosition.shelfScrollerId
+        );
+
+        if (shelfScroller instanceof HTMLElement) {
+          shelfScroller.scrollLeft = returnPosition.shelfScrollLeft ?? 0;
+        }
+      }
+
+      window.scrollTo({
+        top: returnPosition?.windowScrollY ?? 0,
+        behavior: "auto",
+      });
+    });
+  }
 
   useEffect(() => {
     async function loadBooks() {
@@ -648,7 +692,7 @@ export default function App() {
       ) : selectedBook ? (
         renderBookDetail(
           "Back to map",
-          () => setSelectedBookId(null),
+          backToMapFromDetail,
           mapDetailBooks,
           previousMapShelfBooks,
           nextMapShelfBooks
@@ -725,7 +769,7 @@ export default function App() {
             <BookcaseView
               title={selectedBookcase.bookcase}
               shelves={shelves}
-              onBookSelect={setSelectedBookId}
+              onBookSelect={openMapBookDetail}
             />
           ) : selectedBookcase ? (
             <section className="emptyBookcase">

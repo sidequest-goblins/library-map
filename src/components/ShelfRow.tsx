@@ -12,19 +12,33 @@ export type Spine = {
   background?: string;
 };
 
+export type SpineClickContext = {
+  shelfScrollerId: string;
+  shelfScrollLeft: number;
+};
+
+function safeDomId(value: string): string {
+  return value.replace(/[^a-zA-Z0-9_-]+/g, "-");
+}
+
 export type ShelfRowProps = {
-  shelfLabel?: string;          // e.g. "Top shelf"
+  shelfId?: string;
+  shelfLabel?: string;
   spines: Spine[];
-  heightPx?: number;            // shelf row visual height
-  onSpineClick?: (spine: Spine) => void;
+  heightPx?: number;
+  onSpineClick?: (spine: Spine, context: SpineClickContext) => void;
 };
 
 export default function ShelfRow({
+  shelfId,
   shelfLabel,
   spines,
   onSpineClick,
 }: ShelfRowProps) {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const shelfScrollerId = `shelf-scroller-${safeDomId(
+    shelfId ?? shelfLabel ?? "unknown"
+  )}`;
 
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -83,6 +97,7 @@ export default function ShelfRow({
       <div className="shelfRowInner">
         <div className="spineViewport">
           <div
+            id={shelfScrollerId}
             ref={scrollerRef}
             className="spineScroller"
             aria-label={shelfLabel ? `Shelf spines: ${shelfLabel}` : "Shelf spines"}
@@ -182,7 +197,10 @@ export default function ShelfRow({
                 type="button"
                 onClick={() => {
                   if (drag.current.moved) return; // suppress click after a drag
-                  onSpineClick?.(spine);
+                  onSpineClick?.(spine, {
+                    shelfScrollerId,
+                    shelfScrollLeft: scrollerRef.current?.scrollLeft ?? 0,
+                  });
                 }}
                 title={spine.title}
               >

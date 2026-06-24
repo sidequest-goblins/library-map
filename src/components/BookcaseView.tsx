@@ -1,4 +1,4 @@
-import ShelfRow, { type Spine } from "./ShelfRow";
+import ShelfRow, { type Spine, type SpineClickContext } from "./ShelfRow";
 
 export type BookcaseShelf = {
   id: string;
@@ -13,7 +13,7 @@ export default function BookcaseView({
 }: {
   title?: string;
   shelves: BookcaseShelf[];
-  onBookSelect?: (bookId: string) => void;
+  onBookSelect?: (bookId: string, context: SpineClickContext) => void;
 }) {
   return (
     <section className="bookcaseView">
@@ -26,9 +26,10 @@ export default function BookcaseView({
         {shelves.map((s) => (
           <ShelfRow
             key={s.id}
+            shelfId={s.id}
             shelfLabel={s.label}
             spines={s.spines}
-            onSpineClick={(sp) => onBookSelect?.(sp.id)}
+            onSpineClick={(sp, context) => onBookSelect?.(sp.id, context)}
           />
         ))}
       </div>
