@@ -33,7 +33,8 @@ def clean(value: Any) -> str:
     return str(value or "").strip()
 
 def split_name_parts(value: str) -> list[str]:
-    return [part.strip() for part in clean(value).split(";") if part.strip()]
+    text = str(value or "")
+    return [clean(part) for part in re.split(r"[;\r\n]+", text) if clean(part)]
 
 def make_author(first: str, last: str) -> str:
     first_parts = split_name_parts(first)
@@ -148,6 +149,54 @@ SeriesNumber = int | float
 def parse_series_number(value: str) -> SeriesNumber:
     number = float(value)
     return int(number) if number.is_integer() else number
+
+def parse_optional_series_number(value: Any) -> SeriesNumber | None:
+    text = clean(value)
+
+    if not text:
+        return None
+
+    number_match = re.search(r"\d+(?:\.\d+)?", text)
+
+    if not number_match:
+        return None
+
+    return parse_series_number(number_match.group(0))
+
+def parse_series_cell(value: Any) -> dict[str, str | SeriesNumber | None]:
+    text = clean(value)
+
+    if not text:
+        return {
+            "series": None,
+            "seriesTitle": None,
+            "seriesNumber": None,
+        }
+
+    # Supports List View values like:
+    # "True Colors #1"
+    # "The Black Jewels #1-3"
+    # "The Roots of Chaos #0.1"
+    series_match = re.match(
+        r"^(.*?)\s*#\s*(\d+(?:\.\d+)?)(?:\s*-\s*\d+(?:\.\d+)?)?\s*$",
+        text,
+    )
+
+    if series_match:
+        series_title = series_match.group(1).strip()
+        series_number = parse_series_number(series_match.group(2))
+
+        return {
+            "series": series_title or None,
+            "seriesTitle": series_title or None,
+            "seriesNumber": series_number,
+        }
+
+    return {
+        "series": text,
+        "seriesTitle": text,
+        "seriesNumber": None,
+    }
     
 def parse_shelf(raw_shelf: str) -> tuple[str, str]:
     raw_shelf = clean(raw_shelf)
@@ -777,6 +826,165 @@ def inspect_drawing_image_anchors(
 
     return report
 
+def get_cell_reference_parts(cell_reference: str) -> tuple[int | None, int | None]:
+    match = re.match(r"^([A-Z]+)(\d+)$", cell_reference)
+
+    if not match:
+        return None, None
+
+    column_letters = match.group(1)
+    row_number = int(match.group(2))
+    column_number = 0
+
+    for letter in column_letters:
+        column_number = column_number * 26 + (ord(letter) - ord("A") + 1)
+
+    return row_number, column_number
+
+def collect_catalog_cell_image_media_paths(
+    workbook_path: Path,
+    catalog_sheet_names: set[str],
+) -> tuple[dict[tuple[str, int], str], dict[str, Any]]:
+    namespace = {
+        "main": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
+        "richdata": "http://schemas.microsoft.com/office/spreadsheetml/2017/richdata",
+        "richvaluerel": "http://schemas.microsoft.com/office/spreadsheetml/2022/richvaluerel",
+        "rel": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
+    }
+
+    image_media_by_row: dict[tuple[str, int], str] = {}
+    report: dict[str, Any] = {
+        "totalCellImages": 0,
+        "mappedCellImages": 0,
+        "duplicateCellRows": [],
+        "missingRichDataFiles": [],
+        "missingRichValueIndexes": [],
+        "missingRichRelationshipIndexes": [],
+        "missingMediaTargets": [],
+    }
+
+    rich_value_rel_path = "xl/richData/richValueRel.xml"
+    rich_value_path = "xl/richData/rdrichvalue.xml"
+
+    with zipfile.ZipFile(workbook_path, "r") as archive:
+        archive_names = set(archive.namelist())
+
+        missing_rich_files = [
+            path
+            for path in [rich_value_rel_path, rich_value_path]
+            if path not in archive_names
+        ]
+
+        if missing_rich_files:
+            report["missingRichDataFiles"] = missing_rich_files
+            return image_media_by_row, report
+
+        rich_value_rel_root = read_xml(archive, rich_value_rel_path)
+        rich_rel_ids = [
+            rel.attrib.get(f"{{{namespace['rel']}}}id")
+            for rel in rich_value_rel_root.findall("richvaluerel:rel", namespace)
+        ]
+
+        rich_relationships = get_relationships(archive, rich_value_rel_path)
+
+        rich_value_root = read_xml(archive, rich_value_path)
+        rich_value_media_paths: list[str | None] = []
+
+        for rich_value_index, rich_value in enumerate(
+            rich_value_root.findall("richdata:rv", namespace),
+            start=1,
+        ):
+            value_nodes = rich_value.findall("richdata:v", namespace)
+
+            if not value_nodes or value_nodes[0].text is None:
+                report["missingRichRelationshipIndexes"].append(rich_value_index)
+                rich_value_media_paths.append(None)
+                continue
+
+            rel_index = int(value_nodes[0].text)
+
+            if rel_index >= len(rich_rel_ids):
+                report["missingRichRelationshipIndexes"].append(rich_value_index)
+                rich_value_media_paths.append(None)
+                continue
+
+            rel_id = rich_rel_ids[rel_index]
+            media_path = rich_relationships.get(rel_id or "")
+
+            if not media_path:
+                report["missingMediaTargets"].append(
+                    {
+                        "richValueIndex": rich_value_index,
+                        "relIndex": rel_index,
+                        "relId": rel_id,
+                    }
+                )
+
+            rich_value_media_paths.append(media_path)
+
+        sheet_paths = get_workbook_sheet_paths(archive)
+
+        for sheet_name in sorted(catalog_sheet_names):
+            sheet_path = sheet_paths.get(sheet_name)
+
+            if not sheet_path:
+                continue
+
+            sheet_root = read_xml(archive, sheet_path)
+
+            for cell in sheet_root.findall(".//main:c", namespace):
+                vm_index_text = cell.attrib.get("vm")
+                cell_reference = cell.attrib.get("r")
+
+                if not vm_index_text or not cell_reference:
+                    continue
+
+                row_number, column_number = get_cell_reference_parts(cell_reference)
+
+                # Catalog cover images live in column A. Ignore any future rich-data
+                # cells elsewhere on the sheet so we do not attach the wrong media.
+                if row_number is None or column_number != 1:
+                    continue
+
+                report["totalCellImages"] += 1
+
+                rich_value_index = int(vm_index_text)
+                media_index = rich_value_index - 1
+
+                if media_index < 0 or media_index >= len(rich_value_media_paths):
+                    report["missingRichValueIndexes"].append(
+                        {
+                            "sheet": sheet_name,
+                            "row": row_number,
+                            "cell": cell_reference,
+                            "richValueIndex": rich_value_index,
+                        }
+                    )
+                    continue
+
+                media_path = rich_value_media_paths[media_index]
+
+                if not media_path:
+                    continue
+
+                key = (sheet_name, row_number)
+
+                if key in image_media_by_row:
+                    report["duplicateCellRows"].append(
+                        {
+                            "sheet": sheet_name,
+                            "row": row_number,
+                            "firstMediaPath": image_media_by_row[key],
+                            "secondMediaPath": media_path,
+                        }
+                    )
+                    continue
+
+                image_media_by_row[key] = media_path
+                report["mappedCellImages"] += 1
+
+    return image_media_by_row, report
+
 def collect_catalog_image_media_paths(
     workbook_path: Path,
     catalog_sheet_names: set[str],
@@ -787,14 +995,18 @@ def collect_catalog_image_media_paths(
         "rel": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
     }
 
-    image_media_by_row: dict[tuple[str, int], str] = {}
+    image_media_by_row, cell_image_report = collect_catalog_cell_image_media_paths(
+        workbook_path,
+        catalog_sheet_names,
+    )
 
     report: dict[str, Any] = {
-        "totalAnchoredImages": 0,
-        "mappedAnchoredImages": 0,
+        "totalAnchoredImages": cell_image_report["totalCellImages"],
+        "mappedAnchoredImages": cell_image_report["mappedCellImages"],
         "duplicateAnchorRows": [],
         "missingMediaTargets": [],
         "sheetsWithoutDrawings": [],
+        "cellImageReport": cell_image_report,
     }
 
     with zipfile.ZipFile(workbook_path, "r") as archive:
@@ -1245,6 +1457,61 @@ def load_catalog_books(workbook) -> tuple[dict[str, dict[str, Any]], dict[str, A
 
     return catalog_books, report
 
+def normalize_match_text(value: Any) -> str:
+    text = clean(value).lower()
+    text = (
+        text.replace("’", "'")
+        .replace("‘", "'")
+        .replace("“", '"')
+        .replace("”", '"')
+        .replace("–", "-")
+        .replace("—", "-")
+    )
+    text = re.sub(r"&", " and ", text)
+    text = re.sub(r"[^a-z0-9]+", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+def is_short_title_match(short_title: str, full_title: str) -> bool:
+    short_text = normalize_match_text(short_title)
+    full_text = normalize_match_text(full_title)
+
+    if not short_text or not full_text:
+        return False
+
+    if short_text == full_text:
+        return True
+
+    # Allows List View to use a shorter display title while catalog keeps
+    # full subtitle / packaging text, e.g.
+    # "The Hundred Years' War on Palestine"
+    # -> "The Hundred Years' War on Palestine: A History..."
+    return full_text.startswith(f"{short_text} ")
+
+def find_catalog_match(
+    catalog_books: dict[str, dict[str, Any]],
+    title: str,
+    author_sort: str,
+) -> tuple[dict[str, Any] | None, str]:
+    exact_catalog_key = make_catalog_key(title, author_sort)
+    exact_match = catalog_books.get(exact_catalog_key)
+
+    if exact_match:
+        return exact_match, "exact"
+
+    normalized_author_sort = normalize_match_text(author_sort)
+
+    title_prefix_matches = [
+        catalog_book
+        for catalog_book in catalog_books.values()
+        if normalize_match_text(catalog_book["authorSort"]) == normalized_author_sort
+        and is_short_title_match(title, catalog_book["title"])
+    ]
+
+    if len(title_prefix_matches) == 1:
+        return title_prefix_matches[0], "title-prefix"
+
+    return None, "missing"
+
 def main() -> None:
     if not WORKBOOK_PATH.exists():
         raise FileNotFoundError(f"Could not find workbook: {WORKBOOK_PATH}")
@@ -1347,6 +1614,8 @@ def main() -> None:
     skipped_blank_rows = 0
     unmapped_bookcases = set()
     used_bookcases = set()
+    catalog_match_fallback_rows = []
+    catalog_unmatched_rows = []
 
     for row_number, row in enumerate(rows, start=2):
         row_values = list(row)
@@ -1365,6 +1634,21 @@ def main() -> None:
 
         parsed_title = parse_title(raw_title)
         title = clean(parsed_title["title"])
+        parsed_series_cell = parse_series_cell(get("series"))
+        volume_sort = parse_optional_series_number(get("volumesort"))
+        series_sort = get("seriessort")
+
+        series = parsed_title["series"]
+        series_number = parsed_title["seriesNumber"]
+
+        if parsed_series_cell["series"]:
+            series = parsed_series_cell["series"]
+            series_number = parsed_series_cell["seriesNumber"]
+        elif not series and series_sort and volume_sort is not None:
+            series = series_sort
+            series_number = volume_sort
+        elif series and volume_sort is not None:
+            series_number = volume_sort
 
         first = get("first")
         last = get("last")
@@ -1375,7 +1659,34 @@ def main() -> None:
         room = get_room_for_bookcase(bookcase, bookcase_rooms)
 
         catalog_key = make_catalog_key(title, author_sort)
-        catalog_match = catalog_books.get(catalog_key)
+        catalog_match, catalog_match_type = find_catalog_match(
+            catalog_books,
+            title,
+            author_sort,
+        )
+
+        if catalog_match:
+            catalog_key = catalog_match["catalogKey"]
+
+            if catalog_match_type != "exact":
+                catalog_match_fallback_rows.append(
+                    {
+                        "row": row_number,
+                        "matchType": catalog_match_type,
+                        "listTitle": title,
+                        "catalogTitle": catalog_match["title"],
+                        "author": author,
+                    }
+                )
+        else:
+            catalog_unmatched_rows.append(
+                {
+                    "row": row_number,
+                    "title": title,
+                    "author": author,
+                    "catalogKey": catalog_key,
+                }
+            )
 
         if bookcase:
             used_bookcases.add(bookcase)
@@ -1386,13 +1697,27 @@ def main() -> None:
         raw_shelf = get("shelf")
         shelf, row_name = parse_shelf(raw_shelf)
 
+        lgbtq = (
+            checkbox_to_bool(get("lgbtq+"))
+            if "lgbtq+" in header_indexes
+            else catalog_match["lgbtq"] if catalog_match else False
+        )
+
+        if catalog_match and "lgbtq+" in header_indexes:
+            catalog_match["lgbtq"] = lgbtq
+
         book = {
             "bookId": make_book_id(len(books) + 1, title, author_sort),
             "title": title,
             "rawTitle": raw_title,
+            "catalogTitle": catalog_match["title"] if catalog_match else title,
+            "catalogRawTitle": catalog_match["rawTitle"] if catalog_match else raw_title,
+            "catalogMatchType": catalog_match_type,
             "shelfPosition": parse_optional_int(get("position")),
-            "series": parsed_title["series"],
-            "seriesNumber": parsed_title["seriesNumber"],
+            "series": series,
+            "seriesNumber": series_number,
+            "seriesSort": series_sort,
+            "volumeSort": volume_sort,
             "author": author,
             "authorSort": author_sort,
             "firstName": first,
@@ -1404,7 +1729,7 @@ def main() -> None:
             "format": catalog_match["format"] if catalog_match else "",
             "jc": catalog_match["jc"] if catalog_match else False,
             "cj": catalog_match["cj"] if catalog_match else False,
-            "lgbtq": catalog_match["lgbtq"] if catalog_match else False,
+            "lgbtq": lgbtq,
             "coverImage": catalog_match.get("coverImage") if catalog_match else None,
             "room": room,
             "bookcase": bookcase,
@@ -1432,6 +1757,8 @@ def main() -> None:
         "usedBookcases": sorted(used_bookcases),
         "unusedBookcases": unusedBookcases,
         "unmappedBookcases": sorted(unmapped_bookcases),
+        "catalogMatchFallbackRows": catalog_match_fallback_rows,
+        "catalogUnmatchedRows": catalog_unmatched_rows,
         "catalog": catalog_report,
         "coverExtraction": cover_extraction_report,
         "imageInspectionEnabled": DEBUG_IMAGE_INSPECTION,
@@ -1470,6 +1797,22 @@ def main() -> None:
     print(f"Wrote {len(books)} books to {BOOKS_OUTPUT_PATH}")
     print(f"Wrote {len(catalog_books)} catalog books to {CATALOG_OUTPUT_PATH}")
     print(f"Wrote metadata to {META_OUTPUT_PATH}")
+
+    if catalog_match_fallback_rows:
+        print("\nCatalog title-prefix matches:")
+        for match in catalog_match_fallback_rows:
+            print(
+                f"  - row {match['row']}: "
+                f"{match['listTitle']} -> {match['catalogTitle']}"
+            )
+
+    if catalog_unmatched_rows:
+        print("\nRows without catalog matches:")
+        for unmatched in catalog_unmatched_rows:
+            print(
+                f"  - row {unmatched['row']}: "
+                f"{unmatched['title']} by {unmatched['author']}"
+            )
 
     if skipped_blank_rows:
         print(f"Skipped {skipped_blank_rows} blank rows")

@@ -1,12 +1,13 @@
 {
-  "generatedAt": "2026-06-24T21:22:39.012106+00:00",
+  "generatedAt": "2026-07-03T03:35:21.746410+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "sourceSheet": "List View",
-  "bookCount": 895,
+  "bookCount": 929,
   "skippedBlankRows": 0,
   "headers": [
     "LGBTQ+",
     "Title",
+    "Series",
     "First",
     "Last",
     "Genre",
@@ -42,26 +43,44 @@
   ],
   "unusedBookcases": [],
   "unmappedBookcases": [],
+  "catalogMatchFallbackRows": [
+    {
+      "row": 496,
+      "matchType": "title-prefix",
+      "listTitle": "The Hundred Years' War on Palestine",
+      "catalogTitle": "The Hundred Years' War on Palestine: A History of Settler Colonialism and Resistance, 1917–2017",
+      "author": "Rashid Khalidi"
+    },
+    {
+      "row": 709,
+      "matchType": "title-prefix",
+      "listTitle": "The Book of Bizarre Truths: Big Book of Provocative Questions & Myth-Busting Answers",
+      "catalogTitle": "The Book of Bizarre Truths: Big Book of Provocative Questions & Myth-Busting Answers | Hardcover Gift for Trivia Buffs, Curious Minds, Skeptics & Knowledge Seekers",
+      "author": "Publications International"
+    }
+  ],
+  "catalogUnmatchedRows": [],
   "catalog": {
-    "catalogBookCount": 895,
-    "catalogRowsWithTitles": 895,
+    "catalogBookCount": 929,
+    "catalogRowsWithTitles": 929,
     "processedCatalogSheets": {
-      "A-B": 85,
-      "C-D": 102,
-      "E": 50,
-      "F-G": 86,
-      "H-I": 108,
-      "J-K": 78,
-      "L-M": 88,
-      "N-O": 46,
-      "P-R": 82,
-      "S-T": 89,
-      "U-Z": 81
+      "A-B": 89,
+      "C-D": 111,
+      "E": 51,
+      "F-G": 88,
+      "H-I": 111,
+      "J-K": 82,
+      "L-M": 91,
+      "N-O": 47,
+      "P-R": 84,
+      "S-T": 93,
+      "U-Z": 82
     },
     "skippedCatalogSheets": [
       "Total",
       "List View",
       "To Buy",
+      "Series to Complete",
       "Bookcases"
     ],
     "duplicateCatalogKeys": {}
@@ -72,22 +91,55 @@
     "imageExtension": "webp",
     "webpQuality": 76,
     "cachePath": "C:\\library_app\\library-map\\public\\data\\library-cover-cache.json",
-    "extractedCount": 895,
-    "convertedCount": 52,
-    "cachedCount": 843,
-    "deletedStaleCount": 9,
-    "missingAnchors": [],
+    "extractedCount": 927,
+    "convertedCount": 784,
+    "cachedCount": 143,
+    "deletedStaleCount": 10,
+    "missingAnchors": [
+      {
+        "catalogKey": "esiri-allie-a-poem-for-every-summer-day",
+        "title": "A Poem for Every Summer Day",
+        "author": "Allie Esiri",
+        "sourceSheet": "E",
+        "sourceRow": 18
+      },
+      {
+        "catalogKey": "hawkins-scott-the-library-at-mount-char",
+        "title": "The Library at Mount Char",
+        "author": "Scott Hawkins",
+        "sourceSheet": "H-I",
+        "sourceRow": 26
+      }
+    ],
     "missingMediaFiles": [],
     "conversionErrors": [],
     "anchorReport": {
-      "totalAnchoredImages": 895,
-      "mappedAnchoredImages": 895,
+      "totalAnchoredImages": 927,
+      "mappedAnchoredImages": 927,
       "duplicateAnchorRows": [],
       "missingMediaTargets": [],
-      "sheetsWithoutDrawings": []
+      "sheetsWithoutDrawings": [
+        "A-B",
+        "C-D",
+        "F-G",
+        "J-K",
+        "L-M",
+        "N-O",
+        "S-T",
+        "U-Z"
+      ],
+      "cellImageReport": {
+        "totalCellImages": 885,
+        "mappedCellImages": 885,
+        "duplicateCellRows": [],
+        "missingRichDataFiles": [],
+        "missingRichValueIndexes": [],
+        "missingRichRelationshipIndexes": [],
+        "missingMediaTargets": []
+      }
     },
-    "outputFileCount": 895,
-    "outputTotalBytes": 75420924
+    "outputFileCount": 927,
+    "outputTotalBytes": 68860972
   },
   "imageInspectionEnabled": false,
   "images": null,
