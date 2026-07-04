@@ -160,6 +160,29 @@ function preloadBookCovers(booksToPreload: Book[]) {
   });
 }
 
+function formatSearchSeriesLabel(book: Book): string {
+  const titleAlreadyShowsVolume = /,\s*Vol\.?\s*\d+/i.test(book.title);
+
+  if (titleAlreadyShowsVolume) {
+    return "";
+  }
+
+  const series = book.seriesTitle || book.series;
+
+  if (!series) {
+    return "";
+  }
+
+  const cleanSeries = String(series).split("|")[0];
+  const seriesNumber = book.seriesNumber;
+
+  if (seriesNumber === null || seriesNumber === undefined || seriesNumber === "") {
+    return cleanSeries;
+  }
+
+  return `${cleanSeries} #${seriesNumber}`;
+}
+
 function sortBooksForDetailShelf(booksToSort: Book[]): Book[] {
   return [...booksToSort].sort((a, b) => {
     const aPosition = a.shelfPosition;
@@ -819,17 +842,25 @@ export default function App() {
                 {searchResults.length > 0 ? (
                   <>
                     <div className="searchResultList">
-                      {pagedSearchResults.map((book) => (
-                        <button
-                          key={book.bookId}
-                          type="button"
-                          className="searchResultCard searchResultButton"
-                          onClick={() => setSelectedBookId(book.bookId)}
-                        >
-                          <h3>{book.title}</h3>
-                          <p className="searchResultAuthor">{book.author}</p>
-                        </button>
-                      ))}
+                      {pagedSearchResults.map((book) => {
+                        const searchSeriesLabel = formatSearchSeriesLabel(book);
+
+                        return (
+                          <button
+                            key={book.bookId}
+                            type="button"
+                            className="searchResultCard searchResultButton"
+                            onClick={() => setSelectedBookId(book.bookId)}
+                          >
+                            <h3>{book.title}</h3>
+                            <p className="searchResultAuthor">{book.author}</p>
+
+                            {searchSeriesLabel ? (
+                              <p className="searchResultSeries">{searchSeriesLabel}</p>
+                            ) : null}
+                          </button>
+                        );
+                      })}
                     </div>
 
                     {searchResults.length > SEARCH_PAGE_SIZE ? (
