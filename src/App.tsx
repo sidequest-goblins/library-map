@@ -7,9 +7,9 @@ import {
   getShelvesForBookcase,
   searchBooks,
 } from "./data/librarySelectors";
-import type { Book } from "./data/libraryTypes";
+import type { Book, WantedBook, WantedLists } from "./data/libraryTypes";
 
-type AppTab = "search" | "map";
+type AppTab = "search" | "wanted" | "map";
 
 type MapReturnPosition = {
   windowScrollY: number;
@@ -18,6 +18,64 @@ type MapReturnPosition = {
 };
 
 const SEARCH_PAGE_SIZE = 25;
+
+const EMPTY_WANTED_LISTS: WantedLists = {
+  toBuy: [],
+  seriesToComplete: [],
+};
+
+function normalizeInlineSearchText(value: unknown): string {
+  return String(value ?? "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .trim();
+}
+
+function getWantedSearchText(item: WantedBook): string {
+  return normalizeInlineSearchText([
+    item.title,
+    item.rawTitle,
+    item.author,
+    item.authorSort,
+    item.series,
+    item.seriesTitle,
+    item.seriesNumber,
+  ].join(" "));
+}
+
+function filterWantedItems(items: WantedBook[], query: string): WantedBook[] {
+  const normalizedQuery = normalizeInlineSearchText(query);
+
+  if (!normalizedQuery) return items;
+
+  const queryWords = normalizedQuery.split(/\s+/).filter(Boolean);
+
+  return items.filter((item) => {
+    const searchableText = getWantedSearchText(item);
+
+    return queryWords.every((word) => searchableText.includes(word));
+  });
+}
+
+async function loadWantedLists(): Promise<WantedLists> {
+  const response = await fetch(`${import.meta.env.BASE_URL}data/library-wanted.json`);
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      return EMPTY_WANTED_LISTS;
+    }
+
+    throw new Error(`Failed to load wanted lists: ${response.status}`);
+  }
+
+  const parsed = (await response.json()) as Partial<WantedLists>;
+
+  return {
+    toBuy: parsed.toBuy ?? [],
+    seriesToComplete: parsed.seriesToComplete ?? [],
+  };
+}
 
 async function clearAppCache() {
   if ("caches" in window) {
@@ -103,6 +161,7 @@ function sortBooksForDetailShelf(booksToSort: Book[]): Book[] {
 
 export default function App() {
   const [books, setBooks] = useState<Book[]>([]);
+  const [wantedLists, setWantedLists] = useState<WantedLists>(EMPTY_WANTED_LISTS);
   const [loadStatus, setLoadStatus] = useState<"loading" | "ready" | "error">(
     "loading"
   );
@@ -111,6 +170,7 @@ export default function App() {
   const [selectedRoom, setSelectedRoom] = useState("");
   const [activeTab, setActiveTab] = useState<AppTab>("search");
   const [searchQuery, setSearchQuery] = useState("");
+  const [wantedQuery, setWantedQuery] = useState("");
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
   const [searchPage, setSearchPage] = useState(1);
   const mapReturnPositionRef = useRef<MapReturnPosition | null>(null);
@@ -154,15 +214,19 @@ export default function App() {
   useEffect(() => {
     async function loadBooks() {
       try {
-        const response = await fetch(`${import.meta.env.BASE_URL}data/library-books.json`);
+        const [booksResponse, loadedWantedLists] = await Promise.all([
+          fetch(`${import.meta.env.BASE_URL}data/library-books.json`),
+          loadWantedLists(),
+        ]);
 
-        if (!response.ok) {
-          throw new Error(`Failed to load library data: ${response.status}`);
+        if (!booksResponse.ok) {
+          throw new Error(`Failed to load library data: ${booksResponse.status}`);
         }
 
-        const loadedBooks = (await response.json()) as Book[];
+        const loadedBooks = (await booksResponse.json()) as Book[];
 
         setBooks(loadedBooks);
+        setWantedLists(loadedWantedLists);
         setLoadStatus("ready");
       } catch (error) {
         setLoadStatus("error");
@@ -226,6 +290,19 @@ export default function App() {
     () => searchBooks(books, searchQuery),
     [books, searchQuery]
   );
+
+  const filteredToBuy = useMemo(
+    () => filterWantedItems(wantedLists.toBuy, wantedQuery),
+    [wantedLists.toBuy, wantedQuery]
+  );
+
+  const filteredSeriesToComplete = useMemo(
+    () => filterWantedItems(wantedLists.seriesToComplete, wantedQuery),
+    [wantedLists.seriesToComplete, wantedQuery]
+  );
+
+  const wantedTotal = wantedLists.toBuy.length + wantedLists.seriesToComplete.length;
+  const filteredWantedTotal = filteredToBuy.length + filteredSeriesToComplete.length;
 
   const totalSearchPages = Math.max(
     1,
@@ -545,23 +622,67 @@ export default function App() {
       </section>
     );
   }
+  function renderWantedSection(
+    title: string,
+    items: WantedBook[],
+    emptyText: string
+  ) {
+    return (
+      <section className="wantedSection">
+        <div className="wantedSectionHeader">
+          <h2>{title}</h2>
+          <p>
+            {items.length === 1 ? "1 book" : `${items.length} books`}
+          </p>
+        </div>
+
+        {items.length > 0 ? (
+          <div className="wantedList">
+            {items.map((item) => (
+              <article key={item.wantedId} className="wantedCard">
+                <div>
+                  <h3>{item.title}</h3>
+                  <p className="wantedAuthor">
+                    {item.author || "Unknown author"}
+                  </p>
+                </div>
+
+                {item.series ? (
+                  <p className="wantedSeries">{item.series}</p>
+                ) : null}
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p className="emptySearch">{emptyText}</p>
+        )}
+      </section>
+    );
+  }
+
+  const headerTitle =
+    activeTab === "map" && selectedBookcase
+      ? selectedBookcase.bookcase
+      : activeTab === "wanted"
+        ? "Wanted"
+        : "Search";
+
+  const headerMeta =
+    activeTab === "map" && selectedBookcase
+      ? selectedBookcase.hasRisers
+        ? `${selectedBookcase.bookcase} · Risers`
+        : selectedBookcase.room
+      : activeTab === "wanted"
+        ? `${wantedTotal} wanted ${wantedTotal === 1 ? "book" : "books"}`
+        : `${books.length} books loaded`;
+
   return (
     <main className="appShell">
       <header className="appHeader">
         <div>
           <p className="eyebrow">Library Map</p>
-          <h1>
-            {activeTab === "map" && selectedBookcase
-              ? selectedBookcase.bookcase
-              : "Search"}
-          </h1>
-          <p className="bookcaseMeta">
-            {activeTab === "map" && selectedBookcase
-              ? selectedBookcase.hasRisers
-                  ? `${selectedBookcase.bookcase} · Risers`
-                  : selectedBookcase.room
-              : `${books.length} books loaded`}
-          </p>
+          <h1>{headerTitle}</h1>
+          <p className="bookcaseMeta">{headerMeta}</p>
         </div>
 
         <nav className="appTabs" aria-label="Library views">
@@ -570,9 +691,21 @@ export default function App() {
             className={activeTab === "search" ? "appTab active" : "appTab"}
             onClick={() => {
               setActiveTab("search");
+              setSelectedBookId(null);
             }}
           >
             Search
+          </button>
+
+          <button
+            type="button"
+            className={activeTab === "wanted" ? "appTab active" : "appTab"}
+            onClick={() => {
+              setActiveTab("wanted");
+              setSelectedBookId(null);
+            }}
+          >
+            Wanted
           </button>
 
           <button
@@ -689,6 +822,48 @@ export default function App() {
             )}
           </section>
         )
+      ) : activeTab === "wanted" ? (
+        <section className="wantedPanel">
+          <section className="wantedIntro">
+            <p className="eyebrow">Bookstore lists</p>
+            <h2>Wanted books</h2>
+            <p>
+              Books we definitely want, plus missing volumes from series we have
+              already started collecting.
+            </p>
+          </section>
+
+          <label className="librarySearch wantedSearch">
+            <span>Search wanted books</span>
+            <input
+              type="search"
+              value={wantedQuery}
+              onChange={(event) => setWantedQuery(event.target.value)}
+              placeholder="Title, author, or series..."
+            />
+          </label>
+
+          <div className="wantedSummary">
+            <span>{wantedTotal} total</span>
+            {wantedQuery.trim() ? <span>{filteredWantedTotal} matching</span> : null}
+          </div>
+
+          {renderWantedSection(
+            "To Buy",
+            filteredToBuy,
+            wantedQuery.trim()
+              ? "No to-buy books match that search."
+              : "No to-buy books added yet."
+          )}
+
+          {renderWantedSection(
+            "Series to Complete",
+            filteredSeriesToComplete,
+            wantedQuery.trim()
+              ? "No missing-series books match that search."
+              : "No missing-series books added yet."
+          )}
+        </section>
       ) : selectedBook ? (
         renderBookDetail(
           "Back to map",

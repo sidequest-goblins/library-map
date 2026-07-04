@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-03T03:35:21.746410+00:00",
+  "generatedAt": "2026-07-04T02:06:06.676710+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "sourceSheet": "List View",
-  "bookCount": 929,
+  "bookCount": 953,
   "skippedBlankRows": 0,
   "headers": [
     "LGBTQ+",
@@ -45,14 +45,14 @@
   "unmappedBookcases": [],
   "catalogMatchFallbackRows": [
     {
-      "row": 496,
+      "row": 511,
       "matchType": "title-prefix",
       "listTitle": "The Hundred Years' War on Palestine",
       "catalogTitle": "The Hundred Years' War on Palestine: A History of Settler Colonialism and Resistance, 1917–2017",
       "author": "Rashid Khalidi"
     },
     {
-      "row": 709,
+      "row": 728,
       "matchType": "title-prefix",
       "listTitle": "The Book of Bizarre Truths: Big Book of Provocative Questions & Myth-Busting Answers",
       "catalogTitle": "The Book of Bizarre Truths: Big Book of Provocative Questions & Myth-Busting Answers | Hardcover Gift for Trivia Buffs, Curious Minds, Skeptics & Knowledge Seekers",
@@ -61,20 +61,20 @@
   ],
   "catalogUnmatchedRows": [],
   "catalog": {
-    "catalogBookCount": 929,
-    "catalogRowsWithTitles": 929,
+    "catalogBookCount": 953,
+    "catalogRowsWithTitles": 953,
     "processedCatalogSheets": {
-      "A-B": 89,
-      "C-D": 111,
+      "A-B": 95,
+      "C-D": 113,
       "E": 51,
-      "F-G": 88,
-      "H-I": 111,
-      "J-K": 82,
-      "L-M": 91,
+      "F-G": 91,
+      "H-I": 114,
+      "J-K": 83,
+      "L-M": 95,
       "N-O": 47,
       "P-R": 84,
-      "S-T": 93,
-      "U-Z": 82
+      "S-T": 96,
+      "U-Z": 84
     },
     "skippedCatalogSheets": [
       "Total",
@@ -85,37 +85,50 @@
     ],
     "duplicateCatalogKeys": {}
   },
+  "wanted": {
+    "toBuy": {
+      "sheetName": "To Buy",
+      "found": true,
+      "headers": [
+        "Title",
+        "First",
+        "Last"
+      ],
+      "headerMode": "headers",
+      "rowCount": 50,
+      "skippedBlankRows": 0
+    },
+    "seriesToComplete": {
+      "sheetName": "Series to Complete",
+      "found": true,
+      "headers": [
+        "Title",
+        "Series",
+        "First",
+        "Last"
+      ],
+      "headerMode": "headers",
+      "rowCount": 244,
+      "skippedBlankRows": 0
+    },
+    "totalWantedCount": 294
+  },
   "coverExtraction": {
     "outputDir": "C:\\library_app\\library-map\\public\\data\\covers",
     "publicPath": "/data/covers",
     "imageExtension": "webp",
     "webpQuality": 76,
     "cachePath": "C:\\library_app\\library-map\\public\\data\\library-cover-cache.json",
-    "extractedCount": 927,
-    "convertedCount": 784,
-    "cachedCount": 143,
-    "deletedStaleCount": 10,
-    "missingAnchors": [
-      {
-        "catalogKey": "esiri-allie-a-poem-for-every-summer-day",
-        "title": "A Poem for Every Summer Day",
-        "author": "Allie Esiri",
-        "sourceSheet": "E",
-        "sourceRow": 18
-      },
-      {
-        "catalogKey": "hawkins-scott-the-library-at-mount-char",
-        "title": "The Library at Mount Char",
-        "author": "Scott Hawkins",
-        "sourceSheet": "H-I",
-        "sourceRow": 26
-      }
-    ],
+    "extractedCount": 953,
+    "convertedCount": 0,
+    "cachedCount": 953,
+    "deletedStaleCount": 0,
+    "missingAnchors": [],
     "missingMediaFiles": [],
     "conversionErrors": [],
     "anchorReport": {
-      "totalAnchoredImages": 927,
-      "mappedAnchoredImages": 927,
+      "totalAnchoredImages": 953,
+      "mappedAnchoredImages": 953,
       "duplicateAnchorRows": [],
       "missingMediaTargets": [],
       "sheetsWithoutDrawings": [
@@ -129,8 +142,8 @@
         "U-Z"
       ],
       "cellImageReport": {
-        "totalCellImages": 885,
-        "mappedCellImages": 885,
+        "totalCellImages": 911,
+        "mappedCellImages": 911,
         "duplicateCellRows": [],
         "missingRichDataFiles": [],
         "missingRichValueIndexes": [],
@@ -138,8 +151,8 @@
         "missingMediaTargets": []
       }
     },
-    "outputFileCount": 927,
-    "outputTotalBytes": 68860972
+    "outputFileCount": 953,
+    "outputTotalBytes": 72460226
   },
   "imageInspectionEnabled": false,
   "images": null,

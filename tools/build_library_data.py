@@ -19,6 +19,7 @@ WORKBOOK_PATH = Path("C:/Users/cjade/OneDrive/Shared Workbooks/MyLibrary/LIBRARY
 OUTPUT_DIR = Path("C:/library_app/library-map/public/data")
 BOOKS_OUTPUT_PATH = OUTPUT_DIR / "library-books.json"
 CATALOG_OUTPUT_PATH = OUTPUT_DIR / "library-catalog.json"
+WANTED_OUTPUT_PATH = OUTPUT_DIR / "library-wanted.json"
 META_OUTPUT_PATH = OUTPUT_DIR / "library-meta.json"
 CATALOG_REQUIRED_HEADERS = {"first", "last", "title", "jc", "cj"}
 DEBUG_IMAGE_INSPECTION = False
@@ -277,6 +278,27 @@ def parse_title(raw_title: str) -> dict[str, str | SeriesNumber | None]:
 
 def normalize_header(value: Any) -> str:
     return clean(value).lower().replace(" ", "")
+
+def get_header_index(header_indexes: dict[str, int], *headers: str) -> int | None:
+    for header in headers:
+        index = header_indexes.get(normalize_header(header))
+
+        if index is not None:
+            return index
+
+    return None
+
+def get_value_by_header_alias(
+    row_values: list[Any],
+    header_indexes: dict[str, int],
+    *headers: str,
+) -> Any:
+    index = get_header_index(header_indexes, *headers)
+
+    if index is None or index >= len(row_values):
+        return ""
+
+    return row_values[index]
 
 def find_sheet_with_headers(
     workbook,
@@ -1409,6 +1431,18 @@ def load_catalog_books(workbook) -> tuple[dict[str, dict[str, Any]], dict[str, A
 
             parsed_title = parse_title(raw_title)
             title = clean(parsed_title["title"])
+            parsed_series_cell = parse_series_cell(get(row_values, "series"))
+
+            series = parsed_title["series"]
+            series_title = parsed_title["seriesTitle"]
+            series_format = parsed_title["seriesFormat"]
+            series_number = parsed_title["seriesNumber"]
+
+            if parsed_series_cell["series"]:
+                series = parsed_series_cell["series"]
+                series_title = parsed_series_cell["seriesTitle"]
+                series_format = None
+                series_number = parsed_series_cell["seriesNumber"]
 
             first = clean(get(row_values, "first"))
             last = clean(get(row_values, "last"))
@@ -1422,10 +1456,10 @@ def load_catalog_books(workbook) -> tuple[dict[str, dict[str, Any]], dict[str, A
                 "title": title,
                 "rawTitle": raw_title,
                 "coverImage": None,
-                "series": parsed_title["series"],
-                "seriesTitle": parsed_title["seriesTitle"],
-                "seriesFormat": parsed_title["seriesFormat"],
-                "seriesNumber": parsed_title["seriesNumber"],
+                "series": series,
+                "seriesTitle": series_title,
+                "seriesFormat": series_format,
+                "seriesNumber": series_number,
                 "author": author,
                 "authorSort": author_sort,
                 "firstName": first,
@@ -1456,6 +1490,185 @@ def load_catalog_books(workbook) -> tuple[dict[str, dict[str, Any]], dict[str, A
     }
 
     return catalog_books, report
+
+def make_wanted_id(index: int, list_type: str, title: str, author_sort: str, series: str | None) -> str:
+    slug_source = f"{list_type}-{author_sort}-{series or ''}-{title}".lower()
+    slug = re.sub(r"[^a-z0-9]+", "-", slug_source).strip("-")
+    slug = slug[:70].strip("-")
+
+    return f"wanted-{list_type}-{index:04d}-{slug or 'untitled'}"
+
+def load_wanted_sheet(
+    workbook,
+    sheet_name: str,
+    list_type: str,
+    series_headers: tuple[str, ...] = (),
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    if sheet_name not in workbook.sheetnames:
+        return [], {
+            "sheetName": sheet_name,
+            "found": False,
+            "headers": [],
+            "rowCount": 0,
+            "skippedBlankRows": 0,
+        }
+
+    sheet = workbook[sheet_name]
+    rows = sheet.iter_rows(values_only=True)
+
+    try:
+        first_row = next(rows)
+    except StopIteration:
+        return [], {
+            "sheetName": sheet_name,
+            "found": True,
+            "headers": [],
+            "headerMode": "empty",
+            "rowCount": 0,
+            "skippedBlankRows": 0,
+        }
+
+    headers = [clean(value) for value in first_row]
+    header_indexes = {
+        normalize_header(header): index
+        for index, header in enumerate(headers)
+    }
+    header_mode = "headers"
+    row_iterator = list(enumerate(rows, start=2))
+
+    # The bookstore sheets started life as quick headerless notes. Prefer headers
+    # when present, but keep the fallback so an older workbook copy does not
+    # make the whole build explode.
+    if get_header_index(header_indexes, "title", "booktitle") is None:
+        if series_headers:
+            headers = ["Title", "Series", "First", "Last"]
+        else:
+            headers = ["Title", "First", "Last"]
+
+        header_indexes = {
+            normalize_header(header): index
+            for index, header in enumerate(headers)
+        }
+        header_mode = "fallback-default"
+        row_iterator = [(1, first_row)] + row_iterator
+
+    wanted_books: list[dict[str, Any]] = []
+    skipped_blank_rows = 0
+
+    for row_number, row in row_iterator:
+        row_values = list(row)
+
+        raw_title = clean(
+            get_value_by_header_alias(row_values, header_indexes, "title", "booktitle")
+        )
+
+        if not raw_title:
+            skipped_blank_rows += 1
+            continue
+
+        first = clean(
+            get_value_by_header_alias(
+                row_values,
+                header_indexes,
+                "first",
+                "firstname",
+                "authorfirst",
+                "authorfirstname",
+                "author first",
+                "author first name",
+            )
+        )
+        last = clean(
+            get_value_by_header_alias(
+                row_values,
+                header_indexes,
+                "last",
+                "lastname",
+                "authorlast",
+                "authorlastname",
+                "author last",
+                "author last name",
+            )
+        )
+
+        author = make_author(first, last)
+        author_sort = make_author_sort(first, last)
+        parsed_title = parse_title(raw_title)
+        title = clean(parsed_title["title"])
+
+        raw_series = clean(
+            get_value_by_header_alias(row_values, header_indexes, *series_headers)
+        ) if series_headers else ""
+        parsed_series_cell = parse_series_cell(raw_series)
+        series = parsed_series_cell["series"]
+        series_title = parsed_series_cell["seriesTitle"]
+        series_number = parsed_series_cell["seriesNumber"]
+
+        wanted_books.append(
+            {
+                "wantedId": make_wanted_id(
+                    len(wanted_books) + 1,
+                    list_type,
+                    title,
+                    author_sort,
+                    series if isinstance(series, str) else None,
+                ),
+                "listType": list_type,
+                "title": title,
+                "rawTitle": raw_title,
+                "series": series,
+                "seriesTitle": series_title,
+                "seriesNumber": series_number,
+                "author": author,
+                "authorSort": author_sort,
+                "firstName": first,
+                "lastName": last,
+                "sourceSheet": sheet_name,
+                "sourceRow": row_number,
+            }
+        )
+
+    report = {
+        "sheetName": sheet_name,
+        "found": True,
+        "headers": headers,
+        "headerMode": header_mode,
+        "rowCount": len(wanted_books),
+        "skippedBlankRows": skipped_blank_rows,
+    }
+
+    return wanted_books, report
+
+def load_wanted_lists(workbook) -> tuple[dict[str, list[dict[str, Any]]], dict[str, Any]]:
+    to_buy, to_buy_report = load_wanted_sheet(
+        workbook,
+        sheet_name="To Buy",
+        list_type="to-buy",
+    )
+    series_to_complete, series_to_complete_report = load_wanted_sheet(
+        workbook,
+        sheet_name="Series to Complete",
+        list_type="series-to-complete",
+        series_headers=(
+            "series",
+            "series name",
+            "series name and number",
+            "series name and number in the series",
+        ),
+    )
+
+    wanted_lists = {
+        "toBuy": to_buy,
+        "seriesToComplete": series_to_complete,
+    }
+
+    report = {
+        "toBuy": to_buy_report,
+        "seriesToComplete": series_to_complete_report,
+        "totalWantedCount": len(to_buy) + len(series_to_complete),
+    }
+
+    return wanted_lists, report
 
 def normalize_match_text(value: Any) -> str:
     text = clean(value).lower()
@@ -1523,6 +1736,7 @@ def main() -> None:
 
     bookcase_rooms = load_bookcase_rooms(workbook)
     catalog_books, catalog_report = load_catalog_books(workbook)
+    wanted_lists, wanted_report = load_wanted_lists(workbook)
 
     cover_extraction_report = extract_catalog_cover_images(
         WORKBOOK_PATH,
@@ -1635,20 +1849,17 @@ def main() -> None:
         parsed_title = parse_title(raw_title)
         title = clean(parsed_title["title"])
         parsed_series_cell = parse_series_cell(get("series"))
-        volume_sort = parse_optional_series_number(get("volumesort"))
-        series_sort = get("seriessort")
 
         series = parsed_title["series"]
+        series_title = parsed_title["seriesTitle"]
+        series_format = parsed_title["seriesFormat"]
         series_number = parsed_title["seriesNumber"]
 
         if parsed_series_cell["series"]:
             series = parsed_series_cell["series"]
+            series_title = parsed_series_cell["seriesTitle"]
+            series_format = None
             series_number = parsed_series_cell["seriesNumber"]
-        elif not series and series_sort and volume_sort is not None:
-            series = series_sort
-            series_number = volume_sort
-        elif series and volume_sort is not None:
-            series_number = volume_sort
 
         first = get("first")
         last = get("last")
@@ -1715,9 +1926,9 @@ def main() -> None:
             "catalogMatchType": catalog_match_type,
             "shelfPosition": parse_optional_int(get("position")),
             "series": series,
+            "seriesTitle": series_title,
+            "seriesFormat": series_format,
             "seriesNumber": series_number,
-            "seriesSort": series_sort,
-            "volumeSort": volume_sort,
             "author": author,
             "authorSort": author_sort,
             "firstName": first,
@@ -1760,6 +1971,7 @@ def main() -> None:
         "catalogMatchFallbackRows": catalog_match_fallback_rows,
         "catalogUnmatchedRows": catalog_unmatched_rows,
         "catalog": catalog_report,
+        "wanted": wanted_report,
         "coverExtraction": cover_extraction_report,
         "imageInspectionEnabled": DEBUG_IMAGE_INSPECTION,
         "images": image_report,
@@ -1769,6 +1981,11 @@ def main() -> None:
 
     BOOKS_OUTPUT_PATH.write_text(
         json.dumps(books, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    WANTED_OUTPUT_PATH.write_text(
+        json.dumps(wanted_lists, indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
 
@@ -1795,6 +2012,10 @@ def main() -> None:
     )
 
     print(f"Wrote {len(books)} books to {BOOKS_OUTPUT_PATH}")
+    print(
+        f"Wrote {wanted_report['totalWantedCount']} wanted books "
+        f"to {WANTED_OUTPUT_PATH}"
+    )
     print(f"Wrote {len(catalog_books)} catalog books to {CATALOG_OUTPUT_PATH}")
     print(f"Wrote metadata to {META_OUTPUT_PATH}")
 

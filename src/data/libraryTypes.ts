@@ -12,6 +12,7 @@ export type Book = {
   shelf: string;
   row: string;
   genre?: string;
+  subgenre?: string;
   publisher?: string;
   format?: string;
   jc?: boolean;
@@ -19,10 +20,13 @@ export type Book = {
   lgbtq?: boolean;
   coverImage?: string | null;
   catalogKey?: string;
-  series?: string;
-  seriesTitle?: string;
-  seriesFormat?: string;
-  seriesNumber?: number | string;
+  catalogTitle?: string;
+  catalogRawTitle?: string;
+  catalogMatchType?: string;
+  series?: string | null;
+  seriesTitle?: string | null;
+  seriesFormat?: string | null;
+  seriesNumber?: number | string | null;
   shelfPosition?: number | null;
   rawShelf?: string;
   notes?: string;
@@ -35,4 +39,25 @@ export type Bookcase = {
   displayName: string;
   hasRisers: boolean;
   sortOrder: number;
+};
+
+export type WantedBook = {
+  wantedId: string;
+  listType: "to-buy" | "series-to-complete" | string;
+  title: string;
+  rawTitle?: string;
+  series?: string | null;
+  seriesTitle?: string | null;
+  seriesNumber?: number | string | null;
+  author: string;
+  authorSort: string;
+  firstName?: string;
+  lastName?: string;
+  sourceSheet?: string;
+  sourceRow?: number;
+};
+
+export type WantedLists = {
+  toBuy: WantedBook[];
+  seriesToComplete: WantedBook[];
 };
