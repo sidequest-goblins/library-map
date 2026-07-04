@@ -200,6 +200,7 @@ select {
 .searchResultCard,
 .wantedIntro,
 .wantedSection,
+.wantedModeButton,
 .wantedCard,
 .bookDetailCard,
 .emptyBookcase {
@@ -483,6 +484,53 @@ select {
   color: var(--muted);
 }
 
+.wantedModeTabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.wantedModeButton {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+  padding: 0.85rem 1rem;
+  text-align: left;
+  color: var(--brownDark);
+  cursor: pointer;
+}
+
+.wantedModeButton:hover {
+  transform: translateY(-1px);
+  border-color: rgba(82, 111, 69, 0.42);
+  background:
+    linear-gradient(135deg, rgba(255, 250, 240, 1), rgba(244, 232, 206, 0.95)),
+    var(--paper);
+}
+
+.wantedModeButtonActive {
+  border-color: rgba(52, 72, 46, 0.5);
+  background:
+    linear-gradient(135deg, rgba(169, 183, 141, 0.42), rgba(255, 248, 233, 0.92)),
+    var(--paper);
+}
+
+.wantedModeLabel {
+  overflow: hidden;
+  color: var(--brownDark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wantedModeMeta {
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
 .wantedSearch {
   width: 100%;
 }
@@ -502,6 +550,12 @@ select {
   background: rgba(169, 183, 141, 0.22);
   font-size: 0.82rem;
   font-weight: 800;
+}
+
+.wantedModeDescription {
+  margin: -0.15rem 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
 }
 
 .wantedSectionHeader {
@@ -704,5 +758,9 @@ select {
 
   .wantedList {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .wantedModeTabs {
+    grid-template-columns: repeat(2, minmax(210px, 1fr));
   }
 }

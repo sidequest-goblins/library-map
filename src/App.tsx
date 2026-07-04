@@ -10,6 +10,7 @@ import {
 import type { Book, WantedBook, WantedLists } from "./data/libraryTypes";
 
 type AppTab = "search" | "wanted" | "map";
+type WantedMode = "toBuy" | "seriesToComplete";
 
 type MapReturnPosition = {
   windowScrollY: number;
@@ -23,6 +24,29 @@ const EMPTY_WANTED_LISTS: WantedLists = {
   toBuy: [],
   seriesToComplete: [],
 };
+
+const WANTED_MODE_OPTIONS: Array<{
+  mode: WantedMode;
+  label: string;
+  description: string;
+  emptyText: string;
+  emptySearchText: string;
+}> = [
+  {
+    mode: "toBuy",
+    label: "To Buy",
+    description: "Books we definitely want but do not own yet.",
+    emptyText: "No to-buy books added yet.",
+    emptySearchText: "No to-buy books match that search.",
+  },
+  {
+    mode: "seriesToComplete",
+    label: "Series to Complete",
+    description: "Missing books from series we have already started collecting.",
+    emptyText: "No missing-series books added yet.",
+    emptySearchText: "No missing-series books match that search.",
+  },
+];
 
 function normalizeInlineSearchText(value: unknown): string {
   return String(value ?? "")
@@ -170,7 +194,11 @@ export default function App() {
   const [selectedRoom, setSelectedRoom] = useState("");
   const [activeTab, setActiveTab] = useState<AppTab>("search");
   const [searchQuery, setSearchQuery] = useState("");
-  const [wantedQuery, setWantedQuery] = useState("");
+  const [wantedMode, setWantedMode] = useState<WantedMode>("seriesToComplete");
+  const [wantedQueries, setWantedQueries] = useState<Record<WantedMode, string>>({
+    toBuy: "",
+    seriesToComplete: "",
+  });
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
   const [searchPage, setSearchPage] = useState(1);
   const mapReturnPositionRef = useRef<MapReturnPosition | null>(null);
@@ -291,18 +319,23 @@ export default function App() {
     [books, searchQuery]
   );
 
-  const filteredToBuy = useMemo(
-    () => filterWantedItems(wantedLists.toBuy, wantedQuery),
-    [wantedLists.toBuy, wantedQuery]
-  );
+  const activeWantedItems =
+    wantedMode === "toBuy" ? wantedLists.toBuy : wantedLists.seriesToComplete;
 
-  const filteredSeriesToComplete = useMemo(
-    () => filterWantedItems(wantedLists.seriesToComplete, wantedQuery),
-    [wantedLists.seriesToComplete, wantedQuery]
+  const activeWantedQuery = wantedQueries[wantedMode];
+
+  const activeWantedModeOption =
+    WANTED_MODE_OPTIONS.find((option) => option.mode === wantedMode) ??
+    WANTED_MODE_OPTIONS[0];
+
+  const filteredWantedItems = useMemo(
+    () => filterWantedItems(activeWantedItems, activeWantedQuery),
+    [activeWantedItems, activeWantedQuery]
   );
 
   const wantedTotal = wantedLists.toBuy.length + wantedLists.seriesToComplete.length;
-  const filteredWantedTotal = filteredToBuy.length + filteredSeriesToComplete.length;
+  const activeWantedTotal = activeWantedItems.length;
+  const filteredWantedTotal = filteredWantedItems.length;
 
   const totalSearchPages = Math.max(
     1,
@@ -833,35 +866,73 @@ export default function App() {
             </p>
           </section>
 
+          <div
+            className="wantedModeTabs"
+            role="tablist"
+            aria-label="Choose wanted list"
+          >
+            {WANTED_MODE_OPTIONS.map((option) => {
+              const listCount =
+                option.mode === "toBuy"
+                  ? wantedLists.toBuy.length
+                  : wantedLists.seriesToComplete.length;
+
+              return (
+                <button
+                  key={option.mode}
+                  type="button"
+                  role="tab"
+                  aria-selected={wantedMode === option.mode}
+                  className={
+                    wantedMode === option.mode
+                      ? "wantedModeButton wantedModeButtonActive"
+                      : "wantedModeButton"
+                  }
+                  onClick={() => setWantedMode(option.mode)}
+                >
+                  <span className="wantedModeLabel">{option.label}</span>
+                  <span className="wantedModeMeta">
+                    {listCount} {listCount === 1 ? "book" : "books"}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
           <label className="librarySearch wantedSearch">
-            <span>Search wanted books</span>
+            <span>Search {activeWantedModeOption.label}</span>
             <input
               type="search"
-              value={wantedQuery}
-              onChange={(event) => setWantedQuery(event.target.value)}
+              value={activeWantedQuery}
+              onChange={(event) =>
+                setWantedQueries((currentQueries) => ({
+                  ...currentQueries,
+                  [wantedMode]: event.target.value,
+                }))
+              }
               placeholder="Title, author, or series..."
             />
           </label>
 
           <div className="wantedSummary">
-            <span>{wantedTotal} total</span>
-            {wantedQuery.trim() ? <span>{filteredWantedTotal} matching</span> : null}
+            <span>
+              {activeWantedTotal} {activeWantedModeOption.label}
+            </span>
+            {activeWantedQuery.trim() ? (
+              <span>{filteredWantedTotal} matching</span>
+            ) : null}
           </div>
 
-          {renderWantedSection(
-            "To Buy",
-            filteredToBuy,
-            wantedQuery.trim()
-              ? "No to-buy books match that search."
-              : "No to-buy books added yet."
-          )}
+          <p className="wantedModeDescription">
+            {activeWantedModeOption.description}
+          </p>
 
           {renderWantedSection(
-            "Series to Complete",
-            filteredSeriesToComplete,
-            wantedQuery.trim()
-              ? "No missing-series books match that search."
-              : "No missing-series books added yet."
+            activeWantedModeOption.label,
+            filteredWantedItems,
+            activeWantedQuery.trim()
+              ? activeWantedModeOption.emptySearchText
+              : activeWantedModeOption.emptyText
           )}
         </section>
       ) : selectedBook ? (
