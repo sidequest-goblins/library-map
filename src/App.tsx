@@ -82,6 +82,19 @@ function filterWantedItems(items: WantedBook[], query: string): WantedBook[] {
   });
 }
 
+function formatWantedSeriesLabel(item: WantedBook): string {
+  const series = item.series || item.seriesTitle;
+  const seriesNumber = item.seriesNumber;
+
+  if (!series) return "";
+
+  if (seriesNumber === null || seriesNumber === undefined || seriesNumber === "") {
+    return series;
+  }
+
+  return `${series} #${seriesNumber}`;
+}
+
 async function loadWantedLists(): Promise<WantedLists> {
   const response = await fetch(`${import.meta.env.BASE_URL}data/library-wanted.json`);
 
@@ -655,6 +668,7 @@ export default function App() {
       </section>
     );
   }
+  
   function renderWantedSection(
     title: string,
     items: WantedBook[],
@@ -671,20 +685,24 @@ export default function App() {
 
         {items.length > 0 ? (
           <div className="wantedList">
-            {items.map((item) => (
-              <article key={item.wantedId} className="wantedCard">
-                <div>
-                  <h3>{item.title}</h3>
-                  <p className="wantedAuthor">
-                    {item.author || "Unknown author"}
-                  </p>
-                </div>
+            {items.map((item) => {
+              const wantedSeriesLabel = formatWantedSeriesLabel(item);
 
-                {item.series ? (
-                  <p className="wantedSeries">{item.series}</p>
-                ) : null}
-              </article>
-            ))}
+              return (
+                <article key={item.wantedId} className="wantedCard">
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p className="wantedAuthor">
+                      {item.author || "Unknown author"}
+                    </p>
+                  </div>
+
+                  {wantedSeriesLabel ? (
+                    <p className="wantedSeries">{wantedSeriesLabel}</p>
+                  ) : null}
+                </article>
+              );
+            })}
           </div>
         ) : (
           <p className="emptySearch">{emptyText}</p>
