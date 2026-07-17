@@ -7,10 +7,59 @@ import {
   getShelvesForBookcase,
   searchBooks,
 } from "./data/librarySelectors";
+import type {
+  AuthorNameMode,
+  SearchScope,
+  SearchSortDirection,
+} from "./data/librarySelectors";
 import type { Book, WantedBook, WantedLists } from "./data/libraryTypes";
 
 type AppTab = "search" | "wanted" | "map";
 type WantedMode = "toBuy" | "seriesToComplete";
+
+const SEARCH_SCOPE_OPTIONS: Array<{
+  scope: SearchScope;
+  label: string;
+}> = [
+  { scope: "all", label: "All" },
+  { scope: "title", label: "Title" },
+  { scope: "author", label: "Author" },
+  { scope: "series", label: "Series" },
+  { scope: "genre", label: "Genre" },
+  { scope: "publisher", label: "Publisher" },
+  { scope: "bookcase", label: "Bookcase" },
+];
+
+function getSearchPlaceholder(
+  searchScope: SearchScope,
+  authorNameMode: AuthorNameMode
+): string {
+  switch (searchScope) {
+    case "title":
+      return "Search titles...";
+
+    case "author":
+      return authorNameMode === "last"
+        ? "Search author last names..."
+        : "Search author first names...";
+
+    case "series":
+      return "Search series...";
+
+    case "genre":
+      return "Search genres and subgenres...";
+
+    case "publisher":
+      return "Search publishers...";
+
+    case "bookcase":
+      return "Search bookcases or rooms...";
+
+    case "all":
+    default:
+      return "Title, author, genre, publisher, location...";
+  }
+}
 
 type MapReturnPosition = {
   windowScrollY: number;
@@ -230,7 +279,13 @@ export default function App() {
   const [selectedRoom, setSelectedRoom] = useState("");
   const [activeTab, setActiveTab] = useState<AppTab>("search");
   const [searchQuery, setSearchQuery] = useState("");
-  const [wantedMode, setWantedMode] = useState<WantedMode>("seriesToComplete");
+  const [searchScope, setSearchScope] = useState<SearchScope>("all");
+  const [authorNameMode, setAuthorNameMode] =
+    useState<AuthorNameMode>("last");
+  const [searchSortDirection, setSearchSortDirection] =
+    useState<SearchSortDirection>("asc");
+  const [wantedMode, setWantedMode] =
+    useState<WantedMode>("seriesToComplete");
   const [wantedQueries, setWantedQueries] = useState<Record<WantedMode, string>>({
     toBuy: "",
     seriesToComplete: "",
@@ -351,8 +406,21 @@ export default function App() {
     : [];
 
   const searchResults = useMemo(
-    () => searchBooks(books, searchQuery),
-    [books, searchQuery]
+    () =>
+      searchBooks(
+        books,
+        searchQuery,
+        searchScope,
+        authorNameMode,
+        searchSortDirection
+      ),
+    [
+      books,
+      searchQuery,
+      searchScope,
+      authorNameMode,
+      searchSortDirection,
+    ]
   );
 
   const activeWantedItems =
@@ -821,9 +889,139 @@ export default function App() {
                   setSearchPage(1);
                   setSelectedBookId(null);
                 }}
-                placeholder="Title, author, genre, publisher, location..."
+                placeholder={getSearchPlaceholder(
+                  searchScope,
+                  authorNameMode
+                )}
               />
             </label>
+
+            <section
+              className="searchScopePanel"
+              aria-label="Search settings"
+            >
+              <div className="searchControlGroup">
+                <p className="searchControlLabel">Search in</p>
+
+                <div
+                  className="searchScopeOptions"
+                  role="group"
+                  aria-label="Choose where to search"
+                >
+                  {SEARCH_SCOPE_OPTIONS.map((option) => (
+                    <button
+                      key={option.scope}
+                      type="button"
+                      className={
+                        searchScope === option.scope
+                          ? "searchScopeButton searchScopeButtonActive"
+                          : "searchScopeButton"
+                      }
+                      aria-pressed={searchScope === option.scope}
+                      onClick={() => {
+                        setSearchScope(option.scope);
+                        setSearchPage(1);
+                        setSelectedBookId(null);
+                      }}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {searchScope === "author" ? (
+                <div className="searchControlGroup authorNameGroup">
+                  <p className="searchControlLabel">Author name</p>
+
+                  <div
+                    className="authorNameOptions"
+                    role="group"
+                    aria-label="Choose author name field"
+                  >
+                    <button
+                      type="button"
+                      className={
+                        authorNameMode === "last"
+                          ? "authorNameButton authorNameButtonActive"
+                          : "authorNameButton"
+                      }
+                      aria-pressed={authorNameMode === "last"}
+                      onClick={() => {
+                        setAuthorNameMode("last");
+                        setSearchPage(1);
+                        setSelectedBookId(null);
+                      }}
+                    >
+                      Last name
+                    </button>
+
+                    <button
+                      type="button"
+                      className={
+                        authorNameMode === "first"
+                          ? "authorNameButton authorNameButtonActive"
+                          : "authorNameButton"
+                      }
+                      aria-pressed={authorNameMode === "first"}
+                      onClick={() => {
+                        setAuthorNameMode("first");
+                        setSearchPage(1);
+                        setSelectedBookId(null);
+                      }}
+                    >
+                      First name
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+
+              {searchScope !== "all" ? (
+                <div className="searchControlGroup sortDirectionGroup">
+                  <p className="searchControlLabel">Sort results</p>
+
+                  <div
+                    className="searchSortOptions"
+                    role="group"
+                    aria-label="Choose search result order"
+                  >
+                    <button
+                      type="button"
+                      className={
+                        searchSortDirection === "asc"
+                          ? "searchSortButton searchSortButtonActive"
+                          : "searchSortButton"
+                      }
+                      aria-pressed={searchSortDirection === "asc"}
+                      onClick={() => {
+                        setSearchSortDirection("asc");
+                        setSearchPage(1);
+                        setSelectedBookId(null);
+                      }}
+                    >
+                      A–Z
+                    </button>
+
+                    <button
+                      type="button"
+                      className={
+                        searchSortDirection === "desc"
+                          ? "searchSortButton searchSortButtonActive"
+                          : "searchSortButton"
+                      }
+                      aria-pressed={searchSortDirection === "desc"}
+                      onClick={() => {
+                        setSearchSortDirection("desc");
+                        setSearchPage(1);
+                        setSelectedBookId(null);
+                      }}
+                    >
+                      Z–A
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+            </section>
 
             {searchQuery.trim().length > 0 ? (
               <div className="searchResults">

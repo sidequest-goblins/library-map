@@ -165,6 +165,90 @@ select {
   border-color: rgba(82, 111, 69, 0.55);
 }
 
+.searchScopePanel {
+  display: grid;
+  gap: 0.75rem;
+  width: min(100%, 760px);
+}
+
+.searchControlGroup {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.searchControlLabel {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--greenDark);
+}
+
+.searchScopeOptions,
+.authorNameOptions,
+.searchSortOptions {
+  display: flex;
+  gap: 0.45rem;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 0.05rem 0 0.2rem;
+}
+
+.searchScopeButton,
+.authorNameButton,
+.searchSortButton {
+  flex: 0 0 auto;
+  border: 1px solid rgba(76, 48, 30, 0.2);
+  border-radius: 999px;
+  padding: 0.5rem 0.78rem;
+  color: var(--brownDark);
+  background: rgba(255, 248, 233, 0.78);
+  box-shadow: 0 5px 14px rgba(76, 48, 30, 0.07);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.searchScopeButton:hover,
+.authorNameButton:hover,
+.searchSortButton:hover {
+  transform: translateY(-1px);
+  border-color: rgba(82, 111, 69, 0.42);
+  background: #fffaf0;
+  box-shadow: 0 8px 18px rgba(76, 48, 30, 0.1);
+}
+
+.searchScopeButton:focus-visible,
+.authorNameButton:focus-visible,
+.searchSortButton:focus-visible {
+  outline: 3px solid rgba(201, 154, 69, 0.28);
+  outline-offset: 2px;
+}
+
+.searchScopeButtonActive,
+.authorNameButtonActive,
+.searchSortButtonActive {
+  color: #fff8e9;
+  border-color: rgba(52, 72, 46, 0.35);
+  background: linear-gradient(
+    135deg,
+    var(--green),
+    var(--greenDark)
+  );
+}
+
+.authorNameGroup,
+.sortDirectionGroup {
+  padding-left: 0.75rem;
+  border-left: 3px solid rgba(82, 111, 69, 0.24);
+}
+
 .searchPanel,
 .searchResults,
 .bookDetailPanel {

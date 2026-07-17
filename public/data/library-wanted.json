@@ -4908,82 +4908,7 @@
       "sourceRow": 254
     },
     {
-      "wantedId": "wanted-series-to-complete-0254-series-to-complete-sapkowski-andrzej-the-witcher-blood-of-elves",
-      "listType": "series-to-complete",
-      "title": "Blood of Elves",
-      "rawTitle": "Blood of Elves",
-      "series": "The Witcher",
-      "seriesTitle": "The Witcher",
-      "seriesNumber": 1,
-      "author": "Andrzej Sapkowski",
-      "authorSort": "Sapkowski, Andrzej",
-      "firstName": "Andrzej",
-      "lastName": "Sapkowski",
-      "sourceSheet": "Series to Complete",
-      "sourceRow": 255
-    },
-    {
-      "wantedId": "wanted-series-to-complete-0255-series-to-complete-sapkowski-andrzej-the-witcher-the-time-of-contempt",
-      "listType": "series-to-complete",
-      "title": "The Time of Contempt",
-      "rawTitle": "The Time of Contempt",
-      "series": "The Witcher",
-      "seriesTitle": "The Witcher",
-      "seriesNumber": 2,
-      "author": "Andrzej Sapkowski",
-      "authorSort": "Sapkowski, Andrzej",
-      "firstName": "Andrzej",
-      "lastName": "Sapkowski",
-      "sourceSheet": "Series to Complete",
-      "sourceRow": 256
-    },
-    {
-      "wantedId": "wanted-series-to-complete-0256-series-to-complete-sapkowski-andrzej-the-witcher-baptism-of-fire",
-      "listType": "series-to-complete",
-      "title": "Baptism of Fire",
-      "rawTitle": "Baptism of Fire",
-      "series": "The Witcher",
-      "seriesTitle": "The Witcher",
-      "seriesNumber": 3,
-      "author": "Andrzej Sapkowski",
-      "authorSort": "Sapkowski, Andrzej",
-      "firstName": "Andrzej",
-      "lastName": "Sapkowski",
-      "sourceSheet": "Series to Complete",
-      "sourceRow": 257
-    },
-    {
-      "wantedId": "wanted-series-to-complete-0257-series-to-complete-sapkowski-andrzej-the-witcher-the-tower-of-the-swal",
-      "listType": "series-to-complete",
-      "title": "The Tower of the Swallow",
-      "rawTitle": "The Tower of the Swallow",
-      "series": "The Witcher",
-      "seriesTitle": "The Witcher",
-      "seriesNumber": 4,
-      "author": "Andrzej Sapkowski",
-      "authorSort": "Sapkowski, Andrzej",
-      "firstName": "Andrzej",
-      "lastName": "Sapkowski",
-      "sourceSheet": "Series to Complete",
-      "sourceRow": 258
-    },
-    {
-      "wantedId": "wanted-series-to-complete-0258-series-to-complete-sapkowski-andrzej-the-witcher-the-lady-of-the-lake",
-      "listType": "series-to-complete",
-      "title": "The Lady of the Lake",
-      "rawTitle": "The Lady of the Lake",
-      "series": "The Witcher",
-      "seriesTitle": "The Witcher",
-      "seriesNumber": 5,
-      "author": "Andrzej Sapkowski",
-      "authorSort": "Sapkowski, Andrzej",
-      "firstName": "Andrzej",
-      "lastName": "Sapkowski",
-      "sourceSheet": "Series to Complete",
-      "sourceRow": 259
-    },
-    {
-      "wantedId": "wanted-series-to-complete-0259-series-to-complete-satrapi-marjane-persepolis-persepolis-2-the-story-o",
+      "wantedId": "wanted-series-to-complete-0254-series-to-complete-satrapi-marjane-persepolis-persepolis-2-the-story-o",
       "listType": "series-to-complete",
       "title": "Persepolis 2: The Story of a Return",
       "rawTitle": "Persepolis 2: The Story of a Return",
@@ -4995,10 +4920,10 @@
       "firstName": "Marjane",
       "lastName": "Satrapi",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 260
+      "sourceRow": 255
     },
     {
-      "wantedId": "wanted-series-to-complete-0260-series-to-complete-shannon-samantha-the-bone-season-the-pale-dreamer",
+      "wantedId": "wanted-series-to-complete-0255-series-to-complete-shannon-samantha-the-bone-season-the-pale-dreamer",
       "listType": "series-to-complete",
       "title": "The Pale Dreamer",
       "rawTitle": "The Pale Dreamer",
@@ -5010,10 +4935,10 @@
       "firstName": "Samantha",
       "lastName": "Shannon",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 261
+      "sourceRow": 256
     },
     {
-      "wantedId": "wanted-series-to-complete-0261-series-to-complete-shannon-samantha-the-bone-season-the-mime-order",
+      "wantedId": "wanted-series-to-complete-0256-series-to-complete-shannon-samantha-the-bone-season-the-mime-order",
       "listType": "series-to-complete",
       "title": "The Mime Order",
       "rawTitle": "The Mime Order",
@@ -5025,10 +4950,10 @@
       "firstName": "Samantha",
       "lastName": "Shannon",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 262
+      "sourceRow": 257
     },
     {
-      "wantedId": "wanted-series-to-complete-0262-series-to-complete-shannon-samantha-the-bone-season-the-song-rising",
+      "wantedId": "wanted-series-to-complete-0257-series-to-complete-shannon-samantha-the-bone-season-the-song-rising",
       "listType": "series-to-complete",
       "title": "The Song Rising",
       "rawTitle": "The Song Rising",
@@ -5040,10 +4965,10 @@
       "firstName": "Samantha",
       "lastName": "Shannon",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 263
+      "sourceRow": 258
     },
     {
-      "wantedId": "wanted-series-to-complete-0263-series-to-complete-shannon-samantha-the-bone-season-the-dawn-chorus",
+      "wantedId": "wanted-series-to-complete-0258-series-to-complete-shannon-samantha-the-bone-season-the-dawn-chorus",
       "listType": "series-to-complete",
       "title": "The Dawn Chorus",
       "rawTitle": "The Dawn Chorus",
@@ -5055,10 +4980,10 @@
       "firstName": "Samantha",
       "lastName": "Shannon",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 264
+      "sourceRow": 259
     },
     {
-      "wantedId": "wanted-series-to-complete-0264-series-to-complete-shannon-samantha-the-bone-season-the-mask-falling",
+      "wantedId": "wanted-series-to-complete-0259-series-to-complete-shannon-samantha-the-bone-season-the-mask-falling",
       "listType": "series-to-complete",
       "title": "The Mask Falling",
       "rawTitle": "The Mask Falling",
@@ -5070,10 +4995,10 @@
       "firstName": "Samantha",
       "lastName": "Shannon",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 265
+      "sourceRow": 260
     },
     {
-      "wantedId": "wanted-series-to-complete-0265-series-to-complete-shannon-samantha-the-bone-season-the-dark-mirror",
+      "wantedId": "wanted-series-to-complete-0260-series-to-complete-shannon-samantha-the-bone-season-the-dark-mirror",
       "listType": "series-to-complete",
       "title": "The Dark Mirror",
       "rawTitle": "The Dark Mirror",
@@ -5085,10 +5010,10 @@
       "firstName": "Samantha",
       "lastName": "Shannon",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 266
+      "sourceRow": 261
     },
     {
-      "wantedId": "wanted-series-to-complete-0266-series-to-complete-shannon-samantha-the-bone-season-the-moth-reborn",
+      "wantedId": "wanted-series-to-complete-0261-series-to-complete-shannon-samantha-the-bone-season-the-moth-reborn",
       "listType": "series-to-complete",
       "title": "The Moth Reborn",
       "rawTitle": "The Moth Reborn",
@@ -5100,10 +5025,10 @@
       "firstName": "Samantha",
       "lastName": "Shannon",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 267
+      "sourceRow": 262
     },
     {
-      "wantedId": "wanted-series-to-complete-0267-series-to-complete-shannon-samantha-the-roots-of-chaos-among-the-burni",
+      "wantedId": "wanted-series-to-complete-0262-series-to-complete-shannon-samantha-the-roots-of-chaos-among-the-burni",
       "listType": "series-to-complete",
       "title": "Among the Burning Flowers",
       "rawTitle": "Among the Burning Flowers",
@@ -5115,10 +5040,10 @@
       "firstName": "Samantha",
       "lastName": "Shannon",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 268
+      "sourceRow": 263
     },
     {
-      "wantedId": "wanted-series-to-complete-0268-series-to-complete-silvera-adam-they-both-die-at-the-end-the-first-to",
+      "wantedId": "wanted-series-to-complete-0263-series-to-complete-silvera-adam-they-both-die-at-the-end-the-first-to",
       "listType": "series-to-complete",
       "title": "The First to Die at the End",
       "rawTitle": "The First to Die at the End",
@@ -5130,10 +5055,10 @@
       "firstName": "Adam",
       "lastName": "Silvera",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 269
+      "sourceRow": 264
     },
     {
-      "wantedId": "wanted-series-to-complete-0269-series-to-complete-silvera-adam-they-both-die-at-the-end-the-survivor",
+      "wantedId": "wanted-series-to-complete-0264-series-to-complete-silvera-adam-they-both-die-at-the-end-the-survivor",
       "listType": "series-to-complete",
       "title": "The Survivor Wants to Die at the End",
       "rawTitle": "The Survivor Wants to Die at the End",
@@ -5145,10 +5070,10 @@
       "firstName": "Adam",
       "lastName": "Silvera",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 270
+      "sourceRow": 265
     },
     {
-      "wantedId": "wanted-series-to-complete-0270-series-to-complete-silvera-adam-they-both-die-at-the-end-no-one-knows",
+      "wantedId": "wanted-series-to-complete-0265-series-to-complete-silvera-adam-they-both-die-at-the-end-no-one-knows",
       "listType": "series-to-complete",
       "title": "No One Knows Who Dies at the End",
       "rawTitle": "No One Knows Who Dies at the End",
@@ -5160,10 +5085,10 @@
       "firstName": "Adam",
       "lastName": "Silvera",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 271
+      "sourceRow": 266
     },
     {
-      "wantedId": "wanted-series-to-complete-0271-series-to-complete-smythe-rachel-vol-8-11-lore-olympus",
+      "wantedId": "wanted-series-to-complete-0266-series-to-complete-smythe-rachel-vol-8-11-lore-olympus",
       "listType": "series-to-complete",
       "title": "Lore Olympus",
       "rawTitle": "Lore Olympus",
@@ -5175,10 +5100,10 @@
       "firstName": "Rachel",
       "lastName": "Smythe",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 272
+      "sourceRow": 267
     },
     {
-      "wantedId": "wanted-series-to-complete-0272-series-to-complete-snicket-lemony-a-series-of-unfortunate-events-the-r",
+      "wantedId": "wanted-series-to-complete-0267-series-to-complete-snicket-lemony-a-series-of-unfortunate-events-the-r",
       "listType": "series-to-complete",
       "title": "The Reptile Room",
       "rawTitle": "The Reptile Room",
@@ -5190,10 +5115,10 @@
       "firstName": "Lemony",
       "lastName": "Snicket",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 273
+      "sourceRow": 268
     },
     {
-      "wantedId": "wanted-series-to-complete-0273-series-to-complete-snicket-lemony-a-series-of-unfortunate-events-the-v",
+      "wantedId": "wanted-series-to-complete-0268-series-to-complete-snicket-lemony-a-series-of-unfortunate-events-the-v",
       "listType": "series-to-complete",
       "title": "The Vile Village",
       "rawTitle": "The Vile Village",
@@ -5205,10 +5130,10 @@
       "firstName": "Lemony",
       "lastName": "Snicket",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 274
+      "sourceRow": 269
     },
     {
-      "wantedId": "wanted-series-to-complete-0274-series-to-complete-snicket-lemony-a-series-of-unfortunate-events-the-h",
+      "wantedId": "wanted-series-to-complete-0269-series-to-complete-snicket-lemony-a-series-of-unfortunate-events-the-h",
       "listType": "series-to-complete",
       "title": "The Hostile Hospital",
       "rawTitle": "The Hostile Hospital",
@@ -5220,10 +5145,10 @@
       "firstName": "Lemony",
       "lastName": "Snicket",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 275
+      "sourceRow": 270
     },
     {
-      "wantedId": "wanted-series-to-complete-0275-series-to-complete-snicket-lemony-a-series-of-unfortunate-events-the-s",
+      "wantedId": "wanted-series-to-complete-0270-series-to-complete-snicket-lemony-a-series-of-unfortunate-events-the-s",
       "listType": "series-to-complete",
       "title": "The Slippery Slope",
       "rawTitle": "The Slippery Slope",
@@ -5235,10 +5160,10 @@
       "firstName": "Lemony",
       "lastName": "Snicket",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 276
+      "sourceRow": 271
     },
     {
-      "wantedId": "wanted-series-to-complete-0276-series-to-complete-snicket-lemony-a-series-of-unfortunate-events-the-g",
+      "wantedId": "wanted-series-to-complete-0271-series-to-complete-snicket-lemony-a-series-of-unfortunate-events-the-g",
       "listType": "series-to-complete",
       "title": "The Grim Grotto",
       "rawTitle": "The Grim Grotto",
@@ -5250,10 +5175,10 @@
       "firstName": "Lemony",
       "lastName": "Snicket",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 277
+      "sourceRow": 272
     },
     {
-      "wantedId": "wanted-series-to-complete-0277-series-to-complete-snicket-lemony-a-series-of-unfortunate-events-the-p",
+      "wantedId": "wanted-series-to-complete-0272-series-to-complete-snicket-lemony-a-series-of-unfortunate-events-the-p",
       "listType": "series-to-complete",
       "title": "The Penultimate Peril",
       "rawTitle": "The Penultimate Peril",
@@ -5265,10 +5190,10 @@
       "firstName": "Lemony",
       "lastName": "Snicket",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 278
+      "sourceRow": 273
     },
     {
-      "wantedId": "wanted-series-to-complete-0278-series-to-complete-snicket-lemony-a-series-of-unfortunate-events-the-e",
+      "wantedId": "wanted-series-to-complete-0273-series-to-complete-snicket-lemony-a-series-of-unfortunate-events-the-e",
       "listType": "series-to-complete",
       "title": "The End",
       "rawTitle": "The End",
@@ -5280,10 +5205,10 @@
       "firstName": "Lemony",
       "lastName": "Snicket",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 279
+      "sourceRow": 274
     },
     {
-      "wantedId": "wanted-series-to-complete-0279-series-to-complete-straube-lindsay-split-or-swallow-kneel-before-me",
+      "wantedId": "wanted-series-to-complete-0274-series-to-complete-straube-lindsay-split-or-swallow-kneel-before-me",
       "listType": "series-to-complete",
       "title": "Kneel Before Me",
       "rawTitle": "Kneel Before Me",
@@ -5295,10 +5220,10 @@
       "firstName": "Lindsay",
       "lastName": "Straube",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 280
+      "sourceRow": 275
     },
     {
-      "wantedId": "wanted-series-to-complete-0280-series-to-complete-stroud-jonathan-bartimaeus-ptolemy-s-gate",
+      "wantedId": "wanted-series-to-complete-0275-series-to-complete-stroud-jonathan-bartimaeus-ptolemy-s-gate",
       "listType": "series-to-complete",
       "title": "Ptolemy’s Gate",
       "rawTitle": "Ptolemy’s Gate",
@@ -5310,10 +5235,10 @@
       "firstName": "Jonathan",
       "lastName": "Stroud",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 281
+      "sourceRow": 276
     },
     {
-      "wantedId": "wanted-series-to-complete-0281-series-to-complete-sutanto-jesse-q-well-that-was-unexpected-well-that",
+      "wantedId": "wanted-series-to-complete-0276-series-to-complete-sutanto-jesse-q-well-that-was-unexpected-well-that",
       "listType": "series-to-complete",
       "title": "Well, That Was Unexpected",
       "rawTitle": "Well, That Was Unexpected",
@@ -5325,10 +5250,10 @@
       "firstName": "Jesse Q.",
       "lastName": "Sutanto",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 282
+      "sourceRow": 277
     },
     {
-      "wantedId": "wanted-series-to-complete-0282-series-to-complete-sutanto-jesse-q-vera-wong-vera-wong-s-guide-to-snoo",
+      "wantedId": "wanted-series-to-complete-0277-series-to-complete-sutanto-jesse-q-vera-wong-vera-wong-s-guide-to-snoo",
       "listType": "series-to-complete",
       "title": "Vera Wong’s Guide to Snooping (on a Dead Man)",
       "rawTitle": "Vera Wong’s Guide to Snooping (on a Dead Man)",
@@ -5340,10 +5265,10 @@
       "firstName": "Jesse Q.",
       "lastName": "Sutanto",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 283
+      "sourceRow": 278
     },
     {
-      "wantedId": "wanted-series-to-complete-0283-series-to-complete-swanson-peter-henry-kimball-lily-kintner-the-kind-w",
+      "wantedId": "wanted-series-to-complete-0278-series-to-complete-swanson-peter-henry-kimball-lily-kintner-the-kind-w",
       "listType": "series-to-complete",
       "title": "The Kind Worth Saving",
       "rawTitle": "The Kind Worth Saving",
@@ -5355,10 +5280,10 @@
       "firstName": "Peter",
       "lastName": "Swanson",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 284
+      "sourceRow": 279
     },
     {
-      "wantedId": "wanted-series-to-complete-0284-series-to-complete-swanson-peter-henry-kimball-lily-kintner-a-talent-f",
+      "wantedId": "wanted-series-to-complete-0279-series-to-complete-swanson-peter-henry-kimball-lily-kintner-a-talent-f",
       "listType": "series-to-complete",
       "title": "A Talent for Murder",
       "rawTitle": "A Talent for Murder",
@@ -5370,10 +5295,10 @@
       "firstName": "Peter",
       "lastName": "Swanson",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 285
+      "sourceRow": 280
     },
     {
-      "wantedId": "wanted-series-to-complete-0285-series-to-complete-taylor-laini-daughter-of-smoke-bone-days-of-blood-s",
+      "wantedId": "wanted-series-to-complete-0280-series-to-complete-taylor-laini-daughter-of-smoke-bone-days-of-blood-s",
       "listType": "series-to-complete",
       "title": "Days of Blood & Starlight",
       "rawTitle": "Days of Blood & Starlight",
@@ -5385,10 +5310,10 @@
       "firstName": "Laini",
       "lastName": "Taylor",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 286
+      "sourceRow": 281
     },
     {
-      "wantedId": "wanted-series-to-complete-0286-series-to-complete-taylor-laini-daughter-of-smoke-bone-dreams-of-gods",
+      "wantedId": "wanted-series-to-complete-0281-series-to-complete-taylor-laini-daughter-of-smoke-bone-dreams-of-gods",
       "listType": "series-to-complete",
       "title": "Dreams of Gods & Monsters",
       "rawTitle": "Dreams of Gods & Monsters",
@@ -5400,10 +5325,10 @@
       "firstName": "Laini",
       "lastName": "Taylor",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 287
+      "sourceRow": 282
     },
     {
-      "wantedId": "wanted-series-to-complete-0287-series-to-complete-turnbull-cadwell-convergence-saga-we-are-the-crisis",
+      "wantedId": "wanted-series-to-complete-0282-series-to-complete-turnbull-cadwell-convergence-saga-we-are-the-crisis",
       "listType": "series-to-complete",
       "title": "We Are the Crisis",
       "rawTitle": "We Are the Crisis",
@@ -5415,10 +5340,10 @@
       "firstName": "Cadwell",
       "lastName": "Turnbull",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 288
+      "sourceRow": 283
     },
     {
-      "wantedId": "wanted-series-to-complete-0288-series-to-complete-turnbull-cadwell-convergence-saga-a-ruin-great-and",
+      "wantedId": "wanted-series-to-complete-0283-series-to-complete-turnbull-cadwell-convergence-saga-a-ruin-great-and",
       "listType": "series-to-complete",
       "title": "A Ruin, Great and Free",
       "rawTitle": "A Ruin, Great and Free",
@@ -5430,10 +5355,10 @@
       "firstName": "Cadwell",
       "lastName": "Turnbull",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 289
+      "sourceRow": 284
     },
     {
-      "wantedId": "wanted-series-to-complete-0289-series-to-complete-uketsu-strange-houses-strange-houses",
+      "wantedId": "wanted-series-to-complete-0284-series-to-complete-uketsu-strange-houses-strange-houses",
       "listType": "series-to-complete",
       "title": "Strange Houses",
       "rawTitle": "Strange Houses",
@@ -5445,10 +5370,10 @@
       "firstName": "",
       "lastName": "Uketsu",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 290
+      "sourceRow": 285
     },
     {
-      "wantedId": "wanted-series-to-complete-0290-series-to-complete-uketsu-strange-houses-strange-buildings",
+      "wantedId": "wanted-series-to-complete-0285-series-to-complete-uketsu-strange-houses-strange-buildings",
       "listType": "series-to-complete",
       "title": "Strange Buildings",
       "rawTitle": "Strange Buildings",
@@ -5460,10 +5385,10 @@
       "firstName": "",
       "lastName": "Uketsu",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 291
+      "sourceRow": 286
     },
     {
-      "wantedId": "wanted-series-to-complete-0291-series-to-complete-wells-martha-vol-2-3-the-murderbot-diaries",
+      "wantedId": "wanted-series-to-complete-0286-series-to-complete-wells-martha-vol-2-3-the-murderbot-diaries",
       "listType": "series-to-complete",
       "title": "The Murderbot Diaries",
       "rawTitle": "The Murderbot Diaries",
@@ -5475,10 +5400,10 @@
       "firstName": "Martha",
       "lastName": "Wells",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 292
+      "sourceRow": 287
     },
     {
-      "wantedId": "wanted-series-to-complete-0292-series-to-complete-wen-zhao-am-lie-song-of-the-last-kingdom-dark-star",
+      "wantedId": "wanted-series-to-complete-0287-series-to-complete-wen-zhao-am-lie-song-of-the-last-kingdom-dark-star",
       "listType": "series-to-complete",
       "title": "Dark Star Burning, Ash Falls White",
       "rawTitle": "Dark Star Burning, Ash Falls White",
@@ -5490,10 +5415,10 @@
       "firstName": "Amélie",
       "lastName": "Wen Zhao",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 293
+      "sourceRow": 288
     },
     {
-      "wantedId": "wanted-series-to-complete-0293-series-to-complete-wong-david-john-dies-at-the-end-this-book-is-full-o",
+      "wantedId": "wanted-series-to-complete-0288-series-to-complete-wong-david-john-dies-at-the-end-this-book-is-full-o",
       "listType": "series-to-complete",
       "title": "This Book is Full of Spiders",
       "rawTitle": "This Book is Full of Spiders",
@@ -5505,10 +5430,10 @@
       "firstName": "David",
       "lastName": "Wong",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 294
+      "sourceRow": 289
     },
     {
-      "wantedId": "wanted-series-to-complete-0294-series-to-complete-wong-david-john-dies-at-the-end-what-the-hell-did-i",
+      "wantedId": "wanted-series-to-complete-0289-series-to-complete-wong-david-john-dies-at-the-end-what-the-hell-did-i",
       "listType": "series-to-complete",
       "title": "What the Hell Did I Just Read",
       "rawTitle": "What the Hell Did I Just Read",
@@ -5520,10 +5445,10 @@
       "firstName": "David",
       "lastName": "Wong",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 295
+      "sourceRow": 290
     },
     {
-      "wantedId": "wanted-series-to-complete-0295-series-to-complete-wong-david-john-dies-at-the-end-if-this-book-exists",
+      "wantedId": "wanted-series-to-complete-0290-series-to-complete-wong-david-john-dies-at-the-end-if-this-book-exists",
       "listType": "series-to-complete",
       "title": "If This Book Exists, You’re in the Wrong Universe",
       "rawTitle": "If This Book Exists, You’re in the Wrong Universe",
@@ -5535,10 +5460,10 @@
       "firstName": "David",
       "lastName": "Wong",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 296
+      "sourceRow": 291
     },
     {
-      "wantedId": "wanted-series-to-complete-0296-series-to-complete-wong-david-john-dies-at-the-end-there-are-no-giant",
+      "wantedId": "wanted-series-to-complete-0291-series-to-complete-wong-david-john-dies-at-the-end-there-are-no-giant",
       "listType": "series-to-complete",
       "title": "There Are No Giant Crabs in This Novel",
       "rawTitle": "There Are No Giant Crabs in This Novel",
@@ -5550,10 +5475,10 @@
       "firstName": "David",
       "lastName": "Wong",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 297
+      "sourceRow": 292
     },
     {
-      "wantedId": "wanted-series-to-complete-0297-series-to-complete-yarros-rebecca-the-empyrean-iron-flame",
+      "wantedId": "wanted-series-to-complete-0292-series-to-complete-yarros-rebecca-the-empyrean-iron-flame",
       "listType": "series-to-complete",
       "title": "Iron Flame",
       "rawTitle": "Iron Flame",
@@ -5565,10 +5490,10 @@
       "firstName": "Rebecca",
       "lastName": "Yarros",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 298
+      "sourceRow": 293
     },
     {
-      "wantedId": "wanted-series-to-complete-0298-series-to-complete-yarros-rebecca-the-empyrean-onyx-storm",
+      "wantedId": "wanted-series-to-complete-0293-series-to-complete-yarros-rebecca-the-empyrean-onyx-storm",
       "listType": "series-to-complete",
       "title": "Onyx Storm",
       "rawTitle": "Onyx Storm",
@@ -5580,10 +5505,10 @@
       "firstName": "Rebecca",
       "lastName": "Yarros",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 299
+      "sourceRow": 294
     },
     {
-      "wantedId": "wanted-series-to-complete-0299-series-to-complete-zhao-xiran-jay-iron-widow-heavenly-tyrant",
+      "wantedId": "wanted-series-to-complete-0294-series-to-complete-zhao-xiran-jay-iron-widow-heavenly-tyrant",
       "listType": "series-to-complete",
       "title": "Heavenly Tyrant",
       "rawTitle": "Heavenly Tyrant",
@@ -5595,7 +5520,7 @@
       "firstName": "Xiran Jay",
       "lastName": "Zhao",
       "sourceSheet": "Series to Complete",
-      "sourceRow": 300
+      "sourceRow": 295
     }
   ]
 }

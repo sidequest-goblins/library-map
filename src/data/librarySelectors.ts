@@ -344,12 +344,421 @@ export function getBookcasesFromBooks(books: Book[]): Bookcase[] {
   );
 }
 
+export type SearchScope =
+  | "all"
+  | "title"
+  | "author"
+  | "series"
+  | "genre"
+  | "publisher"
+  | "bookcase";
+
+export type AuthorNameMode = "last" | "first";
+export type SearchSortDirection = "asc" | "desc";
+
+const LEADING_TITLE_ARTICLE_PATTERN = /^(?:a|an|the)\s+/;
+
 function normalizeSearchText(value: unknown): string {
   return String(value ?? "")
     .toLowerCase()
     .normalize("NFD")
     .replace(/\p{Diacritic}/gu, "")
     .trim();
+}
+
+function normalizeSearchValueStart(value: string): string {
+  return value.replace(/^[^a-z0-9]+/, "");
+}
+
+function normalizeTitleForAlphabeticalSearch(title: string): string {
+  const normalizedTitle = normalizeSearchValueStart(
+    normalizeSearchText(title)
+  );
+
+  return normalizedTitle.replace(LEADING_TITLE_ARTICLE_PATTERN, "");
+}
+
+function splitAuthorField(value: unknown): string[] {
+  return String(value ?? "")
+    .split(/\s*[;|]\s*/)
+    .map((part) => normalizeSearchText(part))
+    .filter(Boolean);
+}
+
+function getAuthorSearchValues(
+  book: Book,
+  authorNameMode: AuthorNameMode
+): string[] {
+  const authorField =
+    authorNameMode === "last" ? book.lastName : book.firstName;
+
+  const authorNames = splitAuthorField(authorField);
+
+  if (authorNames.length > 0) {
+    return authorNames;
+  }
+
+  const fallbackValues =
+    authorNameMode === "last"
+      ? splitAuthorField(book.authorSort)
+      : splitAuthorField(book.author);
+
+  return fallbackValues.length > 0
+    ? fallbackValues
+    : [normalizeSearchText(book.author)].filter(Boolean);
+}
+
+function getScopedSearchValues(
+  book: Book,
+  scope: Exclude<SearchScope, "all">,
+  authorNameMode: AuthorNameMode
+): string[] {
+  switch (scope) {
+    case "title":
+      return [
+        normalizeSearchText(book.title),
+        normalizeTitleForAlphabeticalSearch(book.title),
+      ].filter(Boolean);
+
+    case "author":
+      return getAuthorSearchValues(book, authorNameMode);
+
+    case "series":
+      return [
+        book.seriesTitle,
+        book.series,
+        book.seriesNumber,
+      ]
+        .map((value) => normalizeSearchText(value))
+        .filter(Boolean);
+
+    case "genre":
+      return [book.genre, book.subgenre]
+        .map((value) => normalizeSearchText(value))
+        .filter(Boolean);
+
+    case "publisher":
+      return [book.publisher]
+        .map((value) => normalizeSearchText(value))
+        .filter(Boolean);
+
+    case "bookcase":
+      return [book.bookcase, book.room]
+        .map((value) => normalizeSearchText(value))
+        .filter(Boolean);
+  }
+}
+
+function matchesScopedSearch(
+  book: Book,
+  normalizedQuery: string,
+  scope: Exclude<SearchScope, "all">,
+  authorNameMode: AuthorNameMode
+): boolean {
+  const searchableValues = getScopedSearchValues(
+    book,
+    scope,
+    authorNameMode
+  );
+
+  if (normalizedQuery.length === 1) {
+    if (scope === "title") {
+      return normalizeTitleForAlphabeticalSearch(book.title).startsWith(
+        normalizedQuery
+      );
+    }
+
+    return searchableValues.some((value) =>
+      normalizeSearchValueStart(value).startsWith(normalizedQuery)
+    );
+  }
+
+  const queryWords = normalizedQuery.split(/\s+/).filter(Boolean);
+
+  return queryWords.every((word) =>
+    searchableValues.some((value) => value.includes(word))
+  );
+}
+
+function compareSearchText(a: string, b: string): number {
+  return a.localeCompare(b, undefined, {
+    numeric: true,
+    sensitivity: "base",
+  });
+}
+
+function valueMatchesQuery(
+  value: string,
+  normalizedQuery: string
+): boolean {
+  if (normalizedQuery.length === 1) {
+    return normalizeSearchValueStart(value).startsWith(
+      normalizedQuery
+    );
+  }
+
+  const queryWords = normalizedQuery.split(/\s+/).filter(Boolean);
+
+  return queryWords.every((word) => value.includes(word));
+}
+
+function getMatchingSortValue(
+  values: string[],
+  normalizedQuery: string
+): string {
+  const matchingValues = values.filter((value) =>
+    valueMatchesQuery(value, normalizedQuery)
+  );
+
+  const valuesToSort =
+    matchingValues.length > 0
+      ? matchingValues
+      : values;
+
+  return [...valuesToSort].sort(compareSearchText)[0] ?? "";
+}
+
+function getSeriesSortTitle(book: Book): string {
+  return normalizeSearchText(
+    book.seriesTitle ??
+      book.series?.split("|")[0] ??
+      ""
+  );
+}
+
+function normalizeSeriesMediaValue(value: unknown): string {
+  return normalizeSearchText(value).replace(
+    /\bmanwha\b/g,
+    "manhwa"
+  );
+}
+
+function getSeriesMediaSortValue(book: Book): string {
+  const explicitSeriesFormat = normalizeSeriesMediaValue(
+    book.seriesFormat
+  );
+
+  if (explicitSeriesFormat) {
+    return explicitSeriesFormat;
+  }
+
+  const rawSeries = String(book.series ?? "");
+  const seriesParts = rawSeries.split("|");
+
+  if (seriesParts.length > 1) {
+    const formatFromSeries = normalizeSeriesMediaValue(
+      seriesParts.slice(1).join("|")
+    );
+
+    if (formatFromSeries) {
+      return formatFromSeries;
+    }
+  }
+
+  const titleFormatMatch = book.title.match(
+    /\((Light Novel|Manga|Manwha|Manhwa)\)\s*$/i
+  );
+
+  return normalizeSeriesMediaValue(
+    titleFormatMatch?.[1] ?? ""
+  );
+}
+
+function compareSeriesNumbers(a: Book, b: Book): number {
+  const aSeriesNumber = normalizeSearchText(a.seriesNumber);
+  const bSeriesNumber = normalizeSearchText(b.seriesNumber);
+
+  if (!aSeriesNumber && !bSeriesNumber) return 0;
+  if (!aSeriesNumber) return 1;
+  if (!bSeriesNumber) return -1;
+
+  return compareSearchText(
+    aSeriesNumber,
+    bSeriesNumber
+  );
+}
+
+function compareBooksInsideSeries(
+  a: Book,
+  b: Book
+): number {
+  const mediaComparison = compareSearchText(
+    getSeriesMediaSortValue(a),
+    getSeriesMediaSortValue(b)
+  );
+
+  if (mediaComparison !== 0) {
+    return mediaComparison;
+  }
+
+  const volumeComparison = compareSeriesNumbers(a, b);
+
+  if (volumeComparison !== 0) {
+    return volumeComparison;
+  }
+
+  return compareSearchText(
+    normalizeTitleForAlphabeticalSearch(a.title),
+    normalizeTitleForAlphabeticalSearch(b.title)
+  );
+}
+
+function compareBooksWithinSameSeries(
+  a: Book,
+  b: Book
+): number | null {
+  const aSeries = getSeriesSortTitle(a);
+  const bSeries = getSeriesSortTitle(b);
+
+  if (
+    !aSeries ||
+    !bSeries ||
+    aSeries !== bSeries
+  ) {
+    return null;
+  }
+
+  return compareBooksInsideSeries(a, b);
+}
+
+function groupSeriesResultsPreservingOrder(
+  books: Book[]
+): Book[] {
+  const booksBySeries = new Map<string, Book[]>();
+
+  books.forEach((book) => {
+    const seriesKey = getSeriesSortTitle(book);
+
+    if (!seriesKey) return;
+
+    const existingBooks =
+      booksBySeries.get(seriesKey) ?? [];
+
+    existingBooks.push(book);
+    booksBySeries.set(seriesKey, existingBooks);
+  });
+
+  const emittedSeries = new Set<string>();
+  const groupedResults: Book[] = [];
+
+  books.forEach((book) => {
+    const seriesKey = getSeriesSortTitle(book);
+
+    if (!seriesKey) {
+      groupedResults.push(book);
+      return;
+    }
+
+    if (emittedSeries.has(seriesKey)) {
+      return;
+    }
+
+    emittedSeries.add(seriesKey);
+
+    const seriesBooks =
+      booksBySeries.get(seriesKey) ?? [book];
+
+    groupedResults.push(
+      ...[...seriesBooks].sort(compareBooksInsideSeries)
+    );
+  });
+
+  return groupedResults;
+}
+
+function compareScopedBooks(
+  a: Book,
+  b: Book,
+  normalizedQuery: string,
+  scope: Exclude<SearchScope, "all">,
+  authorNameMode: AuthorNameMode
+): number {
+  let comparison = 0;
+
+  switch (scope) {
+    case "title": {
+      const seriesComparison =
+        compareBooksWithinSameSeries(a, b);
+
+      if (seriesComparison !== null) {
+        return seriesComparison;
+      }
+
+      comparison = compareSearchText(
+        normalizeTitleForAlphabeticalSearch(a.title),
+        normalizeTitleForAlphabeticalSearch(b.title)
+      );
+
+      break;
+    }
+
+    case "author":
+      comparison = compareSearchText(
+        getMatchingSortValue(
+          getAuthorSearchValues(a, authorNameMode),
+          normalizedQuery
+        ),
+        getMatchingSortValue(
+          getAuthorSearchValues(b, authorNameMode),
+          normalizedQuery
+        )
+      );
+
+      break;
+
+    case "series": {
+      comparison = compareSearchText(
+        getSeriesSortTitle(a),
+        getSeriesSortTitle(b)
+      );
+
+      if (comparison !== 0) {
+        return comparison;
+      }
+
+      return compareBooksInsideSeries(a, b);
+    }
+
+    case "genre":
+    case "publisher":
+    case "bookcase":
+      comparison = compareSearchText(
+        getMatchingSortValue(
+          getScopedSearchValues(
+            a,
+            scope,
+            authorNameMode
+          ),
+          normalizedQuery
+        ),
+        getMatchingSortValue(
+          getScopedSearchValues(
+            b,
+            scope,
+            authorNameMode
+          ),
+          normalizedQuery
+        )
+      );
+
+      break;
+  }
+
+  if (comparison !== 0) {
+    return comparison;
+  }
+
+  const seriesComparison =
+    compareBooksWithinSameSeries(a, b);
+
+  if (seriesComparison !== null) {
+    return seriesComparison;
+  }
+
+  return compareSearchText(
+    normalizeTitleForAlphabeticalSearch(a.title),
+    normalizeTitleForAlphabeticalSearch(b.title)
+  );
 }
 
 export function getSearchableBookText(book: Book): string {
@@ -372,18 +781,57 @@ export function getSearchableBookText(book: Book): string {
   ].join(" "));
 }
 
-export function searchBooks(books: Book[], query: string): Book[] {
+export function searchBooks(
+  books: Book[],
+  query: string,
+  scope: SearchScope = "all",
+  authorNameMode: AuthorNameMode = "last",
+  sortDirection: SearchSortDirection = "asc"
+): Book[] {
   const normalizedQuery = normalizeSearchText(query);
 
   if (!normalizedQuery) {
     return [];
   }
 
-  const queryWords = normalizedQuery.split(/\s+/).filter(Boolean);
+  if (scope === "all") {
+    const queryWords = normalizedQuery
+      .split(/\s+/)
+      .filter(Boolean);
 
-  return books.filter((book) => {
-    const searchableText = getSearchableBookText(book);
+    const matchingBooks = books.filter((book) => {
+      const searchableText = getSearchableBookText(book);
 
-    return queryWords.every((word) => searchableText.includes(word));
+      return queryWords.every((word) =>
+        searchableText.includes(word)
+      );
+    });
+
+    return groupSeriesResultsPreservingOrder(
+      matchingBooks
+    );
+  }
+
+  const matchingBooks = books.filter((book) =>
+    matchesScopedSearch(
+      book,
+      normalizedQuery,
+      scope,
+      authorNameMode
+    )
+  );
+
+  return matchingBooks.sort((a, b) => {
+    const comparison = compareScopedBooks(
+      a,
+      b,
+      normalizedQuery,
+      scope,
+      authorNameMode
+    );
+
+    return sortDirection === "asc"
+      ? comparison
+      : -comparison;
   });
 }

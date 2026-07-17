@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-13T05:24:59.730091+00:00",
+  "generatedAt": "2026-07-17T23:23:30.929680+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "sourceSheet": "List View",
-  "bookCount": 993,
+  "bookCount": 1005,
   "skippedBlankRows": 0,
   "headers": [
     "LGBTQ+",
@@ -13,6 +13,8 @@
     "Genre",
     "Subgenre",
     "Publisher",
+    "Year",
+    "Pages",
     "Bookcase",
     "Shelf",
     "Position",
@@ -45,14 +47,93 @@
   "unmappedBookcases": [],
   "catalogMatchFallbackRows": [
     {
-      "row": 527,
+      "row": 535,
       "matchType": "title-prefix",
       "listTitle": "The Hundred Years' War on Palestine",
       "catalogTitle": "The Hundred Years' War on Palestine: A History of Settler Colonialism and Resistance, 1917–2017",
       "author": "Rashid Khalidi"
     }
   ],
-  "catalogUnmatchedRows": [],
+  "catalogUnmatchedRows": [
+    {
+      "row": 53,
+      "title": "Six of Crows",
+      "author": "Leigh Bardugo",
+      "catalogKey": "bardugo-leigh-six-of-crows"
+    },
+    {
+      "row": 54,
+      "title": "The Crooked Kingdom",
+      "author": "Leigh Bardugo",
+      "catalogKey": "bardugo-leigh-the-crooked-kingdom"
+    },
+    {
+      "row": 75,
+      "title": "Masters of Death",
+      "author": "Olivie Blake",
+      "catalogKey": "blake-olivie-masters-of-death"
+    },
+    {
+      "row": 97,
+      "title": "Red Rising",
+      "author": "Pierce Brown",
+      "catalogKey": "brown-pierce-red-rising"
+    },
+    {
+      "row": 210,
+      "title": "The Year of Magical Thinking",
+      "author": "Joan Didion",
+      "catalogKey": "didion-joan-the-year-of-magical-thinking"
+    },
+    {
+      "row": 291,
+      "title": "What My Bones Know: A Memoir of Healing from Complex Trauma",
+      "author": "Stephanie Foo",
+      "catalogKey": "foo-stephanie-what-my-bones-know-a-memoir-of-healing-from-complex-trauma"
+    },
+    {
+      "row": 370,
+      "title": "How to Stop Time",
+      "author": "Matt Haig",
+      "catalogKey": "haig-matt-how-to-stop-time"
+    },
+    {
+      "row": 450,
+      "title": "Women in Science: 50 Fearless Pioneers Who Changed the World",
+      "author": "Rachel Ignotofsky",
+      "catalogKey": "ignotofsky-rachel-women-in-science-50-fearless-pioneers-who-changed-the-world"
+    },
+    {
+      "row": 544,
+      "title": "Pigs in Heaven",
+      "author": "Barbara Kingsolver",
+      "catalogKey": "kingsolver-barbara-pigs-in-heaven"
+    },
+    {
+      "row": 714,
+      "title": "The September House",
+      "author": "Carissa Orlando",
+      "catalogKey": "orlando-carissa-the-september-house"
+    },
+    {
+      "row": 782,
+      "title": "Gulp: Adventures on the Alimentary Canal",
+      "author": "Mary Roach",
+      "catalogKey": "roach-mary-gulp-adventures-on-the-alimentary-canal"
+    },
+    {
+      "row": 871,
+      "title": "The Vile Village",
+      "author": "Lemony Snicket",
+      "catalogKey": "snicket-lemony-the-vile-village"
+    },
+    {
+      "row": 987,
+      "title": "The Beauty & Peace, Pipe",
+      "author": "Aliya Whiteley",
+      "catalogKey": "whiteley-aliya-the-beauty-peace-pipe"
+    }
+  ],
   "catalog": {
     "catalogBookCount": 993,
     "catalogRowsWithTitles": 993,
@@ -16488,10 +16569,10 @@
         ""
       ],
       "headerMode": "headers",
-      "rowCount": 299,
+      "rowCount": 294,
       "skippedBlankRows": 0
     },
-    "totalWantedCount": 373
+    "totalWantedCount": 368
   },
   "coverExtraction": {
     "outputDir": "C:\\library_app\\library-map\\public\\data\\covers",
