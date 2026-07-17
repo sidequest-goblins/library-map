@@ -165,6 +165,101 @@ select {
   border-color: rgba(82, 111, 69, 0.55);
 }
 
+.searchAutocomplete {
+  position: relative;
+  z-index: 10;
+  width: min(100%, 430px);
+}
+
+.searchAutocomplete .librarySearch {
+  width: 100%;
+}
+
+.searchAutocompleteMenu {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  left: 0;
+  max-height: min(360px, 55vh);
+  overflow-y: auto;
+  border: 1px solid rgba(76, 48, 30, 0.22);
+  border-radius: 18px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 250, 240, 0.99),
+      rgba(247, 236, 215, 0.98)
+    ),
+    var(--paper);
+  box-shadow: 0 18px 38px rgba(76, 48, 30, 0.2);
+}
+
+.searchSuggestionGroup + .searchSuggestionGroup {
+  border-top: 1px solid rgba(76, 48, 30, 0.13);
+}
+
+.searchSuggestionGroupLabel {
+  margin: 0;
+  padding: 0.65rem 0.85rem 0.35rem;
+  color: var(--greenDark);
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.searchSuggestionOptions {
+  display: grid;
+  padding: 0 0.35rem 0.4rem;
+}
+
+.searchSuggestionOption {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.3rem 0.75rem;
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  padding: 0.65rem 0.55rem;
+  color: var(--ink);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.searchSuggestionOption:hover,
+.searchSuggestionOptionActive {
+  background: rgba(169, 183, 141, 0.28);
+}
+
+.searchSuggestionOption:focus-visible {
+  outline: 3px solid rgba(201, 154, 69, 0.28);
+  outline-offset: -2px;
+}
+
+.searchSuggestionLabel {
+  overflow: hidden;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.searchSuggestionDetail {
+  align-self: center;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.searchAutocompleteEmpty {
+  margin: 0;
+  padding: 0.85rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
 .searchScopePanel {
   display: grid;
   gap: 0.75rem;

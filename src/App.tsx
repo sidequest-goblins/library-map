@@ -1,4 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  type KeyboardEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import "./App.css";
 
 import BookcaseView from "./components/BookcaseView";
@@ -103,6 +109,218 @@ function normalizeInlineSearchText(value: unknown): string {
     .normalize("NFD")
     .replace(/\p{Diacritic}/gu, "")
     .trim();
+}
+
+type AutocompleteSearchScope =
+  | "series"
+  | "genre"
+  | "publisher"
+  | "bookcase";
+
+type SearchSuggestion = {
+  key: string;
+  value: string;
+  label: string;
+  group: string;
+  detail?: string;
+};
+
+const SEARCH_SUGGESTION_GROUP_ORDER: Record<string, number> = {
+  Series: 0,
+  Genres: 0,
+  Subgenres: 1,
+  Publishers: 0,
+  Rooms: 0,
+  Bookcases: 1,
+};
+
+function supportsSearchAutocomplete(
+  scope: SearchScope
+): scope is AutocompleteSearchScope {
+  return (
+    scope === "series" ||
+    scope === "genre" ||
+    scope === "publisher" ||
+    scope === "bookcase"
+  );
+}
+
+function compareSuggestionText(a: string, b: string): number {
+  return a.localeCompare(b, undefined, {
+    numeric: true,
+    sensitivity: "base",
+  });
+}
+
+function buildSearchSuggestions(
+  books: Book[],
+  scope: SearchScope
+): SearchSuggestion[] {
+  if (!supportsSearchAutocomplete(scope)) {
+    return [];
+  }
+
+  const suggestions = new Map<string, SearchSuggestion>();
+
+  function addSuggestion(
+    suggestion: Omit<SearchSuggestion, "key">
+  ) {
+    const normalizedValue = normalizeInlineSearchText(
+      suggestion.value
+    );
+
+    if (!normalizedValue) return;
+
+    const key = [
+      suggestion.group,
+      normalizeInlineSearchText(suggestion.label),
+      normalizeInlineSearchText(suggestion.detail),
+    ].join("|");
+
+    if (suggestions.has(key)) return;
+
+    suggestions.set(key, {
+      ...suggestion,
+      key,
+    });
+  }
+
+  books.forEach((book) => {
+    switch (scope) {
+      case "series": {
+        const series = String(
+          book.seriesTitle ??
+            book.series?.split("|")[0] ??
+            ""
+        ).trim();
+
+        if (series) {
+          addSuggestion({
+            value: series,
+            label: series,
+            group: "Series",
+          });
+        }
+
+        break;
+      }
+
+      case "genre": {
+        const genre = String(book.genre ?? "").trim();
+        const subgenre = String(book.subgenre ?? "").trim();
+
+        if (genre) {
+          addSuggestion({
+            value: genre,
+            label: genre,
+            group: "Genres",
+          });
+        }
+
+        if (subgenre) {
+          addSuggestion({
+            value: subgenre,
+            label: subgenre,
+            group: "Subgenres",
+          });
+        }
+
+        break;
+      }
+
+      case "publisher": {
+        const publisher = String(book.publisher ?? "").trim();
+
+        if (publisher) {
+          addSuggestion({
+            value: publisher,
+            label: publisher,
+            group: "Publishers",
+          });
+        }
+
+        break;
+      }
+
+      case "bookcase": {
+        const room = String(book.room ?? "").trim();
+        const bookcase = String(book.bookcase ?? "").trim();
+
+        if (room) {
+          addSuggestion({
+            value: room,
+            label: room,
+            group: "Rooms",
+          });
+        }
+
+        if (bookcase) {
+          addSuggestion({
+            value: bookcase,
+            label: bookcase,
+            group: "Bookcases",
+            detail:
+              room && room !== bookcase
+                ? room
+                : undefined,
+          });
+        }
+
+        break;
+      }
+    }
+  });
+
+  return Array.from(suggestions.values()).sort((a, b) => {
+    const groupComparison =
+      (SEARCH_SUGGESTION_GROUP_ORDER[a.group] ?? 99) -
+      (SEARCH_SUGGESTION_GROUP_ORDER[b.group] ?? 99);
+
+    if (groupComparison !== 0) {
+      return groupComparison;
+    }
+
+    return (
+      compareSuggestionText(a.label, b.label) ||
+      compareSuggestionText(
+        a.detail ?? "",
+        b.detail ?? ""
+      )
+    );
+  });
+}
+
+function filterSearchSuggestions(
+  suggestions: SearchSuggestion[],
+  query: string
+): SearchSuggestion[] {
+  const normalizedQuery = normalizeInlineSearchText(query);
+
+  if (!normalizedQuery) {
+    return suggestions;
+  }
+
+  const queryWords = normalizedQuery
+    .split(/\s+/)
+    .filter(Boolean);
+
+  return suggestions.filter((suggestion) => {
+    const searchableText = normalizeInlineSearchText([
+      suggestion.label,
+      suggestion.value,
+      suggestion.detail,
+    ].join(" "));
+
+    if (normalizedQuery.length === 1) {
+      return searchableText
+        .split(/\s+/)
+        .some((word) => word.startsWith(normalizedQuery));
+    }
+
+    return queryWords.every((word) =>
+      searchableText.includes(word)
+    );
+  });
 }
 
 function getWantedSearchText(item: WantedBook): string {
@@ -290,9 +508,51 @@ export default function App() {
     toBuy: "",
     seriesToComplete: "",
   });
-  const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
+  const [selectedBookId, setSelectedBookId] =
+    useState<string | null>(null);
   const [searchPage, setSearchPage] = useState(1);
-  const mapReturnPositionRef = useRef<MapReturnPosition | null>(null);
+  const [searchSuggestionsOpen, setSearchSuggestionsOpen] =
+    useState(false);
+  const [
+    activeSearchSuggestionIndex,
+    setActiveSearchSuggestionIndex,
+  ] = useState(-1);
+
+  const mapReturnPositionRef =
+    useRef<MapReturnPosition | null>(null);
+  const searchAutocompleteRef =
+    useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function handleAutocompletePointerDown(
+      event: PointerEvent
+    ) {
+      const target = event.target;
+
+      if (!(target instanceof Node)) return;
+
+      if (
+        searchAutocompleteRef.current?.contains(target)
+      ) {
+        return;
+      }
+
+      setSearchSuggestionsOpen(false);
+      setActiveSearchSuggestionIndex(-1);
+    }
+
+    document.addEventListener(
+      "pointerdown",
+      handleAutocompletePointerDown
+    );
+
+    return () => {
+      document.removeEventListener(
+        "pointerdown",
+        handleAutocompletePointerDown
+      );
+    };
+  }, []);
 
   function openMapBookDetail(
     bookId: string,
@@ -404,6 +664,173 @@ export default function App() {
   const shelves = selectedBookcase
     ? getShelvesForBookcase(books, selectedBookcase)
     : [];
+
+  const autocompleteEnabled =
+    supportsSearchAutocomplete(searchScope);
+
+  const searchSuggestions = useMemo(
+    () => buildSearchSuggestions(books, searchScope),
+    [books, searchScope]
+  );
+
+  const filteredSearchSuggestions = useMemo(
+    () =>
+      filterSearchSuggestions(
+        searchSuggestions,
+        searchQuery
+      ),
+    [searchSuggestions, searchQuery]
+  );
+
+  const groupedSearchSuggestions = useMemo(() => {
+    const groups = new Map<
+      string,
+      Array<{
+        suggestion: SearchSuggestion;
+        index: number;
+      }>
+    >();
+
+    filteredSearchSuggestions.forEach(
+      (suggestion, index) => {
+        const existingGroup =
+          groups.get(suggestion.group) ?? [];
+
+        existingGroup.push({
+          suggestion,
+          index,
+        });
+
+        groups.set(suggestion.group, existingGroup);
+      }
+    );
+
+    return Array.from(groups.entries());
+  }, [filteredSearchSuggestions]);
+
+  useEffect(() => {
+    if (!searchSuggestionsOpen) return;
+
+    setActiveSearchSuggestionIndex((currentIndex) => {
+      if (filteredSearchSuggestions.length === 0) {
+        return -1;
+      }
+
+      if (
+        currentIndex < 0 ||
+        currentIndex >= filteredSearchSuggestions.length
+      ) {
+        return 0;
+      }
+
+      return currentIndex;
+    });
+  }, [
+    filteredSearchSuggestions.length,
+    searchSuggestionsOpen,
+  ]);
+
+  useEffect(() => {
+    if (!searchSuggestionsOpen) return;
+    if (activeSearchSuggestionIndex < 0) return;
+
+    document
+      .getElementById(
+        `library-search-suggestion-${activeSearchSuggestionIndex}`
+      )
+      ?.scrollIntoView({
+        block: "nearest",
+      });
+  }, [
+    activeSearchSuggestionIndex,
+    searchSuggestionsOpen,
+  ]);
+
+  function selectSearchSuggestion(
+    suggestion: SearchSuggestion
+  ) {
+    setSearchQuery(suggestion.value);
+    setSearchPage(1);
+    setSelectedBookId(null);
+    setSearchSuggestionsOpen(false);
+    setActiveSearchSuggestionIndex(-1);
+  }
+
+  function handleSearchInputKeyDown(
+    event: KeyboardEvent<HTMLInputElement>
+  ) {
+    if (!autocompleteEnabled) return;
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setSearchSuggestionsOpen(true);
+
+      setActiveSearchSuggestionIndex((currentIndex) => {
+        if (filteredSearchSuggestions.length === 0) {
+          return -1;
+        }
+
+        if (currentIndex < 0) {
+          return 0;
+        }
+
+        return (
+          (currentIndex + 1) %
+          filteredSearchSuggestions.length
+        );
+      });
+
+      return;
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setSearchSuggestionsOpen(true);
+
+      setActiveSearchSuggestionIndex((currentIndex) => {
+        if (filteredSearchSuggestions.length === 0) {
+          return -1;
+        }
+
+        if (currentIndex <= 0) {
+          return filteredSearchSuggestions.length - 1;
+        }
+
+        return currentIndex - 1;
+      });
+
+      return;
+    }
+
+    if (
+      event.key === "Enter" &&
+      searchSuggestionsOpen &&
+      activeSearchSuggestionIndex >= 0
+    ) {
+      const activeSuggestion =
+        filteredSearchSuggestions[
+          activeSearchSuggestionIndex
+        ];
+
+      if (activeSuggestion) {
+        event.preventDefault();
+        selectSearchSuggestion(activeSuggestion);
+      }
+
+      return;
+    }
+
+    if (event.key === "Escape") {
+      setSearchSuggestionsOpen(false);
+      setActiveSearchSuggestionIndex(-1);
+      return;
+    }
+
+    if (event.key === "Tab") {
+      setSearchSuggestionsOpen(false);
+      setActiveSearchSuggestionIndex(-1);
+    }
+  }
 
   const searchResults = useMemo(
     () =>
@@ -879,22 +1306,153 @@ export default function App() {
           renderBookDetail("Back to results", () => setSelectedBookId(null))
         ) : (
           <section className="searchPanel">
-            <label className="librarySearch">
-              <span>Search books</span>
-              <input
-                type="search"
-                value={searchQuery}
-                onChange={(event) => {
-                  setSearchQuery(event.target.value);
-                  setSearchPage(1);
-                  setSelectedBookId(null);
-                }}
-                placeholder={getSearchPlaceholder(
-                  searchScope,
-                  authorNameMode
-                )}
-              />
-            </label>
+            <div
+              className="searchAutocomplete"
+              ref={searchAutocompleteRef}
+            >
+              <label
+                className="librarySearch"
+                htmlFor="library-search-input"
+              >
+                <span>Search books</span>
+
+                <input
+                  id="library-search-input"
+                  type="search"
+                  value={searchQuery}
+                  autoComplete="off"
+                  role={autocompleteEnabled ? "combobox" : undefined}
+                  aria-autocomplete={
+                    autocompleteEnabled ? "list" : undefined
+                  }
+                  aria-haspopup={
+                    autocompleteEnabled ? "listbox" : undefined
+                  }
+                  aria-expanded={
+                    autocompleteEnabled
+                      ? searchSuggestionsOpen
+                      : undefined
+                  }
+                  aria-controls={
+                    autocompleteEnabled
+                      ? "library-search-suggestions"
+                      : undefined
+                  }
+                  aria-activedescendant={
+                    autocompleteEnabled &&
+                    searchSuggestionsOpen &&
+                    activeSearchSuggestionIndex >= 0
+                      ? `library-search-suggestion-${activeSearchSuggestionIndex}`
+                      : undefined
+                  }
+                  onFocus={() => {
+                    if (!autocompleteEnabled) return;
+
+                    setSearchSuggestionsOpen(true);
+                    setActiveSearchSuggestionIndex(
+                      filteredSearchSuggestions.length > 0
+                        ? 0
+                        : -1
+                    );
+                  }}
+                  onChange={(event) => {
+                    setSearchQuery(event.target.value);
+                    setSearchPage(1);
+                    setSelectedBookId(null);
+
+                    if (autocompleteEnabled) {
+                      setSearchSuggestionsOpen(true);
+                      setActiveSearchSuggestionIndex(0);
+                    } else {
+                      setSearchSuggestionsOpen(false);
+                      setActiveSearchSuggestionIndex(-1);
+                    }
+                  }}
+                  onKeyDown={handleSearchInputKeyDown}
+                  placeholder={getSearchPlaceholder(
+                    searchScope,
+                    authorNameMode
+                  )}
+                />
+              </label>
+
+              {autocompleteEnabled && searchSuggestionsOpen ? (
+                <div
+                  id="library-search-suggestions"
+                  className="searchAutocompleteMenu"
+                  role="listbox"
+                  aria-label={`${searchScope} suggestions`}
+                >
+                  {filteredSearchSuggestions.length > 0 ? (
+                    groupedSearchSuggestions.map(
+                      ([group, suggestions]) => (
+                        <div
+                          key={group}
+                          className="searchSuggestionGroup"
+                          role="group"
+                          aria-label={group}
+                        >
+                          <p className="searchSuggestionGroupLabel">
+                            {group}
+                          </p>
+
+                          <div className="searchSuggestionOptions">
+                            {suggestions.map(
+                              ({ suggestion, index }) => (
+                                <button
+                                  key={suggestion.key}
+                                  id={`library-search-suggestion-${index}`}
+                                  type="button"
+                                  role="option"
+                                  aria-selected={
+                                    activeSearchSuggestionIndex ===
+                                    index
+                                  }
+                                  className={
+                                    activeSearchSuggestionIndex ===
+                                    index
+                                      ? "searchSuggestionOption searchSuggestionOptionActive"
+                                      : "searchSuggestionOption"
+                                  }
+                                  onMouseDown={(event) => {
+                                    event.preventDefault();
+                                  }}
+                                  onMouseEnter={() => {
+                                    setActiveSearchSuggestionIndex(
+                                      index
+                                    );
+                                  }}
+                                  onClick={() => {
+                                    selectSearchSuggestion(
+                                      suggestion
+                                    );
+                                  }}
+                                >
+                                  <span className="searchSuggestionLabel">
+                                    {suggestion.label}
+                                  </span>
+
+                                  {suggestion.detail ? (
+                                    <span className="searchSuggestionDetail">
+                                      {suggestion.detail}
+                                    </span>
+                                  ) : null}
+                                </button>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      )
+                    )
+                  ) : (
+                    <p className="searchAutocompleteEmpty">
+                      No matching suggestions. You can still
+                      search using the text you entered.
+                    </p>
+                  )}
+                </div>
+              ) : null}
+            </div>
 
             <section
               className="searchScopePanel"
@@ -920,6 +1478,8 @@ export default function App() {
                       aria-pressed={searchScope === option.scope}
                       onClick={() => {
                         setSearchScope(option.scope);
+                        setSearchSuggestionsOpen(false);
+                        setActiveSearchSuggestionIndex(-1);
                         setSearchPage(1);
                         setSelectedBookId(null);
                       }}
