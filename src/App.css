@@ -587,6 +587,64 @@ select {
   font-weight: 800;
 }
 
+.readStatusButton {
+  appearance: none;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.readStatusButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: rgba(52, 72, 46, 0.48);
+  box-shadow: 0 6px 14px rgba(52, 72, 46, 0.12);
+}
+
+.readStatusButton:focus-visible {
+  outline: 3px solid rgba(201, 154, 69, 0.28);
+  outline-offset: 2px;
+}
+
+.readStatusButtonActive {
+  color: #fff8e9;
+  border-color: rgba(52, 72, 46, 0.42);
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--greenDark)
+    );
+}
+
+.readStatusButtonInactive {
+  color: var(--muted);
+  border-style: dashed;
+  background: rgba(255, 250, 240, 0.72);
+}
+
+.readStatusButton:disabled {
+  cursor: wait;
+  opacity: 0.58;
+  transform: none;
+}
+
+.readStatusHint {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.readStatusError {
+  color: #8a3429;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
 .bookDetailSections {
   display: grid;
   gap: 1rem;

@@ -17,6 +17,7 @@ import {
   isLibraryReaderId,
   makeLibraryStateKey,
   type LibraryReaderBookState,
+  type LibraryReaderId,
   type LibraryStateLoadStatus,
   type LibraryStateSeedFeedback,
 } from "./data/libraryState";
@@ -648,6 +649,16 @@ export default function App() {
     libraryStateSeedFeedback,
     setLibraryStateSeedFeedback,
   ] = useState<LibraryStateSeedFeedback>(null);
+
+  const [
+    readStatusSavingKey,
+    setReadStatusSavingKey,
+  ] = useState<string | null>(null);
+
+  const [
+    readStatusError,
+    setReadStatusError,
+  ] = useState("");
 
   const [loadStatus, setLoadStatus] = useState<"loading" | "ready" | "error">(
     "loading"
@@ -1405,6 +1416,134 @@ export default function App() {
     };
   }
 
+  async function updateBookReaderReadStatus(
+    book: Book,
+    readerId: LibraryReaderId,
+    nextIsRead: boolean
+  ) {
+    const catalogKey =
+      book.catalogKey?.trim() ?? "";
+
+    if (
+      !householdSession ||
+      libraryStateLoadStatus !== "ready"
+    ) {
+      setReadStatusError(
+        "Household sync must be signed in and fully loaded before changing read status."
+      );
+
+      return;
+    }
+
+    if (!catalogKey) {
+      setReadStatusError(
+        "This book does not have a catalog key, so its shared state cannot be changed safely."
+      );
+
+      return;
+    }
+
+    if (readStatusSavingKey) {
+      return;
+    }
+
+    const stateKey =
+      makeLibraryStateKey(
+        readerId,
+        catalogKey
+      );
+
+    const existingState =
+      libraryStateByKey.get(stateKey);
+
+    setReadStatusSavingKey(stateKey);
+    setReadStatusError("");
+
+    try {
+      if (existingState) {
+        const { error } = await supabase
+          .from("library_reader_book_state")
+          .update({
+            is_read: nextIsRead,
+          })
+          .eq(
+            "user_id",
+            householdSession.user.id
+          )
+          .eq(
+            "reader_id",
+            readerId
+          )
+          .eq(
+            "catalog_key",
+            catalogKey
+          );
+
+        if (error) {
+          throw error;
+        }
+      } else {
+        const { error } = await supabase
+          .from("library_reader_book_state")
+          .insert({
+            user_id:
+              householdSession.user.id,
+            reader_id: readerId,
+            catalog_key: catalogKey,
+            is_read: nextIsRead,
+            current_page: null,
+            rating: null,
+            notes: null,
+          });
+
+        if (error) {
+          throw error;
+        }
+      }
+
+      const refreshedRows =
+        await fetchLibraryStateRows(
+          householdSession.user.id
+        );
+
+      const refreshedState =
+        refreshedRows.find(
+          (stateRow) =>
+            stateRow.reader_id ===
+              readerId &&
+            stateRow.catalog_key ===
+              catalogKey
+        );
+
+      if (
+        !refreshedState ||
+        refreshedState.is_read !==
+          nextIsRead
+      ) {
+        throw new Error(
+          "Supabase did not return the expected read status after saving."
+        );
+      }
+
+      setLibraryStateRows(
+        refreshedRows
+      );
+    } catch (error) {
+      console.error(
+        "Could not update book read status.",
+        error
+      );
+
+      setReadStatusError(
+        error instanceof Error
+          ? `Read status failed to save: ${error.message}`
+          : "Read status failed to save because of an unknown Supabase error."
+      );
+    } finally {
+      setReadStatusSavingKey(null);
+    }
+  }
+
   const activeWantedItems =
     wantedMode === "toBuy" ? wantedLists.toBuy : wantedLists.seriesToComplete;
 
@@ -1602,6 +1741,10 @@ export default function App() {
     preloadBookCovers(mapDetailBooks);
   }, [activeTab, selectedBook, mapDetailBooks]);
 
+  useEffect(() => {
+    setReadStatusError("");
+  }, [selectedBookId]);
+
   function renderBookDetail(
     backLabel: string,
     onBack: () => void,
@@ -1668,6 +1811,29 @@ export default function App() {
       selectedBookCjRead ? "CJ" : "",
       selectedBookJcRead ? "JC" : "",
     ].filter(Boolean);
+
+    const selectedBookCatalogKey =
+      selectedBook.catalogKey?.trim() ?? "";
+
+    const readStatusCanEdit =
+      sharedLibraryStateIsAuthoritative &&
+      Boolean(selectedBookCatalogKey);
+
+    const cjReadStatusKey =
+      selectedBookCatalogKey
+        ? makeLibraryStateKey(
+            "cj",
+            selectedBookCatalogKey
+          )
+        : "";
+
+    const jcReadStatusKey =
+      selectedBookCatalogKey
+        ? makeLibraryStateKey(
+            "jc",
+            selectedBookCatalogKey
+          )
+        : "";
 
     const selectedBookSeriesName = String(
       selectedBook.seriesTitle ??
@@ -1801,9 +1967,94 @@ export default function App() {
 
           <div className="bookDetailSections">
             <section className="detailSection">
-              <p className="detailLabel">Read status</p>
+              <p className="detailLabel">
+                Read status
+              </p>
 
-              {readBy.length > 0 ? (
+              {readStatusCanEdit ? (
+                <>
+                  <div
+                    className="readStatusList"
+                    role="group"
+                    aria-label="Change book read status"
+                  >
+                    <button
+                      type="button"
+                      className={
+                        selectedBookCjRead
+                          ? "readStatusChip readStatusButton readStatusButtonActive"
+                          : "readStatusChip readStatusButton readStatusButtonInactive"
+                      }
+                      aria-pressed={
+                        selectedBookCjRead
+                      }
+                      aria-label={
+                        selectedBookCjRead
+                          ? "Mark CJ as unread"
+                          : "Mark CJ as read"
+                      }
+                      disabled={
+                        readStatusSavingKey !==
+                        null
+                      }
+                      onClick={() => {
+                        void updateBookReaderReadStatus(
+                          selectedBook,
+                          "cj",
+                          !selectedBookCjRead
+                        );
+                      }}
+                    >
+                      {readStatusSavingKey ===
+                      cjReadStatusKey
+                        ? "CJ · Saving…"
+                        : selectedBookCjRead
+                          ? "CJ ✓"
+                          : "CJ"}
+                    </button>
+
+                    <button
+                      type="button"
+                      className={
+                        selectedBookJcRead
+                          ? "readStatusChip readStatusButton readStatusButtonActive"
+                          : "readStatusChip readStatusButton readStatusButtonInactive"
+                      }
+                      aria-pressed={
+                        selectedBookJcRead
+                      }
+                      aria-label={
+                        selectedBookJcRead
+                          ? "Mark JC as unread"
+                          : "Mark JC as read"
+                      }
+                      disabled={
+                        readStatusSavingKey !==
+                        null
+                      }
+                      onClick={() => {
+                        void updateBookReaderReadStatus(
+                          selectedBook,
+                          "jc",
+                          !selectedBookJcRead
+                        );
+                      }}
+                    >
+                      {readStatusSavingKey ===
+                      jcReadStatusKey
+                        ? "JC · Saving…"
+                        : selectedBookJcRead
+                          ? "JC ✓"
+                          : "JC"}
+                    </button>
+                  </div>
+
+                  <p className="readStatusHint">
+                    Tap a reader to change their
+                    shared read status.
+                  </p>
+                </>
+              ) : readBy.length > 0 ? (
                 <div className="readStatusList">
                   {selectedBookCjRead ? (
                     <span className="readStatusChip">
@@ -1822,6 +2073,15 @@ export default function App() {
                   Not marked read yet.
                 </p>
               )}
+
+              {readStatusError ? (
+                <p
+                  className="readStatusError"
+                  role="alert"
+                >
+                  {readStatusError}
+                </p>
+              ) : null}
             </section>
 
             {selectedBookReadingProgress.length > 0 ? (
