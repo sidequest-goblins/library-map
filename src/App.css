@@ -1562,3 +1562,10 @@ select {
   font-size: 0.78rem;
   line-height: 1.4;
 }
+
+.householdAccountActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}

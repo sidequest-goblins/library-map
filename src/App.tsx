@@ -17,6 +17,7 @@ import {
   makeLibraryStateKey,
   type LibraryReaderBookState,
   type LibraryStateLoadStatus,
+  type LibraryStateSeedFeedback,
 } from "./data/libraryState";
 import {
   getBookcasesFromBooks,
@@ -574,6 +575,40 @@ function sortBooksForDetailShelf(booksToSort: Book[]): Book[] {
   });
 }
 
+async function fetchLibraryStateRows(
+  userId: string
+): Promise<LibraryReaderBookState[]> {
+  const { data, error } = await supabase
+    .from("library_reader_book_state")
+    .select(`
+      user_id,
+      reader_id,
+      catalog_key,
+      is_read,
+      current_page,
+      rating,
+      notes,
+      created_at,
+      updated_at
+    `)
+    .eq("user_id", userId)
+    .order("catalog_key", {
+      ascending: true,
+    })
+    .order("reader_id", {
+      ascending: true,
+    })
+    .overrideTypes<
+      LibraryReaderBookState[]
+    >();
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}
+
 export default function App() {
   const [books, setBooks] = useState<Book[]>([]);
   const [wantedLists, setWantedLists] = useState<WantedLists>(EMPTY_WANTED_LISTS);
@@ -599,6 +634,16 @@ export default function App() {
     libraryStateLoadError,
     setLibraryStateLoadError,
   ] = useState("");
+
+  const [
+    isSeedingLibraryState,
+    setIsSeedingLibraryState,
+  ] = useState(false);
+
+  const [
+    libraryStateSeedFeedback,
+    setLibraryStateSeedFeedback,
+  ] = useState<LibraryStateSeedFeedback>(null);
 
   const [loadStatus, setLoadStatus] = useState<"loading" | "ready" | "error">(
     "loading"
@@ -752,6 +797,8 @@ export default function App() {
         setLibraryStateRows([]);
         setLibraryStateLoadStatus("idle");
         setLibraryStateLoadError("");
+        setLibraryStateSeedFeedback(null);
+        setIsSeedingLibraryState(false);
         return;
       }
 
@@ -759,43 +806,16 @@ export default function App() {
       setLibraryStateLoadError("");
 
       try {
-        const { data, error } = await supabase
-          .from("library_reader_book_state")
-          .select(`
-            user_id,
-            reader_id,
-            catalog_key,
-            is_read,
-            current_page,
-            rating,
-            notes,
-            created_at,
-            updated_at
-          `)
-          .eq(
-            "user_id",
+        const loadedRows =
+          await fetchLibraryStateRows(
             householdSession.user.id
-          )
-          .order("catalog_key", {
-            ascending: true,
-          })
-          .order("reader_id", {
-            ascending: true,
-          })
-          .overrideTypes<
-            LibraryReaderBookState[]
-          >();
+          );
 
         if (!isActive) {
           return;
         }
 
-        if (error) {
-          throw error;
-        }
-
-        setLibraryStateRows(data ?? []);
-
+        setLibraryStateRows(loadedRows);
         setLibraryStateLoadStatus("ready");
       } catch (error) {
         if (!isActive) {
@@ -859,6 +879,189 @@ export default function App() {
       householdSession,
       loadStatus,
     ]);
+
+  async function seedLibraryStateFromPreview() {
+    if (
+      !householdSession ||
+      !libraryStateSeedPreview
+    ) {
+      setLibraryStateSeedFeedback({
+        kind: "error",
+        message:
+          "The household session or seed preview is unavailable.",
+      });
+
+      return;
+    }
+
+    if (
+      libraryStateLoadStatus !== "ready"
+    ) {
+      setLibraryStateSeedFeedback({
+        kind: "error",
+        message:
+          "Wait for shared library state to finish loading.",
+      });
+
+      return;
+    }
+
+    if (libraryStateByKey.size > 0) {
+      setLibraryStateSeedFeedback({
+        kind: "error",
+        message:
+          "Seed stopped because shared records already exist.",
+      });
+
+      return;
+    }
+
+    if (
+      libraryStateSeedPreview.totalRows === 0
+    ) {
+      setLibraryStateSeedFeedback({
+        kind: "error",
+        message:
+          "The seed preview contains no records.",
+      });
+
+      return;
+    }
+
+    if (
+      libraryStateSeedPreview
+        .skippedMissingCatalogKey > 0
+    ) {
+      setLibraryStateSeedFeedback({
+        kind: "error",
+        message:
+          "Seed stopped because some records are missing catalog keys.",
+      });
+
+      return;
+    }
+
+    const expectedRowCount =
+      libraryStateSeedPreview.totalRows;
+
+    const confirmed = window.confirm(
+      `Seed ${expectedRowCount} shared library records now?\n\n` +
+        `This is the one-time import from the workbook and challenge data. ` +
+        `Existing database rows will not be overwritten.`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setIsSeedingLibraryState(true);
+    setLibraryStateSeedFeedback(null);
+
+    try {
+      const {
+        count: existingRowCount,
+        error: countError,
+      } = await supabase
+        .from("library_reader_book_state")
+        .select("*", {
+          count: "exact",
+          head: true,
+        })
+        .eq(
+          "user_id",
+          householdSession.user.id
+        );
+
+      if (countError) {
+        throw countError;
+      }
+
+      if ((existingRowCount ?? 0) > 0) {
+        const existingRows =
+          await fetchLibraryStateRows(
+            householdSession.user.id
+          );
+
+        setLibraryStateRows(existingRows);
+        setLibraryStateLoadStatus("ready");
+
+        setLibraryStateSeedFeedback({
+          kind: "error",
+          message:
+            `Seed stopped because the database already contains ` +
+            `${existingRows.length} shared records.`,
+        });
+
+        return;
+      }
+
+      const { error: seedError } =
+        await supabase
+          .from(
+            "library_reader_book_state"
+          )
+          .upsert(
+            libraryStateSeedPreview.rows,
+            {
+              onConflict:
+                "user_id,reader_id,catalog_key",
+              ignoreDuplicates: true,
+            }
+          );
+
+      if (seedError) {
+        throw seedError;
+      }
+
+      setLibraryStateLoadStatus("loading");
+
+      const refreshedRows =
+        await fetchLibraryStateRows(
+          householdSession.user.id
+        );
+
+      setLibraryStateRows(refreshedRows);
+      setLibraryStateLoadStatus("ready");
+      setLibraryStateLoadError("");
+
+      if (
+        refreshedRows.length !==
+        expectedRowCount
+      ) {
+        setLibraryStateSeedFeedback({
+          kind: "error",
+          message:
+            `Seed request finished, but ${refreshedRows.length} of ` +
+            `${expectedRowCount} expected records loaded. ` +
+            `Stop here and inspect Supabase before editing anything.`,
+        });
+
+        return;
+      }
+
+      setLibraryStateSeedFeedback({
+        kind: "success",
+        message:
+          `${refreshedRows.length} shared library records ` +
+          `were seeded successfully.`,
+      });
+    } catch (error) {
+      console.error(
+        "Could not seed shared library state.",
+        error
+      );
+
+      setLibraryStateSeedFeedback({
+        kind: "error",
+        message:
+          error instanceof Error
+            ? `Seed failed: ${error.message}`
+            : "Seed failed because of an unknown Supabase error.",
+      });
+    } finally {
+      setIsSeedingLibraryState(false);
+    }
+  }
 
   const bookcases = useMemo(
     () =>
@@ -1807,6 +2010,15 @@ export default function App() {
             }
             libraryStateSeedPreview={
               libraryStateSeedPreview
+            }
+            onSeedLibraryState={
+              seedLibraryStateFromPreview
+            }
+            isSeedingLibraryState={
+              isSeedingLibraryState
+            }
+            libraryStateSeedFeedback={
+              libraryStateSeedFeedback
             }
           />
 

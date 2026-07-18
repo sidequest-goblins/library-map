@@ -45,6 +45,11 @@ export type LibraryStateSeedPreview = {
   skippedMissingCatalogKey: number;
 };
 
+export type LibraryStateSeedFeedback = {
+  kind: "success" | "error";
+  message: string;
+} | null;
+
 export function makeLibraryStateKey(
   readerId: LibraryReaderId,
   catalogKey: string

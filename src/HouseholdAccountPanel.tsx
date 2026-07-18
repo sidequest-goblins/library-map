@@ -9,6 +9,7 @@ import { supabase } from "./supabaseClient";
 
 import type {
   LibraryStateLoadStatus,
+  LibraryStateSeedFeedback,
   LibraryStateSeedPreview,
 } from "./data/libraryState";
 
@@ -26,6 +27,10 @@ type HouseholdAccountPanelProps = {
 
   libraryStateSeedPreview:
     LibraryStateSeedPreview | null;
+
+  onSeedLibraryState: () => void;
+  isSeedingLibraryState: boolean;
+  libraryStateSeedFeedback: LibraryStateSeedFeedback;
 };
 
 type AuthFeedback = {
@@ -39,6 +44,9 @@ export default function HouseholdAccountPanel({
   libraryStateRecordCount,
   libraryStateLoadError,
   libraryStateSeedPreview,
+  onSeedLibraryState,
+  isSeedingLibraryState,
+  libraryStateSeedFeedback,
 }: HouseholdAccountPanelProps) {
   const [session, setSession] =
     useState<Session | null>(null);
@@ -244,6 +252,7 @@ export default function HouseholdAccountPanel({
             </span>
 
             {libraryStateLoadStatus === "ready" &&
+            libraryStateRecordCount === 0 &&
             libraryStateSeedPreview ? (
               <span className="householdAccountSeedPreview">
                 Seed preview:{" "}
@@ -265,16 +274,44 @@ export default function HouseholdAccountPanel({
             ) : null}
           </div>
 
-          <button
-            type="button"
-            className="householdAccountButton"
-            disabled={isSubmitting}
-            onClick={handleSignOut}
-          >
-            {isSubmitting
-              ? "Signing out…"
-              : "Sign out"}
-          </button>
+          <div className="householdAccountActions">
+            {libraryStateLoadStatus === "ready" &&
+            libraryStateRecordCount === 0 &&
+            libraryStateSeedPreview ? (
+              <button
+                type="button"
+                className="householdAccountButton"
+                disabled={
+                  isSubmitting ||
+                  isSeedingLibraryState ||
+                  libraryStateSeedPreview.totalRows === 0 ||
+                  libraryStateSeedPreview
+                    .skippedMissingCatalogKey > 0
+                }
+                onClick={
+                  onSeedLibraryState
+                }
+              >
+                {isSeedingLibraryState
+                  ? `Seeding ${libraryStateSeedPreview.totalRows}…`
+                  : "Seed shared state"}
+              </button>
+            ) : null}
+
+            <button
+              type="button"
+              className="householdAccountButton"
+              disabled={
+                isSubmitting ||
+                isSeedingLibraryState
+              }
+              onClick={handleSignOut}
+            >
+              {isSubmitting
+                ? "Signing out…"
+                : "Sign out"}
+            </button>
+          </div>
         </>
       ) : (
         <form
@@ -328,6 +365,18 @@ export default function HouseholdAccountPanel({
         </form>
       )}
 
+      {session &&
+      libraryStateSeedFeedback ? (
+        <p
+          className={`householdAccountFeedback householdAccountFeedback${libraryStateSeedFeedback.kind}`}
+          role="status"
+        >
+          {
+            libraryStateSeedFeedback.message
+          }
+        </p>
+      ) : null}
+      
       {feedback ? (
         <p
           className={`householdAccountFeedback householdAccountFeedback${feedback.kind}`}
