@@ -1,0 +1,1023 @@
+-- ============================================================
+-- MyLibrary 04 - Create Reading Attempts and History
+--
+-- Creates:
+--   1. Global reading attempts, independent of Challenges.
+--   2. First-read versus reread classification.
+--   3. One active attempt per reader/book.
+--   4. Immutable completed and abandoned attempts.
+--   5. Automatic book-state completion sync.
+--   6. Append-only attempt history.
+--   7. Migration of legacy in-progress book state.
+--
+-- Browser permissions:
+--   Attempts:
+--     authenticated household user: SELECT, INSERT, UPDATE
+--     anon: no access
+--     DELETE: prohibited
+--
+--   Attempt history:
+--     authenticated household user: SELECT only
+--     anon: no access
+--     INSERT / UPDATE / DELETE: prohibited
+-- ============================================================
+
+
+-- ------------------------------------------------------------
+-- 1. Private schema
+-- ------------------------------------------------------------
+
+create schema if not exists library_private;
+
+revoke all
+on schema library_private
+from public, anon, authenticated;
+
+
+-- ------------------------------------------------------------
+-- 2. Reading attempts
+-- ------------------------------------------------------------
+
+create table if not exists
+public.library_reader_reading_attempts
+(
+  attempt_id uuid
+    primary key
+    default gen_random_uuid(),
+
+  user_id uuid
+    not null
+    references auth.users(id)
+    on delete cascade,
+
+  reader_id text
+    not null
+    check (
+      reader_id in ('cj', 'jc')
+    ),
+
+  catalog_key text
+    not null
+    check (
+      btrim(catalog_key) <> ''
+    ),
+
+  status text
+    not null
+    default 'active'
+    check (
+      status in (
+        'active',
+        'completed',
+        'abandoned'
+      )
+    ),
+
+  is_reread boolean
+    not null
+    default false,
+
+  current_page integer
+    check (
+      current_page is null
+      or current_page >= 0
+    ),
+
+  started_at timestamptz
+    not null
+    default now(),
+
+  completed_at timestamptz,
+
+  abandoned_at timestamptz,
+
+  created_at timestamptz
+    not null
+    default now(),
+
+  updated_at timestamptz
+    not null
+    default now(),
+
+  constraint
+  library_reader_reading_attempts_lifecycle_check
+  check
+  (
+    (
+      status = 'active'
+      and completed_at is null
+      and abandoned_at is null
+    )
+
+    or
+
+    (
+      status = 'completed'
+      and completed_at is not null
+      and abandoned_at is null
+      and completed_at >= started_at
+    )
+
+    or
+
+    (
+      status = 'abandoned'
+      and abandoned_at is not null
+      and completed_at is null
+      and abandoned_at >= started_at
+    )
+  )
+);
+
+
+-- Only one active attempt may exist for one
+-- user + reader + book combination.
+--
+-- Completed and abandoned attempts are not included
+-- in this unique index, so their history is unlimited.
+
+create unique index if not exists
+library_reader_reading_attempts_one_active_idx
+on public.library_reader_reading_attempts
+(
+  user_id,
+  reader_id,
+  catalog_key
+)
+where status = 'active';
+
+
+-- Fast lookup of a reader's attempts for one book.
+
+create index if not exists
+library_reader_reading_attempts_book_lookup_idx
+on public.library_reader_reading_attempts
+(
+  user_id,
+  reader_id,
+  catalog_key,
+  started_at desc
+);
+
+
+-- Fast lookup of all active household attempts.
+
+create index if not exists
+library_reader_reading_attempts_active_lookup_idx
+on public.library_reader_reading_attempts
+(
+  user_id,
+  reader_id,
+  updated_at desc
+)
+where status = 'active';
+
+
+-- ------------------------------------------------------------
+-- 3. Attempt history
+-- ------------------------------------------------------------
+
+create table if not exists
+public.library_reader_reading_attempt_history
+(
+  history_id bigint
+    generated always as identity
+    primary key,
+
+  attempt_id uuid
+    not null,
+
+  user_id uuid
+    not null,
+
+  reader_id text
+    not null
+    check (
+      reader_id in ('cj', 'jc')
+    ),
+
+  catalog_key text
+    not null,
+
+  operation text
+    not null
+    check (
+      operation in (
+        'INSERT',
+        'UPDATE'
+      )
+    ),
+
+  old_state jsonb,
+
+  new_state jsonb
+    not null,
+
+  changed_at timestamptz
+    not null
+    default now(),
+
+  changed_by uuid,
+
+  constraint
+  library_reader_reading_attempt_history_shape_check
+  check
+  (
+    (
+      operation = 'INSERT'
+      and old_state is null
+      and new_state is not null
+    )
+
+    or
+
+    (
+      operation = 'UPDATE'
+      and old_state is not null
+      and new_state is not null
+    )
+  )
+);
+
+
+create index if not exists
+library_reader_reading_attempt_history_lookup_idx
+on public.library_reader_reading_attempt_history
+(
+  user_id,
+  reader_id,
+  catalog_key,
+  changed_at desc
+);
+
+
+create index if not exists
+library_reader_reading_attempt_history_attempt_idx
+on public.library_reader_reading_attempt_history
+(
+  attempt_id,
+  history_id
+);
+
+
+-- ------------------------------------------------------------
+-- 4. RLS and browser privileges: attempts
+-- ------------------------------------------------------------
+
+alter table
+public.library_reader_reading_attempts
+enable row level security;
+
+
+revoke all
+on table
+public.library_reader_reading_attempts
+from anon, authenticated;
+
+
+grant
+  select,
+  insert,
+  update
+on table
+public.library_reader_reading_attempts
+to authenticated;
+
+
+drop policy if exists
+"Household can view reading attempts"
+on public.library_reader_reading_attempts;
+
+
+create policy
+"Household can view reading attempts"
+on public.library_reader_reading_attempts
+for select
+to authenticated
+using
+(
+  (select auth.uid()) is not null
+
+  and
+  (select auth.uid()) = user_id
+
+  and
+  user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+
+drop policy if exists
+"Household can create reading attempts"
+on public.library_reader_reading_attempts;
+
+
+create policy
+"Household can create reading attempts"
+on public.library_reader_reading_attempts
+for insert
+to authenticated
+with check
+(
+  (select auth.uid()) is not null
+
+  and
+  (select auth.uid()) = user_id
+
+  and
+  user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+
+drop policy if exists
+"Household can update reading attempts"
+on public.library_reader_reading_attempts;
+
+
+create policy
+"Household can update reading attempts"
+on public.library_reader_reading_attempts
+for update
+to authenticated
+using
+(
+  (select auth.uid()) is not null
+
+  and
+  (select auth.uid()) = user_id
+
+  and
+  user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+)
+with check
+(
+  (select auth.uid()) is not null
+
+  and
+  (select auth.uid()) = user_id
+
+  and
+  user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+
+-- Deliberately create no DELETE policy.
+
+
+-- ------------------------------------------------------------
+-- 5. RLS and browser privileges: attempt history
+-- ------------------------------------------------------------
+
+alter table
+public.library_reader_reading_attempt_history
+enable row level security;
+
+
+revoke all
+on table
+public.library_reader_reading_attempt_history
+from anon, authenticated;
+
+
+revoke all
+on sequence
+public.library_reader_reading_attempt_history_history_id_seq
+from anon, authenticated;
+
+
+grant select
+on table
+public.library_reader_reading_attempt_history
+to authenticated;
+
+
+drop policy if exists
+"Household can view reading attempt history"
+on public.library_reader_reading_attempt_history;
+
+
+create policy
+"Household can view reading attempt history"
+on public.library_reader_reading_attempt_history
+for select
+to authenticated
+using
+(
+  (select auth.uid()) is not null
+
+  and
+  (select auth.uid()) = user_id
+
+  and
+  user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+
+-- Deliberately create no INSERT, UPDATE, or DELETE policies.
+
+
+-- ------------------------------------------------------------
+-- 6. Prepare and protect attempt lifecycle
+-- ------------------------------------------------------------
+
+create or replace function
+library_private.prepare_library_reader_reading_attempt()
+returns trigger
+language plpgsql
+security definer
+set search_path = pg_catalog
+as $$
+declare
+  prior_read_exists boolean;
+begin
+  -- ----------------------------------------------------------
+  -- New attempts
+  -- ----------------------------------------------------------
+
+  if TG_OP = 'INSERT' then
+    if
+      NEW.catalog_key is null
+      or btrim(NEW.catalog_key) = ''
+    then
+      raise exception
+        'A reading attempt requires a catalog key';
+    end if;
+
+
+    NEW.catalog_key :=
+      btrim(NEW.catalog_key);
+
+
+    -- Every new attempt begins active.
+    --
+    -- Completion and abandonment must happen through
+    -- a later explicit update.
+
+    NEW.status := 'active';
+    NEW.completed_at := null;
+    NEW.abandoned_at := null;
+
+
+    NEW.started_at :=
+      coalesce(
+        NEW.started_at,
+        clock_timestamp()
+      );
+
+
+    NEW.created_at :=
+      coalesce(
+        NEW.created_at,
+        clock_timestamp()
+      );
+
+
+    NEW.updated_at :=
+      NEW.created_at;
+
+
+    -- An attempt is a reread when either:
+    --
+    --   1. The permanent reader/book state is already Read, or
+    --   2. A prior completed attempt exists.
+    --
+    -- An abandoned first attempt does not turn the next attempt
+    -- into a reread unless the book was actually completed.
+
+    select
+    (
+      exists
+      (
+        select 1
+
+        from
+        public.library_reader_book_state
+          as state
+
+        where
+          state.user_id =
+            NEW.user_id
+
+          and
+          state.reader_id =
+            NEW.reader_id
+
+          and
+          state.catalog_key =
+            NEW.catalog_key
+
+          and
+          state.is_read = true
+      )
+
+      or
+
+      exists
+      (
+        select 1
+
+        from
+        public.library_reader_reading_attempts
+          as prior_attempt
+
+        where
+          prior_attempt.user_id =
+            NEW.user_id
+
+          and
+          prior_attempt.reader_id =
+            NEW.reader_id
+
+          and
+          prior_attempt.catalog_key =
+            NEW.catalog_key
+
+          and
+          prior_attempt.status =
+            'completed'
+      )
+    )
+    into prior_read_exists;
+
+
+    NEW.is_reread :=
+      prior_read_exists;
+
+
+    return NEW;
+  end if;
+
+
+  -- ----------------------------------------------------------
+  -- Existing attempts
+  -- ----------------------------------------------------------
+
+  if TG_OP = 'UPDATE' then
+    -- Identity and historical classification never change.
+
+    if
+      NEW.attempt_id
+        is distinct from
+      OLD.attempt_id
+
+      or
+
+      NEW.user_id
+        is distinct from
+      OLD.user_id
+
+      or
+
+      NEW.reader_id
+        is distinct from
+      OLD.reader_id
+
+      or
+
+      NEW.catalog_key
+        is distinct from
+      OLD.catalog_key
+
+      or
+
+      NEW.is_reread
+        is distinct from
+      OLD.is_reread
+
+      or
+
+      NEW.started_at
+        is distinct from
+      OLD.started_at
+
+      or
+
+      NEW.created_at
+        is distinct from
+      OLD.created_at
+    then
+      raise exception
+        'Reading attempt identity and classification are immutable';
+    end if;
+
+
+    -- Once an attempt is completed or abandoned, it becomes
+    -- a frozen historical record.
+
+    if OLD.status <> 'active' then
+      raise exception
+        'Completed and abandoned reading attempts are immutable';
+    end if;
+
+
+    if NEW.status = 'active' then
+      NEW.completed_at := null;
+      NEW.abandoned_at := null;
+
+
+    elsif NEW.status = 'completed' then
+      NEW.completed_at :=
+        coalesce(
+          NEW.completed_at,
+          clock_timestamp()
+        );
+
+      NEW.abandoned_at := null;
+
+
+    elsif NEW.status = 'abandoned' then
+      NEW.abandoned_at :=
+        coalesce(
+          NEW.abandoned_at,
+          clock_timestamp()
+        );
+
+      NEW.completed_at := null;
+
+
+    else
+      raise exception
+        'Unsupported reading attempt status: %',
+        NEW.status;
+    end if;
+
+
+    NEW.updated_at :=
+      clock_timestamp();
+
+
+    return NEW;
+  end if;
+
+
+  raise exception
+    'Unsupported reading attempt operation: %',
+    TG_OP;
+end;
+$$;
+
+
+revoke all
+on function
+library_private.prepare_library_reader_reading_attempt()
+from public, anon, authenticated;
+
+
+drop trigger if exists
+prepare_library_reader_reading_attempt
+on public.library_reader_reading_attempts;
+
+
+create trigger
+prepare_library_reader_reading_attempt
+before insert or update
+on public.library_reader_reading_attempts
+for each row
+execute function
+library_private.prepare_library_reader_reading_attempt();
+
+
+-- ------------------------------------------------------------
+-- 7. Prevent attempt deletion
+-- ------------------------------------------------------------
+
+create or replace function
+library_private.reject_library_reader_reading_attempt_delete()
+returns trigger
+language plpgsql
+set search_path = pg_catalog
+as $$
+begin
+  raise exception
+    'Reading attempts cannot be deleted; complete or abandon the active attempt instead';
+
+  return null;
+end;
+$$;
+
+
+revoke all
+on function
+library_private.reject_library_reader_reading_attempt_delete()
+from public, anon, authenticated;
+
+
+drop trigger if exists
+protect_library_reader_reading_attempt_delete
+on public.library_reader_reading_attempts;
+
+
+create trigger
+protect_library_reader_reading_attempt_delete
+before delete
+on public.library_reader_reading_attempts
+for each row
+execute function
+library_private.reject_library_reader_reading_attempt_delete();
+
+
+-- ------------------------------------------------------------
+-- 8. Attempt audit logger
+-- ------------------------------------------------------------
+
+create or replace function
+library_private.log_library_reader_reading_attempt_history()
+returns trigger
+language plpgsql
+security definer
+set search_path = pg_catalog
+as $$
+begin
+  if TG_OP = 'INSERT' then
+    insert into
+    public.library_reader_reading_attempt_history
+    (
+      attempt_id,
+      user_id,
+      reader_id,
+      catalog_key,
+      operation,
+      old_state,
+      new_state,
+      changed_at,
+      changed_by
+    )
+    values
+    (
+      NEW.attempt_id,
+      NEW.user_id,
+      NEW.reader_id,
+      NEW.catalog_key,
+      'INSERT',
+      null,
+      to_jsonb(NEW),
+      clock_timestamp(),
+      auth.uid()
+    );
+
+
+    return NEW;
+  end if;
+
+
+  if TG_OP = 'UPDATE' then
+    insert into
+    public.library_reader_reading_attempt_history
+    (
+      attempt_id,
+      user_id,
+      reader_id,
+      catalog_key,
+      operation,
+      old_state,
+      new_state,
+      changed_at,
+      changed_by
+    )
+    values
+    (
+      NEW.attempt_id,
+      NEW.user_id,
+      NEW.reader_id,
+      NEW.catalog_key,
+      'UPDATE',
+      to_jsonb(OLD),
+      to_jsonb(NEW),
+      clock_timestamp(),
+      auth.uid()
+    );
+
+
+    return NEW;
+  end if;
+
+
+  raise exception
+    'Unsupported reading attempt history operation: %',
+    TG_OP;
+end;
+$$;
+
+
+revoke all
+on function
+library_private.log_library_reader_reading_attempt_history()
+from public, anon, authenticated;
+
+
+drop trigger if exists
+audit_library_reader_reading_attempt_changes
+on public.library_reader_reading_attempts;
+
+
+create trigger
+audit_library_reader_reading_attempt_changes
+after insert or update
+on public.library_reader_reading_attempts
+for each row
+execute function
+library_private.log_library_reader_reading_attempt_history();
+
+
+-- ------------------------------------------------------------
+-- 9. Completing an attempt permanently marks the book Read
+-- ------------------------------------------------------------
+
+create or replace function
+library_private.sync_completed_reading_attempt_to_book_state()
+returns trigger
+language plpgsql
+security definer
+set search_path = pg_catalog
+as $$
+begin
+  if
+    NEW.status = 'completed'
+    and OLD.status is distinct from 'completed'
+  then
+    insert into
+    public.library_reader_book_state
+      as existing_state
+    (
+      user_id,
+      reader_id,
+      catalog_key,
+      is_read,
+      current_page,
+      rating,
+      notes
+    )
+    values
+    (
+      NEW.user_id,
+      NEW.reader_id,
+      NEW.catalog_key,
+      true,
+      null,
+      null,
+      null
+    )
+
+    on conflict
+    (
+      user_id,
+      reader_id,
+      catalog_key
+    )
+    do update
+
+    set
+      is_read = true
+
+    where
+      existing_state.is_read
+        is distinct from
+      true;
+  end if;
+
+
+  return NEW;
+end;
+$$;
+
+
+revoke all
+on function
+library_private.sync_completed_reading_attempt_to_book_state()
+from public, anon, authenticated;
+
+
+drop trigger if exists
+sync_completed_library_reader_reading_attempt
+on public.library_reader_reading_attempts;
+
+
+create trigger
+sync_completed_library_reader_reading_attempt
+after update
+on public.library_reader_reading_attempts
+for each row
+execute function
+library_private.sync_completed_reading_attempt_to_book_state();
+
+
+-- ------------------------------------------------------------
+-- 10. Protect attempt history itself
+-- ------------------------------------------------------------
+
+create or replace function
+library_private.reject_library_reader_reading_attempt_history_mutation()
+returns trigger
+language plpgsql
+set search_path = pg_catalog
+as $$
+begin
+  raise exception
+    'library_reader_reading_attempt_history is append-only';
+
+  return null;
+end;
+$$;
+
+
+revoke all
+on function
+library_private.reject_library_reader_reading_attempt_history_mutation()
+from public, anon, authenticated;
+
+
+drop trigger if exists
+protect_library_reader_reading_attempt_history
+on public.library_reader_reading_attempt_history;
+
+
+create trigger
+protect_library_reader_reading_attempt_history
+before update or delete
+on public.library_reader_reading_attempt_history
+for each row
+execute function
+library_private.reject_library_reader_reading_attempt_history_mutation();
+
+
+-- ------------------------------------------------------------
+-- 11. Migrate meaningful legacy in-progress state
+-- ------------------------------------------------------------
+--
+-- The existing permanent book-state table currently contains
+-- one meaningful unread row with current_page > 0.
+--
+-- Preserve that progress as an active first-read attempt.
+--
+-- Read rows with a page total are deliberately NOT migrated:
+-- those represented completed challenge books, not active reads.
+--
+-- The old current_page value remains temporarily because the
+-- deployed app still reads it. It will be retired only after
+-- the UI has switched safely to reading attempts.
+-- ------------------------------------------------------------
+
+insert into
+public.library_reader_reading_attempts
+(
+  user_id,
+  reader_id,
+  catalog_key,
+  current_page,
+  started_at
+)
+select
+  state.user_id,
+  state.reader_id,
+  state.catalog_key,
+  state.current_page,
+
+  coalesce(
+    state.updated_at,
+    state.created_at,
+    clock_timestamp()
+  )
+
+from
+public.library_reader_book_state
+  as state
+
+where
+  state.is_read = false
+
+  and
+  coalesce(
+    state.current_page,
+    0
+  ) > 0
+
+  and not exists
+  (
+    select 1
+
+    from
+    public.library_reader_reading_attempts
+      as existing_attempt
+
+    where
+      existing_attempt.user_id =
+        state.user_id
+
+      and
+      existing_attempt.reader_id =
+        state.reader_id
+
+      and
+      existing_attempt.catalog_key =
+        state.catalog_key
+
+      and
+      existing_attempt.status =
+        'active'
+  )
+
+on conflict do nothing;

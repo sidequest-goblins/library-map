@@ -1,0 +1,21 @@
+select
+  count(*) as total_records,
+
+  count(*) filter (
+    where is_read
+  ) as read_records,
+
+  count(*) filter (
+    where not is_read
+      and current_page > 0
+  ) as in_progress_records,
+
+  count(*) filter (
+    where reader_id = 'cj'
+  ) as cj_records,
+
+  count(*) filter (
+    where reader_id = 'jc'
+  ) as jc_records
+
+from public.library_reader_book_state;

@@ -1,0 +1,158 @@
+-- ============================================================
+-- MyLibrary: household-generated state for each reader and book
+-- ============================================================
+
+create table if not exists public.library_reader_book_state (
+  user_id uuid not null
+    references auth.users(id)
+    on delete cascade,
+
+  reader_id text not null,
+
+  catalog_key text not null,
+
+  is_read boolean not null default false,
+
+  current_page integer,
+
+  rating numeric(2, 1),
+
+  notes text,
+
+  created_at timestamptz not null default now(),
+
+  updated_at timestamptz not null default now(),
+
+  constraint library_reader_book_state_primary_key
+    primary key (user_id, reader_id, catalog_key),
+
+  constraint library_reader_book_state_reader_check
+    check (reader_id in ('cj', 'jc')),
+
+  constraint library_reader_book_state_current_page_check
+    check (
+      current_page is null
+      or current_page >= 0
+    ),
+
+  constraint library_reader_book_state_rating_range_check
+    check (
+      rating is null
+      or rating between 0 and 5
+    ),
+
+  constraint library_reader_book_state_rating_half_step_check
+    check (
+      rating is null
+      or rating * 2 = trunc(rating * 2)
+    )
+);
+
+-- Automatically refresh updated_at whenever a row changes.
+
+create or replace function public.set_library_reader_book_state_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists
+  set_library_reader_book_state_updated_at
+  on public.library_reader_book_state;
+
+create trigger set_library_reader_book_state_updated_at
+before update on public.library_reader_book_state
+for each row
+execute function public.set_library_reader_book_state_updated_at();
+
+-- ============================================================
+-- Permissions and Row Level Security
+-- ============================================================
+
+alter table public.library_reader_book_state
+enable row level security;
+
+revoke all
+on table public.library_reader_book_state
+from anon;
+
+grant select, insert, update, delete
+on table public.library_reader_book_state
+to authenticated;
+
+drop policy if exists
+  "Household can read its library state"
+  on public.library_reader_book_state;
+
+create policy
+  "Household can read its library state"
+on public.library_reader_book_state
+for select
+to authenticated
+using (
+  (select auth.uid()) is not null
+  and (select auth.uid()) = user_id
+);
+
+drop policy if exists
+  "Household can insert its library state"
+  on public.library_reader_book_state;
+
+create policy
+  "Household can insert its library state"
+on public.library_reader_book_state
+for insert
+to authenticated
+with check (
+  (select auth.uid()) is not null
+  and (select auth.uid()) = user_id
+);
+
+drop policy if exists
+  "Household can update its library state"
+  on public.library_reader_book_state;
+
+create policy
+  "Household can update its library state"
+on public.library_reader_book_state
+for update
+to authenticated
+using (
+  (select auth.uid()) is not null
+  and (select auth.uid()) = user_id
+)
+with check (
+  (select auth.uid()) is not null
+  and (select auth.uid()) = user_id
+);
+
+drop policy if exists
+  "Household can delete its library state"
+  on public.library_reader_book_state;
+
+create policy
+  "Household can delete its library state"
+on public.library_reader_book_state
+for delete
+to authenticated
+using (
+  (select auth.uid()) is not null
+  and (select auth.uid()) = user_id
+);
+
+-- Show the resulting columns as a quick verification.
+
+select
+  column_name,
+  data_type,
+  is_nullable,
+  column_default
+from information_schema.columns
+where
+  table_schema = 'public'
+  and table_name = 'library_reader_book_state'
+order by ordinal_position;

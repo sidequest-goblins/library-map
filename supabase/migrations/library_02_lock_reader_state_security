@@ -1,0 +1,108 @@
+-- ============================================================
+-- MyLibrary: restrict all shared state to one household account
+-- ============================================================
+
+alter table public.library_reader_book_state
+enable row level security;
+
+-- Logged-out users receive no table privileges.
+revoke all
+on table public.library_reader_book_state
+from anon;
+
+-- Signed-in users may only use the operations MyLibrary needs.
+-- DELETE is intentionally excluded.
+revoke all
+on table public.library_reader_book_state
+from authenticated;
+
+grant select, insert, update
+on table public.library_reader_book_state
+to authenticated;
+
+-- Remove the earlier general ownership policies.
+
+drop policy if exists
+  "Household can read its library state"
+  on public.library_reader_book_state;
+
+drop policy if exists
+  "Household can insert its library state"
+  on public.library_reader_book_state;
+
+drop policy if exists
+  "Household can update its library state"
+  on public.library_reader_book_state;
+
+drop policy if exists
+  "Household can delete its library state"
+  on public.library_reader_book_state;
+
+-- Only the one designated household Auth user may read rows.
+
+create policy
+  "Only designated household can read library state"
+on public.library_reader_book_state
+for select
+to authenticated
+using (
+  (select auth.uid()) =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+  and user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+-- Only the designated household user may create rows,
+-- and every new row must belong to that exact user.
+
+create policy
+  "Only designated household can insert library state"
+on public.library_reader_book_state
+for insert
+to authenticated
+with check (
+  (select auth.uid()) =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+  and user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+-- Only the designated household user may update its rows.
+-- The WITH CHECK clause prevents changing user_id during an update.
+
+create policy
+  "Only designated household can update library state"
+on public.library_reader_book_state
+for update
+to authenticated
+using (
+  (select auth.uid()) =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+  and user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+)
+with check (
+  (select auth.uid()) =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+  and user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+-- There is deliberately no DELETE policy and no DELETE grant.
+-- Clearing or reversing state must happen through UPDATE.
+
+-- ============================================================
+-- Verification
+-- ============================================================
+
+select
+  policyname,
+  cmd,
+  roles,
+  qual,
+  with_check
+from pg_policies
+where
+  schemaname = 'public'
+  and tablename = 'library_reader_book_state'
+order by cmd, policyname;

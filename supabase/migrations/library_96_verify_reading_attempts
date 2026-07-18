@@ -1,0 +1,170 @@
+-- ============================================================
+-- MyLibrary 96 - Verify Reading Attempts
+-- ============================================================
+
+
+-- ------------------------------------------------------------
+-- 1. Reading-attempt counts
+-- ------------------------------------------------------------
+
+select
+  status,
+  is_reread,
+  count(*) as attempt_count
+
+from
+public.library_reader_reading_attempts
+
+group by
+  status,
+  is_reread
+
+order by
+  status,
+  is_reread;
+
+
+-- ------------------------------------------------------------
+-- 2. Current attempt rows
+-- ------------------------------------------------------------
+
+select
+  attempt_id,
+  reader_id,
+  catalog_key,
+  status,
+  is_reread,
+  current_page,
+  started_at,
+  completed_at,
+  abandoned_at,
+  created_at,
+  updated_at
+
+from
+public.library_reader_reading_attempts
+
+order by
+  created_at desc;
+
+
+-- ------------------------------------------------------------
+-- 3. Attempt-history counts
+-- ------------------------------------------------------------
+
+select
+  operation,
+  count(*) as history_rows
+
+from
+public.library_reader_reading_attempt_history
+
+group by operation
+order by operation;
+
+
+-- ------------------------------------------------------------
+-- 4. Browser table privileges
+-- ------------------------------------------------------------
+
+select
+  table_name,
+  grantee,
+  privilege_type
+
+from information_schema.role_table_grants
+
+where
+  table_schema = 'public'
+
+  and table_name in
+  (
+    'library_reader_reading_attempts',
+    'library_reader_reading_attempt_history'
+  )
+
+  and grantee in
+  (
+    'anon',
+    'authenticated'
+  )
+
+order by
+  table_name,
+  grantee,
+  privilege_type;
+
+
+-- ------------------------------------------------------------
+-- 5. RLS policies
+-- ------------------------------------------------------------
+
+select
+  tablename,
+  policyname,
+  cmd,
+  roles,
+  qual,
+  with_check
+
+from pg_policies
+
+where
+  schemaname = 'public'
+
+  and tablename in
+  (
+    'library_reader_reading_attempts',
+    'library_reader_reading_attempt_history'
+  )
+
+order by
+  tablename,
+  cmd,
+  policyname;
+
+
+-- ------------------------------------------------------------
+-- 6. Relevant triggers
+-- ------------------------------------------------------------
+
+select
+  event_object_table,
+  trigger_name,
+  action_timing,
+  event_manipulation
+
+from information_schema.triggers
+
+where
+  trigger_schema = 'public'
+
+  and event_object_table in
+  (
+    'library_reader_reading_attempts',
+    'library_reader_reading_attempt_history'
+  )
+
+order by
+  event_object_table,
+  trigger_name,
+  event_manipulation;
+
+
+-- ------------------------------------------------------------
+-- 7. Attempt indexes
+-- ------------------------------------------------------------
+
+select
+  indexname,
+  indexdef
+
+from pg_indexes
+
+where
+  schemaname = 'public'
+
+  and tablename =
+    'library_reader_reading_attempts'
+
+order by indexname;

@@ -1,0 +1,9 @@
+select
+  grantee,
+  privilege_type
+from information_schema.role_table_grants
+where
+  table_schema = 'public'
+  and table_name = 'library_reader_book_state'
+  and grantee in ('anon', 'authenticated')
+order by grantee, privilege_type;
