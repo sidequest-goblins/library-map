@@ -9,6 +9,7 @@ import { supabase } from "./supabaseClient";
 
 import type {
   LibraryStateLoadStatus,
+  LibraryStateSeedPreview,
 } from "./data/libraryState";
 
 type HouseholdAccountPanelProps = {
@@ -22,6 +23,9 @@ type HouseholdAccountPanelProps = {
   libraryStateRecordCount: number;
 
   libraryStateLoadError: string;
+
+  libraryStateSeedPreview:
+    LibraryStateSeedPreview | null;
 };
 
 type AuthFeedback = {
@@ -34,6 +38,7 @@ export default function HouseholdAccountPanel({
   libraryStateLoadStatus,
   libraryStateRecordCount,
   libraryStateLoadError,
+  libraryStateSeedPreview,
 }: HouseholdAccountPanelProps) {
   const [session, setSession] =
     useState<Session | null>(null);
@@ -237,6 +242,27 @@ export default function HouseholdAccountPanel({
                         : "records"
                     } loaded`}
             </span>
+
+            {libraryStateLoadStatus === "ready" &&
+            libraryStateSeedPreview ? (
+              <span className="householdAccountSeedPreview">
+                Seed preview:{" "}
+                {libraryStateSeedPreview.totalRows} candidate{" "}
+                {libraryStateSeedPreview.totalRows === 1
+                  ? "record"
+                  : "records"}
+                {" · "}
+                {libraryStateSeedPreview.readRows} read
+                {" · "}
+                {libraryStateSeedPreview.inProgressRows} in progress
+                {" · "}
+                {libraryStateSeedPreview.cjRows} CJ
+                {" · "}
+                {libraryStateSeedPreview.jcRows} JC
+                {" · "}
+                {libraryStateSeedPreview.skippedMissingCatalogKey} skipped
+              </span>
+            ) : null}
           </div>
 
           <button

@@ -1556,3 +1556,9 @@ select {
 .householdAccountStateError {
   color: #8a3429;
 }
+
+.householdAccountSeedPreview {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}

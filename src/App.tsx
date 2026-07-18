@@ -13,6 +13,7 @@ import BookcaseView from "./components/BookcaseView";
 import HouseholdAccountPanel from "./HouseholdAccountPanel";
 import { supabase } from "./supabaseClient";
 import {
+  buildLibraryStateSeedPreview,
   makeLibraryStateKey,
   type LibraryReaderBookState,
   type LibraryStateLoadStatus,
@@ -838,7 +839,32 @@ export default function App() {
     [libraryStateRows]
   );
 
-  const bookcases = useMemo(() => getBookcasesFromBooks(books), [books]);
+  const libraryStateSeedPreview =
+    useMemo(() => {
+      if (
+        !householdSession ||
+        loadStatus !== "ready"
+      ) {
+        return null;
+      }
+
+      return buildLibraryStateSeedPreview(
+        books,
+        challengeData,
+        householdSession.user.id
+      );
+    }, [
+      books,
+      challengeData,
+      householdSession,
+      loadStatus,
+    ]);
+
+  const bookcases = useMemo(
+    () =>
+      getBookcasesFromBooks(books),
+    [books]
+  );
 
   const rooms = useMemo(
     () => Array.from(new Set(bookcases.map((bookcase) => bookcase.room))).sort(),
@@ -1767,7 +1793,9 @@ export default function App() {
 
         <div className="headerUtilityRow">
           <HouseholdAccountPanel
-            onSessionChange={setHouseholdSession}
+            onSessionChange={
+              setHouseholdSession
+            }
             libraryStateLoadStatus={
               libraryStateLoadStatus
             }
@@ -1776,6 +1804,9 @@ export default function App() {
             }
             libraryStateLoadError={
               libraryStateLoadError
+            }
+            libraryStateSeedPreview={
+              libraryStateSeedPreview
             }
           />
 
