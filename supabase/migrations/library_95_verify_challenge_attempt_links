@@ -1,0 +1,566 @@
+-- ============================================================
+-- MyLibrary 95 - Verify Challenge Attempt Links
+-- ============================================================
+
+
+-- ------------------------------------------------------------
+-- 1. Challenge-link counts
+-- ------------------------------------------------------------
+--
+-- Immediately after migration 05, both counts should be 0
+-- because no challenge entries have been linked yet.
+-- ------------------------------------------------------------
+
+select
+  count(*) filter
+  (
+    where unlinked_at is null
+  ) as current_links,
+
+  count(*) filter
+  (
+    where unlinked_at is not null
+  ) as historical_links,
+
+  count(*) as total_links
+
+from
+public.library_reader_challenge_attempt_links;
+
+
+-- ------------------------------------------------------------
+-- 2. Current challenge-link rows
+-- ------------------------------------------------------------
+--
+-- Immediately after migration 05, this should return no rows.
+-- ------------------------------------------------------------
+
+select
+  link_id,
+  reader_id,
+  challenge_id,
+  challenge_entry_id,
+  catalog_key,
+  attempt_id,
+  linked_at,
+  unlinked_at,
+  created_at,
+  updated_at
+
+from
+public.library_reader_challenge_attempt_links
+
+order by
+  created_at desc;
+
+
+-- ------------------------------------------------------------
+-- 3. Challenge-link history counts
+-- ------------------------------------------------------------
+--
+-- Immediately after migration 05, this should return no rows.
+-- ------------------------------------------------------------
+
+select
+  operation,
+  count(*) as history_rows
+
+from
+public.library_reader_challenge_attempt_link_history
+
+group by
+  operation
+
+order by
+  operation;
+
+
+-- ------------------------------------------------------------
+-- 4. Browser table privileges
+-- ------------------------------------------------------------
+--
+-- Expected:
+--
+-- library_reader_challenge_attempt_links
+--   authenticated INSERT
+--   authenticated SELECT
+--   authenticated UPDATE
+--
+-- library_reader_challenge_attempt_link_history
+--   authenticated SELECT
+--
+-- There should be no anon rows and no DELETE privileges.
+-- ------------------------------------------------------------
+
+select
+  table_name,
+  grantee,
+  privilege_type
+
+from
+information_schema.role_table_grants
+
+where
+  table_schema = 'public'
+
+  and table_name in
+  (
+    'library_reader_challenge_attempt_links',
+    'library_reader_challenge_attempt_link_history'
+  )
+
+  and grantee in
+  (
+    'anon',
+    'authenticated'
+  )
+
+order by
+  table_name,
+  grantee,
+  privilege_type;
+
+
+-- ------------------------------------------------------------
+-- 5. RLS enabled status
+-- ------------------------------------------------------------
+--
+-- Expected:
+--   row_level_security_enabled = true
+-- for both tables.
+-- ------------------------------------------------------------
+
+select
+  tables.relname as table_name,
+  tables.relrowsecurity
+    as row_level_security_enabled,
+  tables.relforcerowsecurity
+    as row_level_security_forced
+
+from
+pg_class as tables
+
+join
+pg_namespace as schemas
+  on schemas.oid =
+    tables.relnamespace
+
+where
+  schemas.nspname = 'public'
+
+  and tables.relname in
+  (
+    'library_reader_challenge_attempt_links',
+    'library_reader_challenge_attempt_link_history'
+  )
+
+order by
+  tables.relname;
+
+
+-- ------------------------------------------------------------
+-- 6. RLS policies
+-- ------------------------------------------------------------
+--
+-- Expected on challenge-attempt links:
+--   SELECT
+--   INSERT
+--   UPDATE
+--
+-- Expected on challenge-attempt-link history:
+--   SELECT
+--
+-- There should be no DELETE policy.
+-- ------------------------------------------------------------
+
+select
+  tablename,
+  policyname,
+  cmd,
+  roles,
+  qual,
+  with_check
+
+from
+pg_policies
+
+where
+  schemaname = 'public'
+
+  and tablename in
+  (
+    'library_reader_challenge_attempt_links',
+    'library_reader_challenge_attempt_link_history'
+  )
+
+order by
+  tablename,
+  cmd,
+  policyname;
+
+
+-- ------------------------------------------------------------
+-- 7. Relevant triggers
+-- ------------------------------------------------------------
+--
+-- Expected on library_reader_challenge_attempt_links:
+--
+--   prepare_library_reader_challenge_attempt_link
+--     BEFORE INSERT
+--     BEFORE UPDATE
+--
+--   protect_library_reader_challenge_attempt_link_delete
+--     BEFORE DELETE
+--
+--   audit_library_reader_challenge_attempt_link_changes
+--     AFTER INSERT
+--     AFTER UPDATE
+--
+-- Expected on challenge-attempt-link history:
+--
+--   protect_library_reader_challenge_attempt_link_history
+--     BEFORE UPDATE
+--     BEFORE DELETE
+-- ------------------------------------------------------------
+
+select
+  event_object_table,
+  trigger_name,
+  action_timing,
+  event_manipulation
+
+from
+information_schema.triggers
+
+where
+  trigger_schema = 'public'
+
+  and event_object_table in
+  (
+    'library_reader_challenge_attempt_links',
+    'library_reader_challenge_attempt_link_history'
+  )
+
+order by
+  event_object_table,
+  trigger_name,
+  event_manipulation;
+
+
+-- ------------------------------------------------------------
+-- 8. Challenge-link indexes
+-- ------------------------------------------------------------
+--
+-- Confirm that the partial unique index enforcing one current
+-- attempt per challenge entry exists.
+-- ------------------------------------------------------------
+
+select
+  tablename,
+  indexname,
+  indexdef
+
+from
+pg_indexes
+
+where
+  schemaname = 'public'
+
+  and tablename in
+  (
+    'library_reader_challenge_attempt_links',
+    'library_reader_challenge_attempt_link_history'
+  )
+
+order by
+  tablename,
+  indexname;
+
+
+-- ------------------------------------------------------------
+-- 9. Constraints and foreign keys
+-- ------------------------------------------------------------
+
+select
+  tables.relname as table_name,
+  constraints.conname
+    as constraint_name,
+  constraints.contype
+    as constraint_type,
+  pg_get_constraintdef(
+    constraints.oid
+  ) as constraint_definition
+
+from
+pg_constraint as constraints
+
+join
+pg_class as tables
+  on tables.oid =
+    constraints.conrelid
+
+join
+pg_namespace as schemas
+  on schemas.oid =
+    tables.relnamespace
+
+where
+  schemas.nspname = 'public'
+
+  and tables.relname in
+  (
+    'library_reader_challenge_attempt_links',
+    'library_reader_challenge_attempt_link_history'
+  )
+
+order by
+  tables.relname,
+  constraints.contype,
+  constraints.conname;
+
+
+-- ------------------------------------------------------------
+-- 10. Protected trigger functions
+-- ------------------------------------------------------------
+--
+-- Expected:
+--   All five functions should exist under library_private.
+--   Trigger functions that write protected data should show
+--   SECURITY DEFINER where configured by migration 05.
+-- ------------------------------------------------------------
+
+select
+  schemas.nspname
+    as function_schema,
+  procedures.proname
+    as function_name,
+  procedures.prosecdef
+    as security_definer
+
+from
+pg_proc as procedures
+
+join
+pg_namespace as schemas
+  on schemas.oid =
+    procedures.pronamespace
+
+where
+  schemas.nspname =
+    'library_private'
+
+  and procedures.proname in
+  (
+    'prepare_library_reader_challenge_attempt_link',
+    'reject_library_reader_challenge_attempt_link_delete',
+    'log_library_reader_challenge_attempt_link_history',
+    'reject_library_reader_challenge_attempt_link_history_mutation'
+  )
+
+order by
+  procedures.proname;
+
+
+-- ------------------------------------------------------------
+-- 11. Duplicate current-link check
+-- ------------------------------------------------------------
+--
+-- Expected: no rows.
+--
+-- The partial unique index should make duplicates impossible.
+-- ------------------------------------------------------------
+
+select
+  user_id,
+  reader_id,
+  challenge_id,
+  challenge_entry_id,
+  count(*) as current_link_count
+
+from
+public.library_reader_challenge_attempt_links
+
+where
+  unlinked_at is null
+
+group by
+  user_id,
+  reader_id,
+  challenge_id,
+  challenge_entry_id
+
+having
+  count(*) > 1
+
+order by
+  user_id,
+  reader_id,
+  challenge_id,
+  challenge_entry_id;
+
+
+-- ------------------------------------------------------------
+-- 12. Missing-attempt check
+-- ------------------------------------------------------------
+--
+-- Expected: 0.
+--
+-- The foreign key should make this impossible.
+-- ------------------------------------------------------------
+
+select
+  count(*) as missing_attempt_links
+
+from
+public.library_reader_challenge_attempt_links
+  as links
+
+left join
+public.library_reader_reading_attempts
+  as attempts
+
+  on attempts.attempt_id =
+    links.attempt_id
+
+where
+  attempts.attempt_id is null;
+
+
+-- ------------------------------------------------------------
+-- 13. Attempt identity mismatch check
+-- ------------------------------------------------------------
+--
+-- Expected: 0.
+--
+-- Every link must match its reading attempt's:
+--   user
+--   reader
+--   catalog book
+-- ------------------------------------------------------------
+
+select
+  count(*) as mismatched_attempt_links
+
+from
+public.library_reader_challenge_attempt_links
+  as links
+
+join
+public.library_reader_reading_attempts
+  as attempts
+
+  on attempts.attempt_id =
+    links.attempt_id
+
+where
+  links.user_id
+    is distinct from
+  attempts.user_id
+
+  or
+
+  links.reader_id
+    is distinct from
+  attempts.reader_id
+
+  or
+
+  links.catalog_key
+    is distinct from
+  attempts.catalog_key;
+
+
+-- ------------------------------------------------------------
+-- 14. Invalid timestamp check
+-- ------------------------------------------------------------
+--
+-- Expected: 0.
+-- ------------------------------------------------------------
+
+select
+  count(*) as invalid_timestamp_links
+
+from
+public.library_reader_challenge_attempt_links
+
+where
+  linked_at < created_at
+
+  or
+
+  updated_at < created_at
+
+  or
+
+  (
+    unlinked_at is not null
+
+    and
+    (
+      unlinked_at < linked_at
+
+      or
+
+      updated_at < unlinked_at
+    )
+  );
+
+
+-- ------------------------------------------------------------
+-- 15. History-to-link consistency check
+-- ------------------------------------------------------------
+--
+-- Expected: 0.
+--
+-- Every history row must describe the same identity as its
+-- parent challenge-attempt link.
+-- ------------------------------------------------------------
+
+select
+  count(*) as mismatched_history_rows
+
+from
+public.library_reader_challenge_attempt_link_history
+  as history
+
+join
+public.library_reader_challenge_attempt_links
+  as links
+
+  on links.link_id =
+    history.link_id
+
+where
+  history.attempt_id
+    is distinct from
+  links.attempt_id
+
+  or
+
+  history.user_id
+    is distinct from
+  links.user_id
+
+  or
+
+  history.reader_id
+    is distinct from
+  links.reader_id
+
+  or
+
+  history.challenge_id
+    is distinct from
+  links.challenge_id
+
+  or
+
+  history.challenge_entry_id
+    is distinct from
+  links.challenge_entry_id
+
+  or
+
+  history.catalog_key
+    is distinct from
+  links.catalog_key;

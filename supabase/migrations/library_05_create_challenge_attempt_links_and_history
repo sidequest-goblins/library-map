@@ -1,0 +1,954 @@
+-- ============================================================
+-- MyLibrary 05 - Challenge Attempt Links and History
+--
+-- Creates:
+--   1. Explicit links between challenge entries and reading attempts.
+--   2. One currently linked attempt per challenge entry.
+--   3. Preserved history when a challenge entry is relinked.
+--   4. Validation that the linked attempt belongs to the same
+--      household user, reader, and catalog book.
+--   5. Append-only audit history for link creation and unlinking.
+--
+-- Important behavior:
+--   - Reading attempts remain global and independent of Challenges.
+--   - A reading attempt affects a challenge only when explicitly linked.
+--   - One attempt may intentionally be linked to multiple challenge
+--     entries.
+--   - Completed, active, and abandoned attempts may all remain linked
+--     for accurate challenge history.
+--   - Challenge completion will later be derived from the status of
+--     the explicitly linked reading attempt.
+--
+-- Browser permissions:
+--   Challenge links:
+--     authenticated household user: SELECT, INSERT, UPDATE
+--     anon: no access
+--     DELETE: prohibited
+--
+--   Challenge-link history:
+--     authenticated household user: SELECT only
+--     anon: no access
+--     INSERT / UPDATE / DELETE: prohibited
+-- ============================================================
+
+
+begin;
+
+
+-- ------------------------------------------------------------
+-- 1. Private schema
+-- ------------------------------------------------------------
+
+create schema if not exists
+library_private;
+
+
+revoke all
+on schema library_private
+from public, anon, authenticated;
+
+
+-- ------------------------------------------------------------
+-- 2. Challenge-attempt links
+-- ------------------------------------------------------------
+
+create table if not exists
+public.library_reader_challenge_attempt_links
+(
+  link_id uuid
+    primary key
+    default gen_random_uuid(),
+
+  user_id uuid
+    not null
+    references auth.users(id)
+    on delete cascade,
+
+  reader_id text
+    not null
+    check
+    (
+      reader_id in
+      (
+        'cj',
+        'jc'
+      )
+    ),
+
+  challenge_id text
+    not null
+    check
+    (
+      btrim(challenge_id) <> ''
+    ),
+
+  challenge_entry_id text
+    not null
+    check
+    (
+      btrim(challenge_entry_id) <> ''
+    ),
+
+  catalog_key text
+    not null
+    check
+    (
+      btrim(catalog_key) <> ''
+    ),
+
+  attempt_id uuid
+    not null
+    references
+      public.library_reader_reading_attempts
+      (
+        attempt_id
+      )
+    on delete restrict,
+
+  linked_at timestamptz
+    not null
+    default now(),
+
+  unlinked_at timestamptz,
+
+  created_at timestamptz
+    not null
+    default now(),
+
+  updated_at timestamptz
+    not null
+    default now(),
+
+  constraint
+  library_reader_challenge_attempt_links_lifecycle_check
+  check
+  (
+    unlinked_at is null
+
+    or
+
+    unlinked_at >= linked_at
+  )
+);
+
+
+-- A challenge entry may have only one current link.
+--
+-- Historical rows are excluded after unlinked_at is set,
+-- allowing the entry to be deliberately linked to a later
+-- reading attempt.
+
+create unique index if not exists
+library_reader_challenge_attempt_links_one_active_entry_idx
+on public.library_reader_challenge_attempt_links
+(
+  user_id,
+  reader_id,
+  challenge_id,
+  challenge_entry_id
+)
+where unlinked_at is null;
+
+
+-- Fast lookup of every entry in one reader's challenge.
+
+create index if not exists
+library_challenge_links_challenge_lookup_idx
+on public.library_reader_challenge_attempt_links
+(
+  user_id,
+  reader_id,
+  challenge_id,
+  challenge_entry_id,
+  linked_at desc
+);
+
+
+-- Fast lookup of every challenge entry associated with one
+-- reading attempt.
+
+create index if not exists
+library_challenge_links_attempt_lookup_idx
+on public.library_reader_challenge_attempt_links
+(
+  attempt_id,
+  linked_at desc
+);
+
+
+-- Fast lookup of currently linked challenge entries by book.
+
+create index if not exists
+library_challenge_links_active_book_lookup_idx
+on public.library_reader_challenge_attempt_links
+(
+  user_id,
+  reader_id,
+  catalog_key,
+  challenge_id
+)
+where unlinked_at is null;
+
+
+-- ------------------------------------------------------------
+-- 3. Challenge-link history
+-- ------------------------------------------------------------
+
+create table if not exists
+public.library_reader_challenge_attempt_link_history
+(
+  history_id bigint
+    generated always as identity
+    primary key,
+
+  link_id uuid
+    not null
+    references
+      public.library_reader_challenge_attempt_links
+      (
+        link_id
+      )
+    on delete restrict,
+
+  attempt_id uuid
+    not null
+    references
+      public.library_reader_reading_attempts
+      (
+        attempt_id
+      )
+    on delete restrict,
+
+  user_id uuid
+    not null,
+
+  reader_id text
+    not null
+    check
+    (
+      reader_id in
+      (
+        'cj',
+        'jc'
+      )
+    ),
+
+  challenge_id text
+    not null,
+
+  challenge_entry_id text
+    not null,
+
+  catalog_key text
+    not null,
+
+  operation text
+    not null
+    check
+    (
+      operation in
+      (
+        'INSERT',
+        'UPDATE'
+      )
+    ),
+
+  old_state jsonb,
+
+  new_state jsonb
+    not null,
+
+  changed_at timestamptz
+    not null
+    default now(),
+
+  changed_by uuid,
+
+  constraint
+  library_reader_challenge_attempt_link_history_shape_check
+  check
+  (
+    (
+      operation = 'INSERT'
+      and old_state is null
+      and new_state is not null
+    )
+
+    or
+
+    (
+      operation = 'UPDATE'
+      and old_state is not null
+      and new_state is not null
+    )
+  )
+);
+
+
+create index if not exists
+library_challenge_link_history_entry_idx
+on public.library_reader_challenge_attempt_link_history
+(
+  user_id,
+  reader_id,
+  challenge_id,
+  challenge_entry_id,
+  changed_at desc
+);
+
+
+create index if not exists
+library_challenge_link_history_attempt_idx
+on public.library_reader_challenge_attempt_link_history
+(
+  attempt_id,
+  changed_at desc
+);
+
+
+-- ------------------------------------------------------------
+-- 4. RLS and browser privileges: challenge links
+-- ------------------------------------------------------------
+
+alter table
+public.library_reader_challenge_attempt_links
+enable row level security;
+
+
+revoke all
+on table
+public.library_reader_challenge_attempt_links
+from anon, authenticated;
+
+
+grant
+  select,
+  insert,
+  update
+on table
+public.library_reader_challenge_attempt_links
+to authenticated;
+
+
+drop policy if exists
+"Household can view challenge attempt links"
+on public.library_reader_challenge_attempt_links;
+
+
+create policy
+"Household can view challenge attempt links"
+on public.library_reader_challenge_attempt_links
+for select
+to authenticated
+using
+(
+  (select auth.uid()) is not null
+
+  and
+
+  (select auth.uid()) = user_id
+
+  and
+
+  user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+
+drop policy if exists
+"Household can create challenge attempt links"
+on public.library_reader_challenge_attempt_links;
+
+
+create policy
+"Household can create challenge attempt links"
+on public.library_reader_challenge_attempt_links
+for insert
+to authenticated
+with check
+(
+  (select auth.uid()) is not null
+
+  and
+
+  (select auth.uid()) = user_id
+
+  and
+
+  user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+
+drop policy if exists
+"Household can unlink challenge attempt links"
+on public.library_reader_challenge_attempt_links;
+
+
+create policy
+"Household can unlink challenge attempt links"
+on public.library_reader_challenge_attempt_links
+for update
+to authenticated
+using
+(
+  (select auth.uid()) is not null
+
+  and
+
+  (select auth.uid()) = user_id
+
+  and
+
+  user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+)
+with check
+(
+  (select auth.uid()) is not null
+
+  and
+
+  (select auth.uid()) = user_id
+
+  and
+
+  user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+
+-- Deliberately create no DELETE policy.
+
+
+-- ------------------------------------------------------------
+-- 5. RLS and browser privileges: challenge-link history
+-- ------------------------------------------------------------
+
+alter table
+public.library_reader_challenge_attempt_link_history
+enable row level security;
+
+
+revoke all
+on table
+public.library_reader_challenge_attempt_link_history
+from anon, authenticated;
+
+
+revoke all
+on sequence
+public.library_reader_challenge_attempt_link_history_history_id_seq
+from anon, authenticated;
+
+
+grant select
+on table
+public.library_reader_challenge_attempt_link_history
+to authenticated;
+
+
+drop policy if exists
+"Household can view challenge attempt link history"
+on public.library_reader_challenge_attempt_link_history;
+
+
+create policy
+"Household can view challenge attempt link history"
+on public.library_reader_challenge_attempt_link_history
+for select
+to authenticated
+using
+(
+  (select auth.uid()) is not null
+
+  and
+
+  (select auth.uid()) = user_id
+
+  and
+
+  user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+
+-- Deliberately create no INSERT, UPDATE, or DELETE policies.
+
+
+-- ------------------------------------------------------------
+-- 6. Prepare and validate challenge-attempt links
+-- ------------------------------------------------------------
+
+create or replace function
+library_private.prepare_library_reader_challenge_attempt_link()
+returns trigger
+language plpgsql
+security definer
+set search_path = pg_catalog
+as $$
+declare
+  linked_attempt
+    public.library_reader_reading_attempts%rowtype;
+
+  change_time timestamptz;
+begin
+  -- ----------------------------------------------------------
+  -- New challenge links
+  -- ----------------------------------------------------------
+
+  if TG_OP = 'INSERT' then
+    NEW.challenge_id :=
+      btrim(
+        coalesce(
+          NEW.challenge_id,
+          ''
+        )
+      );
+
+    NEW.challenge_entry_id :=
+      btrim(
+        coalesce(
+          NEW.challenge_entry_id,
+          ''
+        )
+      );
+
+    NEW.catalog_key :=
+      btrim(
+        coalesce(
+          NEW.catalog_key,
+          ''
+        )
+      );
+
+
+    if NEW.challenge_id = '' then
+      raise exception
+        'A challenge-attempt link requires a challenge ID';
+    end if;
+
+
+    if NEW.challenge_entry_id = '' then
+      raise exception
+        'A challenge-attempt link requires a challenge entry ID';
+    end if;
+
+
+    if NEW.catalog_key = '' then
+      raise exception
+        'A challenge-attempt link requires a catalog key';
+    end if;
+
+
+    select
+      existing_attempt.*
+
+    into linked_attempt
+
+    from
+    public.library_reader_reading_attempts
+      as existing_attempt
+
+    where
+      existing_attempt.attempt_id =
+        NEW.attempt_id;
+
+
+    if not found then
+      raise exception
+        'Reading attempt % does not exist',
+        NEW.attempt_id;
+    end if;
+
+
+    if
+      linked_attempt.user_id
+        is distinct from
+      NEW.user_id
+    then
+      raise exception
+        'Challenge link and reading attempt belong to different users';
+    end if;
+
+
+    if
+      linked_attempt.reader_id
+        is distinct from
+      NEW.reader_id
+    then
+      raise exception
+        'Challenge link and reading attempt belong to different readers';
+    end if;
+
+
+    if
+      linked_attempt.catalog_key
+        is distinct from
+      NEW.catalog_key
+    then
+      raise exception
+        'Challenge link catalog key does not match the reading attempt';
+    end if;
+
+
+    change_time :=
+      clock_timestamp();
+
+
+    NEW.linked_at :=
+      coalesce(
+        NEW.linked_at,
+        change_time
+      );
+
+
+    -- Every inserted row begins as the current link.
+    --
+    -- Historical unlinking must occur through a later explicit
+    -- update.
+
+    NEW.unlinked_at :=
+      null;
+
+
+    NEW.created_at :=
+      coalesce(
+        NEW.created_at,
+        change_time
+      );
+
+
+    NEW.updated_at :=
+      NEW.created_at;
+
+
+    return NEW;
+  end if;
+
+
+  -- ----------------------------------------------------------
+  -- Existing challenge links
+  -- ----------------------------------------------------------
+
+  if TG_OP = 'UPDATE' then
+    -- Link identity may never be rewritten.
+    --
+    -- Replacing an attempt requires unlinking this row and
+    -- inserting a separate new link row.
+
+    if
+      NEW.link_id
+        is distinct from
+      OLD.link_id
+
+      or
+
+      NEW.user_id
+        is distinct from
+      OLD.user_id
+
+      or
+
+      NEW.reader_id
+        is distinct from
+      OLD.reader_id
+
+      or
+
+      NEW.challenge_id
+        is distinct from
+      OLD.challenge_id
+
+      or
+
+      NEW.challenge_entry_id
+        is distinct from
+      OLD.challenge_entry_id
+
+      or
+
+      NEW.catalog_key
+        is distinct from
+      OLD.catalog_key
+
+      or
+
+      NEW.attempt_id
+        is distinct from
+      OLD.attempt_id
+
+      or
+
+      NEW.linked_at
+        is distinct from
+      OLD.linked_at
+
+      or
+
+      NEW.created_at
+        is distinct from
+      OLD.created_at
+    then
+      raise exception
+        'Challenge-attempt link identity is immutable';
+    end if;
+
+
+    -- Once unlinked, the row is permanent historical data.
+
+    if OLD.unlinked_at is not null then
+      raise exception
+        'Historical challenge-attempt links are immutable';
+    end if;
+
+
+    -- The only supported update is explicitly unlinking the
+    -- current attempt.
+
+    if NEW.unlinked_at is null then
+      raise exception
+        'Challenge-attempt links may only be updated by unlinking them';
+    end if;
+
+
+    change_time :=
+      clock_timestamp();
+
+
+    -- Use the database timestamp rather than trusting a browser-
+    -- supplied unlink time.
+
+    NEW.unlinked_at :=
+      change_time;
+
+
+    NEW.updated_at :=
+      change_time;
+
+
+    return NEW;
+  end if;
+
+
+  raise exception
+    'Unsupported challenge-attempt link operation: %',
+    TG_OP;
+end;
+$$;
+
+
+revoke all
+on function
+library_private.prepare_library_reader_challenge_attempt_link()
+from public, anon, authenticated;
+
+
+drop trigger if exists
+prepare_library_reader_challenge_attempt_link
+on public.library_reader_challenge_attempt_links;
+
+
+create trigger
+prepare_library_reader_challenge_attempt_link
+before insert or update
+on public.library_reader_challenge_attempt_links
+for each row
+execute function
+library_private.prepare_library_reader_challenge_attempt_link();
+
+
+-- ------------------------------------------------------------
+-- 7. Prevent challenge-link deletion
+-- ------------------------------------------------------------
+
+create or replace function
+library_private.reject_library_reader_challenge_attempt_link_delete()
+returns trigger
+language plpgsql
+set search_path = pg_catalog
+as $$
+begin
+  raise exception
+    'Challenge-attempt links cannot be deleted; unlink the current attempt instead';
+
+  return null;
+end;
+$$;
+
+
+revoke all
+on function
+library_private.reject_library_reader_challenge_attempt_link_delete()
+from public, anon, authenticated;
+
+
+drop trigger if exists
+protect_library_reader_challenge_attempt_link_delete
+on public.library_reader_challenge_attempt_links;
+
+
+create trigger
+protect_library_reader_challenge_attempt_link_delete
+before delete
+on public.library_reader_challenge_attempt_links
+for each row
+execute function
+library_private.reject_library_reader_challenge_attempt_link_delete();
+
+
+-- ------------------------------------------------------------
+-- 8. Challenge-link audit logger
+-- ------------------------------------------------------------
+
+create or replace function
+library_private.log_library_reader_challenge_attempt_link_history()
+returns trigger
+language plpgsql
+security definer
+set search_path = pg_catalog
+as $$
+begin
+  if TG_OP = 'INSERT' then
+    insert into
+    public.library_reader_challenge_attempt_link_history
+    (
+      link_id,
+      attempt_id,
+      user_id,
+      reader_id,
+      challenge_id,
+      challenge_entry_id,
+      catalog_key,
+      operation,
+      old_state,
+      new_state,
+      changed_at,
+      changed_by
+    )
+    values
+    (
+      NEW.link_id,
+      NEW.attempt_id,
+      NEW.user_id,
+      NEW.reader_id,
+      NEW.challenge_id,
+      NEW.challenge_entry_id,
+      NEW.catalog_key,
+      'INSERT',
+      null,
+      to_jsonb(NEW),
+      clock_timestamp(),
+      auth.uid()
+    );
+
+
+    return NEW;
+  end if;
+
+
+  if TG_OP = 'UPDATE' then
+    insert into
+    public.library_reader_challenge_attempt_link_history
+    (
+      link_id,
+      attempt_id,
+      user_id,
+      reader_id,
+      challenge_id,
+      challenge_entry_id,
+      catalog_key,
+      operation,
+      old_state,
+      new_state,
+      changed_at,
+      changed_by
+    )
+    values
+    (
+      NEW.link_id,
+      NEW.attempt_id,
+      NEW.user_id,
+      NEW.reader_id,
+      NEW.challenge_id,
+      NEW.challenge_entry_id,
+      NEW.catalog_key,
+      'UPDATE',
+      to_jsonb(OLD),
+      to_jsonb(NEW),
+      clock_timestamp(),
+      auth.uid()
+    );
+
+
+    return NEW;
+  end if;
+
+
+  raise exception
+    'Unsupported challenge-link history operation: %',
+    TG_OP;
+end;
+$$;
+
+
+revoke all
+on function
+library_private.log_library_reader_challenge_attempt_link_history()
+from public, anon, authenticated;
+
+
+drop trigger if exists
+audit_library_reader_challenge_attempt_link_changes
+on public.library_reader_challenge_attempt_links;
+
+
+create trigger
+audit_library_reader_challenge_attempt_link_changes
+after insert or update
+on public.library_reader_challenge_attempt_links
+for each row
+execute function
+library_private.log_library_reader_challenge_attempt_link_history();
+
+
+-- ------------------------------------------------------------
+-- 9. Protect challenge-link history itself
+-- ------------------------------------------------------------
+
+create or replace function
+library_private.reject_library_reader_challenge_attempt_link_history_mutation()
+returns trigger
+language plpgsql
+set search_path = pg_catalog
+as $$
+begin
+  raise exception
+    'library_reader_challenge_attempt_link_history is append-only';
+
+  return null;
+end;
+$$;
+
+
+revoke all
+on function
+library_private.reject_library_reader_challenge_attempt_link_history_mutation()
+from public, anon, authenticated;
+
+
+drop trigger if exists
+protect_library_reader_challenge_attempt_link_history
+on public.library_reader_challenge_attempt_link_history;
+
+
+create trigger
+protect_library_reader_challenge_attempt_link_history
+before update or delete
+on public.library_reader_challenge_attempt_link_history
+for each row
+execute function
+library_private.reject_library_reader_challenge_attempt_link_history_mutation();
+
+
+commit;
