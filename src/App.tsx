@@ -14,7 +14,6 @@ import HouseholdAccountPanel from "./HouseholdAccountPanel";
 import { supabase } from "./supabaseClient";
 import {
   buildLibraryStateSeedPreview,
-  isLibraryReaderId,
   makeLibraryStateKey,
   type LibraryReaderBookState,
   type LibraryReaderId,
@@ -1565,64 +1564,19 @@ export default function App() {
   }
 
   function getChallengeEntryDisplayState(
-    entry: ChallengeEntry,
-    readerId: string,
-    linkedBook?: Book
+    entry: ChallengeEntry
   ) {
     const totalPages = Math.max(
       entry.totalPages ?? 0,
       0
     );
 
-    const staticPagesRead =
-      getChallengeEntryPagesRead(entry);
-
-    const catalogKey =
-      entry.catalogKey?.trim() ||
-      linkedBook?.catalogKey?.trim() ||
-      "";
-
-    if (
-      !sharedLibraryStateIsAuthoritative ||
-      !isLibraryReaderId(readerId) ||
-      !catalogKey
-    ) {
-      return {
-        isRead: entry.read,
-        pagesRead: staticPagesRead,
-        totalPages,
-      };
-    }
-
-    const sharedState =
-      libraryStateByKey.get(
-        makeLibraryStateKey(
-          readerId,
-          catalogKey
-        )
-      );
-
-    const isRead =
-      sharedState?.is_read ?? false;
-
-    const currentPage = Math.max(
-      sharedState?.current_page ?? 0,
-      0
-    );
-
-    const pagesRead =
-      isRead && totalPages > 0
-        ? totalPages
-        : totalPages > 0
-          ? Math.min(
-              currentPage,
-              totalPages
-            )
-          : currentPage;
-
     return {
-      isRead,
-      pagesRead,
+      isRead: entry.read,
+      pagesRead:
+        getChallengeEntryPagesRead(
+          entry
+        ),
       totalPages,
     };
   }
@@ -2283,19 +2237,14 @@ export default function App() {
 
   const challengeSummary = activeChallengeEntries.reduce(
     (summary, entry) => {
-      const linkedBook = entry.bookId
-        ? booksById.get(entry.bookId)
-        : undefined;
-
       const {
         isRead,
         pagesRead,
         totalPages,
-      } = getChallengeEntryDisplayState(
-        entry,
-        activeChallengeReader?.readerId ?? "",
-        linkedBook
-      );
+      } =
+        getChallengeEntryDisplayState(
+          entry
+        );
 
       const inProgress =
         !isRead &&
@@ -3132,11 +3081,10 @@ export default function App() {
                         isRead,
                         pagesRead,
                         totalPages,
-                      } = getChallengeEntryDisplayState(
-                        entry,
-                        reader.readerId,
-                        selectedBook
-                      );
+                      } =
+                        getChallengeEntryDisplayState(
+                          entry
+                        );
 
                       const progressPercent =
                         totalPages > 0
@@ -3927,9 +3875,10 @@ export default function App() {
               </h2>
 
               <p>
-                Challenge membership and page totals come from
-                the challenge workbook. Read status and current
-                progress come from household sync when signed in.
+                Challenge membership, completion, and starting
+                progress come from the challenge workbook.
+                Overall library Read status is tracked
+                separately.
               </p>
             </section>
 
@@ -4153,11 +4102,10 @@ export default function App() {
                               isRead,
                               pagesRead,
                               totalPages,
-                            } = getChallengeEntryDisplayState(
-                              entry,
-                              activeChallengeReader.readerId,
-                              linkedBook
-                            );
+                            } =
+                              getChallengeEntryDisplayState(
+                                entry
+                              );
 
                             const inProgress =
                               !isRead &&
