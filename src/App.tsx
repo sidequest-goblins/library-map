@@ -770,6 +770,13 @@ export default function App() {
     null
   );
 
+  const [
+    readingAttemptPageDrafts,
+    setReadingAttemptPageDrafts,
+  ] = useState<Record<string, string>>(
+    {}
+  );
+
   const [loadStatus, setLoadStatus] = useState<
     "loading" | "ready" | "error"
   >("loading");
@@ -983,6 +990,7 @@ export default function App() {
         setReadingAttemptsLoadError("");
         setReadingAttemptSavingKey(null);
         setReadingAttemptFeedback(null);
+        setReadingAttemptPageDrafts({});
 
         return;
       }
@@ -1912,6 +1920,330 @@ export default function App() {
     }
   }
 
+  async function saveReadingAttemptPage(
+    attempt: LibraryReaderReadingAttempt,
+    draftValue: string
+  ) {
+    const stateKey =
+      makeLibraryStateKey(
+        attempt.reader_id,
+        attempt.catalog_key
+      );
+
+    if (
+      !householdSession ||
+      readingAttemptsLoadStatus !==
+        "ready"
+    ) {
+      setReadingAttemptFeedback({
+        stateKey,
+        kind: "error",
+        message:
+          "Reading activity must finish loading before saving progress.",
+      });
+
+      return;
+    }
+
+    if (readingAttemptSavingKey) {
+      return;
+    }
+
+    const trimmedValue =
+      draftValue.trim();
+
+    let nextCurrentPage:
+      | number
+      | null = null;
+
+    if (trimmedValue) {
+      const parsedPage =
+        Number(trimmedValue);
+
+      if (
+        !Number.isInteger(parsedPage) ||
+        parsedPage < 0
+      ) {
+        setReadingAttemptFeedback({
+          stateKey,
+          kind: "error",
+          message:
+            "Enter a whole page number of 0 or greater.",
+        });
+
+        return;
+      }
+
+      nextCurrentPage =
+        parsedPage === 0
+          ? null
+          : parsedPage;
+    }
+
+    if (
+      attempt.current_page ===
+      nextCurrentPage
+    ) {
+      setReadingAttemptPageDrafts(
+        (currentDrafts) => {
+          const nextDrafts = {
+            ...currentDrafts,
+          };
+
+          delete nextDrafts[stateKey];
+
+          return nextDrafts;
+        }
+      );
+
+      setReadingAttemptFeedback({
+        stateKey,
+        kind: "success",
+        message:
+          nextCurrentPage === null
+            ? "Progress is already clear."
+            : `Page ${nextCurrentPage.toLocaleString()} is already saved.`,
+      });
+
+      return;
+    }
+
+    setReadingAttemptSavingKey(
+      stateKey
+    );
+
+    setReadingAttemptFeedback(null);
+
+    try {
+      const { error } = await supabase
+        .from(
+          "library_reader_reading_attempts"
+        )
+        .update({
+          current_page:
+            nextCurrentPage,
+        })
+        .eq(
+          "attempt_id",
+          attempt.attempt_id
+        )
+        .eq(
+          "user_id",
+          householdSession.user.id
+        )
+        .eq(
+          "status",
+          "active"
+        );
+
+      if (error) {
+        throw error;
+      }
+
+      const refreshedAttempts =
+        await fetchActiveReadingAttempts(
+          householdSession.user.id
+        );
+
+      const refreshedAttempt =
+        refreshedAttempts.find(
+          (candidate) =>
+            candidate.attempt_id ===
+            attempt.attempt_id
+        );
+
+      if (
+        !refreshedAttempt ||
+        refreshedAttempt.current_page !==
+          nextCurrentPage
+      ) {
+        throw new Error(
+          "Supabase did not return the expected page after saving."
+        );
+      }
+
+      setActiveReadingAttempts(
+        refreshedAttempts
+      );
+
+      setReadingAttemptPageDrafts(
+        (currentDrafts) => {
+          const nextDrafts = {
+            ...currentDrafts,
+          };
+
+          delete nextDrafts[stateKey];
+
+          return nextDrafts;
+        }
+      );
+
+      setReadingAttemptFeedback({
+        stateKey,
+        kind: "success",
+        message:
+          nextCurrentPage === null
+            ? "Reading progress cleared."
+            : `Page ${nextCurrentPage.toLocaleString()} saved.`,
+      });
+    } catch (error) {
+      console.error(
+        "Could not save reading progress.",
+        error
+      );
+
+      setReadingAttemptFeedback({
+        stateKey,
+        kind: "error",
+        message:
+          error instanceof Error
+            ? `Progress failed to save: ${error.message}`
+            : "Progress failed to save because of an unknown Supabase error.",
+      });
+    } finally {
+      setReadingAttemptSavingKey(null);
+    }
+  }
+
+  async function abandonReadingAttempt(
+    attempt: LibraryReaderReadingAttempt
+  ) {
+    const stateKey =
+      makeLibraryStateKey(
+        attempt.reader_id,
+        attempt.catalog_key
+      );
+
+    const readerName =
+      attempt.reader_id === "cj"
+        ? "CJ"
+        : "JC";
+
+    const activityName =
+      attempt.is_reread
+        ? "reread"
+        : "reading attempt";
+
+    if (
+      !householdSession ||
+      readingAttemptsLoadStatus !==
+        "ready"
+    ) {
+      setReadingAttemptFeedback({
+        stateKey,
+        kind: "error",
+        message:
+          "Reading activity must finish loading before cancelling an attempt.",
+      });
+
+      return;
+    }
+
+    if (readingAttemptSavingKey) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Cancel ${readerName}'s active ${activityName}?\n\n` +
+        `Its history will be preserved, but it will no longer appear as active.`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setReadingAttemptSavingKey(
+      stateKey
+    );
+
+    setReadingAttemptFeedback(null);
+
+    try {
+      const { error } = await supabase
+        .from(
+          "library_reader_reading_attempts"
+        )
+        .update({
+          status: "abandoned",
+        })
+        .eq(
+          "attempt_id",
+          attempt.attempt_id
+        )
+        .eq(
+          "user_id",
+          householdSession.user.id
+        )
+        .eq(
+          "status",
+          "active"
+        );
+
+      if (error) {
+        throw error;
+      }
+
+      const refreshedAttempts =
+        await fetchActiveReadingAttempts(
+          householdSession.user.id
+        );
+
+      const attemptStillActive =
+        refreshedAttempts.some(
+          (candidate) =>
+            candidate.attempt_id ===
+            attempt.attempt_id
+        );
+
+      if (attemptStillActive) {
+        throw new Error(
+          "The reading attempt still appears active after cancellation."
+        );
+      }
+
+      setActiveReadingAttempts(
+        refreshedAttempts
+      );
+
+      setReadingAttemptPageDrafts(
+        (currentDrafts) => {
+          const nextDrafts = {
+            ...currentDrafts,
+          };
+
+          delete nextDrafts[stateKey];
+
+          return nextDrafts;
+        }
+      );
+
+      setReadingAttemptFeedback({
+        stateKey,
+        kind: "success",
+        message:
+          attempt.is_reread
+            ? `${readerName}'s reread was cancelled. The book remains marked read.`
+            : `${readerName}'s reading attempt was cancelled.`,
+      });
+    } catch (error) {
+      console.error(
+        "Could not cancel reading attempt.",
+        error
+      );
+
+      setReadingAttemptFeedback({
+        stateKey,
+        kind: "error",
+        message:
+          error instanceof Error
+            ? `Reading attempt failed to cancel: ${error.message}`
+            : "Reading attempt failed to cancel because of an unknown Supabase error.",
+      });
+    } finally {
+      setReadingAttemptSavingKey(null);
+    }
+  }
+
   const activeWantedItems =
     wantedMode === "toBuy" ? wantedLists.toBuy : wantedLists.seriesToComplete;
 
@@ -2112,6 +2444,7 @@ export default function App() {
   useEffect(() => {
     setReadStatusError("");
     setReadingAttemptFeedback(null);
+    setReadingAttemptPageDrafts({});
   }, [selectedBookId]);
 
   function renderBookDetail(
@@ -2561,6 +2894,25 @@ export default function App() {
                           readingAttemptSavingKey ===
                           stateKey;
 
+                        const storedPageValue =
+                          attempt?.current_page
+                            ? String(
+                                attempt.current_page
+                              )
+                            : "";
+
+                        const pageDraftValue =
+                          stateKey in
+                          readingAttemptPageDrafts
+                            ? readingAttemptPageDrafts[
+                                stateKey
+                              ]
+                            : storedPageValue;
+
+                        const pageDraftHasChanges =
+                          pageDraftValue.trim() !==
+                          storedPageValue;
+
                         const feedback =
                           readingAttemptFeedback
                             ?.stateKey ===
@@ -2614,6 +2966,92 @@ export default function App() {
                                     attempt.started_at
                                   )}
                                 </p>
+
+                                <div className="readingAttemptPageEditor">
+                                  <label className="readingAttemptPageField">
+                                    <span>
+                                      Current page
+                                    </span>
+
+                                    <input
+                                      type="number"
+                                      min={0}
+                                      step={1}
+                                      inputMode="numeric"
+                                      value={
+                                        pageDraftValue
+                                      }
+                                      disabled={
+                                        isSaving
+                                      }
+                                      onChange={(
+                                        event
+                                      ) => {
+                                        setReadingAttemptPageDrafts(
+                                          (
+                                            currentDrafts
+                                          ) => ({
+                                            ...currentDrafts,
+                                            [stateKey]:
+                                              event.target
+                                                .value,
+                                          })
+                                        );
+
+                                        if (
+                                          readingAttemptFeedback
+                                            ?.stateKey ===
+                                          stateKey
+                                        ) {
+                                          setReadingAttemptFeedback(
+                                            null
+                                          );
+                                        }
+                                      }}
+                                    />
+                                  </label>
+
+                                  <button
+                                    type="button"
+                                    className="readingAttemptSaveButton"
+                                    disabled={
+                                      isSaving ||
+                                      !pageDraftHasChanges
+                                    }
+                                    onClick={() => {
+                                      void saveReadingAttemptPage(
+                                        attempt,
+                                        pageDraftValue
+                                      );
+                                    }}
+                                  >
+                                    {isSaving
+                                      ? "Saving…"
+                                      : "Save page"}
+                                  </button>
+                                </div>
+
+                                <p className="readingAttemptPageHint">
+                                  Enter 0 or clear the
+                                  field to reset progress.
+                                </p>
+
+                                <button
+                                  type="button"
+                                  className="readingAttemptCancelButton"
+                                  disabled={isSaving}
+                                  onClick={() => {
+                                    void abandonReadingAttempt(
+                                      attempt
+                                    );
+                                  }}
+                                >
+                                  {isSaving
+                                    ? "Working…"
+                                    : attempt.is_reread
+                                      ? "Cancel reread"
+                                      : "Cancel reading"}
+                                </button>
                               </>
                             ) : (
                               <>

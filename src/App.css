@@ -760,6 +760,95 @@ select {
   color: #8a3429;
 }
 
+.readingAttemptPageEditor {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: end;
+  padding-top: 0.45rem;
+  border-top: 1px solid rgba(76, 48, 30, 0.1);
+}
+
+.readingAttemptPageField {
+  display: grid;
+  gap: 0.28rem;
+  color: var(--greenDark);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.readingAttemptPageField input {
+  width: 7rem;
+  border: 1px solid rgba(76, 48, 30, 0.2);
+  border-radius: 10px;
+  padding: 0.5rem 0.6rem;
+  color: var(--brownDark);
+  background: rgba(255, 250, 240, 0.9);
+  font: inherit;
+  font-size: 0.9rem;
+}
+
+.readingAttemptPageField input:focus {
+  outline: 3px solid rgba(201, 154, 69, 0.24);
+  outline-offset: 1px;
+  border-color: rgba(82, 111, 69, 0.45);
+}
+
+.readingAttemptPageField input:disabled {
+  cursor: wait;
+  opacity: 0.58;
+}
+
+.readingAttemptSaveButton {
+  border: 1px solid rgba(52, 72, 46, 0.35);
+  border-radius: 10px;
+  padding: 0.5rem 0.72rem;
+  color: #fff8e9;
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--greenDark)
+    );
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.readingAttemptSaveButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.readingAttemptPageHint {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.readingAttemptCancelButton {
+  width: fit-content;
+  border: 1px solid rgba(138, 52, 41, 0.28);
+  border-radius: 10px;
+  padding: 0.46rem 0.7rem;
+  color: #8a3429;
+  background: rgba(255, 246, 242, 0.78);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.readingAttemptCancelButton:hover:not(:disabled) {
+  border-color: rgba(138, 52, 41, 0.48);
+  background: rgba(255, 238, 232, 0.94);
+}
+
+.readingAttemptCancelButton:disabled {
+  cursor: wait;
+  opacity: 0.5;
+}
+
 .bookDetailSections {
   display: grid;
   gap: 1rem;
