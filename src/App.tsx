@@ -947,6 +947,14 @@ export default function App() {
     ]
   );
 
+  const booksById = useMemo(
+    () =>
+      new Map(
+        books.map((book) => [book.bookId, book])
+      ),
+    [books]
+  );
+
   const activeWantedItems =
     wantedMode === "toBuy" ? wantedLists.toBuy : wantedLists.seriesToComplete;
 
@@ -2306,6 +2314,17 @@ export default function App() {
                       <div className="challengeEntryGrid">
                         {activeChallengeEntries.map(
                           (entry) => {
+                            const linkedBook = entry.bookId
+                              ? booksById.get(entry.bookId)
+                              : undefined;
+
+                            const challengeSeriesLabel =
+                              linkedBook
+                                ? formatSearchSeriesLabel(
+                                    linkedBook
+                                  )
+                                : "";
+
                             const pagesRead =
                               getChallengeEntryPagesRead(
                                 entry
@@ -2345,16 +2364,16 @@ export default function App() {
                                 key={entry.entryId}
                                 type="button"
                                 className={cardClassName}
-                                disabled={!entry.bookId}
+                                disabled={!linkedBook}
                                 onClick={() => {
-                                  if (entry.bookId) {
+                                  if (linkedBook) {
                                     setSelectedBookId(
-                                      entry.bookId
+                                      linkedBook.bookId
                                     );
                                   }
                                 }}
                                 aria-label={
-                                  entry.bookId
+                                  linkedBook
                                     ? `Open ${entry.title} book details`
                                     : `${entry.title} is not linked to a library book`
                                 }
@@ -2380,6 +2399,12 @@ export default function App() {
                                     {entry.author ||
                                       "Unknown author"}
                                   </span>
+
+                                  {challengeSeriesLabel ? (
+                                    <span className="challengeEntrySeries">
+                                      {challengeSeriesLabel}
+                                    </span>
+                                  ) : null}
 
                                   <span className="challengeEntryBadges">
                                     <span className="challengeBadge">

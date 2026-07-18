@@ -1260,6 +1260,15 @@ select {
   font-size: 0.9rem;
 }
 
+.challengeEntrySeries {
+  width: fit-content;
+  border-left: 3px solid rgba(82, 111, 69, 0.34);
+  padding-left: 0.5rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
 .challengeEntryBadges {
   display: flex;
   flex-wrap: wrap;
