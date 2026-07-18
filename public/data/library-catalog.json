@@ -11494,7 +11494,7 @@
     "lastName": "Lavalle",
     "format": "Paperback",
     "jc": true,
-    "cj": false,
+    "cj": true,
     "lgbtq": false,
     "sourceSheet": "L",
     "sourceRow": 9
@@ -15274,7 +15274,7 @@
     "lastName": "Reid",
     "format": "Paperback",
     "jc": false,
-    "cj": false,
+    "cj": true,
     "lgbtq": true,
     "sourceSheet": "R",
     "sourceRow": 10
@@ -17814,7 +17814,7 @@
     "lastName": "Tao",
     "format": "Paperback",
     "jc": false,
-    "cj": false,
+    "cj": true,
     "lgbtq": false,
     "sourceSheet": "T-V",
     "sourceRow": 17

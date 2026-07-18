@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-17T23:23:30.929680+00:00",
+  "generatedAt": "2026-07-18T05:17:21.283298+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "sourceSheet": "List View",
-  "bookCount": 1005,
+  "bookCount": 1015,
   "skippedBlankRows": 0,
   "headers": [
     "LGBTQ+",
@@ -47,7 +47,7 @@
   "unmappedBookcases": [],
   "catalogMatchFallbackRows": [
     {
-      "row": 535,
+      "row": 541,
       "matchType": "title-prefix",
       "listTitle": "The Hundred Years' War on Palestine",
       "catalogTitle": "The Hundred Years' War on Palestine: A History of Settler Colonialism and Resistance, 1917–2017",
@@ -56,79 +56,139 @@
   ],
   "catalogUnmatchedRows": [
     {
+      "row": 52,
+      "title": "Shadow and Bone",
+      "author": "Leigh Bardugo",
+      "catalogKey": "bardugo-leigh-shadow-and-bone"
+    },
+    {
       "row": 53,
+      "title": "Siege and Storm",
+      "author": "Leigh Bardugo",
+      "catalogKey": "bardugo-leigh-siege-and-storm"
+    },
+    {
+      "row": 55,
       "title": "Six of Crows",
       "author": "Leigh Bardugo",
       "catalogKey": "bardugo-leigh-six-of-crows"
     },
     {
-      "row": 54,
+      "row": 56,
       "title": "The Crooked Kingdom",
       "author": "Leigh Bardugo",
       "catalogKey": "bardugo-leigh-the-crooked-kingdom"
     },
     {
-      "row": 75,
+      "row": 58,
+      "title": "The Hawthorne Legacy",
+      "author": "Jennifer Lynn Barnes",
+      "catalogKey": "barnes-jennifer-lynn-the-hawthorne-legacy"
+    },
+    {
+      "row": 78,
       "title": "Masters of Death",
       "author": "Olivie Blake",
       "catalogKey": "blake-olivie-masters-of-death"
     },
     {
-      "row": 97,
+      "row": 100,
       "title": "Red Rising",
       "author": "Pierce Brown",
       "catalogKey": "brown-pierce-red-rising"
     },
     {
-      "row": 210,
+      "row": 165,
+      "title": "Tsubasa: RESERVoir CHRoNiCLE, Vol. 5",
+      "author": "Clamp",
+      "catalogKey": "clamp-tsubasa-reservoir-chronicle-vol-5"
+    },
+    {
+      "row": 214,
       "title": "The Year of Magical Thinking",
       "author": "Joan Didion",
       "catalogKey": "didion-joan-the-year-of-magical-thinking"
     },
     {
-      "row": 291,
+      "row": 295,
       "title": "What My Bones Know: A Memoir of Healing from Complex Trauma",
       "author": "Stephanie Foo",
       "catalogKey": "foo-stephanie-what-my-bones-know-a-memoir-of-healing-from-complex-trauma"
     },
     {
-      "row": 370,
+      "row": 364,
+      "title": "Demon Slayer: Kimetsu Academy, Vol. 2",
+      "author": "Koyoharu Gotouge; Natsuki Hokami",
+      "catalogKey": "gotouge-koyoharu-demon-slayer-kimetsu-academy-vol-2"
+    },
+    {
+      "row": 375,
       "title": "How to Stop Time",
       "author": "Matt Haig",
       "catalogKey": "haig-matt-how-to-stop-time"
     },
     {
-      "row": 450,
+      "row": 455,
       "title": "Women in Science: 50 Fearless Pioneers Who Changed the World",
       "author": "Rachel Ignotofsky",
       "catalogKey": "ignotofsky-rachel-women-in-science-50-fearless-pioneers-who-changed-the-world"
     },
     {
-      "row": 544,
+      "row": 513,
+      "title": "Part of Your World",
+      "author": "Abby Jimenez",
+      "catalogKey": "jimenez-abby-part-of-your-world"
+    },
+    {
+      "row": 550,
       "title": "Pigs in Heaven",
       "author": "Barbara Kingsolver",
       "catalogKey": "kingsolver-barbara-pigs-in-heaven"
     },
     {
-      "row": 714,
+      "row": 593,
+      "title": "Carmilla",
+      "author": "Joseph Sheridan Le Fanu",
+      "catalogKey": "le-fanu-joseph-sheridan-carmilla"
+    },
+    {
+      "row": 721,
       "title": "The September House",
       "author": "Carissa Orlando",
       "catalogKey": "orlando-carissa-the-september-house"
     },
     {
-      "row": 782,
+      "row": 730,
+      "title": "Nick and Charlie",
+      "author": "Alice Oseman",
+      "catalogKey": "oseman-alice-nick-and-charlie"
+    },
+    {
+      "row": 733,
+      "title": "Mr. Fox",
+      "author": "Helen Oyeyemi",
+      "catalogKey": "oyeyemi-helen-mr-fox"
+    },
+    {
+      "row": 791,
       "title": "Gulp: Adventures on the Alimentary Canal",
       "author": "Mary Roach",
       "catalogKey": "roach-mary-gulp-adventures-on-the-alimentary-canal"
     },
     {
-      "row": 871,
+      "row": 880,
       "title": "The Vile Village",
       "author": "Lemony Snicket",
       "catalogKey": "snicket-lemony-the-vile-village"
     },
     {
-      "row": 987,
+      "row": 923,
+      "title": "Can't Spell Treason Without Tea",
+      "author": "Rebecca Thorne",
+      "catalogKey": "thorne-rebecca-can-t-spell-treason-without-tea"
+    },
+    {
+      "row": 997,
       "title": "The Beauty & Peace, Pipe",
       "author": "Aliya Whiteley",
       "catalogKey": "whiteley-aliya-the-beauty-peace-pipe"
@@ -176,7 +236,7 @@
         "Last"
       ],
       "headerMode": "headers",
-      "rowCount": 74,
+      "rowCount": 72,
       "skippedBlankRows": 0
     },
     "seriesToComplete": {
@@ -16569,10 +16629,10 @@
         ""
       ],
       "headerMode": "headers",
-      "rowCount": 294,
+      "rowCount": 287,
       "skippedBlankRows": 0
     },
-    "totalWantedCount": 368
+    "totalWantedCount": 359
   },
   "coverExtraction": {
     "outputDir": "C:\\library_app\\library-map\\public\\data\\covers",
