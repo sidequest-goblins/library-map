@@ -14,6 +14,7 @@ import HouseholdAccountPanel from "./HouseholdAccountPanel";
 import { supabase } from "./supabaseClient";
 import {
   buildLibraryStateSeedPreview,
+  isLibraryReaderId,
   makeLibraryStateKey,
   type LibraryReaderBookState,
   type LibraryStateLoadStatus,
@@ -446,25 +447,28 @@ function getChallengeEntryPagesRead(
   return currentPage;
 }
 
-function getChallengeEntryStatus(
-  entry: ChallengeEntry
+function getChallengeDisplayStatus(
+  isRead: boolean,
+  pagesRead: number,
+  totalPages: number
 ): string {
-  if (entry.read) {
+  if (isRead) {
     return "Read";
   }
 
-  const currentPage = getChallengeEntryPagesRead(entry);
-
-  if (currentPage > 0 && entry.totalPages) {
-    return `${currentPage} / ${entry.totalPages} pages`;
+  if (
+    pagesRead > 0 &&
+    totalPages > 0
+  ) {
+    return `${pagesRead} / ${totalPages} pages`;
   }
 
-  if (currentPage > 0) {
-    return `Page ${currentPage}`;
+  if (pagesRead > 0) {
+    return `Page ${pagesRead}`;
   }
 
-  if (entry.totalPages) {
-    return `${entry.totalPages} pages`;
+  if (totalPages > 0) {
+    return `${totalPages} pages`;
   }
 
   return "Not started";
@@ -1309,6 +1313,98 @@ export default function App() {
     [books]
   );
 
+  const sharedLibraryStateIsAuthoritative =
+    householdSession !== null &&
+    libraryStateLoadStatus === "ready";
+
+  function getBookReaderIsRead(
+    book: Book,
+    readerId: "cj" | "jc",
+    staticFallback: boolean
+  ): boolean {
+    const catalogKey =
+      book.catalogKey?.trim() ?? "";
+
+    if (
+      !sharedLibraryStateIsAuthoritative ||
+      !catalogKey
+    ) {
+      return staticFallback;
+    }
+
+    return (
+      libraryStateByKey.get(
+        makeLibraryStateKey(
+          readerId,
+          catalogKey
+        )
+      )?.is_read ?? false
+    );
+  }
+
+  function getChallengeEntryDisplayState(
+    entry: ChallengeEntry,
+    readerId: string,
+    linkedBook?: Book
+  ) {
+    const totalPages = Math.max(
+      entry.totalPages ?? 0,
+      0
+    );
+
+    const staticPagesRead =
+      getChallengeEntryPagesRead(entry);
+
+    const catalogKey =
+      entry.catalogKey?.trim() ||
+      linkedBook?.catalogKey?.trim() ||
+      "";
+
+    if (
+      !sharedLibraryStateIsAuthoritative ||
+      !isLibraryReaderId(readerId) ||
+      !catalogKey
+    ) {
+      return {
+        isRead: entry.read,
+        pagesRead: staticPagesRead,
+        totalPages,
+      };
+    }
+
+    const sharedState =
+      libraryStateByKey.get(
+        makeLibraryStateKey(
+          readerId,
+          catalogKey
+        )
+      );
+
+    const isRead =
+      sharedState?.is_read ?? false;
+
+    const currentPage = Math.max(
+      sharedState?.current_page ?? 0,
+      0
+    );
+
+    const pagesRead =
+      isRead && totalPages > 0
+        ? totalPages
+        : totalPages > 0
+          ? Math.min(
+              currentPage,
+              totalPages
+            )
+          : currentPage;
+
+    return {
+      isRead,
+      pagesRead,
+      totalPages,
+    };
+  }
+
   const activeWantedItems =
     wantedMode === "toBuy" ? wantedLists.toBuy : wantedLists.seriesToComplete;
 
@@ -1348,19 +1444,40 @@ export default function App() {
 
   const challengeSummary = activeChallengeEntries.reduce(
     (summary, entry) => {
-      const pagesRead = getChallengeEntryPagesRead(entry);
-      const inProgress = !entry.read && pagesRead > 0;
+      const linkedBook = entry.bookId
+        ? booksById.get(entry.bookId)
+        : undefined;
+
+      const {
+        isRead,
+        pagesRead,
+        totalPages,
+      } = getChallengeEntryDisplayState(
+        entry,
+        activeChallengeReader?.readerId ?? "",
+        linkedBook
+      );
+
+      const inProgress =
+        !isRead &&
+        pagesRead > 0;
 
       return {
         completed:
-          summary.completed + (entry.read ? 1 : 0),
+          summary.completed +
+          (isRead ? 1 : 0),
+
         inProgress:
-          summary.inProgress + (inProgress ? 1 : 0),
+          summary.inProgress +
+          (inProgress ? 1 : 0),
+
         pagesRead:
-          summary.pagesRead + pagesRead,
+          summary.pagesRead +
+          pagesRead,
+
         totalPages:
           summary.totalPages +
-          Math.max(entry.totalPages ?? 0, 0),
+          totalPages,
       };
     },
     {
@@ -1533,9 +1650,23 @@ export default function App() {
       selectedBook.row !== "Main" ? selectedBook.row : "",
     ].filter(Boolean);
 
+    const selectedBookCjRead =
+      getBookReaderIsRead(
+        selectedBook,
+        "cj",
+        Boolean(selectedBook.cj)
+      );
+
+    const selectedBookJcRead =
+      getBookReaderIsRead(
+        selectedBook,
+        "jc",
+        Boolean(selectedBook.jc)
+      );
+
     const readBy = [
-      selectedBook.cj ? "CJ" : "",
-      selectedBook.jc ? "JC" : "",
+      selectedBookCjRead ? "CJ" : "",
+      selectedBookJcRead ? "JC" : "",
     ].filter(Boolean);
 
     const selectedBookSeriesName = String(
@@ -1674,13 +1805,13 @@ export default function App() {
 
               {readBy.length > 0 ? (
                 <div className="readStatusList">
-                  {selectedBook.cj ? (
+                  {selectedBookCjRead ? (
                     <span className="readStatusChip">
                       CJ ✓
                     </span>
                   ) : null}
 
-                  {selectedBook.jc ? (
+                  {selectedBookJcRead ? (
                     <span className="readStatusChip">
                       JC ✓
                     </span>
@@ -1702,12 +1833,14 @@ export default function App() {
                 <div className="detailChallengeList">
                   {selectedBookReadingProgress.map(
                     ({ challenge, reader, entry }) => {
-                      const pagesRead =
-                        getChallengeEntryPagesRead(entry);
-
-                      const totalPages = Math.max(
-                        entry.totalPages ?? 0,
-                        0
+                      const {
+                        isRead,
+                        pagesRead,
+                        totalPages,
+                      } = getChallengeEntryDisplayState(
+                        entry,
+                        reader.readerId,
+                        selectedBook
                       );
 
                       const progressPercent =
@@ -1715,17 +1848,19 @@ export default function App() {
                           ? Math.min(
                               100,
                               Math.round(
-                                (pagesRead / totalPages) *
+                                (pagesRead /
+                                  totalPages) *
                                   100
                               )
                             )
                           : 0;
 
-                      const progressStatus = entry.read
-                        ? "Complete"
-                        : pagesRead > 0
-                          ? "In progress"
-                          : "Not started";
+                      const progressStatus =
+                        isRead
+                          ? "Complete"
+                          : pagesRead > 0
+                            ? "In progress"
+                            : "Not started";
 
                       return (
                         <article
@@ -2497,9 +2632,9 @@ export default function App() {
               </h2>
 
               <p>
-                Challenge books and starting progress are
-                loaded from the challenge workbook. Interactive
-                progress tracking comes next.
+                Challenge membership and page totals come from
+                the challenge workbook. Read status and current
+                progress come from household sync when signed in.
               </p>
             </section>
 
@@ -2719,23 +2854,27 @@ export default function App() {
                                   )
                                 : "";
 
-                            const pagesRead =
-                              getChallengeEntryPagesRead(
-                                entry
-                              );
+                            const {
+                              isRead,
+                              pagesRead,
+                              totalPages,
+                            } = getChallengeEntryDisplayState(
+                              entry,
+                              activeChallengeReader.readerId,
+                              linkedBook
+                            );
 
                             const inProgress =
-                              !entry.read &&
+                              !isRead &&
                               pagesRead > 0;
 
                             const entryProgressPercent =
-                              entry.totalPages &&
-                              entry.totalPages > 0
+                              totalPages > 0
                                 ? Math.min(
                                     100,
                                     Math.round(
                                       (pagesRead /
-                                        entry.totalPages) *
+                                        totalPages) *
                                         100
                                     )
                                   )
@@ -2743,7 +2882,7 @@ export default function App() {
 
                             const cardClassName = [
                               "challengeEntryCard",
-                              entry.read
+                              isRead
                                 ? "challengeEntryCardRead"
                                 : "",
                               inProgress
@@ -2782,7 +2921,7 @@ export default function App() {
                                       {entry.title}
                                     </span>
 
-                                    {entry.read ? (
+                                    {isRead ? (
                                       <span className="challengeBadge challengeReadBadge">
                                         Read ✓
                                       </span>
@@ -2802,8 +2941,10 @@ export default function App() {
 
                                   <span className="challengeEntryBadges">
                                     <span className="challengeBadge">
-                                      {getChallengeEntryStatus(
-                                        entry
+                                      {getChallengeDisplayStatus(
+                                        isRead,
+                                        pagesRead,
+                                        totalPages
                                       )}
                                     </span>
 
@@ -2817,8 +2958,8 @@ export default function App() {
                                   </span>
 
                                   {(pagesRead > 0 ||
-                                    entry.read) &&
-                                  entry.totalPages ? (
+                                    isRead) &&
+                                  totalPages > 0 ? (
                                     <span className="challengeBookProgress">
                                       <span
                                         className="challengeBookProgressFill"

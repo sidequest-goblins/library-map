@@ -57,7 +57,7 @@ export function makeLibraryStateKey(
   return `${readerId}:${catalogKey}`;
 }
 
-function isLibraryReaderId(
+export function isLibraryReaderId(
   value: string
 ): value is LibraryReaderId {
   return value === "cj" || value === "jc";
