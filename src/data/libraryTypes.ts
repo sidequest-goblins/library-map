@@ -61,3 +61,39 @@ export type WantedLists = {
   toBuy: WantedBook[];
   seriesToComplete: WantedBook[];
 };
+
+export type ChallengeEntry = {
+  entryId: string;
+  letter: string;
+  title: string;
+  author: string;
+  authorFirst: string;
+  authorLast: string;
+  bookId: string | null;
+  catalogKey?: string | null;
+  read: boolean;
+  currentPage: number | null;
+  totalPages: number | null;
+  naturalTitleLetter: string;
+  wildcard: boolean;
+  sourceSheet?: string;
+  sourceRow?: number;
+};
+
+export type ChallengeReader = {
+  readerId: string;
+  readerName: string;
+  entries: ChallengeEntry[];
+};
+
+export type ReadingChallenge = {
+  challengeId: string;
+  name: string;
+  readers: ChallengeReader[];
+};
+
+export type ChallengeData = {
+  schemaVersion: number;
+  sourceWorkbook: string;
+  challenges: ReadingChallenge[];
+};

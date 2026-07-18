@@ -18,9 +18,15 @@ import type {
   SearchScope,
   SearchSortDirection,
 } from "./data/librarySelectors";
-import type { Book, WantedBook, WantedLists } from "./data/libraryTypes";
+import type { 
+  Book,
+  ChallengeData,
+  ChallengeEntry, 
+  WantedBook, 
+  WantedLists, 
+} from "./data/libraryTypes";
 
-type AppTab = "search" | "wanted" | "map";
+type AppTab = "search" | "wanted" | "challenges" | "map";
 type WantedMode = "toBuy" | "seriesToComplete";
 
 const SEARCH_SCOPE_OPTIONS: Array<{
@@ -78,6 +84,12 @@ const SEARCH_PAGE_SIZE = 25;
 const EMPTY_WANTED_LISTS: WantedLists = {
   toBuy: [],
   seriesToComplete: [],
+};
+
+const EMPTY_CHALLENGE_DATA: ChallengeData = {
+  schemaVersion: 1,
+  sourceWorkbook: "",
+  challenges: [],
 };
 
 const WANTED_MODE_OPTIONS: Array<{
@@ -381,6 +393,72 @@ async function loadWantedLists(): Promise<WantedLists> {
   };
 }
 
+async function loadChallengeData(): Promise<ChallengeData> {
+  const response = await fetch(
+    `${import.meta.env.BASE_URL}data/library-challenges.json`
+  );
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      return EMPTY_CHALLENGE_DATA;
+    }
+
+    throw new Error(
+      `Failed to load reading challenges: ${response.status}`
+    );
+  }
+
+  const parsed = (await response.json()) as Partial<ChallengeData>;
+
+  return {
+    schemaVersion: parsed.schemaVersion ?? 1,
+    sourceWorkbook: parsed.sourceWorkbook ?? "",
+    challenges: parsed.challenges ?? [],
+  };
+}
+
+function getChallengeEntryPagesRead(
+  entry: ChallengeEntry
+): number {
+  const totalPages = Math.max(entry.totalPages ?? 0, 0);
+
+  if (entry.read && totalPages > 0) {
+    return totalPages;
+  }
+
+  const currentPage = Math.max(entry.currentPage ?? 0, 0);
+
+  if (totalPages > 0) {
+    return Math.min(currentPage, totalPages);
+  }
+
+  return currentPage;
+}
+
+function getChallengeEntryStatus(
+  entry: ChallengeEntry
+): string {
+  if (entry.read) {
+    return "Read";
+  }
+
+  const currentPage = getChallengeEntryPagesRead(entry);
+
+  if (currentPage > 0 && entry.totalPages) {
+    return `${currentPage} / ${entry.totalPages} pages`;
+  }
+
+  if (currentPage > 0) {
+    return `Page ${currentPage}`;
+  }
+
+  if (entry.totalPages) {
+    return `${entry.totalPages} pages`;
+  }
+
+  return "Not started";
+}
+
 async function clearAppCache() {
   if ("caches" in window) {
     const cacheNames = await caches.keys();
@@ -489,6 +567,8 @@ function sortBooksForDetailShelf(booksToSort: Book[]): Book[] {
 export default function App() {
   const [books, setBooks] = useState<Book[]>([]);
   const [wantedLists, setWantedLists] = useState<WantedLists>(EMPTY_WANTED_LISTS);
+  const [challengeData, setChallengeData] =
+    useState<ChallengeData>(EMPTY_CHALLENGE_DATA);
   const [loadStatus, setLoadStatus] = useState<"loading" | "ready" | "error">(
     "loading"
   );
@@ -508,6 +588,13 @@ export default function App() {
     toBuy: "",
     seriesToComplete: "",
   });
+  const [selectedChallengeId, setSelectedChallengeId] =
+    useState("");
+
+  const [
+    selectedChallengeReaderId,
+    setSelectedChallengeReaderId,
+  ] = useState("");
   const [selectedBookId, setSelectedBookId] =
     useState<string | null>(null);
   const [searchPage, setSearchPage] = useState(1);
@@ -593,23 +680,35 @@ export default function App() {
   useEffect(() => {
     async function loadBooks() {
       try {
-        const [booksResponse, loadedWantedLists] = await Promise.all([
+        const [
+          booksResponse,
+          loadedWantedLists,
+          loadedChallengeData,
+        ] = await Promise.all([
           fetch(`${import.meta.env.BASE_URL}data/library-books.json`),
           loadWantedLists(),
+          loadChallengeData(),
         ]);
 
         if (!booksResponse.ok) {
-          throw new Error(`Failed to load library data: ${booksResponse.status}`);
+          throw new Error(
+            `Failed to load library data: ${booksResponse.status}`
+          );
         }
 
         const loadedBooks = (await booksResponse.json()) as Book[];
 
         setBooks(loadedBooks);
         setWantedLists(loadedWantedLists);
+        setChallengeData(loadedChallengeData);
         setLoadStatus("ready");
       } catch (error) {
         setLoadStatus("error");
-        setLoadError(error instanceof Error ? error.message : String(error));
+        setLoadError(
+          error instanceof Error
+            ? error.message
+            : String(error)
+        );
       }
     }
 
@@ -868,6 +967,62 @@ export default function App() {
   const activeWantedTotal = activeWantedItems.length;
   const filteredWantedTotal = filteredWantedItems.length;
 
+  const activeChallenge =
+    challengeData.challenges.find(
+      (challenge) =>
+        challenge.challengeId === selectedChallengeId
+    ) ??
+    challengeData.challenges[0] ??
+    null;
+
+  const activeChallengeReader =
+    activeChallenge?.readers.find(
+      (reader) =>
+        reader.readerId === selectedChallengeReaderId
+    ) ??
+    activeChallenge?.readers[0] ??
+    null;
+
+  const activeChallengeEntries =
+    activeChallengeReader?.entries ?? [];
+
+  const challengeSummary = activeChallengeEntries.reduce(
+    (summary, entry) => {
+      const pagesRead = getChallengeEntryPagesRead(entry);
+      const inProgress = !entry.read && pagesRead > 0;
+
+      return {
+        completed:
+          summary.completed + (entry.read ? 1 : 0),
+        inProgress:
+          summary.inProgress + (inProgress ? 1 : 0),
+        pagesRead:
+          summary.pagesRead + pagesRead,
+        totalPages:
+          summary.totalPages +
+          Math.max(entry.totalPages ?? 0, 0),
+      };
+    },
+    {
+      completed: 0,
+      inProgress: 0,
+      pagesRead: 0,
+      totalPages: 0,
+    }
+  );
+
+  const challengeProgressPercent =
+    challengeSummary.totalPages > 0
+      ? Math.min(
+          100,
+          Math.round(
+            (challengeSummary.pagesRead /
+              challengeSummary.totalPages) *
+              100
+          )
+        )
+      : 0;
+
   const totalSearchPages = Math.max(
     1,
     Math.ceil(searchResults.length / SEARCH_PAGE_SIZE)
@@ -1023,6 +1178,22 @@ export default function App() {
       selectedBook.jc ? "JC" : "",
     ].filter(Boolean);
 
+    const selectedBookChallengeMemberships =
+    challengeData.challenges.flatMap((challenge) =>
+      challenge.readers.flatMap((reader) =>
+        reader.entries
+          .filter(
+            (entry) =>
+              entry.bookId === selectedBook.bookId
+          )
+          .map((entry) => ({
+            challenge,
+            reader,
+            entry,
+          }))
+      )
+    );
+
     return (
       <section className="bookDetailPanel">
         <button type="button" className="backButton" onClick={onBack}>
@@ -1164,6 +1335,103 @@ export default function App() {
               </dl>
             </section>
 
+            {selectedBookChallengeMemberships.length > 0 ? (
+              <section className="detailSection">
+                <p className="detailLabel">
+                  Challenge progress
+                </p>
+
+                <div className="detailChallengeList">
+                  {selectedBookChallengeMemberships.map(
+                    ({ challenge, reader, entry }) => {
+                      const pagesRead =
+                        getChallengeEntryPagesRead(entry);
+
+                      const totalPages = Math.max(
+                        entry.totalPages ?? 0,
+                        0
+                      );
+
+                      const progressPercent =
+                        totalPages > 0
+                          ? Math.min(
+                              100,
+                              Math.round(
+                                (pagesRead / totalPages) * 100
+                              )
+                            )
+                          : 0;
+
+                      const progressStatus = entry.read
+                        ? "Complete"
+                        : pagesRead > 0
+                          ? "In progress"
+                          : "Not started";
+
+                      return (
+                        <article
+                          key={entry.entryId}
+                          className="detailChallengeCard"
+                        >
+                          <div className="detailChallengeHeading">
+                            <div>
+                              <p className="detailChallengeName">
+                                {challenge.name} ·{" "}
+                                {reader.readerName}
+                              </p>
+
+                              <p className="detailChallengeStatus">
+                                {progressStatus}
+                              </p>
+                            </div>
+
+                            <span
+                              className="detailChallengeLetter"
+                              aria-label={`Challenge letter ${entry.letter}`}
+                            >
+                              {entry.letter}
+                            </span>
+                          </div>
+
+                          {totalPages > 0 ? (
+                            <>
+                              <div
+                                className="detailChallengeProgressMeta"
+                                aria-label={`${pagesRead} of ${totalPages} pages read`}
+                              >
+                                <span>
+                                  {pagesRead.toLocaleString()} of{" "}
+                                  {totalPages.toLocaleString()} pages
+                                </span>
+
+                                <span>{progressPercent}%</span>
+                              </div>
+
+                              <div
+                                className="challengeProgressTrack"
+                                aria-hidden="true"
+                              >
+                                <span
+                                  className="challengeProgressFill"
+                                  style={{
+                                    width: `${progressPercent}%`,
+                                  }}
+                                />
+                              </div>
+                            </>
+                          ) : (
+                            <p className="detailMuted">
+                              Page count not entered.
+                            </p>
+                          )}
+                        </article>
+                      );
+                    }
+                  )}
+                </div>
+              </section>
+            ) : null}
+            
             <section className="detailSection">
               <p className="detailLabel">Read by</p>
 
@@ -1230,20 +1498,40 @@ export default function App() {
   }
 
   const headerTitle =
-    activeTab === "map" && selectedBookcase
-      ? selectedBookcase.bookcase
+    activeTab === "map"
+      ? selectedBookcase?.bookcase ?? "Map"
       : activeTab === "wanted"
         ? "Wanted"
-        : "Search";
+        : activeTab === "challenges"
+          ? activeChallenge?.name ?? "Challenges"
+          : "Search";
 
   const headerMeta =
-    activeTab === "map" && selectedBookcase
-      ? selectedBookcase.hasRisers
-        ? `${selectedBookcase.bookcase} · Risers`
-        : selectedBookcase.room
+    activeTab === "map"
+      ? selectedBookcase
+        ? selectedBookcase.hasRisers
+          ? `${selectedBookcase.bookcase} · Risers`
+          : selectedBookcase.room
+        : `${bookcases.length} bookcases`
       : activeTab === "wanted"
-        ? `${wantedTotal} wanted ${wantedTotal === 1 ? "book" : "books"}`
-        : `${books.length} books loaded`;
+        ? `${wantedTotal} wanted ${
+            wantedTotal === 1 ? "book" : "books"
+          }`
+        : activeTab === "challenges"
+          ? activeChallengeReader
+            ? `${activeChallengeReader.readerName} · ${
+                activeChallengeEntries.length
+              } ${
+                activeChallengeEntries.length === 1
+                  ? "book"
+                  : "books"
+              }`
+            : `${challengeData.challenges.length} ${
+                challengeData.challenges.length === 1
+                  ? "challenge"
+                  : "challenges"
+              }`
+          : `${books.length} books loaded`;
 
   return (
     <main className="appShell">
@@ -1275,6 +1563,21 @@ export default function App() {
             }}
           >
             Wanted
+          </button>
+
+          <button
+            type="button"
+            className={
+              activeTab === "challenges"
+                ? "appTab active"
+                : "appTab"
+            }
+            onClick={() => {
+              setActiveTab("challenges");
+              setSelectedBookId(null);
+            }}
+          >
+            Challenges
           </button>
 
           <button
@@ -1742,6 +2045,358 @@ export default function App() {
               : activeWantedModeOption.emptyText
           )}
         </section>
+      ) : activeTab === "challenges" ? (
+        selectedBook ? (
+          renderBookDetail(
+            "Back to challenge",
+            () => setSelectedBookId(null)
+          )
+        ) : (
+          <section className="challengePanel">
+            <section className="challengeIntro">
+              <p className="eyebrow">Reading challenges</p>
+
+              <h2>
+                {activeChallenge?.name ??
+                  "No challenges yet"}
+              </h2>
+
+              <p>
+                Challenge books and starting progress are
+                loaded from the challenge workbook. Interactive
+                progress tracking comes next.
+              </p>
+            </section>
+
+            {challengeData.challenges.length === 0 ? (
+              <section className="emptyBookcase">
+                <h2>No reading challenges found</h2>
+                <p>
+                  Generate library-challenges.json from
+                  CHALLENGES.xlsx to add one.
+                </p>
+              </section>
+            ) : (
+              <>
+                {challengeData.challenges.length > 1 ? (
+                  <section className="challengeControls">
+                    <p className="detailLabel">
+                      Choose a challenge
+                    </p>
+
+                    <div
+                      className="challengePickerTabs"
+                      role="tablist"
+                      aria-label="Choose a reading challenge"
+                    >
+                      {challengeData.challenges.map(
+                        (challenge) => (
+                          <button
+                            key={challenge.challengeId}
+                            type="button"
+                            role="tab"
+                            aria-selected={
+                              activeChallenge?.challengeId ===
+                              challenge.challengeId
+                            }
+                            className={
+                              activeChallenge?.challengeId ===
+                              challenge.challengeId
+                                ? "challengePickerButton challengePickerButtonActive"
+                                : "challengePickerButton"
+                            }
+                            onClick={() => {
+                              setSelectedChallengeId(
+                                challenge.challengeId
+                              );
+
+                              setSelectedChallengeReaderId(
+                                challenge.readers[0]
+                                  ?.readerId ?? ""
+                              );
+
+                              setSelectedBookId(null);
+                            }}
+                          >
+                            {challenge.name}
+                          </button>
+                        )
+                      )}
+                    </div>
+                  </section>
+                ) : null}
+
+                {activeChallenge ? (
+                  <section className="challengeControls">
+                    <p className="detailLabel">
+                      Choose a reader
+                    </p>
+
+                    <div
+                      className="challengeReaderTabs"
+                      role="tablist"
+                      aria-label="Choose a challenge reader"
+                    >
+                      {activeChallenge.readers.map(
+                        (reader) => (
+                          <button
+                            key={reader.readerId}
+                            type="button"
+                            role="tab"
+                            aria-selected={
+                              activeChallengeReader?.readerId ===
+                              reader.readerId
+                            }
+                            className={
+                              activeChallengeReader?.readerId ===
+                              reader.readerId
+                                ? "challengeReaderButton challengeReaderButtonActive"
+                                : "challengeReaderButton"
+                            }
+                            onClick={() => {
+                              setSelectedChallengeReaderId(
+                                reader.readerId
+                              );
+
+                              setSelectedBookId(null);
+                            }}
+                          >
+                            <span>
+                              {reader.readerName}
+                            </span>
+
+                            <span className="challengeReaderCount">
+                              {reader.entries.length} books
+                            </span>
+                          </button>
+                        )
+                      )}
+                    </div>
+                  </section>
+                ) : null}
+
+                {activeChallengeReader ? (
+                  <>
+                    <section className="challengeSummaryPanel">
+                      <div className="challengeSummaryHeader">
+                        <div>
+                          <p className="eyebrow">
+                            {activeChallengeReader.readerName}
+                          </p>
+
+                          <h2>
+                            {activeChallenge?.name}
+                          </h2>
+                        </div>
+
+                        <p>
+                          {challengeProgressPercent}% by pages
+                        </p>
+                      </div>
+
+                      <div className="challengeSummaryGrid">
+                        <article className="challengeStatCard">
+                          <span className="challengeStatValue">
+                            {activeChallengeEntries.length}
+                          </span>
+
+                          <span className="challengeStatLabel">
+                            Books
+                          </span>
+                        </article>
+
+                        <article className="challengeStatCard">
+                          <span className="challengeStatValue">
+                            {challengeSummary.completed}
+                          </span>
+
+                          <span className="challengeStatLabel">
+                            Read
+                          </span>
+                        </article>
+
+                        <article className="challengeStatCard">
+                          <span className="challengeStatValue">
+                            {challengeSummary.inProgress}
+                          </span>
+
+                          <span className="challengeStatLabel">
+                            In progress
+                          </span>
+                        </article>
+
+                        <article className="challengeStatCard">
+                          <span className="challengeStatValue">
+                            {challengeSummary.pagesRead.toLocaleString()}
+                          </span>
+
+                          <span className="challengeStatLabel">
+                            Pages read
+                          </span>
+                        </article>
+                      </div>
+
+                      <div className="challengeOverallProgress">
+                        <div
+                          className="challengeProgressTrack"
+                          aria-hidden="true"
+                        >
+                          <span
+                            className="challengeProgressFill"
+                            style={{
+                              width: `${challengeProgressPercent}%`,
+                            }}
+                          />
+                        </div>
+
+                        <p>
+                          {challengeSummary.pagesRead.toLocaleString()}{" "}
+                          of{" "}
+                          {challengeSummary.totalPages.toLocaleString()}{" "}
+                          pages
+                        </p>
+                      </div>
+                    </section>
+
+                    <section className="challengeListSection">
+                      <div className="challengeListHeader">
+                        <h2>
+                          {activeChallengeReader.readerName}
+                          ’s books
+                        </h2>
+
+                        <p>
+                          Tap a book to open its library details.
+                        </p>
+                      </div>
+
+                      <div className="challengeEntryGrid">
+                        {activeChallengeEntries.map(
+                          (entry) => {
+                            const pagesRead =
+                              getChallengeEntryPagesRead(
+                                entry
+                              );
+
+                            const inProgress =
+                              !entry.read &&
+                              pagesRead > 0;
+
+                            const entryProgressPercent =
+                              entry.totalPages &&
+                              entry.totalPages > 0
+                                ? Math.min(
+                                    100,
+                                    Math.round(
+                                      (pagesRead /
+                                        entry.totalPages) *
+                                        100
+                                    )
+                                  )
+                                : 0;
+
+                            const cardClassName = [
+                              "challengeEntryCard",
+                              entry.read
+                                ? "challengeEntryCardRead"
+                                : "",
+                              inProgress
+                                ? "challengeEntryCardInProgress"
+                                : "",
+                            ]
+                              .filter(Boolean)
+                              .join(" ");
+
+                            return (
+                              <button
+                                key={entry.entryId}
+                                type="button"
+                                className={cardClassName}
+                                disabled={!entry.bookId}
+                                onClick={() => {
+                                  if (entry.bookId) {
+                                    setSelectedBookId(
+                                      entry.bookId
+                                    );
+                                  }
+                                }}
+                                aria-label={
+                                  entry.bookId
+                                    ? `Open ${entry.title} book details`
+                                    : `${entry.title} is not linked to a library book`
+                                }
+                              >
+                                <span className="challengeLetter">
+                                  {entry.letter}
+                                </span>
+
+                                <span className="challengeEntryContent">
+                                  <span className="challengeEntryTitleRow">
+                                    <span className="challengeEntryTitle">
+                                      {entry.title}
+                                    </span>
+
+                                    {entry.read ? (
+                                      <span className="challengeBadge challengeReadBadge">
+                                        Read ✓
+                                      </span>
+                                    ) : null}
+                                  </span>
+
+                                  <span className="challengeEntryAuthor">
+                                    {entry.author ||
+                                      "Unknown author"}
+                                  </span>
+
+                                  <span className="challengeEntryBadges">
+                                    <span className="challengeBadge">
+                                      {getChallengeEntryStatus(
+                                        entry
+                                      )}
+                                    </span>
+
+                                    {entry.wildcard ? (
+                                      <span className="challengeBadge challengeWildcardBadge">
+                                        Wildcard ·{" "}
+                                        {entry.naturalTitleLetter}{" "}
+                                        title
+                                      </span>
+                                    ) : null}
+                                  </span>
+
+                                  {(pagesRead > 0 ||
+                                    entry.read) &&
+                                  entry.totalPages ? (
+                                    <span className="challengeBookProgress">
+                                      <span
+                                        className="challengeBookProgressFill"
+                                        style={{
+                                          width: `${entryProgressPercent}%`,
+                                        }}
+                                      />
+                                    </span>
+                                  ) : null}
+                                </span>
+                              </button>
+                            );
+                          }
+                        )}
+                      </div>
+                    </section>
+                  </>
+                ) : (
+                  <section className="emptyBookcase">
+                    <h2>No reader lists found</h2>
+                    <p>
+                      This challenge does not have any reader
+                      sheets yet.
+                    </p>
+                  </section>
+                )}
+              </>
+            )}
+          </section>
+        )
       ) : selectedBook ? (
         renderBookDetail(
           "Back to map",

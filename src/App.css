@@ -943,3 +943,436 @@ select {
     grid-template-columns: repeat(2, minmax(210px, 1fr));
   }
 }
+
+.challengePanel {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.challengeIntro,
+.challengeControls,
+.challengeSummaryPanel,
+.challengeListSection {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 1rem;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 248, 233, 0.95),
+      rgba(247, 236, 215, 0.88)
+    ),
+    var(--paper);
+  box-shadow: 0 12px 30px rgba(76, 48, 30, 0.1);
+}
+
+.challengeIntro,
+.challengeControls,
+.challengeSummaryPanel,
+.challengeListSection {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.challengeIntro h2,
+.challengeIntro p,
+.challengeSummaryHeader h2,
+.challengeSummaryHeader p,
+.challengeOverallProgress p,
+.challengeListHeader h2,
+.challengeListHeader p {
+  margin: 0;
+}
+
+.challengeIntro h2,
+.challengeSummaryHeader h2,
+.challengeListHeader h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--brownDark);
+}
+
+.challengeIntro p,
+.challengeSummaryHeader p,
+.challengeOverallProgress p,
+.challengeListHeader p {
+  color: var(--muted);
+}
+
+.challengePickerTabs,
+.challengeReaderTabs {
+  display: flex;
+  gap: 0.55rem;
+  max-width: 100%;
+  overflow-x: auto;
+  padding-bottom: 0.15rem;
+}
+
+.challengePickerButton,
+.challengeReaderButton {
+  flex: 0 0 auto;
+  border: 1px solid rgba(76, 48, 30, 0.2);
+  border-radius: 16px;
+  padding: 0.65rem 0.9rem;
+  color: var(--brownDark);
+  background: rgba(255, 248, 233, 0.78);
+  box-shadow: 0 5px 14px rgba(76, 48, 30, 0.07);
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.challengeReaderButton {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 112px;
+  text-align: left;
+}
+
+.challengePickerButton:hover,
+.challengeReaderButton:hover {
+  transform: translateY(-1px);
+  border-color: rgba(82, 111, 69, 0.42);
+  background: #fffaf0;
+  box-shadow: 0 8px 18px rgba(76, 48, 30, 0.1);
+}
+
+.challengePickerButtonActive,
+.challengeReaderButtonActive {
+  color: #fff8e9;
+  border-color: rgba(52, 72, 46, 0.35);
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--greenDark)
+    );
+}
+
+.challengeReaderButton > span:first-child {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.challengeReaderCount {
+  color: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  opacity: 0.78;
+}
+
+.challengeSummaryHeader,
+.challengeListHeader {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.challengeSummaryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.challengeStatCard {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+  border: 1px solid rgba(76, 48, 30, 0.14);
+  border-radius: 16px;
+  padding: 0.75rem;
+  background: rgba(255, 250, 240, 0.72);
+}
+
+.challengeStatValue {
+  overflow: hidden;
+  color: var(--brownDark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.45rem;
+  font-weight: 800;
+  text-overflow: ellipsis;
+}
+
+.challengeStatLabel {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.challengeOverallProgress {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.challengeOverallProgress p {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.challengeProgressTrack,
+.challengeBookProgress {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(76, 48, 30, 0.12);
+}
+
+.challengeProgressTrack {
+  height: 12px;
+}
+
+.challengeBookProgress {
+  height: 7px;
+  margin-top: 0.1rem;
+}
+
+.challengeProgressFill,
+.challengeBookProgressFill {
+  display: block;
+  height: 100%;
+  min-width: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      90deg,
+      var(--sage),
+      var(--green)
+    );
+}
+
+.challengeEntryGrid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.challengeEntryCard {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.8rem;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 0.85rem;
+  color: var(--ink);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 250, 240, 0.98),
+      rgba(247, 236, 215, 0.86)
+    ),
+    var(--paper);
+  box-shadow: 0 8px 20px rgba(76, 48, 30, 0.08);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.challengeEntryCard:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: rgba(82, 111, 69, 0.42);
+  box-shadow: 0 11px 24px rgba(76, 48, 30, 0.12);
+}
+
+.challengeEntryCard:focus-visible,
+.challengePickerButton:focus-visible,
+.challengeReaderButton:focus-visible {
+  outline: 3px solid rgba(201, 154, 69, 0.3);
+  outline-offset: 2px;
+}
+
+.challengeEntryCard:disabled {
+  cursor: default;
+  opacity: 0.72;
+}
+
+.challengeEntryCardRead {
+  border-color: rgba(82, 111, 69, 0.38);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(169, 183, 141, 0.3),
+      rgba(255, 248, 233, 0.94)
+    ),
+    var(--paper);
+}
+
+.challengeEntryCardInProgress {
+  border-color: rgba(201, 154, 69, 0.5);
+}
+
+.challengeLetter {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid rgba(82, 111, 69, 0.28);
+  border-radius: 14px;
+  color: #fff8e9;
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--greenDark)
+    );
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15rem;
+  font-weight: 900;
+  box-shadow: 0 6px 14px rgba(52, 72, 46, 0.16);
+}
+
+.challengeEntryContent {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.challengeEntryTitleRow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.challengeEntryTitle {
+  overflow-wrap: anywhere;
+  color: var(--brownDark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.03rem;
+  font-weight: 800;
+}
+
+.challengeEntryAuthor {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.challengeEntryBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.challengeBadge {
+  width: fit-content;
+  border: 1px solid rgba(76, 48, 30, 0.14);
+  border-radius: 999px;
+  padding: 0.22rem 0.48rem;
+  color: var(--muted);
+  background: rgba(255, 248, 233, 0.72);
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.challengeReadBadge {
+  flex: 0 0 auto;
+  color: var(--greenDark);
+  border-color: rgba(82, 111, 69, 0.28);
+  background: rgba(169, 183, 141, 0.3);
+}
+
+.challengeWildcardBadge {
+  color: var(--brownDark);
+  border-color: rgba(201, 154, 69, 0.38);
+  background: rgba(201, 154, 69, 0.18);
+}
+
+@media (min-width: 720px) {
+  .challengeSummaryGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .challengeEntryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.detailChallengeList {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.detailChallengeCard {
+  display: grid;
+  gap: 0.65rem;
+  border: 1px solid rgba(76, 48, 30, 0.14);
+  border-radius: 16px;
+  padding: 0.8rem;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 250, 240, 0.84),
+      rgba(247, 236, 215, 0.62)
+    ),
+    var(--paper);
+}
+
+.detailChallengeHeading {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.detailChallengeName,
+.detailChallengeStatus {
+  margin: 0;
+}
+
+.detailChallengeName {
+  color: var(--brownDark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.detailChallengeStatus {
+  margin-top: 0.15rem;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.detailChallengeLetter {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border: 1px solid rgba(82, 111, 69, 0.28);
+  border-radius: 12px;
+  color: #fff8e9;
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--greenDark)
+    );
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+  font-weight: 900;
+  box-shadow: 0 5px 12px rgba(52, 72, 46, 0.14);
+}
+
+.detailChallengeProgressMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 750;
+}

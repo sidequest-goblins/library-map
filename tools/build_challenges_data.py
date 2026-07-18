@@ -10,8 +10,8 @@ Each challenge sheet must contain:
     Letter | Title | First | Last | Read | Current Page | Total Page
 
 The generator preserves workbook order and duplicate letters. It links entries
-against public/data/library-books.json so the app can cross-reference canonical
-book metadata through catalogKey.
+against public/data/library-books.json through bookId, while retaining catalogKey
+when available for additional catalog metadata.
 
 This script intentionally uses only Python's standard library.
 """
