@@ -5,9 +5,12 @@ import {
   useRef,
   useState,
 } from "react";
+import type { Session } from "@supabase/supabase-js";
+
 import "./App.css";
 
 import BookcaseView from "./components/BookcaseView";
+import HouseholdAccountPanel from "./HouseholdAccountPanel";
 import {
   getBookcasesFromBooks,
   getShelvesForBookcase,
@@ -569,6 +572,12 @@ export default function App() {
   const [wantedLists, setWantedLists] = useState<WantedLists>(EMPTY_WANTED_LISTS);
   const [challengeData, setChallengeData] =
     useState<ChallengeData>(EMPTY_CHALLENGE_DATA);
+
+  const [
+    householdSession,
+    setHouseholdSession,
+  ] = useState<Session | null>(null);
+
   const [loadStatus, setLoadStatus] = useState<"loading" | "ready" | "error">(
     "loading"
   );
@@ -1575,7 +1584,14 @@ export default function App() {
           : `${books.length} books loaded`;
 
   return (
-    <main className="appShell">
+    <main
+      className="appShell"
+      data-household-auth={
+        householdSession
+          ? "signed-in"
+          : "signed-out"
+      }
+    >
       <header className="appHeader">
         <div>
           <p className="eyebrow">Library Map</p>
@@ -1633,9 +1649,19 @@ export default function App() {
           </button>
         </nav>
 
-        <button type="button" className="cacheButton" onClick={clearAppCache}>
-          Clear cache
-        </button>
+        <div className="headerUtilityRow">
+          <HouseholdAccountPanel
+            onSessionChange={setHouseholdSession}
+          />
+
+          <button
+            type="button"
+            className="cacheButton"
+            onClick={clearAppCache}
+          >
+            Clear cache
+          </button>
+        </div>
       </header>
 
       {loadStatus === "loading" ? (

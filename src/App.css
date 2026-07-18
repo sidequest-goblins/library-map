@@ -1409,3 +1409,141 @@ select {
   font-weight: 750;
   text-align: center;
 }
+
+.headerUtilityRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: flex-start;
+}
+
+.householdAccountPanel {
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  min-width: 0;
+  border: 1px solid rgba(76, 48, 30, 0.16);
+  border-radius: 16px;
+  padding: 0.75rem;
+  color: var(--ink);
+  background: rgba(255, 250, 240, 0.76);
+  box-shadow: 0 7px 18px rgba(76, 48, 30, 0.08);
+}
+
+.householdAccountPanelSignedIn {
+  border-color: rgba(82, 111, 69, 0.35);
+  background: rgba(169, 183, 141, 0.2);
+}
+
+.householdAccountCopy {
+  display: grid;
+  flex: 1 1 180px;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.householdAccountCopy strong {
+  color: var(--greenDark);
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.householdAccountCopy span {
+  overflow-wrap: anywhere;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.householdAccountForm {
+  display: grid;
+  flex: 1 1 100%;
+  gap: 0.65rem;
+  width: 100%;
+}
+
+.householdAccountField {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.householdAccountField > span {
+  color: var(--greenDark);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.householdAccountField input {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(76, 48, 30, 0.22);
+  border-radius: 12px;
+  padding: 0.65rem 0.75rem;
+  color: var(--ink);
+  background: #fffaf0;
+}
+
+.householdAccountField input:focus {
+  outline: 3px solid rgba(201, 154, 69, 0.28);
+  border-color: rgba(82, 111, 69, 0.55);
+}
+
+.householdAccountButton {
+  width: fit-content;
+  border: 1px solid rgba(52, 72, 46, 0.32);
+  border-radius: 999px;
+  padding: 0.58rem 0.9rem;
+  color: #fff8e9;
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--greenDark)
+    );
+  box-shadow: 0 6px 16px rgba(52, 72, 46, 0.15);
+  cursor: pointer;
+}
+
+.householdAccountButton:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.householdAccountFeedback {
+  flex: 1 1 100%;
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.householdAccountFeedbacksuccess {
+  color: var(--greenDark);
+}
+
+.householdAccountFeedbackerror {
+  color: #8a3429;
+}
+
+@media (min-width: 720px) {
+  .headerUtilityRow {
+    grid-column: 1 / -1;
+    justify-self: end;
+    align-items: center;
+  }
+
+  .householdAccountPanel {
+    flex: 0 1 auto;
+    max-width: 760px;
+  }
+
+  .householdAccountForm {
+    grid-template-columns:
+      minmax(170px, 1fr)
+      minmax(150px, 220px)
+      minmax(150px, 220px)
+      auto;
+    align-items: end;
+  }
+}
