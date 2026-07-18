@@ -1547,3 +1547,12 @@ select {
     align-items: end;
   }
 }
+
+.householdAccountState {
+  color: var(--greenDark);
+  font-weight: 700;
+}
+
+.householdAccountStateError {
+  color: #8a3429;
+}

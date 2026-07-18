@@ -7,8 +7,21 @@ import type { Session } from "@supabase/supabase-js";
 
 import { supabase } from "./supabaseClient";
 
+import type {
+  LibraryStateLoadStatus,
+} from "./data/libraryState";
+
 type HouseholdAccountPanelProps = {
-  onSessionChange: (session: Session | null) => void;
+  onSessionChange: (
+    session: Session | null
+  ) => void;
+
+  libraryStateLoadStatus:
+    LibraryStateLoadStatus;
+
+  libraryStateRecordCount: number;
+
+  libraryStateLoadError: string;
 };
 
 type AuthFeedback = {
@@ -18,6 +31,9 @@ type AuthFeedback = {
 
 export default function HouseholdAccountPanel({
   onSessionChange,
+  libraryStateLoadStatus,
+  libraryStateRecordCount,
+  libraryStateLoadError,
 }: HouseholdAccountPanelProps) {
   const [session, setSession] =
     useState<Session | null>(null);
@@ -201,6 +217,25 @@ export default function HouseholdAccountPanel({
               Signed in as{" "}
               {session.user.email ??
                 "household account"}
+            </span>
+
+            <span
+              className={
+                libraryStateLoadStatus === "error"
+                  ? "householdAccountState householdAccountStateError"
+                  : "householdAccountState"
+              }
+              aria-live="polite"
+            >
+              {libraryStateLoadStatus === "loading"
+                ? "Loading shared library state…"
+                : libraryStateLoadStatus === "error"
+                  ? `Shared state failed to load: ${libraryStateLoadError}`
+                  : `${libraryStateRecordCount} shared ${
+                      libraryStateRecordCount === 1
+                        ? "record"
+                        : "records"
+                    } loaded`}
             </span>
           </div>
 

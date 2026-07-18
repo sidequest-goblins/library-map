@@ -11,6 +11,12 @@ import "./App.css";
 
 import BookcaseView from "./components/BookcaseView";
 import HouseholdAccountPanel from "./HouseholdAccountPanel";
+import { supabase } from "./supabaseClient";
+import {
+  makeLibraryStateKey,
+  type LibraryReaderBookState,
+  type LibraryStateLoadStatus,
+} from "./data/libraryState";
 import {
   getBookcasesFromBooks,
   getShelvesForBookcase,
@@ -578,6 +584,21 @@ export default function App() {
     setHouseholdSession,
   ] = useState<Session | null>(null);
 
+  const [
+    libraryStateRows,
+    setLibraryStateRows,
+  ] = useState<LibraryReaderBookState[]>([]);
+
+  const [
+    libraryStateLoadStatus,
+    setLibraryStateLoadStatus,
+  ] = useState<LibraryStateLoadStatus>("idle");
+
+  const [
+    libraryStateLoadError,
+    setLibraryStateLoadError,
+  ] = useState("");
+
   const [loadStatus, setLoadStatus] = useState<"loading" | "ready" | "error">(
     "loading"
   );
@@ -721,6 +742,101 @@ export default function App() {
 
     loadBooks();
   }, []);
+
+  useEffect(() => {
+    let isActive = true;
+
+    async function loadLibraryState() {
+      if (!householdSession) {
+        setLibraryStateRows([]);
+        setLibraryStateLoadStatus("idle");
+        setLibraryStateLoadError("");
+        return;
+      }
+
+      setLibraryStateLoadStatus("loading");
+      setLibraryStateLoadError("");
+
+      try {
+        const { data, error } = await supabase
+          .from("library_reader_book_state")
+          .select(`
+            user_id,
+            reader_id,
+            catalog_key,
+            is_read,
+            current_page,
+            rating,
+            notes,
+            created_at,
+            updated_at
+          `)
+          .eq(
+            "user_id",
+            householdSession.user.id
+          )
+          .order("catalog_key", {
+            ascending: true,
+          })
+          .order("reader_id", {
+            ascending: true,
+          })
+          .overrideTypes<
+            LibraryReaderBookState[]
+          >();
+
+        if (!isActive) {
+          return;
+        }
+
+        if (error) {
+          throw error;
+        }
+
+        setLibraryStateRows(data ?? []);
+
+        setLibraryStateLoadStatus("ready");
+      } catch (error) {
+        if (!isActive) {
+          return;
+        }
+
+        console.error(
+          "Could not load shared library state.",
+          error
+        );
+
+        setLibraryStateRows([]);
+        setLibraryStateLoadStatus("error");
+
+        setLibraryStateLoadError(
+          error instanceof Error
+            ? error.message
+            : "Unknown Supabase error"
+        );
+      }
+    }
+
+    void loadLibraryState();
+
+    return () => {
+      isActive = false;
+    };
+  }, [householdSession]);
+
+  const libraryStateByKey = useMemo(
+    () =>
+      new Map(
+        libraryStateRows.map((stateRow) => [
+          makeLibraryStateKey(
+            stateRow.reader_id,
+            stateRow.catalog_key
+          ),
+          stateRow,
+        ])
+      ),
+    [libraryStateRows]
+  );
 
   const bookcases = useMemo(() => getBookcasesFromBooks(books), [books]);
 
@@ -1652,6 +1768,15 @@ export default function App() {
         <div className="headerUtilityRow">
           <HouseholdAccountPanel
             onSessionChange={setHouseholdSession}
+            libraryStateLoadStatus={
+              libraryStateLoadStatus
+            }
+            libraryStateRecordCount={
+              libraryStateByKey.size
+            }
+            libraryStateLoadError={
+              libraryStateLoadError
+            }
           />
 
           <button
