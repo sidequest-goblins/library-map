@@ -590,7 +590,6 @@ export default function App() {
   });
   const [selectedChallengeId, setSelectedChallengeId] =
     useState("");
-
   const [
     selectedChallengeReaderId,
     setSelectedChallengeReaderId,
@@ -604,7 +603,6 @@ export default function App() {
     activeSearchSuggestionIndex,
     setActiveSearchSuggestionIndex,
   ] = useState(-1);
-
   const mapReturnPositionRef =
     useRef<MapReturnPosition | null>(null);
   const searchAutocompleteRef =
@@ -1591,13 +1589,13 @@ export default function App() {
 
           <button
             type="button"
-            className={activeTab === "wanted" ? "appTab active" : "appTab"}
+            className={activeTab === "map" ? "appTab active" : "appTab"}
             onClick={() => {
-              setActiveTab("wanted");
+              setActiveTab("map");
               setSelectedBookId(null);
             }}
           >
-            Wanted
+            Map
           </button>
 
           <button
@@ -1617,13 +1615,13 @@ export default function App() {
 
           <button
             type="button"
-            className={activeTab === "map" ? "appTab active" : "appTab"}
+            className={activeTab === "wanted" ? "appTab active" : "appTab"}
             onClick={() => {
-              setActiveTab("map");
+              setActiveTab("wanted");
               setSelectedBookId(null);
             }}
           >
-            Map
+            Wanted
           </button>
         </nav>
 
