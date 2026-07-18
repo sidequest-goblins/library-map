@@ -18,6 +18,7 @@ import {
   makeLibraryStateKey,
   type LibraryReaderBookState,
   type LibraryReaderId,
+  type LibraryReaderReadingAttempt,
   type LibraryStateLoadStatus,
   type LibraryStateSeedFeedback,
 } from "./data/libraryState";
@@ -39,8 +40,21 @@ import type {
   WantedLists, 
 } from "./data/libraryTypes";
 
-type AppTab = "search" | "wanted" | "challenges" | "map";
-type WantedMode = "toBuy" | "seriesToComplete";
+type AppTab =
+  | "search"
+  | "wanted"
+  | "challenges"
+  | "map";
+
+type WantedMode =
+  | "toBuy"
+  | "seriesToComplete";
+
+type ReadingAttemptFeedback = {
+  stateKey: string;
+  kind: "success" | "error";
+  message: string;
+} | null;
 
 const SEARCH_SCOPE_OPTIONS: Array<{
   scope: SearchScope;
@@ -475,6 +489,25 @@ function getChallengeDisplayStatus(
   return "Not started";
 }
 
+function formatReadingAttemptDate(
+  value: string
+): string {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Unknown date";
+  }
+
+  return new Intl.DateTimeFormat(
+    undefined,
+    {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }
+  ).format(date);
+}
+
 async function clearAppCache() {
   if ("caches" in window) {
     const cacheNames = await caches.keys();
@@ -614,6 +647,52 @@ async function fetchLibraryStateRows(
   return data ?? [];
 }
 
+async function fetchActiveReadingAttempts(
+  userId: string
+): Promise<LibraryReaderReadingAttempt[]> {
+  const { data, error } = await supabase
+    .from(
+      "library_reader_reading_attempts"
+    )
+    .select(`
+      attempt_id,
+      user_id,
+      reader_id,
+      catalog_key,
+      status,
+      is_reread,
+      current_page,
+      started_at,
+      completed_at,
+      abandoned_at,
+      created_at,
+      updated_at
+    `)
+    .eq(
+      "user_id",
+      userId
+    )
+    .eq(
+      "status",
+      "active"
+    )
+    .order(
+      "started_at",
+      {
+        ascending: false,
+      }
+    )
+    .overrideTypes<
+      LibraryReaderReadingAttempt[]
+    >();
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}
+
 export default function App() {
   const [books, setBooks] = useState<Book[]>([]);
   const [wantedLists, setWantedLists] = useState<WantedLists>(EMPTY_WANTED_LISTS);
@@ -660,9 +739,41 @@ export default function App() {
     setReadStatusError,
   ] = useState("");
 
-  const [loadStatus, setLoadStatus] = useState<"loading" | "ready" | "error">(
-    "loading"
+  const [
+    activeReadingAttempts,
+    setActiveReadingAttempts,
+  ] = useState<
+    LibraryReaderReadingAttempt[]
+  >([]);
+
+  const [
+    readingAttemptsLoadStatus,
+    setReadingAttemptsLoadStatus,
+  ] = useState<LibraryStateLoadStatus>(
+    "idle"
   );
+
+  const [
+    readingAttemptsLoadError,
+    setReadingAttemptsLoadError,
+  ] = useState("");
+
+  const [
+    readingAttemptSavingKey,
+    setReadingAttemptSavingKey,
+  ] = useState<string | null>(null);
+
+  const [
+    readingAttemptFeedback,
+    setReadingAttemptFeedback,
+  ] = useState<ReadingAttemptFeedback>(
+    null
+  );
+
+  const [loadStatus, setLoadStatus] = useState<
+    "loading" | "ready" | "error"
+  >("loading");
+
   const [loadError, setLoadError] = useState("");
   const [selectedBookcaseId, setSelectedBookcaseId] = useState("");
   const [selectedRoom, setSelectedRoom] = useState("");
@@ -860,6 +971,76 @@ export default function App() {
     };
   }, [householdSession]);
 
+  useEffect(() => {
+    let isActive = true;
+
+    async function loadReadingAttempts() {
+      if (!householdSession) {
+        setActiveReadingAttempts([]);
+        setReadingAttemptsLoadStatus(
+          "idle"
+        );
+        setReadingAttemptsLoadError("");
+        setReadingAttemptSavingKey(null);
+        setReadingAttemptFeedback(null);
+
+        return;
+      }
+
+      setReadingAttemptsLoadStatus(
+        "loading"
+      );
+
+      setReadingAttemptsLoadError("");
+
+      try {
+        const loadedAttempts =
+          await fetchActiveReadingAttempts(
+            householdSession.user.id
+          );
+
+        if (!isActive) {
+          return;
+        }
+
+        setActiveReadingAttempts(
+          loadedAttempts
+        );
+
+        setReadingAttemptsLoadStatus(
+          "ready"
+        );
+      } catch (error) {
+        if (!isActive) {
+          return;
+        }
+
+        console.error(
+          "Could not load active reading attempts.",
+          error
+        );
+
+        setActiveReadingAttempts([]);
+
+        setReadingAttemptsLoadStatus(
+          "error"
+        );
+
+        setReadingAttemptsLoadError(
+          error instanceof Error
+            ? error.message
+            : "Unknown Supabase error"
+        );
+      }
+    }
+
+    void loadReadingAttempts();
+
+    return () => {
+      isActive = false;
+    };
+  }, [householdSession]);
+
   const libraryStateByKey = useMemo(
     () =>
       new Map(
@@ -873,6 +1054,23 @@ export default function App() {
       ),
     [libraryStateRows]
   );
+
+  const activeReadingAttemptByKey =
+    useMemo(
+      () =>
+        new Map(
+          activeReadingAttempts.map(
+            (attempt) => [
+              makeLibraryStateKey(
+                attempt.reader_id,
+                attempt.catalog_key
+              ),
+              attempt,
+            ]
+          )
+        ),
+      [activeReadingAttempts]
+    );
 
   const libraryStateSeedPreview =
     useMemo(() => {
@@ -1328,6 +1526,11 @@ export default function App() {
     householdSession !== null &&
     libraryStateLoadStatus === "ready";
 
+  const sharedReadingAttemptsAreAuthoritative =
+    householdSession !== null &&
+    readingAttemptsLoadStatus ===
+      "ready";
+
   function getBookReaderIsRead(
     book: Book,
     readerId: "cj" | "jc",
@@ -1426,10 +1629,13 @@ export default function App() {
 
     if (
       !householdSession ||
-      libraryStateLoadStatus !== "ready"
+      libraryStateLoadStatus !==
+        "ready" ||
+      readingAttemptsLoadStatus !==
+        "ready"
     ) {
       setReadStatusError(
-        "Household sync must be signed in and fully loaded before changing read status."
+        "Household sync and reading activity must finish loading before changing read status."
       );
 
       return;
@@ -1443,7 +1649,10 @@ export default function App() {
       return;
     }
 
-    if (readStatusSavingKey) {
+    if (
+      readStatusSavingKey ||
+      readingAttemptSavingKey
+    ) {
       return;
     }
 
@@ -1455,6 +1664,22 @@ export default function App() {
 
     const existingState =
       libraryStateByKey.get(stateKey);
+
+    const activeAttempt =
+      activeReadingAttemptByKey.get(
+        stateKey
+      );
+
+    if (
+      !nextIsRead &&
+      activeAttempt?.is_reread
+    ) {
+      setReadStatusError(
+        "Read status stays on while a reread is active. Complete or abandon the reread before clearing it."
+      );
+
+      return;
+    }
 
     setReadStatusSavingKey(stateKey);
     setReadStatusError("");
@@ -1541,6 +1766,149 @@ export default function App() {
       );
     } finally {
       setReadStatusSavingKey(null);
+    }
+  }
+
+  async function startBookReadingAttempt(
+    book: Book,
+    readerId: LibraryReaderId
+  ) {
+    const catalogKey =
+      book.catalogKey?.trim() ?? "";
+
+    const stateKey = catalogKey
+      ? makeLibraryStateKey(
+          readerId,
+          catalogKey
+        )
+      : "";
+
+    const readerName =
+      readerId === "cj"
+        ? "CJ"
+        : "JC";
+
+    if (
+      !householdSession ||
+      libraryStateLoadStatus !==
+        "ready" ||
+      readingAttemptsLoadStatus !==
+        "ready"
+    ) {
+      setReadingAttemptFeedback({
+        stateKey,
+        kind: "error",
+        message:
+          "Household sync and reading activity must finish loading before starting a book.",
+      });
+
+      return;
+    }
+
+    if (!catalogKey) {
+      setReadingAttemptFeedback({
+        stateKey,
+        kind: "error",
+        message:
+          "This book does not have a catalog key, so a reading attempt cannot be created safely.",
+      });
+
+      return;
+    }
+
+    if (
+      readStatusSavingKey ||
+      readingAttemptSavingKey
+    ) {
+      return;
+    }
+
+    const existingAttempt =
+      activeReadingAttemptByKey.get(
+        stateKey
+      );
+
+    if (existingAttempt) {
+      setReadingAttemptFeedback({
+        stateKey,
+        kind: "error",
+        message:
+          `${readerName} already has an active reading attempt for this book.`,
+      });
+
+      return;
+    }
+
+    setReadingAttemptSavingKey(
+      stateKey
+    );
+
+    setReadingAttemptFeedback(null);
+
+    try {
+      const { error } = await supabase
+        .from(
+          "library_reader_reading_attempts"
+        )
+        .insert({
+          user_id:
+            householdSession.user.id,
+          reader_id: readerId,
+          catalog_key: catalogKey,
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      const refreshedAttempts =
+        await fetchActiveReadingAttempts(
+          householdSession.user.id
+        );
+
+      const refreshedAttempt =
+        refreshedAttempts.find(
+          (attempt) =>
+            attempt.reader_id ===
+              readerId &&
+            attempt.catalog_key ===
+              catalogKey
+        );
+
+      if (!refreshedAttempt) {
+        throw new Error(
+          "Supabase did not return the newly created reading attempt."
+        );
+      }
+
+      setActiveReadingAttempts(
+        refreshedAttempts
+      );
+
+      setReadingAttemptFeedback({
+        stateKey,
+        kind: "success",
+        message:
+          refreshedAttempt.is_reread
+            ? `${readerName}'s reread started.`
+            : `${readerName}'s reading attempt started.`,
+      });
+    } catch (error) {
+      console.error(
+        "Could not start reading attempt.",
+        error
+      );
+
+      setReadingAttemptFeedback({
+        stateKey,
+        kind: "error",
+        message:
+          error instanceof Error
+            ? `Reading attempt failed to start: ${error.message}`
+            : "Reading attempt failed to start because of an unknown Supabase error.",
+      });
+    } finally {
+      setReadingAttemptSavingKey(null);
     }
   }
 
@@ -1743,6 +2111,7 @@ export default function App() {
 
   useEffect(() => {
     setReadStatusError("");
+    setReadingAttemptFeedback(null);
   }, [selectedBookId]);
 
   function renderBookDetail(
@@ -1815,10 +2184,6 @@ export default function App() {
     const selectedBookCatalogKey =
       selectedBook.catalogKey?.trim() ?? "";
 
-    const readStatusCanEdit =
-      sharedLibraryStateIsAuthoritative &&
-      Boolean(selectedBookCatalogKey);
-
     const cjReadStatusKey =
       selectedBookCatalogKey
         ? makeLibraryStateKey(
@@ -1834,6 +2199,40 @@ export default function App() {
             selectedBookCatalogKey
           )
         : "";
+
+    const selectedBookCjAttempt =
+      cjReadStatusKey
+        ? activeReadingAttemptByKey.get(
+            cjReadStatusKey
+          )
+        : undefined;
+
+    const selectedBookJcAttempt =
+      jcReadStatusKey
+        ? activeReadingAttemptByKey.get(
+            jcReadStatusKey
+          )
+        : undefined;
+
+    const readStatusCanEdit =
+      sharedLibraryStateIsAuthoritative &&
+      sharedReadingAttemptsAreAuthoritative &&
+      Boolean(selectedBookCatalogKey);
+
+    const readingActivityCanEdit =
+      readStatusCanEdit;
+
+    const cjReadStatusLockedForReread =
+      Boolean(
+        selectedBookCjRead &&
+        selectedBookCjAttempt?.is_reread
+      );
+
+    const jcReadStatusLockedForReread =
+      Boolean(
+        selectedBookJcRead &&
+        selectedBookJcAttempt?.is_reread
+      );
 
     const selectedBookSeriesName = String(
       selectedBook.seriesTitle ??
@@ -1989,13 +2388,23 @@ export default function App() {
                         selectedBookCjRead
                       }
                       aria-label={
-                        selectedBookCjRead
-                          ? "Mark CJ as unread"
-                          : "Mark CJ as read"
+                        cjReadStatusLockedForReread
+                          ? "CJ remains marked read during an active reread"
+                          : selectedBookCjRead
+                            ? "Mark CJ as unread"
+                            : "Mark CJ as read"
+                      }
+                      title={
+                        cjReadStatusLockedForReread
+                          ? "Read status stays on during an active reread."
+                          : undefined
                       }
                       disabled={
                         readStatusSavingKey !==
-                        null
+                          null ||
+                        readingAttemptSavingKey !==
+                          null ||
+                        cjReadStatusLockedForReread
                       }
                       onClick={() => {
                         void updateBookReaderReadStatus(
@@ -2024,13 +2433,23 @@ export default function App() {
                         selectedBookJcRead
                       }
                       aria-label={
-                        selectedBookJcRead
-                          ? "Mark JC as unread"
-                          : "Mark JC as read"
+                        jcReadStatusLockedForReread
+                          ? "JC remains marked read during an active reread"
+                          : selectedBookJcRead
+                            ? "Mark JC as unread"
+                            : "Mark JC as read"
+                      }
+                      title={
+                        jcReadStatusLockedForReread
+                          ? "Read status stays on during an active reread."
+                          : undefined
                       }
                       disabled={
                         readStatusSavingKey !==
-                        null
+                          null ||
+                        readingAttemptSavingKey !==
+                          null ||
+                        jcReadStatusLockedForReread
                       }
                       onClick={() => {
                         void updateBookReaderReadStatus(
@@ -2083,6 +2502,184 @@ export default function App() {
                 </p>
               ) : null}
             </section>
+
+            {householdSession ? (
+              <section className="detailSection">
+                <p className="detailLabel">
+                  Reading activity
+                </p>
+
+                {readingAttemptsLoadStatus ===
+                "loading" ? (
+                  <p className="detailMuted">
+                    Loading active reading
+                    attempts…
+                  </p>
+                ) : readingAttemptsLoadStatus ===
+                  "error" ? (
+                  <p
+                    className="readingAttemptFeedbackError"
+                    role="alert"
+                  >
+                    Could not load reading
+                    activity:{" "}
+                    {readingAttemptsLoadError}
+                  </p>
+                ) : readingActivityCanEdit ? (
+                  <div className="readingAttemptGrid">
+                    {[
+                      {
+                        readerId: "cj" as const,
+                        readerName: "CJ",
+                        isRead:
+                          selectedBookCjRead,
+                        attempt:
+                          selectedBookCjAttempt,
+                      },
+                      {
+                        readerId: "jc" as const,
+                        readerName: "JC",
+                        isRead:
+                          selectedBookJcRead,
+                        attempt:
+                          selectedBookJcAttempt,
+                      },
+                    ].map(
+                      ({
+                        readerId,
+                        readerName,
+                        isRead,
+                        attempt,
+                      }) => {
+                        const stateKey =
+                          makeLibraryStateKey(
+                            readerId,
+                            selectedBookCatalogKey
+                          );
+
+                        const isSaving =
+                          readingAttemptSavingKey ===
+                          stateKey;
+
+                        const feedback =
+                          readingAttemptFeedback
+                            ?.stateKey ===
+                          stateKey
+                            ? readingAttemptFeedback
+                            : null;
+
+                        return (
+                          <article
+                            key={readerId}
+                            className={
+                              attempt
+                                ? "readingAttemptCard readingAttemptCardActive"
+                                : "readingAttemptCard"
+                            }
+                          >
+                            <div className="readingAttemptCardHeader">
+                              <span className="readingAttemptReader">
+                                {readerName}
+                              </span>
+
+                              <span
+                                className={
+                                  attempt
+                                    ? "readingAttemptBadge readingAttemptBadgeActive"
+                                    : "readingAttemptBadge"
+                                }
+                              >
+                                {attempt
+                                  ? attempt.is_reread
+                                    ? "Rereading"
+                                    : "Reading"
+                                  : "No active read"}
+                              </span>
+                            </div>
+
+                            {attempt ? (
+                              <>
+                                <p className="readingAttemptProgress">
+                                  {(
+                                    attempt.current_page ??
+                                    0
+                                  ) > 0
+                                    ? `Page ${attempt.current_page?.toLocaleString()}`
+                                    : "No page saved yet"}
+                                </p>
+
+                                <p className="readingAttemptMeta">
+                                  Started{" "}
+                                  {formatReadingAttemptDate(
+                                    attempt.started_at
+                                  )}
+                                </p>
+                              </>
+                            ) : (
+                              <>
+                                <p className="readingAttemptMeta">
+                                  {isRead
+                                    ? `${readerName} has read this book before.`
+                                    : `${readerName} has not marked this book read yet.`}
+                                </p>
+
+                                <button
+                                  type="button"
+                                  className="readingAttemptStartButton"
+                                  disabled={
+                                    isSaving ||
+                                    readStatusSavingKey !==
+                                      null ||
+                                    readingAttemptSavingKey !==
+                                      null
+                                  }
+                                  onClick={() => {
+                                    void startBookReadingAttempt(
+                                      selectedBook,
+                                      readerId
+                                    );
+                                  }}
+                                >
+                                  {isSaving
+                                    ? "Starting…"
+                                    : isRead
+                                      ? "Start reread"
+                                      : "Start reading"}
+                                </button>
+                              </>
+                            )}
+
+                            {feedback ? (
+                              <p
+                                className={
+                                  feedback.kind ===
+                                  "error"
+                                    ? "readingAttemptFeedback readingAttemptFeedbackError"
+                                    : "readingAttemptFeedback readingAttemptFeedbackSuccess"
+                                }
+                                role={
+                                  feedback.kind ===
+                                  "error"
+                                    ? "alert"
+                                    : "status"
+                                }
+                              >
+                                {feedback.message}
+                              </p>
+                            ) : null}
+                          </article>
+                        );
+                      }
+                    )}
+                  </div>
+                ) : (
+                  <p className="detailMuted">
+                    Reading activity is
+                    unavailable for this book.
+                  </p>
+                )}
+              </section>
+            ) : null}
 
             {selectedBookReadingProgress.length > 0 ? (
               <section className="detailSection">

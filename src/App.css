@@ -645,6 +645,121 @@ select {
   font-weight: 700;
 }
 
+.readingAttemptGrid {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.readingAttemptCard {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 0.8rem;
+  border: 1px solid rgba(76, 48, 30, 0.14);
+  border-radius: 16px;
+  background: rgba(255, 250, 240, 0.72);
+}
+
+.readingAttemptCardActive {
+  border-color: rgba(82, 111, 69, 0.34);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(169, 183, 141, 0.22),
+      rgba(255, 250, 240, 0.86)
+    );
+}
+
+.readingAttemptCardHeader {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.readingAttemptReader {
+  color: var(--brownDark);
+  font-weight: 900;
+}
+
+.readingAttemptBadge {
+  width: fit-content;
+  border: 1px solid rgba(76, 48, 30, 0.18);
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem;
+  color: var(--muted);
+  background: rgba(255, 250, 240, 0.75);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.readingAttemptBadgeActive {
+  color: var(--greenDark);
+  border-color: rgba(82, 111, 69, 0.28);
+  background: rgba(169, 183, 141, 0.28);
+}
+
+.readingAttemptProgress {
+  color: var(--brownDark);
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.readingAttemptMeta {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.readingAttemptStartButton {
+  width: fit-content;
+  border: 1px solid rgba(52, 72, 46, 0.35);
+  border-radius: 12px;
+  padding: 0.52rem 0.78rem;
+  color: #fff8e9;
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--greenDark)
+    );
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.readingAttemptStartButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 16px rgba(52, 72, 46, 0.14);
+}
+
+.readingAttemptStartButton:focus-visible {
+  outline: 3px solid rgba(201, 154, 69, 0.28);
+  outline-offset: 2px;
+}
+
+.readingAttemptStartButton:disabled {
+  cursor: wait;
+  opacity: 0.5;
+  transform: none;
+}
+
+.readingAttemptFeedback {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.readingAttemptFeedbackSuccess {
+  color: var(--greenDark);
+}
+
+.readingAttemptFeedbackError {
+  color: #8a3429;
+}
+
 .bookDetailSections {
   display: grid;
   gap: 1rem;

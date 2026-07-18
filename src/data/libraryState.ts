@@ -19,6 +19,26 @@ export type LibraryReaderBookState = {
   updated_at: string;
 };
 
+export type LibraryReadingAttemptStatus =
+  | "active"
+  | "completed"
+  | "abandoned";
+
+export type LibraryReaderReadingAttempt = {
+  attempt_id: string;
+  user_id: string;
+  reader_id: LibraryReaderId;
+  catalog_key: string;
+  status: LibraryReadingAttemptStatus;
+  is_reread: boolean;
+  current_page: number | null;
+  started_at: string;
+  completed_at: string | null;
+  abandoned_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
 export type LibraryReaderBookStateSeedRow = {
   user_id: string;
   reader_id: LibraryReaderId;
