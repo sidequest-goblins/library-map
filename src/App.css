@@ -1367,12 +1367,36 @@ select {
   box-shadow: 0 5px 12px rgba(52, 72, 46, 0.14);
 }
 
-.detailChallengeProgressMeta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 1rem;
-  justify-content: space-between;
+.detailReadingProgressTrack {
+  position: relative;
+  height: 1.85rem;
+}
+
+.detailReadingProgressTrack .challengeProgressFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  transition: width 180ms ease;
+}
+
+.detailReadingProgressPercent {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: #fff8e9;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-shadow:
+    0 1px 2px rgba(47, 36, 24, 0.92),
+    0 0 5px rgba(47, 36, 24, 0.58);
+}
+
+.detailReadingProgressFraction {
+  margin: 0;
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   font-weight: 750;
+  text-align: center;
 }

@@ -1178,21 +1178,33 @@ export default function App() {
       selectedBook.jc ? "JC" : "",
     ].filter(Boolean);
 
+    const selectedBookSeriesName = String(
+      selectedBook.seriesTitle ??
+        selectedBook.series?.split("|")[0] ??
+        ""
+    ).trim();
+
     const selectedBookChallengeMemberships =
-    challengeData.challenges.flatMap((challenge) =>
-      challenge.readers.flatMap((reader) =>
-        reader.entries
-          .filter(
-            (entry) =>
-              entry.bookId === selectedBook.bookId
-          )
-          .map((entry) => ({
-            challenge,
-            reader,
-            entry,
-          }))
-      )
-    );
+      challengeData.challenges.flatMap((challenge) =>
+        challenge.readers.flatMap((reader) =>
+          reader.entries
+            .filter(
+              (entry) =>
+                entry.bookId === selectedBook.bookId
+            )
+            .map((entry) => ({
+              challenge,
+              reader,
+              entry,
+            }))
+        )
+      );
+
+    const selectedBookReadingProgress =
+      selectedBookChallengeMemberships.filter(
+        ({ entry }) =>
+          Math.max(entry.totalPages ?? 0, 0) > 0
+      );
 
     return (
       <section className="bookDetailPanel">
@@ -1265,23 +1277,158 @@ export default function App() {
 
               <div className="detailChips" aria-label="Book tags">
                 {selectedBook.format ? (
-                  <span className="detailChip">{selectedBook.format}</span>
+                  <span className="detailChip">
+                    {selectedBook.format}
+                  </span>
+                ) : null}
+
+                {selectedBookSeriesName ? (
+                  <span className="detailChip detailSeriesChip">
+                    {selectedBookSeriesName}
+                  </span>
                 ) : null}
 
                 {selectedBook.lgbtq ? (
-                  <span className="detailChip">LGBTQ+</span>
+                  <span className="detailChip">
+                    LGBTQ+
+                  </span>
                 ) : null}
 
-                {selectedBook.seriesTitle ? (
-                  <span className="detailChip">Series</span>
-                ) : null}
+                {selectedBookChallengeMemberships.map(
+                  ({ challenge, reader, entry }) => (
+                    <span
+                      key={`challenge-chip-${entry.entryId}`}
+                      className="detailChip detailChallengeChip"
+                    >
+                      {challenge.name} • {reader.readerName}
+                    </span>
+                  )
+                )}
               </div>
             </div>
           </div>
 
           <div className="bookDetailSections">
             <section className="detailSection">
+              <p className="detailLabel">Read status</p>
+
+              {readBy.length > 0 ? (
+                <div className="readStatusList">
+                  {selectedBook.cj ? (
+                    <span className="readStatusChip">
+                      CJ ✓
+                    </span>
+                  ) : null}
+
+                  {selectedBook.jc ? (
+                    <span className="readStatusChip">
+                      JC ✓
+                    </span>
+                  ) : null}
+                </div>
+              ) : (
+                <p className="detailMuted">
+                  Not marked read yet.
+                </p>
+              )}
+            </section>
+
+            {selectedBookReadingProgress.length > 0 ? (
+              <section className="detailSection">
+                <p className="detailLabel">
+                  Reading progress
+                </p>
+
+                <div className="detailChallengeList">
+                  {selectedBookReadingProgress.map(
+                    ({ challenge, reader, entry }) => {
+                      const pagesRead =
+                        getChallengeEntryPagesRead(entry);
+
+                      const totalPages = Math.max(
+                        entry.totalPages ?? 0,
+                        0
+                      );
+
+                      const progressPercent =
+                        totalPages > 0
+                          ? Math.min(
+                              100,
+                              Math.round(
+                                (pagesRead / totalPages) *
+                                  100
+                              )
+                            )
+                          : 0;
+
+                      const progressStatus = entry.read
+                        ? "Complete"
+                        : pagesRead > 0
+                          ? "In progress"
+                          : "Not started";
+
+                      return (
+                        <article
+                          key={entry.entryId}
+                          className="detailChallengeCard"
+                        >
+                          <div className="detailChallengeHeading">
+                            <div>
+                              <p className="detailChallengeName">
+                                {challenge.name} •{" "}
+                                {reader.readerName}
+                              </p>
+
+                              <p className="detailChallengeStatus">
+                                {progressStatus}
+                              </p>
+                            </div>
+
+                            <span
+                              className="detailChallengeLetter"
+                              aria-label={`Challenge letter ${entry.letter}`}
+                            >
+                              {entry.letter}
+                            </span>
+                          </div>
+
+                          <div
+                            className="challengeProgressTrack detailReadingProgressTrack"
+                            role="progressbar"
+                            aria-label={`${reader.readerName} reading progress`}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
+                            aria-valuenow={progressPercent}
+                            aria-valuetext={`${pagesRead} of ${totalPages} pages read`}
+                          >
+                            <span
+                              className="challengeProgressFill"
+                              aria-hidden="true"
+                              style={{
+                                width: `${progressPercent}%`,
+                              }}
+                            />
+
+                            <span className="detailReadingProgressPercent">
+                              {progressPercent}%
+                            </span>
+                          </div>
+
+                          <p className="detailReadingProgressFraction">
+                            {pagesRead.toLocaleString()} /{" "}
+                            {totalPages.toLocaleString()} pages
+                          </p>
+                        </article>
+                      );
+                    }
+                  )}
+                </div>
+              </section>
+            ) : null}
+
+            <section className="detailSection">
               <p className="detailLabel">Location</p>
+
               <dl className="detailGrid">
                 <div>
                   <dt>Place</dt>
@@ -1298,7 +1445,10 @@ export default function App() {
             </section>
 
             <section className="detailSection">
-              <p className="detailLabel">Book details</p>
+              <p className="detailLabel">
+                Book details
+              </p>
+
               <dl className="detailGrid">
                 {selectedBook.genre ? (
                   <div>
@@ -1321,11 +1471,11 @@ export default function App() {
                   </div>
                 ) : null}
 
-                {selectedBook.seriesTitle ? (
+                {selectedBookSeriesName ? (
                   <div>
                     <dt>Series</dt>
                     <dd>
-                      {selectedBook.seriesTitle}
+                      {selectedBookSeriesName}
                       {selectedBook.seriesNumber != null
                         ? ` #${selectedBook.seriesNumber}`
                         : ""}
@@ -1333,121 +1483,6 @@ export default function App() {
                   </div>
                 ) : null}
               </dl>
-            </section>
-
-            {selectedBookChallengeMemberships.length > 0 ? (
-              <section className="detailSection">
-                <p className="detailLabel">
-                  Challenge progress
-                </p>
-
-                <div className="detailChallengeList">
-                  {selectedBookChallengeMemberships.map(
-                    ({ challenge, reader, entry }) => {
-                      const pagesRead =
-                        getChallengeEntryPagesRead(entry);
-
-                      const totalPages = Math.max(
-                        entry.totalPages ?? 0,
-                        0
-                      );
-
-                      const progressPercent =
-                        totalPages > 0
-                          ? Math.min(
-                              100,
-                              Math.round(
-                                (pagesRead / totalPages) * 100
-                              )
-                            )
-                          : 0;
-
-                      const progressStatus = entry.read
-                        ? "Complete"
-                        : pagesRead > 0
-                          ? "In progress"
-                          : "Not started";
-
-                      return (
-                        <article
-                          key={entry.entryId}
-                          className="detailChallengeCard"
-                        >
-                          <div className="detailChallengeHeading">
-                            <div>
-                              <p className="detailChallengeName">
-                                {challenge.name} ·{" "}
-                                {reader.readerName}
-                              </p>
-
-                              <p className="detailChallengeStatus">
-                                {progressStatus}
-                              </p>
-                            </div>
-
-                            <span
-                              className="detailChallengeLetter"
-                              aria-label={`Challenge letter ${entry.letter}`}
-                            >
-                              {entry.letter}
-                            </span>
-                          </div>
-
-                          {totalPages > 0 ? (
-                            <>
-                              <div
-                                className="detailChallengeProgressMeta"
-                                aria-label={`${pagesRead} of ${totalPages} pages read`}
-                              >
-                                <span>
-                                  {pagesRead.toLocaleString()} of{" "}
-                                  {totalPages.toLocaleString()} pages
-                                </span>
-
-                                <span>{progressPercent}%</span>
-                              </div>
-
-                              <div
-                                className="challengeProgressTrack"
-                                aria-hidden="true"
-                              >
-                                <span
-                                  className="challengeProgressFill"
-                                  style={{
-                                    width: `${progressPercent}%`,
-                                  }}
-                                />
-                              </div>
-                            </>
-                          ) : (
-                            <p className="detailMuted">
-                              Page count not entered.
-                            </p>
-                          )}
-                        </article>
-                      );
-                    }
-                  )}
-                </div>
-              </section>
-            ) : null}
-            
-            <section className="detailSection">
-              <p className="detailLabel">Read by</p>
-
-              {readBy.length > 0 ? (
-                <div className="readStatusList">
-                  {selectedBook.cj ? (
-                    <span className="readStatusChip">CJ ✓</span>
-                  ) : null}
-
-                  {selectedBook.jc ? (
-                    <span className="readStatusChip">JC ✓</span>
-                  ) : null}
-                </div>
-              ) : (
-                <p className="detailMuted">Not marked read yet.</p>
-              )}
             </section>
           </div>
         </article>
