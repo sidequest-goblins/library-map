@@ -14,8 +14,11 @@ import HouseholdAccountPanel from "./HouseholdAccountPanel";
 import { supabase } from "./supabaseClient";
 import {
   buildLibraryStateSeedPreview,
+  isLibraryReaderId,
+  makeLibraryChallengeEntryKey,
   makeLibraryStateKey,
   type LibraryReaderBookState,
+  type LibraryReaderChallengeAttemptLink,
   type LibraryReaderId,
   type LibraryReaderReadingAttempt,
   type LibraryStateLoadStatus,
@@ -646,7 +649,7 @@ async function fetchLibraryStateRows(
   return data ?? [];
 }
 
-async function fetchActiveReadingAttempts(
+async function fetchReadingAttempts(
   userId: string
 ): Promise<LibraryReaderReadingAttempt[]> {
   const { data, error } = await supabase
@@ -671,10 +674,6 @@ async function fetchActiveReadingAttempts(
       "user_id",
       userId
     )
-    .eq(
-      "status",
-      "active"
-    )
     .order(
       "started_at",
       {
@@ -683,6 +682,49 @@ async function fetchActiveReadingAttempts(
     )
     .overrideTypes<
       LibraryReaderReadingAttempt[]
+    >();
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}
+
+async function fetchChallengeAttemptLinks(
+  userId: string
+): Promise<
+  LibraryReaderChallengeAttemptLink[]
+> {
+  const { data, error } = await supabase
+    .from(
+      "library_reader_challenge_attempt_links"
+    )
+    .select(`
+      link_id,
+      user_id,
+      reader_id,
+      challenge_id,
+      challenge_entry_id,
+      catalog_key,
+      attempt_id,
+      linked_at,
+      unlinked_at,
+      created_at,
+      updated_at
+    `)
+    .eq(
+      "user_id",
+      userId
+    )
+    .order(
+      "linked_at",
+      {
+        ascending: false,
+      }
+    )
+    .overrideTypes<
+      LibraryReaderChallengeAttemptLink[]
     >();
 
   if (error) {
@@ -739,10 +781,17 @@ export default function App() {
   ] = useState("");
 
   const [
-    activeReadingAttempts,
-    setActiveReadingAttempts,
+    readingAttempts,
+    setReadingAttempts,
   ] = useState<
     LibraryReaderReadingAttempt[]
+  >([]);
+
+  const [
+    challengeAttemptLinks,
+    setChallengeAttemptLinks,
+  ] = useState<
+    LibraryReaderChallengeAttemptLink[]
   >([]);
 
   const [
@@ -980,12 +1029,15 @@ export default function App() {
   useEffect(() => {
     let isActive = true;
 
-    async function loadReadingAttempts() {
+    async function loadReadingActivity() {
       if (!householdSession) {
-        setActiveReadingAttempts([]);
+        setReadingAttempts([]);
+        setChallengeAttemptLinks([]);
+
         setReadingAttemptsLoadStatus(
           "idle"
         );
+
         setReadingAttemptsLoadError("");
         setReadingAttemptSavingKey(null);
         setReadingAttemptFeedback(null);
@@ -1001,17 +1053,29 @@ export default function App() {
       setReadingAttemptsLoadError("");
 
       try {
-        const loadedAttempts =
-          await fetchActiveReadingAttempts(
+        const [
+          loadedAttempts,
+          loadedChallengeLinks,
+        ] = await Promise.all([
+          fetchReadingAttempts(
             householdSession.user.id
-          );
+          ),
+
+          fetchChallengeAttemptLinks(
+            householdSession.user.id
+          ),
+        ]);
 
         if (!isActive) {
           return;
         }
 
-        setActiveReadingAttempts(
+        setReadingAttempts(
           loadedAttempts
+        );
+
+        setChallengeAttemptLinks(
+          loadedChallengeLinks
         );
 
         setReadingAttemptsLoadStatus(
@@ -1023,11 +1087,12 @@ export default function App() {
         }
 
         console.error(
-          "Could not load active reading attempts.",
+          "Could not load shared reading activity.",
           error
         );
 
-        setActiveReadingAttempts([]);
+        setReadingAttempts([]);
+        setChallengeAttemptLinks([]);
 
         setReadingAttemptsLoadStatus(
           "error"
@@ -1041,7 +1106,7 @@ export default function App() {
       }
     }
 
-    void loadReadingAttempts();
+    void loadReadingActivity();
 
     return () => {
       isActive = false;
@@ -1061,6 +1126,53 @@ export default function App() {
       ),
     [libraryStateRows]
   );
+
+  const activeReadingAttempts =
+    useMemo(
+      () =>
+        readingAttempts.filter(
+          (attempt) =>
+            attempt.status === "active"
+        ),
+      [readingAttempts]
+    );
+
+  const readingAttemptById =
+    useMemo(
+      () =>
+        new Map(
+          readingAttempts.map(
+            (attempt) => [
+              attempt.attempt_id,
+              attempt,
+            ]
+          )
+        ),
+      [readingAttempts]
+    );
+
+  const currentChallengeAttemptLinkByKey =
+    useMemo(
+      () =>
+        new Map(
+          challengeAttemptLinks
+            .filter(
+              (link) =>
+                link.unlinked_at === null
+            )
+            .map(
+              (link) => [
+                makeLibraryChallengeEntryKey(
+                  link.reader_id,
+                  link.challenge_id,
+                  link.challenge_entry_id
+                ),
+                link,
+              ]
+            )
+        ),
+      [challengeAttemptLinks]
+    );
 
   const activeReadingAttemptByKey =
     useMemo(
@@ -1564,19 +1676,121 @@ export default function App() {
   }
 
   function getChallengeEntryDisplayState(
-    entry: ChallengeEntry
+    entry: ChallengeEntry,
+    challengeId: string,
+    readerId: string
   ) {
     const totalPages = Math.max(
       entry.totalPages ?? 0,
       0
     );
 
-    return {
+    const workbookFallback = {
       isRead: entry.read,
+
       pagesRead:
         getChallengeEntryPagesRead(
           entry
         ),
+
+      totalPages,
+    };
+
+    if (
+      !sharedReadingAttemptsAreAuthoritative ||
+      !challengeId ||
+      !isLibraryReaderId(readerId)
+    ) {
+      return workbookFallback;
+    }
+
+    const challengeEntryKey =
+      makeLibraryChallengeEntryKey(
+        readerId,
+        challengeId,
+        entry.entryId
+      );
+
+    const challengeLink =
+      currentChallengeAttemptLinkByKey.get(
+        challengeEntryKey
+      );
+
+    if (!challengeLink) {
+      return {
+        isRead: false,
+        pagesRead: 0,
+        totalPages,
+      };
+    }
+
+    const linkedAttempt =
+      readingAttemptById.get(
+        challengeLink.attempt_id
+      );
+
+    if (!linkedAttempt) {
+      console.error(
+        "Challenge link references an unavailable reading attempt.",
+        {
+          challengeEntryId:
+            entry.entryId,
+
+          attemptId:
+            challengeLink.attempt_id,
+        }
+      );
+
+      return {
+        isRead: false,
+        pagesRead: 0,
+        totalPages,
+      };
+    }
+
+    const attemptPage = Math.max(
+      linkedAttempt.current_page ?? 0,
+      0
+    );
+
+    if (
+      linkedAttempt.status ===
+      "completed"
+    ) {
+      return {
+        isRead: true,
+
+        pagesRead:
+          totalPages > 0
+            ? totalPages
+            : attemptPage,
+
+        totalPages,
+      };
+    }
+
+    if (
+      linkedAttempt.status ===
+      "active"
+    ) {
+      return {
+        isRead: false,
+
+        pagesRead:
+          totalPages > 0
+            ? Math.min(
+                attemptPage,
+                totalPages
+              )
+            : attemptPage,
+
+        totalPages,
+      };
+    }
+
+    return {
+      isRead: false,
+      pagesRead: 0,
       totalPages,
     };
   }
@@ -1824,7 +2038,7 @@ export default function App() {
       }
 
       const refreshedAttempts =
-        await fetchActiveReadingAttempts(
+        await fetchReadingAttempts(
           householdSession.user.id
         );
 
@@ -1834,7 +2048,9 @@ export default function App() {
             attempt.reader_id ===
               readerId &&
             attempt.catalog_key ===
-              catalogKey
+              catalogKey &&
+            attempt.status ===
+              "active"
         );
 
       if (!refreshedAttempt) {
@@ -1843,7 +2059,7 @@ export default function App() {
         );
       }
 
-      setActiveReadingAttempts(
+      setReadingAttempts(
         refreshedAttempts
       );
 
@@ -1995,7 +2211,7 @@ export default function App() {
       }
 
       const refreshedAttempts =
-        await fetchActiveReadingAttempts(
+        await fetchReadingAttempts(
           householdSession.user.id
         );
 
@@ -2016,7 +2232,7 @@ export default function App() {
         );
       }
 
-      setActiveReadingAttempts(
+      setReadingAttempts(
         refreshedAttempts
       );
 
@@ -2138,7 +2354,7 @@ export default function App() {
       }
 
       const refreshedAttempts =
-        await fetchActiveReadingAttempts(
+        await fetchReadingAttempts(
           householdSession.user.id
         );
 
@@ -2146,7 +2362,9 @@ export default function App() {
         refreshedAttempts.some(
           (candidate) =>
             candidate.attempt_id ===
-            attempt.attempt_id
+              attempt.attempt_id &&
+            candidate.status ===
+              "active"
         );
 
       if (attemptStillActive) {
@@ -2155,7 +2373,7 @@ export default function App() {
         );
       }
 
-      setActiveReadingAttempts(
+      setReadingAttempts(
         refreshedAttempts
       );
 
@@ -2243,7 +2461,11 @@ export default function App() {
         totalPages,
       } =
         getChallengeEntryDisplayState(
-          entry
+          entry,
+          activeChallenge?.challengeId ??
+            "",
+          activeChallengeReader?.readerId ??
+            ""
         );
 
       const inProgress =
@@ -3083,7 +3305,9 @@ export default function App() {
                         totalPages,
                       } =
                         getChallengeEntryDisplayState(
-                          entry
+                          entry,
+                          challenge.challengeId,
+                          reader.readerId
                         );
 
                       const progressPercent =
@@ -3875,8 +4099,9 @@ export default function App() {
               </h2>
 
               <p>
-                Challenge membership, completion, and starting
-                progress come from the challenge workbook.
+                Challenge book lists come from the challenge
+                workbook. Live progress and completion come
+                from explicitly linked reading attempts.
                 Overall library Read status is tracked
                 separately.
               </p>
@@ -4104,7 +4329,10 @@ export default function App() {
                               totalPages,
                             } =
                               getChallengeEntryDisplayState(
-                                entry
+                                entry,
+                                activeChallenge?.challengeId ??
+                                  "",
+                                activeChallengeReader.readerId
                               );
 
                             const inProgress =

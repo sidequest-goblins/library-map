@@ -39,6 +39,20 @@ export type LibraryReaderReadingAttempt = {
   updated_at: string;
 };
 
+export type LibraryReaderChallengeAttemptLink = {
+  link_id: string;
+  user_id: string;
+  reader_id: LibraryReaderId;
+  challenge_id: string;
+  challenge_entry_id: string;
+  catalog_key: string;
+  attempt_id: string;
+  linked_at: string;
+  unlinked_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
 export type LibraryReaderBookStateSeedRow = {
   user_id: string;
   reader_id: LibraryReaderId;
@@ -75,6 +89,18 @@ export function makeLibraryStateKey(
   catalogKey: string
 ): string {
   return `${readerId}:${catalogKey}`;
+}
+
+export function makeLibraryChallengeEntryKey(
+  readerId: LibraryReaderId,
+  challengeId: string,
+  challengeEntryId: string
+): string {
+  return [
+    readerId,
+    challengeId,
+    challengeEntryId,
+  ].join(":");
 }
 
 export function isLibraryReaderId(
