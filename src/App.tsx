@@ -58,6 +58,32 @@ type ReadingAttemptFeedback = {
   message: string;
 } | null;
 
+type ChallengeAttemptAction =
+  | "link"
+  | "start"
+  | "replace";
+
+type ChallengeAttemptActionResult = {
+  action_name: string;
+  result_link_id: string;
+  result_attempt_id: string;
+  result_attempt_status:
+    | "active"
+    | "completed"
+    | "abandoned";
+  result_is_reread: boolean;
+  result_current_page: number | null;
+  previous_link_id: string | null;
+};
+
+type ChallengeAttemptFeedback =
+  | {
+      challengeEntryKey: string;
+      kind: "success" | "error";
+      message: string;
+    }
+  | null;
+
 const SEARCH_SCOPE_OPTIONS: Array<{
   scope: SearchScope;
   label: string;
@@ -823,6 +849,18 @@ export default function App() {
     setReadingAttemptPageDrafts,
   ] = useState<Record<string, string>>(
     {}
+  );
+
+  const [
+    challengeAttemptSavingKey,
+    setChallengeAttemptSavingKey,
+  ] = useState<string | null>(null);
+
+  const [
+    challengeAttemptFeedback,
+    setChallengeAttemptFeedback,
+  ] = useState<ChallengeAttemptFeedback>(
+    null
   );
 
   const [loadStatus, setLoadStatus] = useState<
@@ -1793,6 +1831,257 @@ export default function App() {
       pagesRead: 0,
       totalPages,
     };
+  }
+
+  async function refreshSharedReadingData(
+    userId: string
+  ) {
+    const [
+      refreshedLibraryStateRows,
+      refreshedAttempts,
+      refreshedChallengeLinks,
+    ] = await Promise.all([
+      fetchLibraryStateRows(userId),
+      fetchReadingAttempts(userId),
+      fetchChallengeAttemptLinks(userId),
+    ]);
+
+    setLibraryStateRows(
+      refreshedLibraryStateRows
+    );
+
+    setReadingAttempts(
+      refreshedAttempts
+    );
+
+    setChallengeAttemptLinks(
+      refreshedChallengeLinks
+    );
+
+    setLibraryStateLoadError("");
+    setReadingAttemptsLoadError("");
+
+    return {
+      refreshedLibraryStateRows,
+      refreshedAttempts,
+      refreshedChallengeLinks,
+    };
+  }
+
+  async function runChallengeAttemptAction({
+    action,
+    challengeId,
+    challengeEntryId,
+    challengeName,
+    readerId,
+    readerName,
+    catalogKey,
+    attemptId,
+  }: {
+    action: ChallengeAttemptAction;
+    challengeId: string;
+    challengeEntryId: string;
+    challengeName: string;
+    readerId: LibraryReaderId;
+    readerName: string;
+    catalogKey: string;
+    attemptId?: string;
+  }) {
+    const challengeEntryKey =
+      makeLibraryChallengeEntryKey(
+        readerId,
+        challengeId,
+        challengeEntryId
+      );
+
+    if (
+      !householdSession ||
+      libraryStateLoadStatus !==
+        "ready" ||
+      readingAttemptsLoadStatus !==
+        "ready"
+    ) {
+      setChallengeAttemptFeedback({
+        challengeEntryKey,
+        kind: "error",
+        message:
+          "Household reading activity must finish loading before changing a challenge link.",
+      });
+
+      return;
+    }
+
+    if (!catalogKey.trim()) {
+      setChallengeAttemptFeedback({
+        challengeEntryKey,
+        kind: "error",
+        message:
+          "This book does not have a catalog key, so its challenge activity cannot be changed safely.",
+      });
+
+      return;
+    }
+
+    if (
+      action === "replace" &&
+      !attemptId
+    ) {
+      setChallengeAttemptFeedback({
+        challengeEntryKey,
+        kind: "error",
+        message:
+          "The replacement reading attempt is unavailable.",
+      });
+
+      return;
+    }
+
+    if (
+      challengeAttemptSavingKey ||
+      readingAttemptSavingKey ||
+      readStatusSavingKey
+    ) {
+      return;
+    }
+
+    setChallengeAttemptSavingKey(
+      challengeEntryKey
+    );
+
+    setChallengeAttemptFeedback(null);
+
+    try {
+      const rpcResponse =
+        action === "link"
+          ? await supabase.rpc(
+              "library_link_current_read_to_challenge",
+              {
+                p_reader_id: readerId,
+                p_challenge_id:
+                  challengeId,
+                p_challenge_entry_id:
+                  challengeEntryId,
+                p_catalog_key:
+                  catalogKey,
+              }
+            )
+          : action === "start"
+            ? await supabase.rpc(
+                "library_start_reading_for_challenge",
+                {
+                  p_reader_id:
+                    readerId,
+                  p_challenge_id:
+                    challengeId,
+                  p_challenge_entry_id:
+                    challengeEntryId,
+                  p_catalog_key:
+                    catalogKey,
+                }
+              )
+            : await supabase.rpc(
+                "library_replace_challenge_attempt_link",
+                {
+                  p_reader_id:
+                    readerId,
+                  p_challenge_id:
+                    challengeId,
+                  p_challenge_entry_id:
+                    challengeEntryId,
+                  p_catalog_key:
+                    catalogKey,
+                  p_attempt_id:
+                    attemptId as string,
+                }
+              );
+
+      if (rpcResponse.error) {
+        throw rpcResponse.error;
+      }
+
+      const actionResult =
+        (
+          rpcResponse.data as
+            | ChallengeAttemptActionResult[]
+            | null
+        )?.[0];
+
+      if (!actionResult) {
+        throw new Error(
+          "Supabase did not return the challenge action result."
+        );
+      }
+
+      const {
+        refreshedChallengeLinks,
+      } =
+        await refreshSharedReadingData(
+          householdSession.user.id
+        );
+
+      const refreshedCurrentLink =
+        refreshedChallengeLinks.find(
+          (link) =>
+            link.reader_id ===
+              readerId &&
+            link.challenge_id ===
+              challengeId &&
+            link.challenge_entry_id ===
+              challengeEntryId &&
+            link.unlinked_at === null
+        );
+
+      if (
+        !refreshedCurrentLink ||
+        refreshedCurrentLink.attempt_id !==
+          actionResult.result_attempt_id
+      ) {
+        throw new Error(
+          "The challenge action finished, but the expected current link did not reload."
+        );
+      }
+
+      let successMessage: string;
+
+      if (
+        actionResult.action_name ===
+        "already_linked"
+      ) {
+        successMessage =
+          "This reading attempt is already linked to the challenge.";
+      } else if (action === "link") {
+        successMessage =
+          `${readerName}'s current read now counts for ${challengeName}.`;
+      } else if (action === "replace") {
+        successMessage =
+          `${readerName}'s current read now replaces the cancelled challenge attempt.`;
+      } else {
+        successMessage =
+          `${readerName}'s challenge read started for ${challengeName}.`;
+      }
+
+      setChallengeAttemptFeedback({
+        challengeEntryKey,
+        kind: "success",
+        message: successMessage,
+      });
+    } catch (error) {
+      console.error(
+        "Could not update challenge reading activity.",
+        error
+      );
+
+      setChallengeAttemptFeedback({
+        challengeEntryKey,
+        kind: "error",
+        message:
+          error instanceof Error
+            ? `Challenge activity failed to save: ${error.message}`
+            : "Challenge activity failed to save because of an unknown Supabase error.",
+      });
+    } finally {
+      setChallengeAttemptSavingKey(null);
+    }
   }
 
   async function updateBookReaderReadStatus(
@@ -2791,6 +3080,7 @@ export default function App() {
   useEffect(() => {
     setReadStatusError("");
     setReadingAttemptFeedback(null);
+    setChallengeAttemptFeedback(null);
     setReadingAttemptPageDrafts({});
   }, [selectedBookId]);
 
@@ -2936,11 +3226,8 @@ export default function App() {
         )
       );
 
-    const selectedBookReadingProgress =
-      selectedBookChallengeMemberships.filter(
-        ({ entry }) =>
-          Math.max(entry.totalPages ?? 0, 0) > 0
-      );
+    const selectedBookChallengeDetails =
+      selectedBookChallengeMemberships;
 
     return (
       <section className="bookDetailPanel">
@@ -3485,15 +3772,19 @@ export default function App() {
               </section>
             ) : null}
 
-            {selectedBookReadingProgress.length > 0 ? (
+            {selectedBookChallengeDetails.length > 0 ? (
               <section className="detailSection">
                 <p className="detailLabel">
-                  Reading progress
+                  Challenge progress
                 </p>
 
                 <div className="detailChallengeList">
-                  {selectedBookReadingProgress.map(
-                    ({ challenge, reader, entry }) => {
+                  {selectedBookChallengeDetails.map(
+                    ({
+                      challenge,
+                      reader,
+                      entry,
+                    }) => {
                       const {
                         isRead,
                         pagesRead,
@@ -3504,6 +3795,52 @@ export default function App() {
                           challenge.challengeId,
                           reader.readerId
                         );
+
+                      const challengeReaderId =
+                        isLibraryReaderId(
+                          reader.readerId
+                        )
+                          ? reader.readerId
+                          : null;
+
+                      const challengeEntryKey =
+                        challengeReaderId
+                          ? makeLibraryChallengeEntryKey(
+                              challengeReaderId,
+                              challenge.challengeId,
+                              entry.entryId
+                            )
+                          : "";
+
+                      const currentChallengeLink =
+                        challengeEntryKey
+                          ? currentChallengeAttemptLinkByKey.get(
+                              challengeEntryKey
+                            )
+                          : undefined;
+
+                      const linkedChallengeAttempt =
+                        currentChallengeLink
+                          ? readingAttemptById.get(
+                              currentChallengeLink.attempt_id
+                            )
+                          : undefined;
+
+                      const activeBookAttemptKey =
+                        challengeReaderId &&
+                        selectedBookCatalogKey
+                          ? makeLibraryStateKey(
+                              challengeReaderId,
+                              selectedBookCatalogKey
+                            )
+                          : "";
+
+                      const activeBookAttempt =
+                        activeBookAttemptKey
+                          ? activeReadingAttemptByKey.get(
+                              activeBookAttemptKey
+                            )
+                          : undefined;
 
                       const progressPercent =
                         totalPages > 0
@@ -3524,9 +3861,92 @@ export default function App() {
                             ? "In progress"
                             : "Not started";
 
+                      const actionFeedback =
+                        challengeAttemptFeedback
+                          ?.challengeEntryKey ===
+                        challengeEntryKey
+                          ? challengeAttemptFeedback
+                          : null;
+
+                      const actionIsSaving =
+                        challengeAttemptSavingKey ===
+                        challengeEntryKey;
+
+                      const challengeActionsReady =
+                        Boolean(
+                          householdSession &&
+                            sharedLibraryStateIsAuthoritative &&
+                            sharedReadingAttemptsAreAuthoritative &&
+                            challengeReaderId &&
+                            selectedBookCatalogKey
+                        );
+
+                      let challengeAction:
+                        | ChallengeAttemptAction
+                        | null = null;
+
+                      let challengeActionLabel =
+                        "";
+
+                      if (challengeActionsReady) {
+                        if (!currentChallengeLink) {
+                          if (activeBookAttempt) {
+                            challengeAction =
+                              "link";
+
+                            challengeActionLabel =
+                              "Link current read";
+                          } else {
+                            challengeAction =
+                              "start";
+
+                            challengeActionLabel =
+                              "Start for challenge";
+                          }
+                        } else if (
+                          linkedChallengeAttempt
+                            ?.status ===
+                          "abandoned"
+                        ) {
+                          if (activeBookAttempt) {
+                            challengeAction =
+                              "replace";
+
+                            challengeActionLabel =
+                              "Use current read";
+                          } else {
+                            challengeAction =
+                              "start";
+
+                            challengeActionLabel =
+                              "Start new challenge read";
+                          }
+                        }
+                      }
+
+                      const challengeLinkNote =
+                        linkedChallengeAttempt
+                          ?.status === "active"
+                          ? `Linked to ${reader.readerName}'s active reading attempt.`
+                          : linkedChallengeAttempt
+                                ?.status ===
+                              "completed"
+                            ? "Completed through its linked reading attempt."
+                            : linkedChallengeAttempt
+                                  ?.status ===
+                                "abandoned"
+                              ? "The linked reading attempt was cancelled and no longer counts."
+                              : currentChallengeLink
+                                ? "The linked reading attempt could not be loaded."
+                                : "";
+
                       return (
                         <article
-                          key={entry.entryId}
+                          key={[
+                            challenge.challengeId,
+                            reader.readerId,
+                            entry.entryId,
+                          ].join(":")}
                           className="detailChallengeCard"
                         >
                           <div className="detailChallengeHeading">
@@ -3549,32 +3969,131 @@ export default function App() {
                             </span>
                           </div>
 
-                          <div
-                            className="challengeProgressTrack detailReadingProgressTrack"
-                            role="progressbar"
-                            aria-label={`${reader.readerName} reading progress`}
-                            aria-valuemin={0}
-                            aria-valuemax={100}
-                            aria-valuenow={progressPercent}
-                            aria-valuetext={`${pagesRead} of ${totalPages} pages read`}
-                          >
-                            <span
-                              className="challengeProgressFill"
-                              aria-hidden="true"
-                              style={{
-                                width: `${progressPercent}%`,
-                              }}
-                            />
+                          {totalPages > 0 ? (
+                            <>
+                              <div
+                                className="challengeProgressTrack detailReadingProgressTrack"
+                                role="progressbar"
+                                aria-label={`${reader.readerName} reading progress`}
+                                aria-valuemin={0}
+                                aria-valuemax={100}
+                                aria-valuenow={
+                                  progressPercent
+                                }
+                                aria-valuetext={`${pagesRead} of ${totalPages} pages read`}
+                              >
+                                <span
+                                  className="challengeProgressFill"
+                                  aria-hidden="true"
+                                  style={{
+                                    width: `${progressPercent}%`,
+                                  }}
+                                />
 
-                            <span className="detailReadingProgressPercent">
-                              {progressPercent}%
-                            </span>
-                          </div>
+                                <span className="detailReadingProgressPercent">
+                                  {progressPercent}%
+                                </span>
+                              </div>
 
-                          <p className="detailReadingProgressFraction">
-                            {pagesRead.toLocaleString()} /{" "}
-                            {totalPages.toLocaleString()} pages
-                          </p>
+                              <p className="detailReadingProgressFraction">
+                                {pagesRead.toLocaleString()}{" "}
+                                /{" "}
+                                {totalPages.toLocaleString()}{" "}
+                                pages
+                              </p>
+                            </>
+                          ) : (
+                            <p className="detailChallengeNoPageCount">
+                              {isRead
+                                ? "Completed"
+                                : pagesRead > 0
+                                  ? `Page ${pagesRead.toLocaleString()}`
+                                  : "No page total available"}
+                            </p>
+                          )}
+
+                          {challengeLinkNote ? (
+                            <p className="detailChallengeLinkNote">
+                              {challengeLinkNote}
+                            </p>
+                          ) : null}
+
+                          {challengeAction &&
+                          challengeReaderId ? (
+                            <div className="detailChallengeActions">
+                              <button
+                                type="button"
+                                className="detailChallengeActionButton"
+                                disabled={
+                                  actionIsSaving ||
+                                  challengeAttemptSavingKey !==
+                                    null ||
+                                  readingAttemptSavingKey !==
+                                    null ||
+                                  readStatusSavingKey !==
+                                    null
+                                }
+                                onClick={() => {
+                                  void runChallengeAttemptAction(
+                                    {
+                                      action:
+                                        challengeAction,
+
+                                      challengeId:
+                                        challenge.challengeId,
+
+                                      challengeEntryId:
+                                        entry.entryId,
+
+                                      challengeName:
+                                        challenge.name,
+
+                                      readerId:
+                                        challengeReaderId,
+
+                                      readerName:
+                                        reader.readerName,
+
+                                      catalogKey:
+                                        selectedBookCatalogKey,
+
+                                      attemptId:
+                                        challengeAction ===
+                                        "replace"
+                                          ? activeBookAttempt
+                                              ?.attempt_id
+                                          : undefined,
+                                    }
+                                  );
+                                }}
+                              >
+                                {actionIsSaving
+                                  ? "Working…"
+                                  : challengeActionLabel}
+                              </button>
+                            </div>
+                          ) : null}
+
+                          {actionFeedback ? (
+                            <p
+                              className={
+                                actionFeedback.kind ===
+                                "error"
+                                  ? "detailChallengeActionFeedback detailChallengeActionFeedbackError"
+                                  : "detailChallengeActionFeedback detailChallengeActionFeedbackSuccess"
+                              }
+                              role={
+                                actionFeedback.kind ===
+                                "error"
+                                  ? "alert"
+                                  : "status"
+                              }
+                            >
+                              {
+                                actionFeedback.message
+                              }
+                            </p>
+                          ) : null}
                         </article>
                       );
                     }

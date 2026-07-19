@@ -1717,6 +1717,81 @@ select {
   text-align: center;
 }
 
+.detailChallengeNoPageCount {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.detailChallengeLinkNote {
+  margin: 0;
+  padding-left: 0.55rem;
+  border-left: 3px solid rgba(82, 111, 69, 0.3);
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.detailChallengeActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.detailChallengeActionButton {
+  width: fit-content;
+  border: 1px solid rgba(52, 72, 46, 0.38);
+  border-radius: 10px;
+  padding: 0.48rem 0.72rem;
+  color: #fff8e9;
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--greenDark)
+    );
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.detailChallengeActionButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 16px rgba(52, 72, 46, 0.15);
+}
+
+.detailChallengeActionButton:focus-visible {
+  outline: 3px solid rgba(201, 154, 69, 0.28);
+  outline-offset: 2px;
+}
+
+.detailChallengeActionButton:disabled {
+  cursor: wait;
+  opacity: 0.5;
+  transform: none;
+}
+
+.detailChallengeActionFeedback {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.detailChallengeActionFeedbackSuccess {
+  color: var(--greenDark);
+}
+
+.detailChallengeActionFeedbackError {
+  color: #8a3429;
+}
+
 .headerUtilityRow {
   display: flex;
   flex-wrap: wrap;
