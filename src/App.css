@@ -899,10 +899,18 @@ select {
   gap: 1rem;
 }
 
+.bookDetailSections:has(
+  .bookDetailSaveBarPending
+) {
+  padding-bottom: calc(
+    8.5rem +
+    env(safe-area-inset-bottom)
+  );
+}
+
 .bookDetailSaveBar {
-  position: sticky;
+  position: relative;
   z-index: 5;
-  bottom: 0.75rem;
   display: flex;
   flex-wrap: wrap;
   gap: 0.7rem;
@@ -918,6 +926,18 @@ select {
 }
 
 .bookDetailSaveBarPending {
+  position: fixed;
+  z-index: 50;
+  left: 50%;
+  bottom: calc(
+    0.75rem +
+    env(safe-area-inset-bottom)
+  );
+  width: min(
+    calc(100vw - 2rem),
+    1148px
+  );
+  transform: translateX(-50%);
   border-color: rgba(201, 154, 69, 0.52);
   background:
     linear-gradient(
@@ -1796,6 +1816,22 @@ select {
 
   .challengeEntryGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bookDetailSaveBarPending {
+    width: min(
+      calc(100vw - 3rem),
+      1132px
+    );
+  }
+
+  .bookDetailSections:has(
+    .bookDetailSaveBarPending
+  ) {
+    padding-bottom: calc(
+      7rem +
+      env(safe-area-inset-bottom)
+    );
   }
 }
 
