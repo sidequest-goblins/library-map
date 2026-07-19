@@ -207,7 +207,9 @@ export default function HouseholdAccountPanel({
 
     try {
       const { error } =
-        await supabase.auth.signOut();
+        await supabase.auth.signOut({
+          scope: "local",
+        });
 
       if (error) {
         setFeedback({
