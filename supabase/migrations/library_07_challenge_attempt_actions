@@ -1,0 +1,1273 @@
+-- ============================================================
+-- MyLibrary 07 - Create Challenge Attempt Actions
+--
+-- Creates authenticated database actions for:
+--
+--   1. Linking an existing active reading attempt to a
+--      challenge entry.
+--
+--   2. Starting a new reading attempt and linking it to a
+--      challenge entry in one transaction.
+--
+--   3. Replacing a challenge entry's current attempt link while
+--      preserving the old link as historical data.
+--
+-- Important behavior:
+--
+--   - Browser requests cannot leave behind half-finished
+--     attempt/link operations.
+--
+--   - All actions validate the authenticated household user.
+--
+--   - Reader, catalog key, challenge ID, and challenge entry ID
+--     are normalized and validated.
+--
+--   - Existing table triggers continue to control timestamps,
+--     reread classification, lifecycle rules, and audit history.
+--
+--   - Start for challenge may replace a completed or abandoned
+--     current link, but it will not replace an active linked
+--     attempt.
+--
+--   - Replace link may intentionally select an active,
+--     completed, or abandoned attempt because challenge history
+--     derives its meaning from the linked attempt's status.
+-- ============================================================
+
+
+begin;
+
+
+-- ============================================================
+-- 1. Link the current active read to a challenge entry
+-- ============================================================
+
+
+drop function if exists
+public.library_link_current_read_to_challenge
+(
+  text,
+  text,
+  text,
+  text
+);
+
+
+create function
+public.library_link_current_read_to_challenge
+(
+  p_reader_id text,
+  p_challenge_id text,
+  p_challenge_entry_id text,
+  p_catalog_key text
+)
+returns table
+(
+  action_name text,
+  result_link_id uuid,
+  result_attempt_id uuid,
+  result_attempt_status text,
+  result_is_reread boolean,
+  result_current_page integer,
+  previous_link_id uuid
+)
+language plpgsql
+security definer
+set search_path = pg_catalog
+as $$
+declare
+  household_user_id constant uuid :=
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid;
+
+  caller_user_id uuid;
+
+  clean_reader_id text;
+
+  clean_challenge_id text;
+
+  clean_challenge_entry_id text;
+
+  clean_catalog_key text;
+
+  active_attempt
+    public.library_reader_reading_attempts%rowtype;
+
+  current_link
+    public.library_reader_challenge_attempt_links%rowtype;
+begin
+  -- ----------------------------------------------------------
+  -- Authenticate the household caller
+  -- ----------------------------------------------------------
+
+  caller_user_id :=
+    auth.uid();
+
+
+  if caller_user_id is null then
+    raise exception
+      'A household session is required';
+  end if;
+
+
+  if
+    caller_user_id
+      is distinct from
+    household_user_id
+  then
+    raise exception
+      'This account cannot manage household challenge activity';
+  end if;
+
+
+  -- ----------------------------------------------------------
+  -- Normalize and validate identifiers
+  -- ----------------------------------------------------------
+
+  clean_reader_id :=
+    lower(
+      btrim(
+        coalesce(
+          p_reader_id,
+          ''
+        )
+      )
+    );
+
+
+  clean_challenge_id :=
+    btrim(
+      coalesce(
+        p_challenge_id,
+        ''
+      )
+    );
+
+
+  clean_challenge_entry_id :=
+    btrim(
+      coalesce(
+        p_challenge_entry_id,
+        ''
+      )
+    );
+
+
+  clean_catalog_key :=
+    btrim(
+      coalesce(
+        p_catalog_key,
+        ''
+      )
+    );
+
+
+  if
+    clean_reader_id not in
+    (
+      'cj',
+      'jc'
+    )
+  then
+    raise exception
+      'Unsupported library reader: %',
+      clean_reader_id;
+  end if;
+
+
+  if clean_challenge_id = '' then
+    raise exception
+      'A challenge ID is required';
+  end if;
+
+
+  if clean_challenge_entry_id = '' then
+    raise exception
+      'A challenge entry ID is required';
+  end if;
+
+
+  if clean_catalog_key = '' then
+    raise exception
+      'A catalog key is required';
+  end if;
+
+
+  -- ----------------------------------------------------------
+  -- Serialize actions for this challenge entry and reader/book
+  -- ----------------------------------------------------------
+
+  perform
+    pg_catalog.pg_advisory_xact_lock
+    (
+      pg_catalog.hashtextextended
+      (
+        caller_user_id::text
+          || '|challenge-entry|'
+          || clean_reader_id
+          || '|'
+          || clean_challenge_id
+          || '|'
+          || clean_challenge_entry_id,
+
+        0
+      )
+    );
+
+
+  perform
+    pg_catalog.pg_advisory_xact_lock
+    (
+      pg_catalog.hashtextextended
+      (
+        caller_user_id::text
+          || '|reader-book|'
+          || clean_reader_id
+          || '|'
+          || clean_catalog_key,
+
+        0
+      )
+    );
+
+
+  -- ----------------------------------------------------------
+  -- Resolve the one active attempt for this reader and book
+  -- ----------------------------------------------------------
+
+  select
+    attempt.*
+
+  into
+    active_attempt
+
+  from
+    public.library_reader_reading_attempts
+      as attempt
+
+  where
+    attempt.user_id =
+      caller_user_id
+
+    and
+
+    attempt.reader_id =
+      clean_reader_id
+
+    and
+
+    attempt.catalog_key =
+      clean_catalog_key
+
+    and
+
+    attempt.status =
+      'active'
+
+  for update;
+
+
+  if not found then
+    raise exception
+      'No active reading attempt exists for reader % and catalog key %',
+      clean_reader_id,
+      clean_catalog_key;
+  end if;
+
+
+  -- ----------------------------------------------------------
+  -- Check the challenge entry's current link
+  -- ----------------------------------------------------------
+
+  select
+    link.*
+
+  into
+    current_link
+
+  from
+    public.library_reader_challenge_attempt_links
+      as link
+
+  where
+    link.user_id =
+      caller_user_id
+
+    and
+
+    link.reader_id =
+      clean_reader_id
+
+    and
+
+    link.challenge_id =
+      clean_challenge_id
+
+    and
+
+    link.challenge_entry_id =
+      clean_challenge_entry_id
+
+    and
+
+    link.unlinked_at is null
+
+  for update;
+
+
+  if found then
+    if
+      current_link.attempt_id =
+        active_attempt.attempt_id
+    then
+      return query
+
+      select
+        'already_linked'::text,
+        current_link.link_id,
+        active_attempt.attempt_id,
+        active_attempt.status,
+        active_attempt.is_reread,
+        active_attempt.current_page,
+        null::uuid;
+
+      return;
+    end if;
+
+
+    raise exception
+      'This challenge entry is already linked to another reading attempt; replace its current link instead';
+  end if;
+
+
+  -- ----------------------------------------------------------
+  -- Create the explicit challenge-attempt link
+  -- ----------------------------------------------------------
+
+  insert into
+  public.library_reader_challenge_attempt_links
+  (
+    user_id,
+    reader_id,
+    challenge_id,
+    challenge_entry_id,
+    catalog_key,
+    attempt_id
+  )
+  values
+  (
+    caller_user_id,
+    clean_reader_id,
+    clean_challenge_id,
+    clean_challenge_entry_id,
+    clean_catalog_key,
+    active_attempt.attempt_id
+  )
+
+  returning
+    *
+
+  into
+    current_link;
+
+
+  return query
+
+  select
+    'linked_current_read'::text,
+    current_link.link_id,
+    active_attempt.attempt_id,
+    active_attempt.status,
+    active_attempt.is_reread,
+    active_attempt.current_page,
+    null::uuid;
+end;
+$$;
+
+
+revoke all
+on function
+public.library_link_current_read_to_challenge
+(
+  text,
+  text,
+  text,
+  text
+)
+from public, anon, authenticated;
+
+
+grant execute
+on function
+public.library_link_current_read_to_challenge
+(
+  text,
+  text,
+  text,
+  text
+)
+to authenticated;
+
+
+-- ============================================================
+-- 2. Start a new read and link it in one transaction
+-- ============================================================
+
+
+drop function if exists
+public.library_start_reading_for_challenge
+(
+  text,
+  text,
+  text,
+  text
+);
+
+
+create function
+public.library_start_reading_for_challenge
+(
+  p_reader_id text,
+  p_challenge_id text,
+  p_challenge_entry_id text,
+  p_catalog_key text
+)
+returns table
+(
+  action_name text,
+  result_link_id uuid,
+  result_attempt_id uuid,
+  result_attempt_status text,
+  result_is_reread boolean,
+  result_current_page integer,
+  previous_link_id uuid
+)
+language plpgsql
+security definer
+set search_path = pg_catalog
+as $$
+declare
+  household_user_id constant uuid :=
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid;
+
+  caller_user_id uuid;
+
+  clean_reader_id text;
+
+  clean_challenge_id text;
+
+  clean_challenge_entry_id text;
+
+  clean_catalog_key text;
+
+  existing_active_attempt
+    public.library_reader_reading_attempts%rowtype;
+
+  new_attempt
+    public.library_reader_reading_attempts%rowtype;
+
+  current_link
+    public.library_reader_challenge_attempt_links%rowtype;
+
+  new_link
+    public.library_reader_challenge_attempt_links%rowtype;
+
+  prior_link_id uuid;
+
+  current_link_attempt_status text;
+begin
+  -- ----------------------------------------------------------
+  -- Authenticate the household caller
+  -- ----------------------------------------------------------
+
+  caller_user_id :=
+    auth.uid();
+
+
+  if caller_user_id is null then
+    raise exception
+      'A household session is required';
+  end if;
+
+
+  if
+    caller_user_id
+      is distinct from
+    household_user_id
+  then
+    raise exception
+      'This account cannot manage household challenge activity';
+  end if;
+
+
+  -- ----------------------------------------------------------
+  -- Normalize and validate identifiers
+  -- ----------------------------------------------------------
+
+  clean_reader_id :=
+    lower(
+      btrim(
+        coalesce(
+          p_reader_id,
+          ''
+        )
+      )
+    );
+
+
+  clean_challenge_id :=
+    btrim(
+      coalesce(
+        p_challenge_id,
+        ''
+      )
+    );
+
+
+  clean_challenge_entry_id :=
+    btrim(
+      coalesce(
+        p_challenge_entry_id,
+        ''
+      )
+    );
+
+
+  clean_catalog_key :=
+    btrim(
+      coalesce(
+        p_catalog_key,
+        ''
+      )
+    );
+
+
+  if
+    clean_reader_id not in
+    (
+      'cj',
+      'jc'
+    )
+  then
+    raise exception
+      'Unsupported library reader: %',
+      clean_reader_id;
+  end if;
+
+
+  if clean_challenge_id = '' then
+    raise exception
+      'A challenge ID is required';
+  end if;
+
+
+  if clean_challenge_entry_id = '' then
+    raise exception
+      'A challenge entry ID is required';
+  end if;
+
+
+  if clean_catalog_key = '' then
+    raise exception
+      'A catalog key is required';
+  end if;
+
+
+  -- ----------------------------------------------------------
+  -- Serialize actions for this challenge entry and reader/book
+  -- ----------------------------------------------------------
+
+  perform
+    pg_catalog.pg_advisory_xact_lock
+    (
+      pg_catalog.hashtextextended
+      (
+        caller_user_id::text
+          || '|challenge-entry|'
+          || clean_reader_id
+          || '|'
+          || clean_challenge_id
+          || '|'
+          || clean_challenge_entry_id,
+
+        0
+      )
+    );
+
+
+  perform
+    pg_catalog.pg_advisory_xact_lock
+    (
+      pg_catalog.hashtextextended
+      (
+        caller_user_id::text
+          || '|reader-book|'
+          || clean_reader_id
+          || '|'
+          || clean_catalog_key,
+
+        0
+      )
+    );
+
+
+  -- ----------------------------------------------------------
+  -- Refuse to create a duplicate active attempt
+  -- ----------------------------------------------------------
+
+  select
+    attempt.*
+
+  into
+    existing_active_attempt
+
+  from
+    public.library_reader_reading_attempts
+      as attempt
+
+  where
+    attempt.user_id =
+      caller_user_id
+
+    and
+
+    attempt.reader_id =
+      clean_reader_id
+
+    and
+
+    attempt.catalog_key =
+      clean_catalog_key
+
+    and
+
+    attempt.status =
+      'active'
+
+  for update;
+
+
+  if found then
+    raise exception
+      'An active reading attempt already exists; link the current read instead';
+  end if;
+
+
+  -- ----------------------------------------------------------
+  -- Resolve any current challenge link
+  --
+  -- Start for challenge may automatically replace a completed
+  -- or abandoned linked attempt, because those are historical.
+  --
+  -- It must not silently replace an actively linked attempt.
+  -- ----------------------------------------------------------
+
+  select
+    link.*
+
+  into
+    current_link
+
+  from
+    public.library_reader_challenge_attempt_links
+      as link
+
+  where
+    link.user_id =
+      caller_user_id
+
+    and
+
+    link.reader_id =
+      clean_reader_id
+
+    and
+
+    link.challenge_id =
+      clean_challenge_id
+
+    and
+
+    link.challenge_entry_id =
+      clean_challenge_entry_id
+
+    and
+
+    link.unlinked_at is null
+
+  for update;
+
+
+  if found then
+    select
+      attempt.status
+
+    into
+      current_link_attempt_status
+
+    from
+      public.library_reader_reading_attempts
+        as attempt
+
+    where
+      attempt.attempt_id =
+        current_link.attempt_id
+
+    for update;
+
+
+    if not found then
+      raise exception
+        'The current challenge link references a missing reading attempt';
+    end if;
+
+
+    if
+      current_link_attempt_status =
+        'active'
+    then
+      raise exception
+        'This challenge entry is already linked to an active reading attempt; finish, abandon, or replace that link explicitly';
+    end if;
+
+
+    prior_link_id :=
+      current_link.link_id;
+
+
+    update
+    public.library_reader_challenge_attempt_links
+
+    set
+      unlinked_at =
+        clock_timestamp()
+
+    where
+      link_id =
+        current_link.link_id;
+  end if;
+
+
+  -- ----------------------------------------------------------
+  -- Create the attempt
+  --
+  -- The existing attempt trigger determines whether this is a
+  -- first read or a reread.
+  -- ----------------------------------------------------------
+
+  insert into
+  public.library_reader_reading_attempts
+  (
+    user_id,
+    reader_id,
+    catalog_key
+  )
+  values
+  (
+    caller_user_id,
+    clean_reader_id,
+    clean_catalog_key
+  )
+
+  returning
+    *
+
+  into
+    new_attempt;
+
+
+  -- ----------------------------------------------------------
+  -- Link the new attempt to the challenge entry
+  --
+  -- If this insert fails, PostgreSQL rolls back both the attempt
+  -- creation and the earlier unlink.
+  -- ----------------------------------------------------------
+
+  insert into
+  public.library_reader_challenge_attempt_links
+  (
+    user_id,
+    reader_id,
+    challenge_id,
+    challenge_entry_id,
+    catalog_key,
+    attempt_id
+  )
+  values
+  (
+    caller_user_id,
+    clean_reader_id,
+    clean_challenge_id,
+    clean_challenge_entry_id,
+    clean_catalog_key,
+    new_attempt.attempt_id
+  )
+
+  returning
+    *
+
+  into
+    new_link;
+
+
+  return query
+
+  select
+    case
+      when prior_link_id is null
+      then
+        'started_and_linked'
+
+      else
+        'started_and_replaced'
+    end::text,
+
+    new_link.link_id,
+    new_attempt.attempt_id,
+    new_attempt.status,
+    new_attempt.is_reread,
+    new_attempt.current_page,
+    prior_link_id;
+end;
+$$;
+
+
+revoke all
+on function
+public.library_start_reading_for_challenge
+(
+  text,
+  text,
+  text,
+  text
+)
+from public, anon, authenticated;
+
+
+grant execute
+on function
+public.library_start_reading_for_challenge
+(
+  text,
+  text,
+  text,
+  text
+)
+to authenticated;
+
+
+-- ============================================================
+-- 3. Replace a challenge entry's current attempt link
+-- ============================================================
+
+
+drop function if exists
+public.library_replace_challenge_attempt_link
+(
+  text,
+  text,
+  text,
+  text,
+  uuid
+);
+
+
+create function
+public.library_replace_challenge_attempt_link
+(
+  p_reader_id text,
+  p_challenge_id text,
+  p_challenge_entry_id text,
+  p_catalog_key text,
+  p_attempt_id uuid
+)
+returns table
+(
+  action_name text,
+  result_link_id uuid,
+  result_attempt_id uuid,
+  result_attempt_status text,
+  result_is_reread boolean,
+  result_current_page integer,
+  previous_link_id uuid
+)
+language plpgsql
+security definer
+set search_path = pg_catalog
+as $$
+declare
+  household_user_id constant uuid :=
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid;
+
+  caller_user_id uuid;
+
+  clean_reader_id text;
+
+  clean_challenge_id text;
+
+  clean_challenge_entry_id text;
+
+  clean_catalog_key text;
+
+  target_attempt
+    public.library_reader_reading_attempts%rowtype;
+
+  current_link
+    public.library_reader_challenge_attempt_links%rowtype;
+
+  new_link
+    public.library_reader_challenge_attempt_links%rowtype;
+
+  prior_link_id uuid;
+begin
+  -- ----------------------------------------------------------
+  -- Authenticate the household caller
+  -- ----------------------------------------------------------
+
+  caller_user_id :=
+    auth.uid();
+
+
+  if caller_user_id is null then
+    raise exception
+      'A household session is required';
+  end if;
+
+
+  if
+    caller_user_id
+      is distinct from
+    household_user_id
+  then
+    raise exception
+      'This account cannot manage household challenge activity';
+  end if;
+
+
+  -- ----------------------------------------------------------
+  -- Normalize and validate identifiers
+  -- ----------------------------------------------------------
+
+  clean_reader_id :=
+    lower(
+      btrim(
+        coalesce(
+          p_reader_id,
+          ''
+        )
+      )
+    );
+
+
+  clean_challenge_id :=
+    btrim(
+      coalesce(
+        p_challenge_id,
+        ''
+      )
+    );
+
+
+  clean_challenge_entry_id :=
+    btrim(
+      coalesce(
+        p_challenge_entry_id,
+        ''
+      )
+    );
+
+
+  clean_catalog_key :=
+    btrim(
+      coalesce(
+        p_catalog_key,
+        ''
+      )
+    );
+
+
+  if
+    clean_reader_id not in
+    (
+      'cj',
+      'jc'
+    )
+  then
+    raise exception
+      'Unsupported library reader: %',
+      clean_reader_id;
+  end if;
+
+
+  if clean_challenge_id = '' then
+    raise exception
+      'A challenge ID is required';
+  end if;
+
+
+  if clean_challenge_entry_id = '' then
+    raise exception
+      'A challenge entry ID is required';
+  end if;
+
+
+  if clean_catalog_key = '' then
+    raise exception
+      'A catalog key is required';
+  end if;
+
+
+  if p_attempt_id is null then
+    raise exception
+      'A replacement reading attempt ID is required';
+  end if;
+
+
+  -- ----------------------------------------------------------
+  -- Serialize actions for this challenge entry and reader/book
+  -- ----------------------------------------------------------
+
+  perform
+    pg_catalog.pg_advisory_xact_lock
+    (
+      pg_catalog.hashtextextended
+      (
+        caller_user_id::text
+          || '|challenge-entry|'
+          || clean_reader_id
+          || '|'
+          || clean_challenge_id
+          || '|'
+          || clean_challenge_entry_id,
+
+        0
+      )
+    );
+
+
+  perform
+    pg_catalog.pg_advisory_xact_lock
+    (
+      pg_catalog.hashtextextended
+      (
+        caller_user_id::text
+          || '|reader-book|'
+          || clean_reader_id
+          || '|'
+          || clean_catalog_key,
+
+        0
+      )
+    );
+
+
+  -- ----------------------------------------------------------
+  -- Resolve and validate the replacement attempt
+  -- ----------------------------------------------------------
+
+  select
+    attempt.*
+
+  into
+    target_attempt
+
+  from
+    public.library_reader_reading_attempts
+      as attempt
+
+  where
+    attempt.attempt_id =
+      p_attempt_id
+
+  for update;
+
+
+  if not found then
+    raise exception
+      'Reading attempt % does not exist',
+      p_attempt_id;
+  end if;
+
+
+  if
+    target_attempt.user_id
+      is distinct from
+    caller_user_id
+  then
+    raise exception
+      'The replacement attempt belongs to a different user';
+  end if;
+
+
+  if
+    target_attempt.reader_id
+      is distinct from
+    clean_reader_id
+  then
+    raise exception
+      'The replacement attempt belongs to a different reader';
+  end if;
+
+
+  if
+    target_attempt.catalog_key
+      is distinct from
+    clean_catalog_key
+  then
+    raise exception
+      'The replacement attempt belongs to a different catalog book';
+  end if;
+
+
+  -- ----------------------------------------------------------
+  -- Resolve the challenge entry's current link
+  -- ----------------------------------------------------------
+
+  select
+    link.*
+
+  into
+    current_link
+
+  from
+    public.library_reader_challenge_attempt_links
+      as link
+
+  where
+    link.user_id =
+      caller_user_id
+
+    and
+
+    link.reader_id =
+      clean_reader_id
+
+    and
+
+    link.challenge_id =
+      clean_challenge_id
+
+    and
+
+    link.challenge_entry_id =
+      clean_challenge_entry_id
+
+    and
+
+    link.unlinked_at is null
+
+  for update;
+
+
+  if not found then
+    raise exception
+      'This challenge entry does not currently have an attempt link';
+  end if;
+
+
+  if
+    current_link.attempt_id =
+      target_attempt.attempt_id
+  then
+    return query
+
+    select
+      'already_linked'::text,
+      current_link.link_id,
+      target_attempt.attempt_id,
+      target_attempt.status,
+      target_attempt.is_reread,
+      target_attempt.current_page,
+      null::uuid;
+
+    return;
+  end if;
+
+
+  prior_link_id :=
+    current_link.link_id;
+
+
+  -- ----------------------------------------------------------
+  -- Preserve the old link, then create the replacement
+  -- ----------------------------------------------------------
+
+  update
+  public.library_reader_challenge_attempt_links
+
+  set
+    unlinked_at =
+      clock_timestamp()
+
+  where
+    link_id =
+      current_link.link_id;
+
+
+  insert into
+  public.library_reader_challenge_attempt_links
+  (
+    user_id,
+    reader_id,
+    challenge_id,
+    challenge_entry_id,
+    catalog_key,
+    attempt_id
+  )
+  values
+  (
+    caller_user_id,
+    clean_reader_id,
+    clean_challenge_id,
+    clean_challenge_entry_id,
+    clean_catalog_key,
+    target_attempt.attempt_id
+  )
+
+  returning
+    *
+
+  into
+    new_link;
+
+
+  return query
+
+  select
+    'replaced_link'::text,
+    new_link.link_id,
+    target_attempt.attempt_id,
+    target_attempt.status,
+    target_attempt.is_reread,
+    target_attempt.current_page,
+    prior_link_id;
+end;
+$$;
+
+
+revoke all
+on function
+public.library_replace_challenge_attempt_link
+(
+  text,
+  text,
+  text,
+  text,
+  uuid
+)
+from public, anon, authenticated;
+
+
+grant execute
+on function
+public.library_replace_challenge_attempt_link
+(
+  text,
+  text,
+  text,
+  text,
+  uuid
+)
+to authenticated;
+
+
+commit;

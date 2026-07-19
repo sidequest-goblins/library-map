@@ -1,0 +1,689 @@
+-- ============================================================
+-- MyLibrary 93 - Verify Challenge Attempt Actions
+--
+-- Read-only verification for:
+--
+--   public.library_link_current_read_to_challenge
+--   public.library_start_reading_for_challenge
+--   public.library_replace_challenge_attempt_link
+--
+-- Expected:
+--
+--   1. All three exact function signatures exist.
+--   2. All three are PL/pgSQL SECURITY DEFINER functions.
+--   3. All three lock search_path to pg_catalog.
+--   4. authenticated may execute them.
+--   5. anon and PUBLIC may not execute them.
+--   6. Required authentication, locking, and action-specific
+--      guards are present.
+--   7. Existing attempt/link integrity checks return zero.
+--
+-- This query performs no writes.
+-- ============================================================
+
+
+-- ============================================================
+-- 1. Exact function signatures exist
+-- ============================================================
+
+
+with expected_functions
+(
+  function_signature
+)
+as
+(
+  values
+  (
+    'public.library_link_current_read_to_challenge(text,text,text,text)'
+  ),
+  (
+    'public.library_start_reading_for_challenge(text,text,text,text)'
+  ),
+  (
+    'public.library_replace_challenge_attempt_link(text,text,text,text,uuid)'
+  )
+)
+
+select
+  function_signature,
+
+  to_regprocedure(
+    function_signature
+  ) is not null
+    as function_exists
+
+from
+  expected_functions
+
+order by
+  function_signature;
+
+
+-- Expected:
+--   3 rows
+--   function_exists = true for all rows
+
+
+-- ============================================================
+-- 2. Function security and configuration
+-- ============================================================
+
+
+with action_functions
+as
+(
+  select
+    p.oid,
+    n.nspname,
+    p.proname,
+    l.lanname,
+    p.prosecdef,
+    p.provolatile,
+    p.proconfig
+
+  from
+    pg_proc
+      as p
+
+    join
+    pg_namespace
+      as n
+      on n.oid = p.pronamespace
+
+    join
+    pg_language
+      as l
+      on l.oid = p.prolang
+
+  where
+    p.oid in
+    (
+      to_regprocedure(
+        'public.library_link_current_read_to_challenge(text,text,text,text)'
+      ),
+
+      to_regprocedure(
+        'public.library_start_reading_for_challenge(text,text,text,text)'
+      ),
+
+      to_regprocedure(
+        'public.library_replace_challenge_attempt_link(text,text,text,text,uuid)'
+      )
+    )
+)
+
+select
+  nspname
+    as function_schema,
+
+  proname
+    as function_name,
+
+  lanname
+    as language_name,
+
+  prosecdef
+    as security_definer,
+
+  provolatile =
+    'v'
+    as is_volatile,
+
+  coalesce(
+    proconfig,
+    array[]::text[]
+  ) @> array[
+    'search_path=pg_catalog'
+  ]::text[]
+    as search_path_locked,
+
+  proconfig
+    as raw_function_config
+
+from
+  action_functions
+
+order by
+  proname;
+
+
+-- Expected:
+--   3 rows
+--   language_name = plpgsql
+--   security_definer = true
+--   is_volatile = true
+--   search_path_locked = true
+
+
+-- ============================================================
+-- 3. Function execution privileges
+-- ============================================================
+
+
+with action_functions
+as
+(
+  select
+    p.oid,
+    p.proname,
+    p.proacl,
+    p.proowner
+
+  from
+    pg_proc
+      as p
+
+    join
+    pg_namespace
+      as n
+      on n.oid = p.pronamespace
+
+  where
+    p.oid in
+    (
+      to_regprocedure(
+        'public.library_link_current_read_to_challenge(text,text,text,text)'
+      ),
+
+      to_regprocedure(
+        'public.library_start_reading_for_challenge(text,text,text,text)'
+      ),
+
+      to_regprocedure(
+        'public.library_replace_challenge_attempt_link(text,text,text,text,uuid)'
+      )
+    )
+)
+
+select
+  proname
+    as function_name,
+
+  has_function_privilege(
+    'authenticated',
+    oid,
+    'EXECUTE'
+  )
+    as authenticated_can_execute,
+
+  has_function_privilege(
+    'anon',
+    oid,
+    'EXECUTE'
+  )
+    as anon_can_execute,
+
+  exists
+  (
+    select
+      1
+
+    from
+      aclexplode
+      (
+        coalesce
+        (
+          proacl,
+          acldefault(
+            'f',
+            proowner
+          )
+        )
+      )
+        as function_acl
+
+    where
+      function_acl.grantee = 0
+
+      and
+
+      function_acl.privilege_type =
+        'EXECUTE'
+  )
+    as public_can_execute
+
+from
+  action_functions
+
+order by
+  proname;
+
+
+-- Expected:
+--   authenticated_can_execute = true
+--   anon_can_execute = false
+--   public_can_execute = false
+
+
+-- ============================================================
+-- 4. Required implementation guards
+-- ============================================================
+
+
+with action_functions
+as
+(
+  select
+    p.proname,
+
+    lower(
+      pg_get_functiondef(
+        p.oid
+      )
+    )
+      as function_definition
+
+  from
+    pg_proc
+      as p
+
+    join
+    pg_namespace
+      as n
+      on n.oid = p.pronamespace
+
+  where
+    p.oid in
+    (
+      to_regprocedure(
+        'public.library_link_current_read_to_challenge(text,text,text,text)'
+      ),
+
+      to_regprocedure(
+        'public.library_start_reading_for_challenge(text,text,text,text)'
+      ),
+
+      to_regprocedure(
+        'public.library_replace_challenge_attempt_link(text,text,text,text,uuid)'
+      )
+    )
+)
+
+select
+  proname
+    as function_name,
+
+  function_definition
+    like '%auth.uid()%'
+    as checks_authenticated_user,
+
+  function_definition
+    like
+      '%2ffd4a75-0f05-41ca-bd69-fa035ee57e22%'
+    as locks_household_user,
+
+  function_definition
+    like
+      '%pg_advisory_xact_lock%'
+    as uses_transaction_locks,
+
+  function_definition
+    like
+      '%|challenge-entry|%'
+    as locks_challenge_entry,
+
+  function_definition
+    like
+      '%|reader-book|%'
+    as locks_reader_book,
+
+  case
+    when
+      proname =
+        'library_link_current_read_to_challenge'
+    then
+      function_definition
+        like
+          '%no active reading attempt exists%'
+
+      and
+
+      function_definition
+        like
+          '%already_linked%'
+
+      and
+
+      function_definition
+        like
+          '%already linked to another reading attempt%'
+
+
+    when
+      proname =
+        'library_start_reading_for_challenge'
+    then
+      function_definition
+        like
+          '%an active reading attempt already exists%'
+
+      and
+
+      function_definition
+        like
+          '%current_link_attempt_status%'
+
+      and
+
+      function_definition
+        like
+          '%already linked to an active reading attempt%'
+
+      and
+
+      function_definition
+        like
+          '%insert into%library_reader_reading_attempts%'
+
+      and
+
+      function_definition
+        like
+          '%insert into%library_reader_challenge_attempt_links%'
+
+
+    when
+      proname =
+        'library_replace_challenge_attempt_link'
+    then
+      function_definition
+        like
+          '%replacement attempt belongs to a different user%'
+
+      and
+
+      function_definition
+        like
+          '%replacement attempt belongs to a different reader%'
+
+      and
+
+      function_definition
+        like
+          '%replacement attempt belongs to a different catalog book%'
+
+      and
+
+      function_definition
+        like
+          '%replaced_link%'
+
+
+    else
+      false
+  end
+    as action_specific_guards_present
+
+from
+  action_functions
+
+order by
+  proname;
+
+
+-- Expected:
+--   3 rows
+--   every boolean = true
+
+
+-- ============================================================
+-- 5. Return signatures
+-- ============================================================
+
+
+select
+  p.proname
+    as function_name,
+
+  pg_get_function_identity_arguments(
+    p.oid
+  )
+    as identity_arguments,
+
+  pg_get_function_result(
+    p.oid
+  )
+    as return_type
+
+from
+  pg_proc
+    as p
+
+  join
+  pg_namespace
+    as n
+    on n.oid = p.pronamespace
+
+where
+  p.oid in
+  (
+    to_regprocedure(
+      'public.library_link_current_read_to_challenge(text,text,text,text)'
+    ),
+
+    to_regprocedure(
+      'public.library_start_reading_for_challenge(text,text,text,text)'
+    ),
+
+    to_regprocedure(
+      'public.library_replace_challenge_attempt_link(text,text,text,text,uuid)'
+    )
+  )
+
+order by
+  p.proname;
+
+
+-- Expected return columns:
+--
+--   action_name text
+--   result_link_id uuid
+--   result_attempt_id uuid
+--   result_attempt_status text
+--   result_is_reread boolean
+--   result_current_page integer
+--   previous_link_id uuid
+
+
+-- ============================================================
+-- 6. Duplicate current challenge links
+-- ============================================================
+
+
+select
+  count(*)
+    as duplicate_current_link_groups
+
+from
+(
+  select
+    user_id,
+    reader_id,
+    challenge_id,
+    challenge_entry_id
+
+  from
+    public.library_reader_challenge_attempt_links
+
+  where
+    unlinked_at is null
+
+  group by
+    user_id,
+    reader_id,
+    challenge_id,
+    challenge_entry_id
+
+  having
+    count(*) > 1
+)
+  as duplicate_links;
+
+
+-- Expected: 0
+
+
+-- ============================================================
+-- 7. Duplicate active reading attempts
+-- ============================================================
+
+
+select
+  count(*)
+    as duplicate_active_attempt_groups
+
+from
+(
+  select
+    user_id,
+    reader_id,
+    catalog_key
+
+  from
+    public.library_reader_reading_attempts
+
+  where
+    status =
+      'active'
+
+  group by
+    user_id,
+    reader_id,
+    catalog_key
+
+  having
+    count(*) > 1
+)
+  as duplicate_attempts;
+
+
+-- Expected: 0
+
+
+-- ============================================================
+-- 8. Challenge links referencing missing attempts
+-- ============================================================
+
+
+select
+  count(*)
+    as links_missing_attempts
+
+from
+  public.library_reader_challenge_attempt_links
+    as link
+
+  left join
+  public.library_reader_reading_attempts
+    as attempt
+    on attempt.attempt_id =
+      link.attempt_id
+
+where
+  attempt.attempt_id is null;
+
+
+-- Expected: 0
+
+
+-- ============================================================
+-- 9. Challenge-link identity mismatches
+-- ============================================================
+
+
+select
+  count(*)
+    as link_attempt_identity_mismatches
+
+from
+  public.library_reader_challenge_attempt_links
+    as link
+
+  join
+  public.library_reader_reading_attempts
+    as attempt
+    on attempt.attempt_id =
+      link.attempt_id
+
+where
+  link.user_id
+    is distinct from
+  attempt.user_id
+
+  or
+
+  link.reader_id
+    is distinct from
+  attempt.reader_id
+
+  or
+
+  link.catalog_key
+    is distinct from
+  attempt.catalog_key;
+
+
+-- Expected: 0
+
+
+-- ============================================================
+-- 10. Invalid challenge-link timestamps
+-- ============================================================
+
+
+select
+  count(*)
+    as invalid_link_timestamps
+
+from
+  public.library_reader_challenge_attempt_links
+
+where
+  unlinked_at is not null
+
+  and
+
+  unlinked_at < linked_at;
+
+
+-- Expected: 0
+
+
+-- ============================================================
+-- 11. Current link summary by attempt status
+-- ============================================================
+
+
+select
+  attempt.status
+    as linked_attempt_status,
+
+  count(*)
+    as current_link_count
+
+from
+  public.library_reader_challenge_attempt_links
+    as link
+
+  join
+  public.library_reader_reading_attempts
+    as attempt
+    on attempt.attempt_id =
+      link.attempt_id
+
+where
+  link.unlinked_at is null
+
+group by
+  attempt.status
+
+order by
+  attempt.status;
+
+
+-- Informational only.
+--
+-- Your existing backfilled challenge link will likely appear
+-- here under active unless that attempt has since been finished
+-- or abandoned.
