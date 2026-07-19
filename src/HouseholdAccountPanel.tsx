@@ -29,33 +29,39 @@ type HouseholdAccountPanelProps = {
     LibraryStateSeedPreview | null;
 
   onSeedLibraryState: () => void;
+
   isSeedingLibraryState: boolean;
-  libraryStateSeedFeedback: LibraryStateSeedFeedback;
+
+  libraryStateSeedFeedback:
+    LibraryStateSeedFeedback;
 };
 
 type AuthFeedback = {
-  kind: "success" | "error";
+  kind: "error";
   message: string;
 };
 
+const HOUSEHOLD_USERNAME =
+  "CJade";
+
+const HOUSEHOLD_LOGIN_EMAIL =
+  import.meta.env
+    .VITE_HOUSEHOLD_LOGIN_EMAIL
+    ?.trim() ?? "";
+
 export default function HouseholdAccountPanel({
   onSessionChange,
-  libraryStateLoadStatus,
-  libraryStateRecordCount,
-  libraryStateLoadError,
-  libraryStateSeedPreview,
-  onSeedLibraryState,
-  isSeedingLibraryState,
-  libraryStateSeedFeedback,
 }: HouseholdAccountPanelProps) {
   const [session, setSession] =
     useState<Session | null>(null);
 
-  const [isCheckingSession, setIsCheckingSession] =
-    useState(true);
+  const [
+    isCheckingSession,
+    setIsCheckingSession,
+  ] = useState(true);
 
-  const [email, setEmail] =
-    useState("");
+  const [username, setUsername] =
+    useState(HOUSEHOLD_USERNAME);
 
   const [password, setPassword] =
     useState("");
@@ -71,13 +77,15 @@ export default function HouseholdAccountPanel({
 
     void supabase.auth.getSession().then(
       ({ data, error }) => {
-        if (!isActive) return;
+        if (!isActive) {
+          return;
+        }
 
         if (error) {
           setFeedback({
             kind: "error",
             message:
-              `Could not check the household session: ${error.message}`,
+              `Could not check the saved sign-in: ${error.message}`,
           });
         }
 
@@ -91,7 +99,9 @@ export default function HouseholdAccountPanel({
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
       (_event, nextSession) => {
-        if (!isActive) return;
+        if (!isActive) {
+          return;
+        }
 
         setSession(nextSession);
         onSessionChange(nextSession);
@@ -110,13 +120,40 @@ export default function HouseholdAccountPanel({
   ) {
     event.preventDefault();
 
-    const normalizedEmail = email.trim();
+    const normalizedUsername =
+      username.trim().toLowerCase();
 
-    if (!normalizedEmail || !password) {
+    const expectedUsername =
+      HOUSEHOLD_USERNAME.toLowerCase();
+
+    if (!normalizedUsername || !password) {
       setFeedback({
         kind: "error",
         message:
-          "Enter the household email and password.",
+          "Enter the username and password.",
+      });
+
+      return;
+    }
+
+    if (
+      normalizedUsername !==
+      expectedUsername
+    ) {
+      setFeedback({
+        kind: "error",
+        message:
+          "The username or password is incorrect.",
+      });
+
+      return;
+    }
+
+    if (!HOUSEHOLD_LOGIN_EMAIL) {
+      setFeedback({
+        kind: "error",
+        message:
+          "Household login is not configured in this app build.",
       });
 
       return;
@@ -128,25 +165,26 @@ export default function HouseholdAccountPanel({
     try {
       const { error } =
         await supabase.auth.signInWithPassword({
-          email: normalizedEmail,
+          email: HOUSEHOLD_LOGIN_EMAIL,
           password,
         });
 
       if (error) {
         setFeedback({
           kind: "error",
-          message: `Login failed: ${error.message}`,
+          message:
+            "The username or password is incorrect.",
         });
 
         return;
       }
 
-      setPassword("");
+      setUsername(
+        HOUSEHOLD_USERNAME
+      );
 
-      setFeedback({
-        kind: "success",
-        message: "Household login succeeded.",
-      });
+      setPassword("");
+      setFeedback(null);
     } catch (error) {
       console.error(
         "Unexpected household login error.",
@@ -181,10 +219,12 @@ export default function HouseholdAccountPanel({
         return;
       }
 
-      setFeedback({
-        kind: "success",
-        message: "Signed out of household sync.",
-      });
+      setUsername(
+        HOUSEHOLD_USERNAME
+      );
+
+      setPassword("");
+      setFeedback(null);
     } catch (error) {
       console.error(
         "Unexpected household sign-out error.",
@@ -203,10 +243,12 @@ export default function HouseholdAccountPanel({
 
   if (isCheckingSession) {
     return (
-      <section className="householdAccountPanel">
-        <div className="householdAccountCopy">
-          <strong>Household sync</strong>
-          <span>Checking saved sign-in…</span>
+      <section
+        className="householdAccountPanel householdAccountPanelSignedIn"
+        aria-label="Checking household sign-in"
+      >
+        <div className="householdAccountIdentity">
+          <strong>CJade…</strong>
         </div>
       </section>
     );
@@ -219,121 +261,44 @@ export default function HouseholdAccountPanel({
           ? "householdAccountPanel householdAccountPanelSignedIn"
           : "householdAccountPanel"
       }
-      aria-label="Household Supabase account"
+      aria-label="Household account"
     >
       {session ? (
         <>
-          <div className="householdAccountCopy">
-            <strong>Household sync ✓</strong>
-
-            <span>
-              Signed in as{" "}
-              {session.user.email ??
-                "household account"}
-            </span>
-
-            <span
-              className={
-                libraryStateLoadStatus === "error"
-                  ? "householdAccountState householdAccountStateError"
-                  : "householdAccountState"
-              }
-              aria-live="polite"
-            >
-              {libraryStateLoadStatus === "loading"
-                ? "Loading shared library state…"
-                : libraryStateLoadStatus === "error"
-                  ? `Shared state failed to load: ${libraryStateLoadError}`
-                  : `${libraryStateRecordCount} shared ${
-                      libraryStateRecordCount === 1
-                        ? "record"
-                        : "records"
-                    } loaded`}
-            </span>
-
-            {libraryStateLoadStatus === "ready" &&
-            libraryStateRecordCount === 0 &&
-            libraryStateSeedPreview ? (
-              <span className="householdAccountSeedPreview">
-                Seed preview:{" "}
-                {libraryStateSeedPreview.totalRows} candidate{" "}
-                {libraryStateSeedPreview.totalRows === 1
-                  ? "record"
-                  : "records"}
-                {" · "}
-                {libraryStateSeedPreview.readRows} read
-                {" · "}
-                {libraryStateSeedPreview.inProgressRows} in progress
-                {" · "}
-                {libraryStateSeedPreview.cjRows} CJ
-                {" · "}
-                {libraryStateSeedPreview.jcRows} JC
-                {" · "}
-                {libraryStateSeedPreview.skippedMissingCatalogKey} skipped
-              </span>
-            ) : null}
+          <div className="householdAccountIdentity">
+            <strong>CJade ✓</strong>
           </div>
 
-          <div className="householdAccountActions">
-            {libraryStateLoadStatus === "ready" &&
-            libraryStateRecordCount === 0 &&
-            libraryStateSeedPreview ? (
-              <button
-                type="button"
-                className="householdAccountButton"
-                disabled={
-                  isSubmitting ||
-                  isSeedingLibraryState ||
-                  libraryStateSeedPreview.totalRows === 0 ||
-                  libraryStateSeedPreview
-                    .skippedMissingCatalogKey > 0
-                }
-                onClick={
-                  onSeedLibraryState
-                }
-              >
-                {isSeedingLibraryState
-                  ? `Seeding ${libraryStateSeedPreview.totalRows}…`
-                  : "Seed shared state"}
-              </button>
-            ) : null}
-
-            <button
-              type="button"
-              className="householdAccountButton"
-              disabled={
-                isSubmitting ||
-                isSeedingLibraryState
-              }
-              onClick={handleSignOut}
-            >
-              {isSubmitting
-                ? "Signing out…"
-                : "Sign out"}
-            </button>
-          </div>
+          <button
+            type="button"
+            className="householdAccountButton"
+            disabled={isSubmitting}
+            onClick={handleSignOut}
+          >
+            {isSubmitting
+              ? "Signing out…"
+              : "Sign out"}
+          </button>
         </>
       ) : (
         <form
           className="householdAccountForm"
           onSubmit={handleSignIn}
         >
-          <div className="householdAccountCopy">
-            <strong>Household sync</strong>
-            <span>
-              Sign in to load shared library state.
-            </span>
-          </div>
-
           <label className="householdAccountField">
-            <span>Email</span>
+            <span>Username</span>
 
             <input
-              type="email"
-              autoComplete="email"
-              value={email}
+              type="text"
+              autoComplete="username"
+              autoCapitalize="none"
+              spellCheck={false}
+              value={username}
               onChange={(event) => {
-                setEmail(event.target.value);
+                setUsername(
+                  event.target.value
+                );
+
                 setFeedback(null);
               }}
             />
@@ -347,7 +312,10 @@ export default function HouseholdAccountPanel({
               autoComplete="current-password"
               value={password}
               onChange={(event) => {
-                setPassword(event.target.value);
+                setPassword(
+                  event.target.value
+                );
+
                 setFeedback(null);
               }}
             />
@@ -365,22 +333,10 @@ export default function HouseholdAccountPanel({
         </form>
       )}
 
-      {session &&
-      libraryStateSeedFeedback ? (
-        <p
-          className={`householdAccountFeedback householdAccountFeedback${libraryStateSeedFeedback.kind}`}
-          role="status"
-        >
-          {
-            libraryStateSeedFeedback.message
-          }
-        </p>
-      ) : null}
-      
       {feedback ? (
         <p
-          className={`householdAccountFeedback householdAccountFeedback${feedback.kind}`}
-          role="status"
+          className="householdAccountFeedback householdAccountFeedbackerror"
+          role="alert"
         >
           {feedback.message}
         </p>

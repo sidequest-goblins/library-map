@@ -1819,22 +1819,18 @@ select {
   background: rgba(169, 183, 141, 0.2);
 }
 
-.householdAccountCopy {
-  display: grid;
-  flex: 1 1 180px;
-  gap: 0.1rem;
+.householdAccountIdentity {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
   min-width: 0;
 }
 
-.householdAccountCopy strong {
+.householdAccountIdentity strong {
   color: var(--greenDark);
   font-family: Georgia, "Times New Roman", serif;
-}
-
-.householdAccountCopy span {
-  overflow-wrap: anywhere;
-  color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 1rem;
+  white-space: nowrap;
 }
 
 .householdAccountForm {
@@ -1896,16 +1892,9 @@ select {
 .householdAccountFeedback {
   flex: 1 1 100%;
   margin: 0;
+  color: #8a3429;
   font-size: 0.82rem;
   font-weight: 700;
-}
-
-.householdAccountFeedbacksuccess {
-  color: var(--greenDark);
-}
-
-.householdAccountFeedbackerror {
-  color: #8a3429;
 }
 
 @media (min-width: 720px) {
@@ -1917,37 +1906,18 @@ select {
 
   .householdAccountPanel {
     flex: 0 1 auto;
-    max-width: 760px;
+    max-width: 680px;
+  }
+
+  .householdAccountPanelSignedIn {
+    min-width: 215px;
   }
 
   .householdAccountForm {
     grid-template-columns:
-      minmax(170px, 1fr)
-      minmax(150px, 220px)
-      minmax(150px, 220px)
+      minmax(150px, 210px)
+      minmax(150px, 210px)
       auto;
     align-items: end;
   }
-}
-
-.householdAccountState {
-  color: var(--greenDark);
-  font-weight: 700;
-}
-
-.householdAccountStateError {
-  color: #8a3429;
-}
-
-.householdAccountSeedPreview {
-  color: var(--muted);
-  font-size: 0.78rem;
-  line-height: 1.4;
-}
-
-.householdAccountActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: center;
 }
