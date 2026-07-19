@@ -7,11 +7,12 @@ Workbook convention:
 
 Each challenge sheet must contain:
 
-    Letter | Title | First | Last | Read | Current Page | Total Page
+    Letter | Title | First | Last
 
-The generator preserves workbook order and duplicate letters. It links entries
-against public/data/library-books.json through bookId, while retaining catalogKey
-when available for additional catalog metadata.
+Extra workbook columns are allowed but ignored. The generator preserves workbook
+order and duplicate letters, links entries against public/data/library-books.json,
+and takes total page counts from the matched library book. Reading progress and
+completion are supplied by Supabase rather than CHALLENGES.xlsx.
 
 This script intentionally uses only Python's standard library.
 """
@@ -32,7 +33,7 @@ from typing import Any, Iterable
 from xml.etree import ElementTree as ET
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 SHEET_NAME_SEPARATOR = " - "
 LEADING_ARTICLES = {"a", "an", "the"}
 TITLE_SUBTITLE_SEPARATORS = (
@@ -56,17 +57,6 @@ EXPECTED_HEADERS = {
         "last name",
         "author last",
         "author last name",
-    },
-    "read": {"read", "completed"},
-    "current_page": {
-        "current page",
-        "current pages",
-        "page",
-    },
-    "total_pages": {
-        "total page",
-        "total pages",
-        "pages",
     },
 }
 
@@ -1212,8 +1202,8 @@ def build_challenge_data(
             )
 
             identity_key = (
-                matched_book_id
-                or catalog_key
+                catalog_key
+                or matched_book_id
                 or slugify(
                     f"{author_last} "
                     f"{author_first} "
@@ -1266,32 +1256,17 @@ def build_challenge_data(
                     "catalogKey":
                         catalog_key,
                     "read":
-                        coerce_bool(
-                            value_at(
-                                values,
-                                headers[
-                                    "read"
-                                ],
-                            )
-                        ),
+                        False,
                     "currentPage":
-                        coerce_number(
-                            value_at(
-                                values,
-                                headers[
-                                    "current_page"
-                                ],
-                            )
-                        ),
+                        None,
                     "totalPages":
                         coerce_number(
-                            value_at(
-                                values,
-                                headers[
-                                    "total_pages"
-                                ],
+                            matched_book.get(
+                                "totalPages"
                             )
-                        ),
+                        )
+                        if matched_book
+                        else None,
                     "naturalTitleLetter":
                         natural_letter,
                     "wildcard":
