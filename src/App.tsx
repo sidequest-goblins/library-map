@@ -558,6 +558,47 @@ function formatReadingAttemptDate(
   ).format(date);
 }
 
+function getReadingAttemptStatusLabel(
+  attempt: LibraryReaderReadingAttempt
+): string {
+  switch (attempt.status) {
+    case "active":
+      return "Active";
+
+    case "completed":
+      return "Completed";
+
+    case "abandoned":
+      return "Cancelled";
+  }
+}
+
+function getReadingAttemptDateLabel(
+  attempt: LibraryReaderReadingAttempt
+): string {
+  if (
+    attempt.status === "completed" &&
+    attempt.completed_at
+  ) {
+    return `Finished ${formatReadingAttemptDate(
+      attempt.completed_at
+    )}`;
+  }
+
+  if (
+    attempt.status === "abandoned" &&
+    attempt.abandoned_at
+  ) {
+    return `Cancelled ${formatReadingAttemptDate(
+      attempt.abandoned_at
+    )}`;
+  }
+
+  return `Started ${formatReadingAttemptDate(
+    attempt.started_at
+  )}`;
+}
+
 async function clearAppCache() {
   if ("caches" in window) {
     const cacheNames = await caches.keys();
@@ -2083,7 +2124,7 @@ export default function App() {
           `${readerName}'s current read now counts for ${challengeName}.`;
       } else if (action === "replace") {
         successMessage =
-          `${readerName}'s current read now replaces the cancelled challenge attempt.`;
+          `${readerName}'s selected reading attempt now counts for ${challengeName}.`;
       } else {
         successMessage =
           `${readerName}'s challenge read started for ${challengeName}.`;
@@ -4167,41 +4208,64 @@ export default function App() {
                       let challengeActionLabel =
                         "";
 
-                      if (challengeActionsReady) {
-                        if (!currentChallengeLink) {
-                          if (activeBookAttempt) {
-                            challengeAction =
-                              "link";
+                      if (
+                        challengeActionsReady &&
+                        !currentChallengeLink
+                      ) {
+                        if (activeBookAttempt) {
+                          challengeAction =
+                            "link";
 
-                            challengeActionLabel =
-                              "Link current read";
-                          } else {
-                            challengeAction =
-                              "start";
+                          challengeActionLabel =
+                            "Link current read";
+                        } else {
+                          challengeAction =
+                            "start";
 
-                            challengeActionLabel =
-                              "Start for challenge";
-                          }
-                        } else if (
-                          linkedChallengeAttempt
-                            ?.status ===
-                          "abandoned"
-                        ) {
-                          if (activeBookAttempt) {
-                            challengeAction =
-                              "replace";
-
-                            challengeActionLabel =
-                              "Use current read";
-                          } else {
-                            challengeAction =
-                              "start";
-
-                            challengeActionLabel =
-                              "Start new challenge read";
-                          }
+                          challengeActionLabel =
+                            "Start for challenge";
                         }
                       }
+
+                      const alternativeChallengeAttempts =
+                        challengeReaderId &&
+                        selectedBookCatalogKey
+                          ? readingAttempts
+                              .filter(
+                                (attempt) =>
+                                  attempt.reader_id ===
+                                    challengeReaderId &&
+                                  attempt.catalog_key ===
+                                    selectedBookCatalogKey &&
+                                  attempt.attempt_id !==
+                                    currentChallengeLink
+                                      ?.attempt_id &&
+                                  attempt.status !==
+                                    "abandoned"
+                              )
+                              .sort(
+                                (
+                                  firstAttempt,
+                                  secondAttempt
+                                ) =>
+                                  new Date(
+                                    secondAttempt.started_at
+                                  ).getTime() -
+                                  new Date(
+                                    firstAttempt.started_at
+                                  ).getTime()
+                              )
+                          : [];
+
+                      const canStartNewChallengeRead =
+                        Boolean(
+                          challengeActionsReady &&
+                            currentChallengeLink &&
+                            linkedChallengeAttempt &&
+                            linkedChallengeAttempt.status !==
+                              "active" &&
+                            !activeBookAttempt
+                        );
 
                       const challengeLinkNote =
                         linkedChallengeAttempt
@@ -4297,6 +4361,238 @@ export default function App() {
                             </p>
                           ) : null}
 
+                          {currentChallengeLink &&
+                          challengeReaderId ? (
+                            <details className="detailChallengeManage">
+                              <summary className="detailChallengeManageSummary">
+                                <span>
+                                  Manage challenge read
+                                </span>
+
+                                <span
+                                  className="detailChallengeManageChevron"
+                                  aria-hidden="true"
+                                >
+                                  ⌄
+                                </span>
+                              </summary>
+
+                              <div className="detailChallengeManageContent">
+                                <p className="detailChallengeManageNote">
+                                  Changing the link
+                                  keeps the old reading
+                                  attempt and link in
+                                  history. It only
+                                  changes which read
+                                  counts for this
+                                  challenge entry.
+                                </p>
+
+                                <div className="detailChallengeManageCurrent">
+                                  <span className="detailChallengeManageEyebrow">
+                                    Currently linked
+                                  </span>
+
+                                  {linkedChallengeAttempt ? (
+                                    <>
+                                      <strong className="detailChallengeManageTitle">
+                                        {linkedChallengeAttempt
+                                          .is_reread
+                                          ? "Reread"
+                                          : "First read"}
+                                        {" · "}
+                                        {getReadingAttemptStatusLabel(
+                                          linkedChallengeAttempt
+                                        )}
+                                      </strong>
+
+                                      <span className="detailChallengeManageMeta">
+                                        {getReadingAttemptDateLabel(
+                                          linkedChallengeAttempt
+                                        )}
+
+                                        {(linkedChallengeAttempt
+                                          .current_page ??
+                                          0) > 0
+                                          ? ` · Page ${linkedChallengeAttempt.current_page?.toLocaleString()}`
+                                          : ""}
+                                      </span>
+                                    </>
+                                  ) : (
+                                    <strong className="detailChallengeManageTitle">
+                                      Linked attempt
+                                      unavailable
+                                    </strong>
+                                  )}
+                                </div>
+
+                                <div className="detailChallengeManageOptions">
+                                  <span className="detailChallengeManageEyebrow">
+                                    Other reads for
+                                    this book
+                                  </span>
+
+                                  {alternativeChallengeAttempts.length >
+                                  0 ? (
+                                    <div className="detailChallengeAttemptOptions">
+                                      {alternativeChallengeAttempts.map(
+                                        (
+                                          alternativeAttempt
+                                        ) => (
+                                          <article
+                                            key={
+                                              alternativeAttempt.attempt_id
+                                            }
+                                            className="detailChallengeAttemptOption"
+                                          >
+                                            <div className="detailChallengeAttemptOptionCopy">
+                                              <strong>
+                                                {alternativeAttempt
+                                                  .is_reread
+                                                  ? "Reread"
+                                                  : "First read"}
+                                                {" · "}
+                                                {getReadingAttemptStatusLabel(
+                                                  alternativeAttempt
+                                                )}
+                                              </strong>
+
+                                              <span>
+                                                {getReadingAttemptDateLabel(
+                                                  alternativeAttempt
+                                                )}
+
+                                                {(alternativeAttempt
+                                                  .current_page ??
+                                                  0) >
+                                                0
+                                                  ? ` · Page ${alternativeAttempt.current_page?.toLocaleString()}`
+                                                  : ""}
+                                              </span>
+                                            </div>
+
+                                            <button
+                                              type="button"
+                                              className="detailChallengeManageUseButton"
+                                              disabled={
+                                                actionIsSaving ||
+                                                challengeAttemptSavingKey !==
+                                                  null ||
+                                                readingAttemptSavingKey !==
+                                                  null ||
+                                                readStatusSavingKey !==
+                                                  null
+                                              }
+                                              onClick={() => {
+                                                void runChallengeAttemptAction(
+                                                  {
+                                                    action:
+                                                      "replace",
+
+                                                    challengeId:
+                                                      challenge.challengeId,
+
+                                                    challengeEntryId:
+                                                      entry.entryId,
+
+                                                    challengeName:
+                                                      challenge.name,
+
+                                                    readerId:
+                                                      challengeReaderId,
+
+                                                    readerName:
+                                                      reader.readerName,
+
+                                                    catalogKey:
+                                                      selectedBookCatalogKey,
+
+                                                    attemptId:
+                                                      alternativeAttempt.attempt_id,
+                                                  }
+                                                );
+                                              }}
+                                            >
+                                              {actionIsSaving
+                                                ? "Working…"
+                                                : alternativeAttempt.status ===
+                                                    "active"
+                                                  ? "Use active read"
+                                                  : "Use this read"}
+                                            </button>
+                                          </article>
+                                        )
+                                      )}
+                                    </div>
+                                  ) : (
+                                    <p className="detailChallengeManageEmpty">
+                                      No other active
+                                      or completed reads
+                                      are available for
+                                      this book.
+                                    </p>
+                                  )}
+                                </div>
+
+                                {canStartNewChallengeRead ? (
+                                  <div className="detailChallengeManageStart">
+                                    <p>
+                                      Start a fresh
+                                      reading attempt
+                                      and make it the
+                                      current challenge
+                                      read.
+                                    </p>
+
+                                    <button
+                                      type="button"
+                                      className="detailChallengeActionButton"
+                                      disabled={
+                                        actionIsSaving ||
+                                        challengeAttemptSavingKey !==
+                                          null ||
+                                        readingAttemptSavingKey !==
+                                          null ||
+                                        readStatusSavingKey !==
+                                          null
+                                      }
+                                      onClick={() => {
+                                        void runChallengeAttemptAction(
+                                          {
+                                            action:
+                                              "start",
+
+                                            challengeId:
+                                              challenge.challengeId,
+
+                                            challengeEntryId:
+                                              entry.entryId,
+
+                                            challengeName:
+                                              challenge.name,
+
+                                            readerId:
+                                              challengeReaderId,
+
+                                            readerName:
+                                              reader.readerName,
+
+                                            catalogKey:
+                                              selectedBookCatalogKey,
+                                          }
+                                        );
+                                      }}
+                                    >
+                                      {actionIsSaving
+                                        ? "Working…"
+                                        : "Start new challenge read"}
+                                    </button>
+                                  </div>
+                                ) : null}
+                              </div>
+                            </details>
+                          ) : null}
+
                           {challengeAction &&
                           challengeReaderId ? (
                             <div className="detailChallengeActions">
@@ -4335,13 +4631,6 @@ export default function App() {
 
                                       catalogKey:
                                         selectedBookCatalogKey,
-
-                                      attemptId:
-                                        challengeAction ===
-                                        "replace"
-                                          ? activeBookAttempt
-                                              ?.attempt_id
-                                          : undefined,
                                     }
                                   );
                                 }}

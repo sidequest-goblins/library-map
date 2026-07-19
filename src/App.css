@@ -1799,6 +1799,186 @@ select {
   line-height: 1.4;
 }
 
+.detailChallengeManage {
+  display: grid;
+  border-top: 1px solid rgba(76, 48, 30, 0.11);
+  padding-top: 0.15rem;
+}
+
+.detailChallengeManageSummary {
+  display: flex;
+  gap: 0.65rem;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.5rem;
+  color: var(--greenDark);
+  font-size: 0.78rem;
+  font-weight: 850;
+  cursor: pointer;
+  list-style: none;
+}
+
+.detailChallengeManageSummary::-webkit-details-marker {
+  display: none;
+}
+
+.detailChallengeManageSummary:focus-visible {
+  border-radius: 8px;
+  outline: 3px solid rgba(201, 154, 69, 0.28);
+  outline-offset: 3px;
+}
+
+.detailChallengeManageChevron {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  border: 1px solid rgba(82, 111, 69, 0.22);
+  border-radius: 999px;
+  background: rgba(169, 183, 141, 0.18);
+  font-size: 0.9rem;
+  line-height: 1;
+  transform: rotate(-90deg);
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease;
+}
+
+.detailChallengeManageSummary:hover
+  .detailChallengeManageChevron {
+  border-color: rgba(82, 111, 69, 0.4);
+  background: rgba(169, 183, 141, 0.3);
+}
+
+.detailChallengeManage[open]
+  .detailChallengeManageChevron {
+  transform: rotate(0deg);
+}
+
+.detailChallengeManageContent {
+  display: grid;
+  gap: 0.7rem;
+  padding-top: 0.65rem;
+}
+
+.detailChallengeManageNote {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.detailChallengeManageCurrent,
+.detailChallengeManageOptions,
+.detailChallengeManageStart {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.detailChallengeManageCurrent {
+  border: 1px solid rgba(82, 111, 69, 0.22);
+  border-radius: 12px;
+  padding: 0.65rem;
+  background: rgba(169, 183, 141, 0.14);
+}
+
+.detailChallengeManageEyebrow {
+  color: var(--greenDark);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.detailChallengeManageTitle {
+  color: var(--brownDark);
+  font-size: 0.86rem;
+}
+
+.detailChallengeManageMeta {
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.detailChallengeAttemptOptions {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.detailChallengeAttemptOption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgba(76, 48, 30, 0.12);
+  border-radius: 12px;
+  padding: 0.6rem;
+  background: rgba(255, 250, 240, 0.68);
+}
+
+.detailChallengeAttemptOptionCopy {
+  display: grid;
+  flex: 1 1 150px;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.detailChallengeAttemptOptionCopy strong {
+  color: var(--brownDark);
+  font-size: 0.82rem;
+}
+
+.detailChallengeAttemptOptionCopy span {
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.35;
+}
+
+.detailChallengeManageUseButton {
+  width: fit-content;
+  border: 1px solid rgba(82, 111, 69, 0.3);
+  border-radius: 10px;
+  padding: 0.42rem 0.62rem;
+  color: var(--greenDark);
+  background: rgba(169, 183, 141, 0.22);
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.detailChallengeManageUseButton:hover:not(:disabled) {
+  border-color: rgba(82, 111, 69, 0.5);
+  background: rgba(169, 183, 141, 0.36);
+}
+
+.detailChallengeManageUseButton:focus-visible {
+  outline: 3px solid rgba(201, 154, 69, 0.28);
+  outline-offset: 2px;
+}
+
+.detailChallengeManageUseButton:disabled {
+  cursor: wait;
+  opacity: 0.5;
+}
+
+.detailChallengeManageEmpty,
+.detailChallengeManageStart p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.detailChallengeManageStart {
+  border-top: 1px solid rgba(76, 48, 30, 0.1);
+  padding-top: 0.65rem;
+}
+
 .detailChallengeActions {
   display: flex;
   flex-wrap: wrap;
