@@ -134,6 +134,28 @@ type MapReturnPosition = {
   shelfScrollLeft?: number;
 };
 
+type BookDetailDisclosureKey =
+  | "readingActivity"
+  | "challengeProgress"
+  | "bookDetails";
+
+type BookDetailDisclosureState = {
+  bookId: string | null;
+  readingActivity: boolean;
+  readingActivityTouched: boolean;
+  challengeProgress: boolean;
+  bookDetails: boolean;
+};
+
+const EMPTY_BOOK_DETAIL_DISCLOSURE_STATE:
+  BookDetailDisclosureState = {
+    bookId: null,
+    readingActivity: false,
+    readingActivityTouched: false,
+    challengeProgress: false,
+    bookDetails: false,
+  };
+
 const SEARCH_PAGE_SIZE = 25;
 
 const EMPTY_WANTED_LISTS: WantedLists = {
@@ -861,6 +883,13 @@ export default function App() {
     setChallengeAttemptFeedback,
   ] = useState<ChallengeAttemptFeedback>(
     null
+  );
+
+  const [
+    bookDetailDisclosureState,
+    setBookDetailDisclosureState,
+  ] = useState<BookDetailDisclosureState>(
+    EMPTY_BOOK_DETAIL_DISCLOSURE_STATE
   );
 
   const [loadStatus, setLoadStatus] = useState<
@@ -3078,11 +3107,181 @@ export default function App() {
   }, [activeTab, selectedBook, mapDetailBooks]);
 
   useEffect(() => {
+    if (!selectedBook) {
+      setBookDetailDisclosureState(
+        (currentState) =>
+          currentState.bookId === null
+            ? currentState
+            : EMPTY_BOOK_DETAIL_DISCLOSURE_STATE
+      );
+
+      return;
+    }
+
+    const selectedCatalogKey =
+      selectedBook.catalogKey?.trim() ?? "";
+
+    const hasActiveReadingAttempt =
+      Boolean(
+        selectedCatalogKey &&
+          (
+            activeReadingAttemptByKey.has(
+              makeLibraryStateKey(
+                "cj",
+                selectedCatalogKey
+              )
+            ) ||
+            activeReadingAttemptByKey.has(
+              makeLibraryStateKey(
+                "jc",
+                selectedCatalogKey
+              )
+            )
+          )
+      );
+
+    setBookDetailDisclosureState(
+      (currentState) => {
+        if (
+          currentState.bookId ===
+          selectedBook.bookId
+        ) {
+          return currentState;
+        }
+
+        return {
+          bookId: selectedBook.bookId,
+
+          readingActivity:
+            hasActiveReadingAttempt,
+
+          readingActivityTouched:
+            false,
+
+          challengeProgress:
+            activeTab === "challenges",
+
+          bookDetails: false,
+        };
+      }
+    );
+  }, [
+    activeReadingAttemptByKey,
+    activeTab,
+    selectedBook,
+  ]);
+
+  useEffect(() => {
+    if (
+      !selectedBook ||
+      readingAttemptsLoadStatus !==
+        "ready"
+    ) {
+      return;
+    }
+
+    const selectedCatalogKey =
+      selectedBook.catalogKey?.trim() ?? "";
+
+    const hasActiveReadingAttempt =
+      Boolean(
+        selectedCatalogKey &&
+          (
+            activeReadingAttemptByKey.has(
+              makeLibraryStateKey(
+                "cj",
+                selectedCatalogKey
+              )
+            ) ||
+            activeReadingAttemptByKey.has(
+              makeLibraryStateKey(
+                "jc",
+                selectedCatalogKey
+              )
+            )
+          )
+      );
+
+    if (!hasActiveReadingAttempt) {
+      return;
+    }
+
+    setBookDetailDisclosureState(
+      (currentState) => {
+        if (
+          currentState.bookId !==
+            selectedBook.bookId ||
+          currentState
+            .readingActivityTouched ||
+          currentState.readingActivity
+        ) {
+          return currentState;
+        }
+
+        return {
+          ...currentState,
+          readingActivity: true,
+        };
+      }
+    );
+  }, [
+    activeReadingAttemptByKey,
+    readingAttemptsLoadStatus,
+    selectedBook,
+  ]);
+
+  useEffect(() => {
     setReadStatusError("");
     setReadingAttemptFeedback(null);
     setChallengeAttemptFeedback(null);
     setReadingAttemptPageDrafts({});
   }, [selectedBookId]);
+
+  function toggleBookDetailDisclosure(
+    section: BookDetailDisclosureKey
+  ) {
+    setBookDetailDisclosureState(
+      (currentState) => {
+        if (
+          currentState.bookId !==
+          selectedBookId
+        ) {
+          return currentState;
+        }
+
+        switch (section) {
+          case "readingActivity":
+            return {
+              ...currentState,
+
+              readingActivity:
+                !currentState
+                  .readingActivity,
+
+              readingActivityTouched:
+                true,
+            };
+
+          case "challengeProgress":
+            return {
+              ...currentState,
+
+              challengeProgress:
+                !currentState
+                  .challengeProgress,
+            };
+
+          case "bookDetails":
+            return {
+              ...currentState,
+
+              bookDetails:
+                !currentState.bookDetails,
+            };
+        }
+      }
+    );
+  }
 
   function renderBookDetail(
     backLabel: string,
@@ -3470,11 +3669,60 @@ export default function App() {
               ) : null}
             </section>
 
+            <section className="detailSection">
+              <p className="detailLabel">Location</p>
+
+              <dl className="detailGrid">
+                <div>
+                  <dt>Place</dt>
+                  <dd>{locationParts.join(" · ")}</dd>
+                </div>
+
+                {selectedBook.shelfPosition != null ? (
+                  <div>
+                    <dt>Position</dt>
+                    <dd>{selectedBook.shelfPosition}</dd>
+                  </div>
+                ) : null}
+              </dl>
+            </section>
+
             {householdSession ? (
-              <section className="detailSection">
-                <p className="detailLabel">
-                  Reading activity
-                </p>
+              <details
+                className="detailSection detailDisclosureSection"
+                open={
+                  bookDetailDisclosureState
+                    .readingActivity
+                }
+              >
+                <summary
+                  className="detailDisclosureSummary"
+                  onClick={(event) => {
+                    event.preventDefault();
+
+                    toggleBookDetailDisclosure(
+                      "readingActivity"
+                    );
+                  }}
+                >
+                  <span className="detailLabel">
+                    Reading activity
+                  </span>
+
+                  <span
+                    className={
+                      bookDetailDisclosureState
+                        .readingActivity
+                        ? "detailDisclosureChevron detailDisclosureChevronOpen"
+                        : "detailDisclosureChevron"
+                    }
+                    aria-hidden="true"
+                  >
+                    ⌄
+                  </span>
+                </summary>
+
+                <div className="detailDisclosureContent">
 
                 {readingAttemptsLoadStatus ===
                 "loading" ? (
@@ -3769,16 +4017,47 @@ export default function App() {
                     unavailable for this book.
                   </p>
                 )}
-              </section>
+                </div>
+              </details>
             ) : null}
 
             {selectedBookChallengeDetails.length > 0 ? (
-              <section className="detailSection">
-                <p className="detailLabel">
-                  Challenge progress
-                </p>
+              <details
+                className="detailSection detailDisclosureSection"
+                open={
+                  bookDetailDisclosureState
+                    .challengeProgress
+                }
+              >
+                <summary
+                  className="detailDisclosureSummary"
+                  onClick={(event) => {
+                    event.preventDefault();
 
-                <div className="detailChallengeList">
+                    toggleBookDetailDisclosure(
+                      "challengeProgress"
+                    );
+                  }}
+                >
+                  <span className="detailLabel">
+                    Challenge progress
+                  </span>
+
+                  <span
+                    className={
+                      bookDetailDisclosureState
+                        .challengeProgress
+                        ? "detailDisclosureChevron detailDisclosureChevronOpen"
+                        : "detailDisclosureChevron"
+                    }
+                    aria-hidden="true"
+                  >
+                    ⌄
+                  </span>
+                </summary>
+
+                <div className="detailDisclosureContent">
+                  <div className="detailChallengeList">
                   {selectedBookChallengeDetails.map(
                     ({
                       challenge,
@@ -4098,68 +4377,83 @@ export default function App() {
                       );
                     }
                   )}
+                  </div>
                 </div>
-              </section>
+              </details>
             ) : null}
 
-            <section className="detailSection">
-              <p className="detailLabel">Location</p>
+            <details
+              className="detailSection detailDisclosureSection"
+              open={
+                bookDetailDisclosureState
+                  .bookDetails
+              }
+            >
+              <summary
+                className="detailDisclosureSummary"
+                onClick={(event) => {
+                  event.preventDefault();
 
-              <dl className="detailGrid">
-                <div>
-                  <dt>Place</dt>
-                  <dd>{locationParts.join(" · ")}</dd>
-                </div>
+                  toggleBookDetailDisclosure(
+                    "bookDetails"
+                  );
+                }}
+              >
+                <span className="detailLabel">
+                  Book details
+                </span>
 
-                {selectedBook.shelfPosition != null ? (
-                  <div>
-                    <dt>Position</dt>
-                    <dd>{selectedBook.shelfPosition}</dd>
-                  </div>
-                ) : null}
-              </dl>
-            </section>
+                <span
+                  className={
+                    bookDetailDisclosureState
+                      .bookDetails
+                      ? "detailDisclosureChevron detailDisclosureChevronOpen"
+                      : "detailDisclosureChevron"
+                  }
+                  aria-hidden="true"
+                >
+                  ⌄
+                </span>
+              </summary>
 
-            <section className="detailSection">
-              <p className="detailLabel">
-                Book details
-              </p>
+              <div className="detailDisclosureContent">
+                <dl className="detailGrid">
+                  {selectedBook.genre ? (
+                    <div>
+                      <dt>Genre</dt>
+                      <dd>{selectedBook.genre}</dd>
+                    </div>
+                  ) : null}
 
-              <dl className="detailGrid">
-                {selectedBook.genre ? (
-                  <div>
-                    <dt>Genre</dt>
-                    <dd>{selectedBook.genre}</dd>
-                  </div>
-                ) : null}
+                  {selectedBook.publisher ? (
+                    <div>
+                      <dt>Publisher</dt>
+                      <dd>{selectedBook.publisher}</dd>
+                    </div>
+                  ) : null}
 
-                {selectedBook.publisher ? (
-                  <div>
-                    <dt>Publisher</dt>
-                    <dd>{selectedBook.publisher}</dd>
-                  </div>
-                ) : null}
+                  {selectedBook.format ? (
+                    <div>
+                      <dt>Format</dt>
+                      <dd>{selectedBook.format}</dd>
+                    </div>
+                  ) : null}
 
-                {selectedBook.format ? (
-                  <div>
-                    <dt>Format</dt>
-                    <dd>{selectedBook.format}</dd>
-                  </div>
-                ) : null}
-
-                {selectedBookSeriesName ? (
-                  <div>
-                    <dt>Series</dt>
-                    <dd>
-                      {selectedBookSeriesName}
-                      {selectedBook.seriesNumber != null
-                        ? ` #${selectedBook.seriesNumber}`
-                        : ""}
-                    </dd>
-                  </div>
-                ) : null}
-              </dl>
-            </section>
+                  {selectedBookSeriesName ? (
+                    <div>
+                      <dt>Series</dt>
+                      <dd>
+                        {selectedBookSeriesName}
+                        {selectedBook.seriesNumber !=
+                        null
+                          ? ` #${selectedBook.seriesNumber}`
+                          : ""}
+                      </dd>
+                    </div>
+                  ) : null}
+                </dl>
+              </div>
+            </details>
           </div>
         </article>
       </section>
