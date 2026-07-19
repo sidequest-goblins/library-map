@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-19T04:41:11.893881+00:00",
+  "generatedAt": "2026-07-19T21:50:21.678573+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "sourceSheet": "List View",
   "bookCount": 1016,
@@ -16509,8 +16509,8 @@
     "webpQuality": 76,
     "cachePath": "C:\\library_app\\library-map\\public\\data\\library-cover-cache.json",
     "extractedCount": 1007,
-    "convertedCount": 14,
-    "cachedCount": 993,
+    "convertedCount": 0,
+    "cachedCount": 1007,
     "deletedStaleCount": 0,
     "missingAnchors": [
       {
