@@ -870,6 +870,18 @@ export default function App() {
   ] = useState("");
 
   const [
+    readStatusDrafts,
+    setReadStatusDrafts,
+  ] = useState<Record<string, boolean>>(
+    {}
+  );
+
+  const [
+    bookDetailSaveError,
+    setBookDetailSaveError,
+  ] = useState("");
+
+  const [
     readingAttempts,
     setReadingAttempts,
   ] = useState<
@@ -2154,13 +2166,185 @@ export default function App() {
     }
   }
 
-  async function updateBookReaderReadStatus(
-    book: Book,
-    readerId: LibraryReaderId,
-    nextIsRead: boolean
+  function getBookDetailStateKeys(
+    book: Book
   ) {
     const catalogKey =
       book.catalogKey?.trim() ?? "";
+
+    return {
+      catalogKey,
+
+      cjStateKey: catalogKey
+        ? makeLibraryStateKey(
+            "cj",
+            catalogKey
+          )
+        : "",
+
+      jcStateKey: catalogKey
+        ? makeLibraryStateKey(
+            "jc",
+            catalogKey
+          )
+        : "",
+    };
+  }
+
+  function toggleBookReaderReadStatusDraft({
+    stateKey,
+    persistedIsRead,
+    activeAttempt,
+  }: {
+    stateKey: string;
+    persistedIsRead: boolean;
+    activeAttempt:
+      | LibraryReaderReadingAttempt
+      | undefined;
+  }) {
+    if (!stateKey) {
+      setReadStatusError(
+        "This book does not have a catalog key, so its read status cannot be changed safely."
+      );
+
+      return;
+    }
+
+    const currentIsRead =
+      stateKey in readStatusDrafts
+        ? readStatusDrafts[stateKey]
+        : persistedIsRead;
+
+    const nextIsRead =
+      !currentIsRead;
+
+    if (
+      !nextIsRead &&
+      activeAttempt?.is_reread
+    ) {
+      setReadStatusError(
+        "Read status stays on while a reread is active. Complete or cancel the reread before clearing it."
+      );
+
+      return;
+    }
+
+    setReadStatusDrafts(
+      (currentDrafts) => {
+        const nextDrafts = {
+          ...currentDrafts,
+        };
+
+        if (
+          nextIsRead ===
+          persistedIsRead
+        ) {
+          delete nextDrafts[stateKey];
+        } else {
+          nextDrafts[stateKey] =
+            nextIsRead;
+        }
+
+        return nextDrafts;
+      }
+    );
+
+    setReadStatusError("");
+    setBookDetailSaveError("");
+  }
+
+  function bookHasPendingDetailChanges(
+    book: Book
+  ): boolean {
+    const {
+      cjStateKey,
+      jcStateKey,
+    } =
+      getBookDetailStateKeys(book);
+
+    return [
+      cjStateKey,
+      jcStateKey,
+    ].some(
+      (stateKey) =>
+        Boolean(stateKey) &&
+        (
+          stateKey in
+            readStatusDrafts ||
+          stateKey in
+            readingAttemptPageDrafts
+        )
+    );
+  }
+
+  function discardBookDetailDrafts(
+    book: Book
+  ) {
+    const {
+      cjStateKey,
+      jcStateKey,
+    } =
+      getBookDetailStateKeys(book);
+
+    const detailStateKeys =
+      new Set(
+        [
+          cjStateKey,
+          jcStateKey,
+        ].filter(Boolean)
+      );
+
+    setReadStatusDrafts(
+      (currentDrafts) => {
+        const nextDrafts = {
+          ...currentDrafts,
+        };
+
+        detailStateKeys.forEach(
+          (stateKey) => {
+            delete nextDrafts[
+              stateKey
+            ];
+          }
+        );
+
+        return nextDrafts;
+      }
+    );
+
+    setReadingAttemptPageDrafts(
+      (currentDrafts) => {
+        const nextDrafts = {
+          ...currentDrafts,
+        };
+
+        detailStateKeys.forEach(
+          (stateKey) => {
+            delete nextDrafts[
+              stateKey
+            ];
+          }
+        );
+
+        return nextDrafts;
+      }
+    );
+
+    setReadStatusError("");
+    setBookDetailSaveError("");
+    setReadingAttemptFeedback(null);
+  }
+
+  async function saveBookDetailChanges(
+    book: Book,
+    onSaved: () => void
+  ) {
+    const {
+      catalogKey,
+      cjStateKey,
+      jcStateKey,
+    } =
+      getBookDetailStateKeys(book);
 
     if (
       !householdSession ||
@@ -2169,16 +2353,16 @@ export default function App() {
       readingAttemptsLoadStatus !==
         "ready"
     ) {
-      setReadStatusError(
-        "Household sync and reading activity must finish loading before changing read status."
+      setBookDetailSaveError(
+        "Household reading data must finish loading before saving."
       );
 
       return;
     }
 
     if (!catalogKey) {
-      setReadStatusError(
-        "This book does not have a catalog key, so its shared state cannot be changed safely."
+      setBookDetailSaveError(
+        "This book does not have a catalog key, so its changes cannot be saved safely."
       );
 
       return;
@@ -2186,121 +2370,461 @@ export default function App() {
 
     if (
       readStatusSavingKey ||
-      readingAttemptSavingKey
+      readingAttemptSavingKey ||
+      challengeAttemptSavingKey
     ) {
       return;
     }
 
-    const stateKey =
-      makeLibraryStateKey(
-        readerId,
-        catalogKey
-      );
+    const readerTargets: Array<{
+      readerId: LibraryReaderId;
+      stateKey: string;
+    }> = [
+      {
+        readerId: "cj",
+        stateKey: cjStateKey,
+      },
+      {
+        readerId: "jc",
+        stateKey: jcStateKey,
+      },
+    ];
 
-    const existingState =
-      libraryStateByKey.get(stateKey);
+    const readChanges: Array<{
+      readerId: LibraryReaderId;
+      stateKey: string;
+      nextIsRead: boolean;
+    }> = [];
 
-    const activeAttempt =
-      activeReadingAttemptByKey.get(
-        stateKey
-      );
-
-    if (
-      !nextIsRead &&
-      activeAttempt?.is_reread
+    for (
+      const target of
+      readerTargets
     ) {
-      setReadStatusError(
-        "Read status stays on while a reread is active. Complete or abandon the reread before clearing it."
-      );
-
-      return;
-    }
-
-    setReadStatusSavingKey(stateKey);
-    setReadStatusError("");
-
-    try {
-      if (existingState) {
-        const { error } = await supabase
-          .from("library_reader_book_state")
-          .update({
-            is_read: nextIsRead,
-          })
-          .eq(
-            "user_id",
-            householdSession.user.id
-          )
-          .eq(
-            "reader_id",
-            readerId
-          )
-          .eq(
-            "catalog_key",
-            catalogKey
-          );
-
-        if (error) {
-          throw error;
-        }
-      } else {
-        const { error } = await supabase
-          .from("library_reader_book_state")
-          .insert({
-            user_id:
-              householdSession.user.id,
-            reader_id: readerId,
-            catalog_key: catalogKey,
-            is_read: nextIsRead,
-            current_page: null,
-            rating: null,
-            notes: null,
-          });
-
-        if (error) {
-          throw error;
-        }
+      if (
+        !target.stateKey ||
+        !(
+          target.stateKey in
+          readStatusDrafts
+        )
+      ) {
+        continue;
       }
 
-      const refreshedRows =
-        await fetchLibraryStateRows(
-          householdSession.user.id
-        );
+      const nextIsRead =
+        readStatusDrafts[
+          target.stateKey
+        ];
 
-      const refreshedState =
-        refreshedRows.find(
-          (stateRow) =>
-            stateRow.reader_id ===
-              readerId &&
-            stateRow.catalog_key ===
-              catalogKey
+      const activeAttempt =
+        activeReadingAttemptByKey.get(
+          target.stateKey
         );
 
       if (
-        !refreshedState ||
-        refreshedState.is_read !==
-          nextIsRead
+        !nextIsRead &&
+        activeAttempt?.is_reread
       ) {
-        throw new Error(
-          "Supabase did not return the expected read status after saving."
+        setBookDetailSaveError(
+          "Read status cannot be cleared while a reread is active."
+        );
+
+        return;
+      }
+
+      readChanges.push({
+        ...target,
+        nextIsRead,
+      });
+    }
+
+    const pageChanges: Array<{
+      stateKey: string;
+      attempt:
+        LibraryReaderReadingAttempt;
+      nextCurrentPage:
+        | number
+        | null;
+    }> = [];
+
+    for (
+      const target of
+      readerTargets
+    ) {
+      if (
+        !target.stateKey ||
+        !(
+          target.stateKey in
+          readingAttemptPageDrafts
+        )
+      ) {
+        continue;
+      }
+
+      const attempt =
+        activeReadingAttemptByKey.get(
+          target.stateKey
+        );
+
+      if (!attempt) {
+        setBookDetailSaveError(
+          "The active reading attempt changed before its page could be saved. Discard the draft and try again."
+        );
+
+        return;
+      }
+
+      const draftValue =
+        readingAttemptPageDrafts[
+          target.stateKey
+        ].trim();
+
+      let nextCurrentPage:
+        | number
+        | null = null;
+
+      if (draftValue) {
+        const parsedPage =
+          Number(draftValue);
+
+        if (
+          !Number.isInteger(
+            parsedPage
+          ) ||
+          parsedPage < 0
+        ) {
+          setBookDetailSaveError(
+            "Current page must be a whole number of 0 or greater."
+          );
+
+          return;
+        }
+
+        nextCurrentPage =
+          parsedPage === 0
+            ? null
+            : parsedPage;
+      }
+
+      pageChanges.push({
+        stateKey:
+          target.stateKey,
+
+        attempt,
+
+        nextCurrentPage,
+      });
+    }
+
+    if (
+      readChanges.length === 0 &&
+      pageChanges.length === 0
+    ) {
+      discardBookDetailDrafts(
+        book
+      );
+
+      return;
+    }
+
+    setReadStatusSavingKey(
+      `book-detail:${catalogKey}`
+    );
+
+    setBookDetailSaveError("");
+    setReadStatusError("");
+    setReadingAttemptFeedback(null);
+
+    try {
+      let operationError:
+        unknown = null;
+
+      try {
+        for (
+          const change of
+          readChanges
+        ) {
+          const existingState =
+            libraryStateByKey.get(
+              change.stateKey
+            );
+
+          if (existingState) {
+            const { error } =
+              await supabase
+                .from(
+                  "library_reader_book_state"
+                )
+                .update({
+                  is_read:
+                    change.nextIsRead,
+                })
+                .eq(
+                  "user_id",
+                  householdSession
+                    .user.id
+                )
+                .eq(
+                  "reader_id",
+                  change.readerId
+                )
+                .eq(
+                  "catalog_key",
+                  catalogKey
+                );
+
+            if (error) {
+              throw error;
+            }
+          } else {
+            const { error } =
+              await supabase
+                .from(
+                  "library_reader_book_state"
+                )
+                .insert({
+                  user_id:
+                    householdSession
+                      .user.id,
+
+                  reader_id:
+                    change.readerId,
+
+                  catalog_key:
+                    catalogKey,
+
+                  is_read:
+                    change.nextIsRead,
+
+                  current_page: null,
+                  rating: null,
+                  notes: null,
+                });
+
+            if (error) {
+              throw error;
+            }
+          }
+        }
+
+        for (
+          const change of
+          pageChanges
+        ) {
+          if (
+            change.attempt
+              .current_page ===
+            change.nextCurrentPage
+          ) {
+            continue;
+          }
+
+          const { error } =
+            await supabase
+              .from(
+                "library_reader_reading_attempts"
+              )
+              .update({
+                current_page:
+                  change.nextCurrentPage,
+              })
+              .eq(
+                "attempt_id",
+                change.attempt
+                  .attempt_id
+              )
+              .eq(
+                "user_id",
+                householdSession
+                  .user.id
+              )
+              .eq(
+                "status",
+                "active"
+              );
+
+          if (error) {
+            throw error;
+          }
+        }
+      } catch (error) {
+        operationError = error;
+
+        console.error(
+          "One or more book detail changes failed to save.",
+          error
         );
       }
 
-      setLibraryStateRows(
-        refreshedRows
-      );
-    } catch (error) {
-      console.error(
-        "Could not update book read status.",
-        error
+      let refreshedData: {
+        refreshedLibraryStateRows:
+          LibraryReaderBookState[];
+
+        refreshedAttempts:
+          LibraryReaderReadingAttempt[];
+
+        refreshedChallengeLinks:
+          LibraryReaderChallengeAttemptLink[];
+      };
+
+      try {
+        refreshedData =
+          await refreshSharedReadingData(
+            householdSession.user.id
+          );
+      } catch (error) {
+        console.error(
+          "Could not reload book detail data after saving.",
+          error
+        );
+
+        setBookDetailSaveError(
+          error instanceof Error
+            ? `Changes may have partially saved, but the app could not verify them: ${error.message}`
+            : "Changes may have partially saved, but the app could not verify them."
+        );
+
+        return;
+      }
+
+      const refreshedStateByKey =
+        new Map(
+          refreshedData
+            .refreshedLibraryStateRows
+            .map(
+              (stateRow) => [
+                makeLibraryStateKey(
+                  stateRow.reader_id,
+                  stateRow.catalog_key
+                ),
+                stateRow,
+              ]
+            )
+        );
+
+      const refreshedAttemptById =
+        new Map(
+          refreshedData
+            .refreshedAttempts
+            .map(
+              (attempt) => [
+                attempt.attempt_id,
+                attempt,
+              ]
+            )
+        );
+
+      const failedReadChanges =
+        readChanges.filter(
+          (change) =>
+            refreshedStateByKey.get(
+              change.stateKey
+            )?.is_read !==
+            change.nextIsRead
+        );
+
+      const failedPageChanges =
+        pageChanges.filter(
+          (change) =>
+            refreshedAttemptById.get(
+              change.attempt
+                .attempt_id
+            )?.current_page !==
+            change.nextCurrentPage
+        );
+
+      const savedReadKeys =
+        new Set(
+          readChanges
+            .filter(
+              (change) =>
+                !failedReadChanges.includes(
+                  change
+                )
+            )
+            .map(
+              (change) =>
+                change.stateKey
+            )
+        );
+
+      const savedPageKeys =
+        new Set(
+          pageChanges
+            .filter(
+              (change) =>
+                !failedPageChanges.includes(
+                  change
+                )
+            )
+            .map(
+              (change) =>
+                change.stateKey
+            )
+        );
+
+      setReadStatusDrafts(
+        (currentDrafts) => {
+          const nextDrafts = {
+            ...currentDrafts,
+          };
+
+          savedReadKeys.forEach(
+            (stateKey) => {
+              delete nextDrafts[
+                stateKey
+              ];
+            }
+          );
+
+          return nextDrafts;
+        }
       );
 
-      setReadStatusError(
-        error instanceof Error
-          ? `Read status failed to save: ${error.message}`
-          : "Read status failed to save because of an unknown Supabase error."
+      setReadingAttemptPageDrafts(
+        (currentDrafts) => {
+          const nextDrafts = {
+            ...currentDrafts,
+          };
+
+          savedPageKeys.forEach(
+            (stateKey) => {
+              delete nextDrafts[
+                stateKey
+              ];
+            }
+          );
+
+          return nextDrafts;
+        }
       );
+
+      if (
+        failedReadChanges.length >
+          0 ||
+        failedPageChanges.length >
+          0
+      ) {
+        const operationMessage =
+          operationError instanceof Error
+            ? ` ${operationError.message}`
+            : "";
+
+        setBookDetailSaveError(
+          `Some changes did not save. The changes that succeeded were kept; the remaining drafts are still available.${operationMessage}`
+        );
+
+        return;
+      }
+
+      discardBookDetailDrafts(
+        book
+      );
+
+      onSaved();
     } finally {
-      setReadStatusSavingKey(null);
+      setReadStatusSavingKey(
+        null
+      );
     }
   }
 
@@ -2443,191 +2967,6 @@ export default function App() {
           error instanceof Error
             ? `Reading attempt failed to start: ${error.message}`
             : "Reading attempt failed to start because of an unknown Supabase error.",
-      });
-    } finally {
-      setReadingAttemptSavingKey(null);
-    }
-  }
-
-  async function saveReadingAttemptPage(
-    attempt: LibraryReaderReadingAttempt,
-    draftValue: string
-  ) {
-    const stateKey =
-      makeLibraryStateKey(
-        attempt.reader_id,
-        attempt.catalog_key
-      );
-
-    if (
-      !householdSession ||
-      readingAttemptsLoadStatus !==
-        "ready"
-    ) {
-      setReadingAttemptFeedback({
-        stateKey,
-        kind: "error",
-        message:
-          "Reading activity must finish loading before saving progress.",
-      });
-
-      return;
-    }
-
-    if (readingAttemptSavingKey) {
-      return;
-    }
-
-    const trimmedValue =
-      draftValue.trim();
-
-    let nextCurrentPage:
-      | number
-      | null = null;
-
-    if (trimmedValue) {
-      const parsedPage =
-        Number(trimmedValue);
-
-      if (
-        !Number.isInteger(parsedPage) ||
-        parsedPage < 0
-      ) {
-        setReadingAttemptFeedback({
-          stateKey,
-          kind: "error",
-          message:
-            "Enter a whole page number of 0 or greater.",
-        });
-
-        return;
-      }
-
-      nextCurrentPage =
-        parsedPage === 0
-          ? null
-          : parsedPage;
-    }
-
-    if (
-      attempt.current_page ===
-      nextCurrentPage
-    ) {
-      setReadingAttemptPageDrafts(
-        (currentDrafts) => {
-          const nextDrafts = {
-            ...currentDrafts,
-          };
-
-          delete nextDrafts[stateKey];
-
-          return nextDrafts;
-        }
-      );
-
-      setReadingAttemptFeedback({
-        stateKey,
-        kind: "success",
-        message:
-          nextCurrentPage === null
-            ? "Progress is already clear."
-            : `Page ${nextCurrentPage.toLocaleString()} is already saved.`,
-      });
-
-      return;
-    }
-
-    setReadingAttemptSavingKey(
-      stateKey
-    );
-
-    setReadingAttemptFeedback(null);
-
-    try {
-      const { error } = await supabase
-        .from(
-          "library_reader_reading_attempts"
-        )
-        .update({
-          current_page:
-            nextCurrentPage,
-        })
-        .eq(
-          "attempt_id",
-          attempt.attempt_id
-        )
-        .eq(
-          "user_id",
-          householdSession.user.id
-        )
-        .eq(
-          "status",
-          "active"
-        );
-
-      if (error) {
-        throw error;
-      }
-
-      const refreshedAttempts =
-        await fetchReadingAttempts(
-          householdSession.user.id
-        );
-
-      const refreshedAttempt =
-        refreshedAttempts.find(
-          (candidate) =>
-            candidate.attempt_id ===
-            attempt.attempt_id
-        );
-
-      if (
-        !refreshedAttempt ||
-        refreshedAttempt.current_page !==
-          nextCurrentPage
-      ) {
-        throw new Error(
-          "Supabase did not return the expected page after saving."
-        );
-      }
-
-      setReadingAttempts(
-        refreshedAttempts
-      );
-
-      setReadingAttemptPageDrafts(
-        (currentDrafts) => {
-          const nextDrafts = {
-            ...currentDrafts,
-          };
-
-          delete nextDrafts[stateKey];
-
-          return nextDrafts;
-        }
-      );
-
-      setReadingAttemptFeedback({
-        stateKey,
-        kind: "success",
-        message:
-          nextCurrentPage === null
-            ? "Reading progress cleared."
-            : `Page ${nextCurrentPage.toLocaleString()} saved.`,
-      });
-    } catch (error) {
-      console.error(
-        "Could not save reading progress.",
-        error
-      );
-
-      setReadingAttemptFeedback({
-        stateKey,
-        kind: "error",
-        message:
-          error instanceof Error
-            ? `Progress failed to save: ${error.message}`
-            : "Progress failed to save because of an unknown Supabase error.",
       });
     } finally {
       setReadingAttemptSavingKey(null);
@@ -3062,6 +3401,42 @@ export default function App() {
     [books, selectedBookId]
   );
 
+  const selectedBookHasPendingChanges =
+    selectedBook
+      ? bookHasPendingDetailChanges(
+          selectedBook
+        )
+      : false;
+
+  useEffect(() => {
+    if (
+      !selectedBookHasPendingChanges
+    ) {
+      return;
+    }
+
+    function handleBeforeUnload(
+      event: BeforeUnloadEvent
+    ) {
+      event.preventDefault();
+      event.returnValue = "";
+    }
+
+    window.addEventListener(
+      "beforeunload",
+      handleBeforeUnload
+    );
+
+    return () => {
+      window.removeEventListener(
+        "beforeunload",
+        handleBeforeUnload
+      );
+    };
+  }, [
+    selectedBookHasPendingChanges,
+  ]);
+
   const mapDetailBooks = useMemo(() => {
     if (!selectedBook || !selectedBookcase) return [];
 
@@ -3273,10 +3648,36 @@ export default function App() {
 
   useEffect(() => {
     setReadStatusError("");
+    setBookDetailSaveError("");
     setReadingAttemptFeedback(null);
     setChallengeAttemptFeedback(null);
+    setReadStatusDrafts({});
     setReadingAttemptPageDrafts({});
   }, [selectedBookId]);
+
+  function runAfterBookDetailDiscardCheck(
+    action: () => void
+  ) {
+    if (
+      selectedBook &&
+      selectedBookHasPendingChanges
+    ) {
+      const confirmed =
+        window.confirm(
+          "Discard the unsaved changes for this book?"
+        );
+
+      if (!confirmed) {
+        return;
+      }
+
+      discardBookDetailDrafts(
+        selectedBook
+      );
+    }
+
+    action();
+  }
 
   function toggleBookDetailDisclosure(
     section: BookDetailDisclosureKey
@@ -3372,25 +3773,6 @@ export default function App() {
       selectedBook.row !== "Main" ? selectedBook.row : "",
     ].filter(Boolean);
 
-    const selectedBookCjRead =
-      getBookReaderIsRead(
-        selectedBook,
-        "cj",
-        Boolean(selectedBook.cj)
-      );
-
-    const selectedBookJcRead =
-      getBookReaderIsRead(
-        selectedBook,
-        "jc",
-        Boolean(selectedBook.jc)
-      );
-
-    const readBy = [
-      selectedBookCjRead ? "CJ" : "",
-      selectedBookJcRead ? "JC" : "",
-    ].filter(Boolean);
-
     const selectedBookCatalogKey =
       selectedBook.catalogKey?.trim() ?? "";
 
@@ -3410,6 +3792,50 @@ export default function App() {
           )
         : "";
 
+    const persistedSelectedBookCjRead =
+      getBookReaderIsRead(
+        selectedBook,
+        "cj",
+        Boolean(selectedBook.cj)
+      );
+
+    const persistedSelectedBookJcRead =
+      getBookReaderIsRead(
+        selectedBook,
+        "jc",
+        Boolean(selectedBook.jc)
+      );
+
+    const selectedBookCjRead =
+      cjReadStatusKey in
+      readStatusDrafts
+        ? readStatusDrafts[
+            cjReadStatusKey
+          ]
+        : persistedSelectedBookCjRead;
+
+    const selectedBookJcRead =
+      jcReadStatusKey in
+      readStatusDrafts
+        ? readStatusDrafts[
+            jcReadStatusKey
+          ]
+        : persistedSelectedBookJcRead;
+
+    const cjReadStatusHasChanges =
+      Boolean(
+        cjReadStatusKey &&
+          cjReadStatusKey in
+            readStatusDrafts
+      );
+
+    const jcReadStatusHasChanges =
+      Boolean(
+        jcReadStatusKey &&
+          jcReadStatusKey in
+            readStatusDrafts
+      );
+
     const selectedBookCjAttempt =
       cjReadStatusKey
         ? activeReadingAttemptByKey.get(
@@ -3424,10 +3850,41 @@ export default function App() {
           )
         : undefined;
 
+    const selectedBookPageHasChanges =
+      [
+        cjReadStatusKey,
+        jcReadStatusKey,
+      ].some(
+        (stateKey) =>
+          Boolean(stateKey) &&
+          stateKey in
+            readingAttemptPageDrafts
+      );
+
+    const bookDetailHasChanges =
+      cjReadStatusHasChanges ||
+      jcReadStatusHasChanges ||
+      selectedBookPageHasChanges;
+
+    const bookDetailIsSaving =
+      readStatusSavingKey !== null;
+
+    const readBy = [
+      selectedBookCjRead
+        ? "CJ"
+        : "",
+
+      selectedBookJcRead
+        ? "JC"
+        : "",
+    ].filter(Boolean);
+
     const readStatusCanEdit =
       sharedLibraryStateIsAuthoritative &&
       sharedReadingAttemptsAreAuthoritative &&
-      Boolean(selectedBookCatalogKey);
+      Boolean(
+        selectedBookCatalogKey
+      );
 
     const readingActivityCanEdit =
       readStatusCanEdit;
@@ -3435,13 +3892,15 @@ export default function App() {
     const cjReadStatusLockedForReread =
       Boolean(
         selectedBookCjRead &&
-        selectedBookCjAttempt?.is_reread
+        selectedBookCjAttempt
+          ?.is_reread
       );
 
     const jcReadStatusLockedForReread =
       Boolean(
         selectedBookJcRead &&
-        selectedBookJcAttempt?.is_reread
+        selectedBookJcAttempt
+          ?.is_reread
       );
 
     const selectedBookSeriesName = String(
@@ -3471,7 +3930,15 @@ export default function App() {
 
     return (
       <section className="bookDetailPanel">
-        <button type="button" className="backButton" onClick={onBack}>
+        <button
+          type="button"
+          className="backButton"
+          onClick={() => {
+            runAfterBookDetailDiscardCheck(
+              onBack
+            );
+          }}
+        >
           ← {backLabel}
         </button>
 
@@ -3484,7 +3951,13 @@ export default function App() {
                 const targetBook = previousBook ?? previousShelfBook;
 
                 if (targetBook) {
-                  setSelectedBookId(targetBook.bookId);
+                  runAfterBookDetailDiscardCheck(
+                    () => {
+                      setSelectedBookId(
+                        targetBook.bookId
+                      );
+                    }
+                  );
                 }
               }}
               disabled={!previousBook && !previousShelfBook}
@@ -3505,7 +3978,13 @@ export default function App() {
                 const targetBook = nextBook ?? nextShelfBook;
 
                 if (targetBook) {
-                  setSelectedBookId(targetBook.bookId);
+                  runAfterBookDetailDiscardCheck(
+                    () => {
+                      setSelectedBookId(
+                        targetBook.bookId
+                      );
+                    }
+                  );
                 }
               }}
               disabled={!nextBook && !nextShelfBook}
@@ -3586,11 +4065,20 @@ export default function App() {
                   >
                     <button
                       type="button"
-                      className={
+                      className={[
+                        "readStatusChip",
+                        "readStatusButton",
+
                         selectedBookCjRead
-                          ? "readStatusChip readStatusButton readStatusButtonActive"
-                          : "readStatusChip readStatusButton readStatusButtonInactive"
-                      }
+                          ? "readStatusButtonActive"
+                          : "readStatusButtonInactive",
+
+                        cjReadStatusHasChanges
+                          ? "readStatusButtonPending"
+                          : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
                       aria-pressed={
                         selectedBookCjRead
                       }
@@ -3604,38 +4092,52 @@ export default function App() {
                       title={
                         cjReadStatusLockedForReread
                           ? "Read status stays on during an active reread."
-                          : undefined
+                          : cjReadStatusHasChanges
+                            ? "Unsaved change"
+                            : undefined
                       }
                       disabled={
-                        readStatusSavingKey !==
-                          null ||
+                        bookDetailIsSaving ||
                         readingAttemptSavingKey !==
                           null ||
                         cjReadStatusLockedForReread
                       }
                       onClick={() => {
-                        void updateBookReaderReadStatus(
-                          selectedBook,
-                          "cj",
-                          !selectedBookCjRead
+                        toggleBookReaderReadStatusDraft(
+                          {
+                            stateKey:
+                              cjReadStatusKey,
+
+                            persistedIsRead:
+                              persistedSelectedBookCjRead,
+
+                            activeAttempt:
+                              selectedBookCjAttempt,
+                          }
                         );
                       }}
                     >
-                      {readStatusSavingKey ===
-                      cjReadStatusKey
-                        ? "CJ · Saving…"
-                        : selectedBookCjRead
-                          ? "CJ ✓"
-                          : "CJ"}
+                      {selectedBookCjRead
+                        ? "CJ ✓"
+                        : "CJ"}
                     </button>
 
                     <button
                       type="button"
-                      className={
+                      className={[
+                        "readStatusChip",
+                        "readStatusButton",
+
                         selectedBookJcRead
-                          ? "readStatusChip readStatusButton readStatusButtonActive"
-                          : "readStatusChip readStatusButton readStatusButtonInactive"
-                      }
+                          ? "readStatusButtonActive"
+                          : "readStatusButtonInactive",
+
+                        jcReadStatusHasChanges
+                          ? "readStatusButtonPending"
+                          : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
                       aria-pressed={
                         selectedBookJcRead
                       }
@@ -3649,35 +4151,41 @@ export default function App() {
                       title={
                         jcReadStatusLockedForReread
                           ? "Read status stays on during an active reread."
-                          : undefined
+                          : jcReadStatusHasChanges
+                            ? "Unsaved change"
+                            : undefined
                       }
                       disabled={
-                        readStatusSavingKey !==
-                          null ||
+                        bookDetailIsSaving ||
                         readingAttemptSavingKey !==
                           null ||
                         jcReadStatusLockedForReread
                       }
                       onClick={() => {
-                        void updateBookReaderReadStatus(
-                          selectedBook,
-                          "jc",
-                          !selectedBookJcRead
+                        toggleBookReaderReadStatusDraft(
+                          {
+                            stateKey:
+                              jcReadStatusKey,
+
+                            persistedIsRead:
+                              persistedSelectedBookJcRead,
+
+                            activeAttempt:
+                              selectedBookJcAttempt,
+                          }
                         );
                       }}
                     >
-                      {readStatusSavingKey ===
-                      jcReadStatusKey
-                        ? "JC · Saving…"
-                        : selectedBookJcRead
-                          ? "JC ✓"
-                          : "JC"}
+                      {selectedBookJcRead
+                        ? "JC ✓"
+                        : "JC"}
                     </button>
                   </div>
 
                   <p className="readStatusHint">
-                    Tap a reader to change their
-                    shared read status.
+                    Tap a reader to change
+                    their status, then use
+                    Save below.
                   </p>
                 </>
               ) : readBy.length > 0 ? (
@@ -3833,8 +4341,8 @@ export default function App() {
                             : storedPageValue;
 
                         const pageDraftHasChanges =
-                          pageDraftValue.trim() !==
-                          storedPageValue;
+                          stateKey in
+                          readingAttemptPageDrafts;
 
                         const feedback =
                           readingAttemptFeedback
@@ -3846,11 +4354,19 @@ export default function App() {
                         return (
                           <article
                             key={readerId}
-                            className={
+                            className={[
+                              "readingAttemptCard",
+
                               attempt
-                                ? "readingAttemptCard readingAttemptCardActive"
-                                : "readingAttemptCard"
-                            }
+                                ? "readingAttemptCardActive"
+                                : "",
+
+                              pageDraftHasChanges
+                                ? "readingAttemptCardPending"
+                                : "",
+                            ]
+                              .filter(Boolean)
+                              .join(" ")}
                           >
                             <div className="readingAttemptCardHeader">
                               <span className="readingAttemptReader">
@@ -3897,6 +4413,11 @@ export default function App() {
                                     </span>
 
                                     <input
+                                      className={
+                                        pageDraftHasChanges
+                                          ? "readingAttemptPageInputPending"
+                                          : undefined
+                                      }
                                       type="number"
                                       min={0}
                                       step={1}
@@ -3905,20 +4426,45 @@ export default function App() {
                                         pageDraftValue
                                       }
                                       disabled={
-                                        isSaving
+                                        isSaving ||
+                                        bookDetailIsSaving
                                       }
                                       onChange={(
                                         event
                                       ) => {
+                                        const nextValue =
+                                          event.target
+                                            .value;
+
                                         setReadingAttemptPageDrafts(
                                           (
                                             currentDrafts
-                                          ) => ({
-                                            ...currentDrafts,
-                                            [stateKey]:
-                                              event.target
-                                                .value,
-                                          })
+                                          ) => {
+                                            const nextDrafts =
+                                              {
+                                                ...currentDrafts,
+                                              };
+
+                                            if (
+                                              nextValue.trim() ===
+                                              storedPageValue
+                                            ) {
+                                              delete nextDrafts[
+                                                stateKey
+                                              ];
+                                            } else {
+                                              nextDrafts[
+                                                stateKey
+                                              ] =
+                                                nextValue;
+                                            }
+
+                                            return nextDrafts;
+                                          }
+                                        );
+
+                                        setBookDetailSaveError(
+                                          ""
                                         );
 
                                         if (
@@ -3933,37 +4479,23 @@ export default function App() {
                                       }}
                                     />
                                   </label>
-
-                                  <button
-                                    type="button"
-                                    className="readingAttemptSaveButton"
-                                    disabled={
-                                      isSaving ||
-                                      !pageDraftHasChanges
-                                    }
-                                    onClick={() => {
-                                      void saveReadingAttemptPage(
-                                        attempt,
-                                        pageDraftValue
-                                      );
-                                    }}
-                                  >
-                                    {isSaving
-                                      ? "Saving…"
-                                      : "Save page"}
-                                  </button>
                                 </div>
 
                                 <p className="readingAttemptPageHint">
-                                  Enter 0 or clear the
-                                  field to reset progress.
+                                  {pageDraftHasChanges
+                                    ? "Unsaved page change · use Save below."
+                                    : "Enter 0 or clear the field to reset progress."}
                                 </p>
 
                                 <div className="readingAttemptActionRow">
                                   <button
                                     type="button"
                                     className="readingAttemptFinishButton"
-                                    disabled={isSaving}
+                                    disabled={
+                                      isSaving ||
+                                      bookDetailIsSaving ||
+                                      bookDetailHasChanges
+                                    }
                                     onClick={() => {
                                       void completeReadingAttempt(
                                         attempt
@@ -3980,7 +4512,11 @@ export default function App() {
                                   <button
                                     type="button"
                                     className="readingAttemptCancelButton"
-                                    disabled={isSaving}
+                                    disabled={
+                                      isSaving ||
+                                      bookDetailIsSaving ||
+                                      bookDetailHasChanges
+                                    }
                                     onClick={() => {
                                       void abandonReadingAttempt(
                                         attempt
@@ -4008,8 +4544,8 @@ export default function App() {
                                   className="readingAttemptStartButton"
                                   disabled={
                                     isSaving ||
-                                    readStatusSavingKey !==
-                                      null ||
+                                    bookDetailIsSaving ||
+                                    bookDetailHasChanges ||
                                     readingAttemptSavingKey !==
                                       null
                                   }
@@ -4473,8 +5009,8 @@ export default function App() {
 
                                             <button
                                               type="button"
-                                              className="detailChallengeManageUseButton"
                                               disabled={
+                                                bookDetailHasChanges ||
                                                 actionIsSaving ||
                                                 challengeAttemptSavingKey !==
                                                   null ||
@@ -4548,6 +5084,7 @@ export default function App() {
                                       type="button"
                                       className="detailChallengeActionButton"
                                       disabled={
+                                        bookDetailHasChanges ||
                                         actionIsSaving ||
                                         challengeAttemptSavingKey !==
                                           null ||
@@ -4600,6 +5137,7 @@ export default function App() {
                                 type="button"
                                 className="detailChallengeActionButton"
                                 disabled={
+                                  bookDetailHasChanges ||
                                   actionIsSaving ||
                                   challengeAttemptSavingKey !==
                                     null ||
@@ -4743,6 +5281,86 @@ export default function App() {
                 </dl>
               </div>
             </details>
+
+            {readStatusCanEdit ? (
+              <section
+                className={
+                  bookDetailHasChanges
+                    ? "bookDetailSaveBar bookDetailSaveBarPending"
+                    : "bookDetailSaveBar"
+                }
+                aria-label="Save book changes"
+              >
+                <div className="bookDetailSaveCopy">
+                  <strong>
+                    {bookDetailHasChanges
+                      ? "Unsaved changes"
+                      : "Everything saved"}
+                  </strong>
+
+                  <span>
+                    {bookDetailHasChanges
+                      ? "Save or discard these changes before using reading or challenge actions."
+                      : "Read status and page progress are up to date."}
+                  </span>
+                </div>
+
+                <div className="bookDetailSaveActions">
+                  {bookDetailHasChanges ? (
+                    <button
+                      type="button"
+                      className="bookDetailDiscardButton"
+                      disabled={
+                        bookDetailIsSaving ||
+                        readingAttemptSavingKey !==
+                          null ||
+                        challengeAttemptSavingKey !==
+                          null
+                      }
+                      onClick={() => {
+                        discardBookDetailDrafts(
+                          selectedBook
+                        );
+                      }}
+                    >
+                      Discard
+                    </button>
+                  ) : null}
+
+                  <button
+                    type="button"
+                    className="bookDetailSaveButton"
+                    disabled={
+                      !bookDetailHasChanges ||
+                      bookDetailIsSaving ||
+                      readingAttemptSavingKey !==
+                        null ||
+                      challengeAttemptSavingKey !==
+                        null
+                    }
+                    onClick={() => {
+                      void saveBookDetailChanges(
+                        selectedBook,
+                        onBack
+                      );
+                    }}
+                  >
+                    {bookDetailIsSaving
+                      ? "Saving…"
+                      : "Save"}
+                  </button>
+                </div>
+
+                {bookDetailSaveError ? (
+                  <p
+                    className="bookDetailSaveError"
+                    role="alert"
+                  >
+                    {bookDetailSaveError}
+                  </p>
+                ) : null}
+              </section>
+            ) : null}
           </div>
         </article>
       </section>
@@ -4843,13 +5461,29 @@ export default function App() {
           <p className="bookcaseMeta">{headerMeta}</p>
         </div>
 
-        <nav className="appTabs" aria-label="Library views">
+        <nav
+          className="appTabs"
+          aria-label="Library views"
+        >
           <button
             type="button"
-            className={activeTab === "search" ? "appTab active" : "appTab"}
+            className={
+              activeTab === "search"
+                ? "appTab active"
+                : "appTab"
+            }
             onClick={() => {
-              setActiveTab("search");
-              setSelectedBookId(null);
+              runAfterBookDetailDiscardCheck(
+                () => {
+                  setActiveTab(
+                    "search"
+                  );
+
+                  setSelectedBookId(
+                    null
+                  );
+                }
+              );
             }}
           >
             Search
@@ -4857,10 +5491,23 @@ export default function App() {
 
           <button
             type="button"
-            className={activeTab === "map" ? "appTab active" : "appTab"}
+            className={
+              activeTab === "map"
+                ? "appTab active"
+                : "appTab"
+            }
             onClick={() => {
-              setActiveTab("map");
-              setSelectedBookId(null);
+              runAfterBookDetailDiscardCheck(
+                () => {
+                  setActiveTab(
+                    "map"
+                  );
+
+                  setSelectedBookId(
+                    null
+                  );
+                }
+              );
             }}
           >
             Map
@@ -4874,8 +5521,17 @@ export default function App() {
                 : "appTab"
             }
             onClick={() => {
-              setActiveTab("challenges");
-              setSelectedBookId(null);
+              runAfterBookDetailDiscardCheck(
+                () => {
+                  setActiveTab(
+                    "challenges"
+                  );
+
+                  setSelectedBookId(
+                    null
+                  );
+                }
+              );
             }}
           >
             Challenges
@@ -4883,10 +5539,23 @@ export default function App() {
 
           <button
             type="button"
-            className={activeTab === "wanted" ? "appTab active" : "appTab"}
+            className={
+              activeTab === "wanted"
+                ? "appTab active"
+                : "appTab"
+            }
             onClick={() => {
-              setActiveTab("wanted");
-              setSelectedBookId(null);
+              runAfterBookDetailDiscardCheck(
+                () => {
+                  setActiveTab(
+                    "wanted"
+                  );
+
+                  setSelectedBookId(
+                    null
+                  );
+                }
+              );
             }}
           >
             Wanted

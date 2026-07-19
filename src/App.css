@@ -899,6 +899,123 @@ select {
   gap: 1rem;
 }
 
+.bookDetailSaveBar {
+  position: sticky;
+  z-index: 5;
+  bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem;
+  border: 1px solid rgba(76, 48, 30, 0.16);
+  border-radius: 16px;
+  background: rgba(255, 250, 240, 0.94);
+  box-shadow:
+    0 12px 28px rgba(76, 48, 30, 0.16);
+  backdrop-filter: blur(10px);
+}
+
+.bookDetailSaveBarPending {
+  border-color: rgba(201, 154, 69, 0.52);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 248, 226, 0.97),
+      rgba(255, 250, 240, 0.97)
+    );
+}
+
+.bookDetailSaveCopy {
+  display: grid;
+  flex: 1 1 180px;
+  gap: 0.12rem;
+  min-width: 0;
+}
+
+.bookDetailSaveCopy strong {
+  color: var(--brownDark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.94rem;
+}
+
+.bookDetailSaveCopy span {
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
+.bookDetailSaveActions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.bookDetailDiscardButton,
+.bookDetailSaveButton {
+  border-radius: 11px;
+  padding: 0.52rem 0.78rem;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.bookDetailDiscardButton {
+  border: 1px solid rgba(76, 48, 30, 0.2);
+  color: var(--muted);
+  background: rgba(255, 250, 240, 0.82);
+}
+
+.bookDetailDiscardButton:hover:not(:disabled) {
+  border-color: rgba(138, 52, 41, 0.34);
+  color: #8a3429;
+  background: rgba(255, 242, 236, 0.9);
+}
+
+.bookDetailSaveButton {
+  border: 1px solid rgba(52, 72, 46, 0.38);
+  color: #fff8e9;
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--greenDark)
+    );
+  box-shadow:
+    0 7px 16px rgba(52, 72, 46, 0.15);
+}
+
+.bookDetailSaveButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow:
+    0 9px 20px rgba(52, 72, 46, 0.19);
+}
+
+.bookDetailDiscardButton:focus-visible,
+.bookDetailSaveButton:focus-visible {
+  outline: 3px solid rgba(201, 154, 69, 0.28);
+  outline-offset: 2px;
+}
+
+.bookDetailDiscardButton:disabled,
+.bookDetailSaveButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+  transform: none;
+}
+
+.bookDetailSaveError {
+  flex: 1 1 100%;
+  margin: 0;
+  color: #8a3429;
+  font-size: 0.78rem;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
 .detailSection {
   display: grid;
   gap: 0.45rem;
