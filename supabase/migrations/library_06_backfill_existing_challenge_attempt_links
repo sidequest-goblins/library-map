@@ -1,0 +1,353 @@
+-- ============================================================
+-- MyLibrary 06 - Backfill Existing Challenge Attempt Links
+--
+-- Explicitly links CJ's existing reading attempt for:
+--
+--   Can't Spell Treason Without Tea
+--
+-- to the corresponding ABC challenge entry.
+--
+-- The workbook snapshot recorded page 75.
+-- Supabase now contains newer live progress, so the backfill:
+--
+--   - requires the exact previewed reading attempt;
+--   - accepts active or completed status;
+--   - rejects abandoned attempts;
+--   - rejects rereads;
+--   - requires progress to be at least page 75;
+--   - never overwrites or reduces current progress;
+--   - is safe to rerun when the correct link already exists.
+-- ============================================================
+
+
+begin;
+
+
+do $$
+declare
+  household_user_id constant uuid :=
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid;
+
+  target_reader_id constant text :=
+    'cj';
+
+  target_challenge_id constant text :=
+    'abc';
+
+  target_challenge_entry_id constant text :=
+    'abc-cj-t-book-00922-thorne-rebecca-can-t-spell-treason-without-tea';
+
+  target_catalog_key constant text :=
+    'thorne-rebecca-can-t-spell-treason-without-tea';
+
+  expected_attempt_id constant uuid :=
+    '3bc833e8-d8d6-4688-abf7-1024619190d1'::uuid;
+
+  workbook_snapshot_page constant integer :=
+    75;
+
+  matching_attempt
+    public.library_reader_reading_attempts%rowtype;
+
+  existing_link_id uuid;
+
+  existing_link_attempt_id uuid;
+
+  inserted_link_id uuid;
+begin
+  -- ----------------------------------------------------------
+  -- 1. Resolve the exact attempt shown by the preview query
+  -- ----------------------------------------------------------
+
+  select
+    attempt.*
+
+  into
+    matching_attempt
+
+  from
+    public.library_reader_reading_attempts
+      as attempt
+
+  where
+    attempt.attempt_id =
+      expected_attempt_id;
+
+
+  if not found then
+    raise exception
+      'Expected reading attempt % no longer exists',
+      expected_attempt_id;
+  end if;
+
+
+  -- ----------------------------------------------------------
+  -- 2. Validate attempt identity
+  -- ----------------------------------------------------------
+
+  if
+    matching_attempt.user_id
+      is distinct from
+    household_user_id
+  then
+    raise exception
+      'Expected reading attempt belongs to a different user';
+  end if;
+
+
+  if
+    matching_attempt.reader_id
+      is distinct from
+    target_reader_id
+  then
+    raise exception
+      'Expected reading attempt belongs to a different reader';
+  end if;
+
+
+  if
+    matching_attempt.catalog_key
+      is distinct from
+    target_catalog_key
+  then
+    raise exception
+      'Expected reading attempt belongs to a different catalog book';
+  end if;
+
+
+  -- ----------------------------------------------------------
+  -- 3. Validate attempt lifecycle
+  -- ----------------------------------------------------------
+
+  if
+    matching_attempt.status =
+      'abandoned'
+  then
+    raise exception
+      'The expected reading attempt is abandoned and will not be backfilled automatically';
+  end if;
+
+
+  if
+    matching_attempt.status not in
+    (
+      'active',
+      'completed'
+    )
+  then
+    raise exception
+      'Unsupported reading attempt status: %',
+      matching_attempt.status;
+  end if;
+
+
+  if
+    matching_attempt.is_reread =
+      true
+  then
+    raise exception
+      'The expected reading attempt is classified as a reread';
+  end if;
+
+
+  -- ----------------------------------------------------------
+  -- 4. Validate live progress against the old workbook snapshot
+  -- ----------------------------------------------------------
+  --
+  -- Supabase is allowed to contain newer progress.
+  -- It must not contain less progress than the workbook snapshot.
+  -- ----------------------------------------------------------
+
+  if
+    coalesce(
+      matching_attempt.current_page,
+      0
+    ) < workbook_snapshot_page
+
+    and
+
+    matching_attempt.status <>
+      'completed'
+  then
+    raise exception
+      'Reading attempt progress is below the workbook snapshot: Supabase page %, workbook page %',
+      coalesce(
+        matching_attempt.current_page,
+        0
+      ),
+      workbook_snapshot_page;
+  end if;
+
+
+  -- ----------------------------------------------------------
+  -- 5. Check for an existing current challenge link
+  -- ----------------------------------------------------------
+
+  select
+    link.link_id,
+    link.attempt_id
+
+  into
+    existing_link_id,
+    existing_link_attempt_id
+
+  from
+    public.library_reader_challenge_attempt_links
+      as link
+
+  where
+    link.user_id =
+      household_user_id
+
+    and
+
+    link.reader_id =
+      target_reader_id
+
+    and
+
+    link.challenge_id =
+      target_challenge_id
+
+    and
+
+    link.challenge_entry_id =
+      target_challenge_entry_id
+
+    and
+
+    link.unlinked_at is null
+
+  limit 1;
+
+
+  if found then
+    if
+      existing_link_attempt_id =
+        expected_attempt_id
+    then
+      raise notice
+        'The correct challenge-attempt link already exists as %',
+        existing_link_id;
+
+    else
+      raise exception
+        'Challenge entry is already linked to a different reading attempt: %',
+        existing_link_attempt_id;
+    end if;
+
+
+  else
+    -- --------------------------------------------------------
+    -- 6. Create the explicit challenge-attempt link
+    -- --------------------------------------------------------
+
+    insert into
+    public.library_reader_challenge_attempt_links
+    (
+      user_id,
+      reader_id,
+      challenge_id,
+      challenge_entry_id,
+      catalog_key,
+      attempt_id
+    )
+    values
+    (
+      household_user_id,
+      target_reader_id,
+      target_challenge_id,
+      target_challenge_entry_id,
+      target_catalog_key,
+      expected_attempt_id
+    )
+
+    returning
+      link_id
+
+    into
+      inserted_link_id;
+
+
+    if inserted_link_id is null then
+      raise exception
+        'Challenge-attempt link insertion did not return a link ID';
+    end if;
+
+
+    raise notice
+      'Created challenge-attempt link %',
+      inserted_link_id;
+  end if;
+end;
+$$;
+
+
+commit;
+
+
+-- ------------------------------------------------------------
+-- 7. Display the resulting current link
+-- ------------------------------------------------------------
+
+select
+  link.link_id,
+
+  link.challenge_id,
+
+  link.challenge_entry_id,
+
+  link.reader_id,
+
+  link.catalog_key,
+
+  link.attempt_id,
+
+  attempt.status
+    as attempt_status,
+
+  attempt.is_reread,
+
+  attempt.current_page,
+
+  attempt.started_at,
+
+  attempt.completed_at,
+
+  link.linked_at,
+
+  link.unlinked_at
+
+from
+public.library_reader_challenge_attempt_links
+  as link
+
+join
+public.library_reader_reading_attempts
+  as attempt
+
+  on attempt.attempt_id =
+    link.attempt_id
+
+where
+  link.user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+
+  and
+
+  link.reader_id =
+    'cj'
+
+  and
+
+  link.challenge_id =
+    'abc'
+
+  and
+
+  link.challenge_entry_id =
+    'abc-cj-t-book-00922-thorne-rebecca-can-t-spell-treason-without-tea'
+
+  and
+
+  link.unlinked_at is null;

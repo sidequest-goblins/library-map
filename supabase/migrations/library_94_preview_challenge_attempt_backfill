@@ -1,0 +1,298 @@
+-- ============================================================
+-- MyLibrary 94 - Preview Challenge Attempt Backfill
+--
+-- Previews the existing reading attempt that should be linked
+-- to CJ's in-progress ABC challenge entry for:
+--
+--   Can't Spell Treason Without Tea
+--
+-- This query performs no writes.
+-- ============================================================
+
+
+with challenge_candidate as
+(
+  select
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+      as user_id,
+
+    'cj'::text
+      as reader_id,
+
+    'abc'::text
+      as challenge_id,
+
+    'abc-cj-t-book-00922-thorne-rebecca-can-t-spell-treason-without-tea'::text
+      as challenge_entry_id,
+
+    'thorne-rebecca-can-t-spell-treason-without-tea'::text
+      as catalog_key,
+
+    'Can''t Spell Treason Without Tea'::text
+      as title,
+
+    75::integer
+      as workbook_current_page
+),
+
+
+candidate_counts as
+(
+  select
+    candidate.*,
+
+    (
+      select
+        count(*)
+
+      from
+      public.library_reader_reading_attempts
+        as attempt
+
+      where
+        attempt.user_id =
+          candidate.user_id
+
+        and
+
+        attempt.reader_id =
+          candidate.reader_id
+
+        and
+
+        attempt.catalog_key =
+          candidate.catalog_key
+    ) as total_attempt_count,
+
+    (
+      select
+        count(*)
+
+      from
+      public.library_reader_reading_attempts
+        as attempt
+
+      where
+        attempt.user_id =
+          candidate.user_id
+
+        and
+
+        attempt.reader_id =
+          candidate.reader_id
+
+        and
+
+        attempt.catalog_key =
+          candidate.catalog_key
+
+        and
+
+        attempt.status =
+          'active'
+    ) as active_attempt_count,
+
+    (
+      select
+        count(*)
+
+      from
+      public.library_reader_challenge_attempt_links
+        as existing_link
+
+      where
+        existing_link.user_id =
+          candidate.user_id
+
+        and
+
+        existing_link.reader_id =
+          candidate.reader_id
+
+        and
+
+        existing_link.challenge_id =
+          candidate.challenge_id
+
+        and
+
+        existing_link.challenge_entry_id =
+          candidate.challenge_entry_id
+
+        and
+
+        existing_link.unlinked_at is null
+    ) as current_link_count
+
+  from
+  challenge_candidate
+    as candidate
+),
+
+
+selected_active_attempt as
+(
+  select
+    candidate.*,
+
+    attempt.attempt_id,
+
+    attempt.status
+      as attempt_status,
+
+    attempt.is_reread,
+
+    attempt.current_page
+      as attempt_current_page,
+
+    attempt.started_at,
+
+    attempt.completed_at,
+
+    attempt.abandoned_at,
+
+    existing_link.link_id
+      as existing_link_id,
+
+    existing_link.attempt_id
+      as existing_link_attempt_id
+
+  from
+  candidate_counts
+    as candidate
+
+  left join lateral
+  (
+    select
+      matching_attempt.*
+
+    from
+    public.library_reader_reading_attempts
+      as matching_attempt
+
+    where
+      matching_attempt.user_id =
+        candidate.user_id
+
+      and
+
+      matching_attempt.reader_id =
+        candidate.reader_id
+
+      and
+
+      matching_attempt.catalog_key =
+        candidate.catalog_key
+
+      and
+
+      matching_attempt.status =
+        'active'
+
+    order by
+      matching_attempt.started_at desc
+
+    limit 1
+  )
+    as attempt
+    on true
+
+  left join lateral
+  (
+    select
+      matching_link.*
+
+    from
+    public.library_reader_challenge_attempt_links
+      as matching_link
+
+    where
+      matching_link.user_id =
+        candidate.user_id
+
+      and
+
+      matching_link.reader_id =
+        candidate.reader_id
+
+      and
+
+      matching_link.challenge_id =
+        candidate.challenge_id
+
+      and
+
+      matching_link.challenge_entry_id =
+        candidate.challenge_entry_id
+
+      and
+
+      matching_link.unlinked_at is null
+
+    order by
+      matching_link.linked_at desc
+
+    limit 1
+  )
+    as existing_link
+    on true
+)
+
+
+select
+  challenge_id,
+  challenge_entry_id,
+  reader_id,
+  title,
+  catalog_key,
+
+  workbook_current_page,
+
+  total_attempt_count,
+  active_attempt_count,
+  current_link_count,
+
+  attempt_id,
+  attempt_status,
+  is_reread,
+  attempt_current_page,
+  started_at,
+  completed_at,
+  abandoned_at,
+
+  existing_link_id,
+  existing_link_attempt_id,
+
+  case
+    when current_link_count > 0
+    then
+      'ALREADY_LINKED'
+
+    when active_attempt_count = 0
+    then
+      'STOP_NO_ACTIVE_ATTEMPT'
+
+    when active_attempt_count > 1
+    then
+      'STOP_MULTIPLE_ACTIVE_ATTEMPTS'
+
+    when attempt_id is null
+    then
+      'STOP_ATTEMPT_NOT_RESOLVED'
+
+    when is_reread = true
+    then
+      'REVIEW_ACTIVE_ATTEMPT_IS_REREAD'
+
+    when attempt_current_page
+      is distinct from
+      workbook_current_page
+    then
+      'REVIEW_PAGE_DIFFERENCE'
+
+    else
+      'READY_TO_LINK'
+  end as backfill_verdict
+
+from
+selected_active_attempt;
