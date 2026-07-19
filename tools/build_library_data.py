@@ -1936,6 +1936,8 @@ def main() -> None:
             "genre": get("genre"),
             "subgenre": get("subgenre"),
             "publisher": get("publisher"),
+            "publicationYear": parse_optional_int(get("year")),
+            "totalPages": parse_optional_int(get("pages")),
             "catalogKey": catalog_key,
             "format": catalog_match["format"] if catalog_match else "",
             "jc": catalog_match["jc"] if catalog_match else False,

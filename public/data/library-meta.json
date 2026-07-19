@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-18T05:17:21.283298+00:00",
+  "generatedAt": "2026-07-19T04:41:11.893881+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "sourceSheet": "List View",
-  "bookCount": 1015,
+  "bookCount": 1016,
   "skippedBlankRows": 0,
   "headers": [
     "LGBTQ+",
@@ -47,7 +47,7 @@
   "unmappedBookcases": [],
   "catalogMatchFallbackRows": [
     {
-      "row": 541,
+      "row": 542,
       "matchType": "title-prefix",
       "listTitle": "The Hundred Years' War on Palestine",
       "catalogTitle": "The Hundred Years' War on Palestine: A History of Settler Colonialism and Resistance, 1917–2017",
@@ -56,165 +56,33 @@
   ],
   "catalogUnmatchedRows": [
     {
-      "row": 52,
-      "title": "Shadow and Bone",
-      "author": "Leigh Bardugo",
-      "catalogKey": "bardugo-leigh-shadow-and-bone"
-    },
-    {
-      "row": 53,
-      "title": "Siege and Storm",
-      "author": "Leigh Bardugo",
-      "catalogKey": "bardugo-leigh-siege-and-storm"
-    },
-    {
-      "row": 55,
-      "title": "Six of Crows",
-      "author": "Leigh Bardugo",
-      "catalogKey": "bardugo-leigh-six-of-crows"
-    },
-    {
-      "row": 56,
-      "title": "The Crooked Kingdom",
-      "author": "Leigh Bardugo",
-      "catalogKey": "bardugo-leigh-the-crooked-kingdom"
-    },
-    {
-      "row": 58,
-      "title": "The Hawthorne Legacy",
-      "author": "Jennifer Lynn Barnes",
-      "catalogKey": "barnes-jennifer-lynn-the-hawthorne-legacy"
-    },
-    {
-      "row": 78,
-      "title": "Masters of Death",
-      "author": "Olivie Blake",
-      "catalogKey": "blake-olivie-masters-of-death"
-    },
-    {
-      "row": 100,
-      "title": "Red Rising",
-      "author": "Pierce Brown",
-      "catalogKey": "brown-pierce-red-rising"
-    },
-    {
-      "row": 165,
-      "title": "Tsubasa: RESERVoir CHRoNiCLE, Vol. 5",
-      "author": "Clamp",
-      "catalogKey": "clamp-tsubasa-reservoir-chronicle-vol-5"
-    },
-    {
-      "row": 214,
-      "title": "The Year of Magical Thinking",
-      "author": "Joan Didion",
-      "catalogKey": "didion-joan-the-year-of-magical-thinking"
-    },
-    {
-      "row": 295,
-      "title": "What My Bones Know: A Memoir of Healing from Complex Trauma",
-      "author": "Stephanie Foo",
-      "catalogKey": "foo-stephanie-what-my-bones-know-a-memoir-of-healing-from-complex-trauma"
-    },
-    {
-      "row": 364,
-      "title": "Demon Slayer: Kimetsu Academy, Vol. 2",
-      "author": "Koyoharu Gotouge; Natsuki Hokami",
-      "catalogKey": "gotouge-koyoharu-demon-slayer-kimetsu-academy-vol-2"
-    },
-    {
-      "row": 375,
-      "title": "How to Stop Time",
-      "author": "Matt Haig",
-      "catalogKey": "haig-matt-how-to-stop-time"
-    },
-    {
-      "row": 455,
-      "title": "Women in Science: 50 Fearless Pioneers Who Changed the World",
-      "author": "Rachel Ignotofsky",
-      "catalogKey": "ignotofsky-rachel-women-in-science-50-fearless-pioneers-who-changed-the-world"
-    },
-    {
-      "row": 513,
-      "title": "Part of Your World",
-      "author": "Abby Jimenez",
-      "catalogKey": "jimenez-abby-part-of-your-world"
-    },
-    {
-      "row": 550,
-      "title": "Pigs in Heaven",
-      "author": "Barbara Kingsolver",
-      "catalogKey": "kingsolver-barbara-pigs-in-heaven"
-    },
-    {
-      "row": 593,
-      "title": "Carmilla",
-      "author": "Joseph Sheridan Le Fanu",
-      "catalogKey": "le-fanu-joseph-sheridan-carmilla"
-    },
-    {
-      "row": 721,
-      "title": "The September House",
-      "author": "Carissa Orlando",
-      "catalogKey": "orlando-carissa-the-september-house"
-    },
-    {
-      "row": 730,
-      "title": "Nick and Charlie",
-      "author": "Alice Oseman",
-      "catalogKey": "oseman-alice-nick-and-charlie"
-    },
-    {
-      "row": 733,
-      "title": "Mr. Fox",
-      "author": "Helen Oyeyemi",
-      "catalogKey": "oyeyemi-helen-mr-fox"
-    },
-    {
-      "row": 791,
-      "title": "Gulp: Adventures on the Alimentary Canal",
-      "author": "Mary Roach",
-      "catalogKey": "roach-mary-gulp-adventures-on-the-alimentary-canal"
-    },
-    {
-      "row": 880,
-      "title": "The Vile Village",
-      "author": "Lemony Snicket",
-      "catalogKey": "snicket-lemony-the-vile-village"
-    },
-    {
-      "row": 923,
-      "title": "Can't Spell Treason Without Tea",
-      "author": "Rebecca Thorne",
-      "catalogKey": "thorne-rebecca-can-t-spell-treason-without-tea"
-    },
-    {
-      "row": 997,
+      "row": 998,
       "title": "The Beauty & Peace, Pipe",
       "author": "Aliya Whiteley",
       "catalogKey": "whiteley-aliya-the-beauty-peace-pipe"
     }
   ],
   "catalog": {
-    "catalogBookCount": 993,
-    "catalogRowsWithTitles": 993,
+    "catalogBookCount": 1016,
+    "catalogRowsWithTitles": 1016,
     "processedCatalogSheets": {
       "A": 37,
-      "B": 61,
-      "C": 80,
-      "D": 37,
-      "E": 52,
-      "F": 40,
-      "G": 54,
-      "H": 78,
-      "I-J": 66,
-      "K": 63,
-      "L": 24,
+      "B": 68,
+      "C": 81,
+      "D": 38,
+      "E": 53,
+      "F": 41,
+      "G": 55,
+      "H": 79,
+      "I-J": 68,
+      "K": 64,
+      "L": 25,
       "M": 75,
-      "N-O": 48,
+      "N-O": 51,
       "P-Q": 41,
-      "R": 45,
-      "S": 75,
-      "T-V": 39,
+      "R": 46,
+      "S": 76,
+      "T-V": 40,
       "W-Z": 78
     },
     "skippedCatalogSheets": [
@@ -16629,10 +16497,10 @@
         ""
       ],
       "headerMode": "headers",
-      "rowCount": 287,
+      "rowCount": 276,
       "skippedBlankRows": 0
     },
-    "totalWantedCount": 359
+    "totalWantedCount": 348
   },
   "coverExtraction": {
     "outputDir": "C:\\library_app\\library-map\\public\\data\\covers",
@@ -16640,16 +16508,80 @@
     "imageExtension": "webp",
     "webpQuality": 76,
     "cachePath": "C:\\library_app\\library-map\\public\\data\\library-cover-cache.json",
-    "extractedCount": 993,
-    "convertedCount": 0,
+    "extractedCount": 1007,
+    "convertedCount": 14,
     "cachedCount": 993,
     "deletedStaleCount": 0,
-    "missingAnchors": [],
+    "missingAnchors": [
+      {
+        "catalogKey": "bardugo-leigh-shadow-and-bone",
+        "title": "Shadow and Bone",
+        "author": "Leigh Bardugo",
+        "sourceSheet": "B",
+        "sourceRow": 15
+      },
+      {
+        "catalogKey": "bardugo-leigh-siege-and-storm",
+        "title": "Siege and Storm",
+        "author": "Leigh Bardugo",
+        "sourceSheet": "B",
+        "sourceRow": 16
+      },
+      {
+        "catalogKey": "bardugo-leigh-six-of-crows",
+        "title": "Six of Crows",
+        "author": "Leigh Bardugo",
+        "sourceSheet": "B",
+        "sourceRow": 18
+      },
+      {
+        "catalogKey": "bardugo-leigh-the-crooked-kingdom",
+        "title": "The Crooked Kingdom",
+        "author": "Leigh Bardugo",
+        "sourceSheet": "B",
+        "sourceRow": 19
+      },
+      {
+        "catalogKey": "barnes-jennifer-lynn-the-hawthorne-legacy",
+        "title": "The Hawthorne Legacy",
+        "author": "Jennifer Lynn Barnes",
+        "sourceSheet": "B",
+        "sourceRow": 21
+      },
+      {
+        "catalogKey": "blake-olivie-masters-of-death",
+        "title": "Masters of Death",
+        "author": "Olivie Blake",
+        "sourceSheet": "B",
+        "sourceRow": 41
+      },
+      {
+        "catalogKey": "brown-pierce-red-rising",
+        "title": "Red Rising",
+        "author": "Pierce Brown",
+        "sourceSheet": "B",
+        "sourceRow": 63
+      },
+      {
+        "catalogKey": "clamp-tsubasa-reservoir-chronicle-vol-5",
+        "title": "Tsubasa: RESERVoir CHRoNiCLE, Vol. 5",
+        "author": "Clamp",
+        "sourceSheet": "C",
+        "sourceRow": 60
+      },
+      {
+        "catalogKey": "didion-joan-the-year-of-magical-thinking",
+        "title": "The Year of Magical Thinking",
+        "author": "Joan Didion",
+        "sourceSheet": "D",
+        "sourceRow": 28
+      }
+    ],
     "missingMediaFiles": [],
     "conversionErrors": [],
     "anchorReport": {
-      "totalAnchoredImages": 993,
-      "mappedAnchoredImages": 993,
+      "totalAnchoredImages": 1007,
+      "mappedAnchoredImages": 1007,
       "duplicateAnchorRows": [],
       "missingMediaTargets": [],
       "sheetsWithoutDrawings": [
@@ -16672,8 +16604,8 @@
         "W-Z"
       ],
       "cellImageReport": {
-        "totalCellImages": 992,
-        "mappedCellImages": 992,
+        "totalCellImages": 1006,
+        "mappedCellImages": 1006,
         "duplicateCellRows": [],
         "missingRichDataFiles": [],
         "missingRichValueIndexes": [],
@@ -16681,8 +16613,8 @@
         "missingMediaTargets": []
       }
     },
-    "outputFileCount": 993,
-    "outputTotalBytes": 73837556
+    "outputFileCount": 1007,
+    "outputTotalBytes": 74760070
   },
   "imageInspectionEnabled": false,
   "images": null,
