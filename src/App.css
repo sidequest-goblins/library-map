@@ -826,6 +826,51 @@ select {
   font-size: 0.76rem;
 }
 
+.readingAttemptActionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.readingAttemptFinishButton {
+  width: fit-content;
+  border: 1px solid rgba(52, 72, 46, 0.38);
+  border-radius: 10px;
+  padding: 0.46rem 0.72rem;
+  color: #fff8e9;
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--greenDark)
+    );
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.readingAttemptFinishButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 16px rgba(52, 72, 46, 0.16);
+}
+
+.readingAttemptFinishButton:focus-visible,
+.readingAttemptCancelButton:focus-visible {
+  outline: 3px solid rgba(201, 154, 69, 0.28);
+  outline-offset: 2px;
+}
+
+.readingAttemptFinishButton:disabled {
+  cursor: wait;
+  opacity: 0.5;
+  transform: none;
+}
+
 .readingAttemptCancelButton {
   width: fit-content;
   border: 1px solid rgba(138, 52, 41, 0.28);

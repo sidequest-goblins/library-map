@@ -2275,6 +2275,182 @@ export default function App() {
     }
   }
 
+  async function completeReadingAttempt(
+    attempt: LibraryReaderReadingAttempt
+  ) {
+    const stateKey =
+      makeLibraryStateKey(
+        attempt.reader_id,
+        attempt.catalog_key
+      );
+
+    const readerName =
+      attempt.reader_id === "cj"
+        ? "CJ"
+        : "JC";
+
+    const activityName =
+      attempt.is_reread
+        ? "reread"
+        : "reading attempt";
+
+    if (
+      !householdSession ||
+      libraryStateLoadStatus !==
+        "ready" ||
+      readingAttemptsLoadStatus !==
+        "ready"
+    ) {
+      setReadingAttemptFeedback({
+        stateKey,
+        kind: "error",
+        message:
+          "Household sync and reading activity must finish loading before completing an attempt.",
+      });
+
+      return;
+    }
+
+    if (readingAttemptSavingKey) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Finish ${readerName}'s active ${activityName}?\n\n` +
+        `This will permanently complete this attempt, mark the book Read, ` +
+        `and complete any challenge entries linked to this exact attempt.`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setReadingAttemptSavingKey(
+      stateKey
+    );
+
+    setReadingAttemptFeedback(null);
+
+    try {
+      const { error } = await supabase
+        .from(
+          "library_reader_reading_attempts"
+        )
+        .update({
+          status: "completed",
+        })
+        .eq(
+          "attempt_id",
+          attempt.attempt_id
+        )
+        .eq(
+          "user_id",
+          householdSession.user.id
+        )
+        .eq(
+          "status",
+          "active"
+        );
+
+      if (error) {
+        throw error;
+      }
+
+      const [
+        refreshedAttempts,
+        refreshedLibraryStateRows,
+      ] = await Promise.all([
+        fetchReadingAttempts(
+          householdSession.user.id
+        ),
+
+        fetchLibraryStateRows(
+          householdSession.user.id
+        ),
+      ]);
+
+      const refreshedAttempt =
+        refreshedAttempts.find(
+          (candidate) =>
+            candidate.attempt_id ===
+            attempt.attempt_id
+        );
+
+      if (
+        !refreshedAttempt ||
+        refreshedAttempt.status !==
+          "completed"
+      ) {
+        throw new Error(
+          "Supabase did not return the completed reading attempt."
+        );
+      }
+
+      const refreshedBookState =
+        refreshedLibraryStateRows.find(
+          (stateRow) =>
+            stateRow.reader_id ===
+              attempt.reader_id &&
+            stateRow.catalog_key ===
+              attempt.catalog_key
+        );
+
+      if (
+        !refreshedBookState ||
+        !refreshedBookState.is_read
+      ) {
+        throw new Error(
+          "The attempt completed, but the book did not return as Read."
+        );
+      }
+
+      setReadingAttempts(
+        refreshedAttempts
+      );
+
+      setLibraryStateRows(
+        refreshedLibraryStateRows
+      );
+
+      setReadingAttemptPageDrafts(
+        (currentDrafts) => {
+          const nextDrafts = {
+            ...currentDrafts,
+          };
+
+          delete nextDrafts[stateKey];
+
+          return nextDrafts;
+        }
+      );
+
+      setReadingAttemptFeedback({
+        stateKey,
+        kind: "success",
+        message:
+          attempt.is_reread
+            ? `${readerName}'s reread is complete.`
+            : `${readerName}'s reading attempt is complete, and the book is marked Read.`,
+      });
+    } catch (error) {
+      console.error(
+        "Could not complete reading attempt.",
+        error
+      );
+
+      setReadingAttemptFeedback({
+        stateKey,
+        kind: "error",
+        message:
+          error instanceof Error
+            ? `Reading attempt failed to finish: ${error.message}`
+            : "Reading attempt failed to finish because of an unknown Supabase error.",
+      });
+    } finally {
+      setReadingAttemptSavingKey(null);
+    }
+  }
+
   async function abandonReadingAttempt(
     attempt: LibraryReaderReadingAttempt
   ) {
@@ -3207,22 +3383,41 @@ export default function App() {
                                   field to reset progress.
                                 </p>
 
-                                <button
-                                  type="button"
-                                  className="readingAttemptCancelButton"
-                                  disabled={isSaving}
-                                  onClick={() => {
-                                    void abandonReadingAttempt(
-                                      attempt
-                                    );
-                                  }}
-                                >
-                                  {isSaving
-                                    ? "Working…"
-                                    : attempt.is_reread
-                                      ? "Cancel reread"
-                                      : "Cancel reading"}
-                                </button>
+                                <div className="readingAttemptActionRow">
+                                  <button
+                                    type="button"
+                                    className="readingAttemptFinishButton"
+                                    disabled={isSaving}
+                                    onClick={() => {
+                                      void completeReadingAttempt(
+                                        attempt
+                                      );
+                                    }}
+                                  >
+                                    {isSaving
+                                      ? "Working…"
+                                      : attempt.is_reread
+                                        ? "Finish reread"
+                                        : "Finish reading"}
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    className="readingAttemptCancelButton"
+                                    disabled={isSaving}
+                                    onClick={() => {
+                                      void abandonReadingAttempt(
+                                        attempt
+                                      );
+                                    }}
+                                  >
+                                    {isSaving
+                                      ? "Working…"
+                                      : attempt.is_reread
+                                        ? "Cancel reread"
+                                        : "Cancel reading"}
+                                  </button>
+                                </div>
                               </>
                             ) : (
                               <>
