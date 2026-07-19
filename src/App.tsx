@@ -600,19 +600,35 @@ function getReadingAttemptDateLabel(
 }
 
 async function clearAppCache() {
-  if ("caches" in window) {
-    const cacheNames = await caches.keys();
-    await Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName)));
-  }
-
   if ("serviceWorker" in navigator) {
-    const registrations = await navigator.serviceWorker.getRegistrations();
+    const registrations =
+      await navigator.serviceWorker.getRegistrations();
+
     await Promise.all(
-      registrations.map((registration) => registration.unregister())
+      registrations.map((registration) =>
+        registration.unregister()
+      )
     );
   }
 
-  window.location.reload();
+  if ("caches" in window) {
+    const cacheNames = await caches.keys();
+
+    await Promise.all(
+      cacheNames.map((cacheName) =>
+        caches.delete(cacheName)
+      )
+    );
+  }
+
+  const refreshedUrl = new URL(window.location.href);
+
+  refreshedUrl.searchParams.set(
+    "_cacheRefresh",
+    Date.now().toString()
+  );
+
+  window.location.replace(refreshedUrl.toString());
 }
 
 function publicAssetPath(path: string | null | undefined): string | undefined {
