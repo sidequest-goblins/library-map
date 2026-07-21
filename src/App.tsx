@@ -213,6 +213,10 @@ type MapReturnPosition = {
   shelfScrollLeft?: number;
 };
 
+type UpdateReturnPosition = {
+  windowScrollY: number;
+};
+
 type BookDetailDisclosureKey =
   | "readingActivity"
   | "challengeProgress"
@@ -1190,6 +1194,9 @@ export default function App() {
   const mapReturnPositionRef =
     useRef<MapReturnPosition | null>(null);
 
+  const updateReturnPositionRef =
+    useRef<UpdateReturnPosition | null>(null);
+
   const searchAutocompleteRef =
     useRef<HTMLDivElement | null>(null);
 
@@ -1285,38 +1292,87 @@ export default function App() {
 
   function openMapBookDetail(
     bookId: string,
-    mapPosition?: Pick<MapReturnPosition, "shelfScrollerId" | "shelfScrollLeft">
+    mapPosition?: Pick<
+      MapReturnPosition,
+      "shelfScrollerId" | "shelfScrollLeft"
+    >
   ) {
     mapReturnPositionRef.current = {
       windowScrollY: window.scrollY,
-      shelfScrollerId: mapPosition?.shelfScrollerId,
-      shelfScrollLeft: mapPosition?.shelfScrollLeft,
+      shelfScrollerId:
+        mapPosition?.shelfScrollerId,
+      shelfScrollLeft:
+        mapPosition?.shelfScrollLeft,
     };
 
     setSelectedBookId(bookId);
   }
 
   function backToMapFromDetail() {
-    const returnPosition = mapReturnPositionRef.current;
+    const returnPosition =
+      mapReturnPositionRef.current;
 
     setSelectedBookId(null);
 
-    window.requestAnimationFrame(() => {
-      if (returnPosition?.shelfScrollerId) {
-        const shelfScroller = document.getElementById(
-          returnPosition.shelfScrollerId
-        );
+    window.requestAnimationFrame(
+      () => {
+        if (
+          returnPosition?.shelfScrollerId
+        ) {
+          const shelfScroller =
+            document.getElementById(
+              returnPosition.shelfScrollerId
+            );
 
-        if (shelfScroller instanceof HTMLElement) {
-          shelfScroller.scrollLeft = returnPosition.shelfScrollLeft ?? 0;
+          if (
+            shelfScroller instanceof
+            HTMLElement
+          ) {
+            shelfScroller.scrollLeft =
+              returnPosition
+                .shelfScrollLeft ?? 0;
+          }
         }
-      }
 
-      window.scrollTo({
-        top: returnPosition?.windowScrollY ?? 0,
-        behavior: "auto",
-      });
-    });
+        window.scrollTo({
+          top:
+            returnPosition
+              ?.windowScrollY ?? 0,
+          behavior: "auto",
+        });
+      }
+    );
+  }
+
+  function openUpdateBookDetail(
+    bookId: string
+  ) {
+    updateReturnPositionRef.current = {
+      windowScrollY: window.scrollY,
+    };
+
+    setSelectedBookId(bookId);
+  }
+
+  function backToUpdateFromDetail() {
+    const returnPosition =
+      updateReturnPositionRef.current;
+
+    setSelectedBookId(null);
+
+    window.requestAnimationFrame(
+      () => {
+        window.scrollTo({
+          top:
+            returnPosition
+              ?.windowScrollY ?? 0,
+          behavior: "auto",
+        });
+
+        updateReturnPositionRef.current =
+          null;
+      }
+    );
   }
 
   useEffect(() => {
@@ -6875,10 +6931,7 @@ export default function App() {
         selectedBook ? (
           renderBookDetail(
             "Back to update list",
-            () =>
-              setSelectedBookId(
-                null
-              ),
+            backToUpdateFromDetail,
             updateBooks
           )
         ) : (
@@ -7056,7 +7109,7 @@ export default function App() {
                           type="button"
                           className="updateCard"
                           onClick={() => {
-                            setSelectedBookId(
+                            openUpdateBookDetail(
                               book.bookId
                             );
                           }}
