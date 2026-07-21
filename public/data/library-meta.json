@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-21T16:55:06.085945+00:00",
+  "generatedAt": "2026-07-21T17:15:42.568275+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "sourceSheet": "List View",
   "bookCount": 1016,
@@ -97,7 +97,7 @@
         "Last"
       ],
       "headerMode": "headers",
-      "rowCount": 72,
+      "rowCount": 78,
       "skippedBlankRows": 0
     },
     "seriesToComplete": {
@@ -16493,7 +16493,7 @@
       "rowCount": 276,
       "skippedBlankRows": 0
     },
-    "totalWantedCount": 348
+    "totalWantedCount": 354
   },
   "coverExtraction": {
     "outputDir": "C:\\library_app\\library-map\\public\\data\\covers",

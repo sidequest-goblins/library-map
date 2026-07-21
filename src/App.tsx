@@ -1,11 +1,19 @@
 import {
   type KeyboardEvent,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
 import type { Session } from "@supabase/supabase-js";
+
+import {
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
 
 import "./App.css";
 
@@ -47,12 +55,144 @@ type AppTab =
   | "map"
   | "challenges"
   | "wanted"
+  | "stats"
   | "update";
 
 type UpdateField =
   | "totalPages"
   | "publicationYear"
   | "coverImage";
+
+type StatsDataset =
+  | "collection"
+  | "cjRead"
+  | "jadeRead"
+  | "eitherRead"
+  | "bothRead"
+  | "neitherRead";
+
+type StatsBreakdown =
+  | "genre"
+  | "subgenre"
+  | "format"
+  | "publicationDecade"
+  | "publisher"
+  | "author"
+  | "room"
+  | "bookcase"
+  | "pageRange";
+
+type StatsDisplay =
+  | "bars"
+  | "pie"
+  | "list";
+
+const STATS_DATASET_OPTIONS: Array<{
+  value: StatsDataset;
+  label: string;
+  description: string;
+}> = [
+  {
+    value: "collection",
+    label: "Whole collection",
+    description: "Every book in the household library.",
+  },
+  {
+    value: "cjRead",
+    label: "Read by CJ",
+    description: "Books CJ has marked Read.",
+  },
+  {
+    value: "jadeRead",
+    label: "Read by Jade",
+    description: "Books Jade has marked Read.",
+  },
+  {
+    value: "eitherRead",
+    label: "Read by either",
+    description: "Books at least one of you has read.",
+  },
+  {
+    value: "bothRead",
+    label: "Read by both",
+    description: "Books both CJ and Jade have read.",
+  },
+  {
+    value: "neitherRead",
+    label: "Read by neither",
+    description: "Books neither reader has marked Read.",
+  },
+];
+
+const STATS_BREAKDOWN_OPTIONS: Array<{
+  value: StatsBreakdown;
+  label: string;
+}> = [
+  {
+    value: "genre",
+    label: "Genre",
+  },
+  {
+    value: "subgenre",
+    label: "Subgenre",
+  },
+  {
+    value: "format",
+    label: "Format",
+  },
+  {
+    value: "publicationDecade",
+    label: "Publication decade",
+  },
+  {
+    value: "publisher",
+    label: "Publisher",
+  },
+  {
+    value: "author",
+    label: "Author",
+  },
+  {
+    value: "room",
+    label: "Room",
+  },
+  {
+    value: "bookcase",
+    label: "Bookcase",
+  },
+  {
+    value: "pageRange",
+    label: "Book length",
+  },
+];
+
+const STATS_DISPLAY_OPTIONS: Array<{
+  value: StatsDisplay;
+  label: string;
+}> = [
+  {
+    value: "bars",
+    label: "Bars",
+  },
+  {
+    value: "pie",
+    label: "Pie",
+  },
+  {
+    value: "list",
+    label: "List",
+  },
+];
+
+const STATS_PIE_COLORS = [
+  "#526f45",
+  "#c99a45",
+  "#b86450",
+  "#7a4d2b",
+  "#8ea176",
+  "#d7b86f",
+  "#6f604b",
+];
 
 const APP_NAV_ITEMS: Array<{
   tab: AppTab;
@@ -83,6 +223,12 @@ const APP_NAV_ITEMS: Array<{
     label: "Wanted",
     icon: "📚",
     description: "View books and series we still need.",
+  },
+  {
+    tab: "stats",
+    label: "Stats",
+    icon: "📊",
+    description: "Explore the household library by the numbers.",
   },
   {
     tab: "update",
@@ -322,6 +468,309 @@ function compareSuggestionText(a: string, b: string): number {
     numeric: true,
     sensitivity: "base",
   });
+}
+
+function getStatsPercent(
+  part: number,
+  total: number
+): number {
+  if (total <= 0) {
+    return 0;
+  }
+
+  return Math.round(
+    (part / total) * 100
+  );
+}
+
+function getStatsBreakdownValue(
+  book: Book,
+  breakdown: StatsBreakdown
+): string {
+  switch (breakdown) {
+    case "genre":
+      return (
+        String(book.genre ?? "").trim() ||
+        "Unknown"
+      );
+
+    case "subgenre":
+      return (
+        String(book.subgenre ?? "").trim() ||
+        "Unknown"
+      );
+
+    case "format":
+      return (
+        String(book.format ?? "").trim() ||
+        "Unknown"
+      );
+
+    case "publisher":
+      return (
+        String(book.publisher ?? "").trim() ||
+        "Unknown"
+      );
+
+    case "author":
+      return (
+        String(book.author ?? "").trim() ||
+        "Unknown"
+      );
+
+    case "room":
+      return (
+        String(book.room ?? "").trim() ||
+        "Unknown"
+      );
+
+    case "bookcase":
+      return (
+        String(book.bookcase ?? "").trim() ||
+        "Unknown"
+      );
+
+    case "publicationDecade": {
+      const publicationYear =
+        Number(book.publicationYear);
+
+      if (
+        !Number.isFinite(
+          publicationYear
+        ) ||
+        publicationYear <= 0
+      ) {
+        return "Unknown";
+      }
+
+      const decade =
+        Math.floor(
+          publicationYear / 10
+        ) * 10;
+
+      return `${decade}s`;
+    }
+
+    case "pageRange": {
+      const totalPages =
+        Number(book.totalPages);
+
+      if (
+        !Number.isFinite(totalPages) ||
+        totalPages <= 0
+      ) {
+        return "Unknown";
+      }
+
+      if (totalPages < 200) {
+        return "Under 200 pages";
+      }
+
+      if (totalPages < 400) {
+        return "200–399 pages";
+      }
+
+      if (totalPages < 600) {
+        return "400–599 pages";
+      }
+
+      if (totalPages < 800) {
+        return "600–799 pages";
+      }
+
+      return "800+ pages";
+    }
+  }
+}
+
+function formatStatsReadingProgress(
+  attempt: LibraryReaderReadingAttempt,
+  book?: Book
+): string {
+  const parts = [
+    attempt.is_reread
+      ? "Rereading"
+      : "Reading",
+  ];
+
+  const currentPage = Math.max(
+    attempt.current_page ?? 0,
+    0
+  );
+
+  const totalPages = Number(
+    book?.totalPages
+  );
+
+  if (currentPage > 0) {
+    parts.push(
+      Number.isFinite(totalPages) &&
+        totalPages > 0
+        ? `Page ${currentPage.toLocaleString()} of ${totalPages.toLocaleString()}`
+        : `Page ${currentPage.toLocaleString()}`
+    );
+  } else if (
+    Number.isFinite(totalPages) &&
+    totalPages > 0
+  ) {
+    parts.push(
+      `${totalPages.toLocaleString()} pages`
+    );
+  }
+
+  return parts.join(" · ");
+}
+
+function AutoFitStatValue({
+  value,
+}: {
+  value: string;
+}) {
+  const valueRef =
+    useRef<HTMLElement | null>(
+      null
+    );
+
+  useLayoutEffect(() => {
+    const element =
+      valueRef.current;
+
+    const container =
+      element?.parentElement;
+
+    if (
+      !element ||
+      !container
+    ) {
+      return;
+    }
+
+    let animationFrameId = 0;
+    let lastContainerWidth = -1;
+
+    function fitValue() {
+      window.cancelAnimationFrame(
+        animationFrameId
+      );
+
+      animationFrameId =
+        window.requestAnimationFrame(
+          () => {
+            if (
+              !element ||
+              element.clientWidth <= 0
+            ) {
+              return;
+            }
+
+            element.style.fontSize =
+              "";
+
+            const maximumFontSize =
+              Number.parseFloat(
+                window
+                  .getComputedStyle(
+                    element
+                  )
+                  .fontSize
+              ) || 38;
+
+            const minimumFontSize =
+              16;
+
+            let lowerSize =
+              minimumFontSize;
+
+            let upperSize =
+              maximumFontSize;
+
+            let bestSize =
+              minimumFontSize;
+
+            for (
+              let step = 0;
+              step < 12;
+              step += 1
+            ) {
+              const testSize =
+                (lowerSize +
+                  upperSize) /
+                2;
+
+              element.style.fontSize =
+                `${testSize}px`;
+
+              if (
+                element.scrollWidth <=
+                element.clientWidth
+              ) {
+                bestSize =
+                  testSize;
+
+                lowerSize =
+                  testSize;
+              } else {
+                upperSize =
+                  testSize;
+              }
+            }
+
+            element.style.fontSize =
+              `${bestSize}px`;
+          }
+        );
+    }
+
+    const resizeObserver =
+      new ResizeObserver(
+        ([entry]) => {
+          const nextWidth =
+            entry?.contentRect
+              .width ?? 0;
+
+          if (
+            Math.abs(
+              nextWidth -
+                lastContainerWidth
+            ) < 0.5
+          ) {
+            return;
+          }
+
+          lastContainerWidth =
+            nextWidth;
+
+          fitValue();
+        }
+      );
+
+    resizeObserver.observe(
+      container
+    );
+
+    fitValue();
+
+    return () => {
+      resizeObserver.disconnect();
+
+      window.cancelAnimationFrame(
+        animationFrameId
+      );
+
+      element.style.fontSize =
+        "";
+    };
+  }, [value]);
+
+  return (
+    <strong
+      ref={valueRef}
+      className="statsMetricValue"
+      title={value}
+    >
+      {value}
+    </strong>
+  );
 }
 
 function buildSearchSuggestions(
@@ -1162,6 +1611,27 @@ export default function App() {
     publicationYear: true,
     coverImage: true,
   });
+
+  const [
+    statsDataset,
+    setStatsDataset,
+  ] = useState<StatsDataset>(
+    "collection"
+  );
+
+  const [
+    statsBreakdown,
+    setStatsBreakdown,
+  ] = useState<StatsBreakdown>(
+    "genre"
+  );
+
+  const [
+    statsDisplay,
+    setStatsDisplay,
+  ] = useState<StatsDisplay>(
+    "bars"
+  );
 
   const [searchQuery, setSearchQuery] =
     useState("");
@@ -2158,6 +2628,26 @@ export default function App() {
     [books]
   );
 
+  const booksByCatalogKey =
+    useMemo(() => {
+      const nextBooksByCatalogKey =
+        new Map<string, Book>();
+
+      books.forEach((book) => {
+        const catalogKey =
+          book.catalogKey?.trim();
+
+        if (catalogKey) {
+          nextBooksByCatalogKey.set(
+            catalogKey,
+            book
+          );
+        }
+      });
+
+      return nextBooksByCatalogKey;
+    }, [books]);
+
   const sharedLibraryStateIsAuthoritative =
     householdSession !== null &&
     libraryStateLoadStatus === "ready";
@@ -2191,6 +2681,509 @@ export default function App() {
       )?.is_read ?? false
     );
   }
+
+  const statsBookFacts =
+    useMemo(
+      () =>
+        books.map((book) => {
+          const cjRead =
+            getBookReaderIsRead(
+              book,
+              "cj",
+              Boolean(book.cj)
+            );
+
+          const jadeRead =
+            getBookReaderIsRead(
+              book,
+              "jc",
+              Boolean(book.jc)
+            );
+
+          return {
+            book,
+            cjRead,
+            jadeRead,
+          };
+        }),
+      [
+        books,
+        sharedLibraryStateIsAuthoritative,
+        libraryStateByKey,
+      ]
+    );
+
+  const statsSummary =
+    useMemo(() => {
+      let totalPages = 0;
+      let pageCountBooks = 0;
+      let publicationYearBooks = 0;
+      let coverBooks = 0;
+      let cjReadBooks = 0;
+      let jadeReadBooks = 0;
+      let eitherReadBooks = 0;
+      let bothReadBooks = 0;
+
+      statsBookFacts.forEach(
+        ({
+          book,
+          cjRead,
+          jadeRead,
+        }) => {
+          const totalBookPages =
+            Number(book.totalPages);
+
+          if (
+            Number.isFinite(
+              totalBookPages
+            ) &&
+            totalBookPages > 0
+          ) {
+            totalPages +=
+              totalBookPages;
+
+            pageCountBooks += 1;
+          }
+
+          const publicationYear =
+            Number(
+              book.publicationYear
+            );
+
+          if (
+            Number.isFinite(
+              publicationYear
+            ) &&
+            publicationYear > 0
+          ) {
+            publicationYearBooks += 1;
+          }
+
+          if (
+            String(
+              book.coverImage ?? ""
+            ).trim()
+          ) {
+            coverBooks += 1;
+          }
+
+          if (cjRead) {
+            cjReadBooks += 1;
+          }
+
+          if (jadeRead) {
+            jadeReadBooks += 1;
+          }
+
+          if (cjRead || jadeRead) {
+            eitherReadBooks += 1;
+          }
+
+          if (cjRead && jadeRead) {
+            bothReadBooks += 1;
+          }
+        }
+      );
+
+      const totalBooks =
+        statsBookFacts.length;
+
+      return {
+        totalBooks,
+        totalPages,
+        pageCountBooks,
+        publicationYearBooks,
+        coverBooks,
+        cjReadBooks,
+        jadeReadBooks,
+        eitherReadBooks,
+        bothReadBooks,
+
+        neitherReadBooks:
+          totalBooks -
+          eitherReadBooks,
+
+        averageBookPages:
+          pageCountBooks > 0
+            ? Math.round(
+                totalPages /
+                  pageCountBooks
+              )
+            : 0,
+      };
+    }, [statsBookFacts]);
+
+  const statsDatasetBookFacts =
+    useMemo(() => {
+      switch (statsDataset) {
+        case "cjRead":
+          return statsBookFacts.filter(
+            (item) => item.cjRead
+          );
+
+        case "jadeRead":
+          return statsBookFacts.filter(
+            (item) => item.jadeRead
+          );
+
+        case "eitherRead":
+          return statsBookFacts.filter(
+            (item) =>
+              item.cjRead ||
+              item.jadeRead
+          );
+
+        case "bothRead":
+          return statsBookFacts.filter(
+            (item) =>
+              item.cjRead &&
+              item.jadeRead
+          );
+
+        case "neitherRead":
+          return statsBookFacts.filter(
+            (item) =>
+              !item.cjRead &&
+              !item.jadeRead
+          );
+
+        case "collection":
+        default:
+          return statsBookFacts;
+      }
+    }, [
+      statsBookFacts,
+      statsDataset,
+    ]);
+
+  const statsBreakdownRows =
+    useMemo(() => {
+      const counts =
+        new Map<string, number>();
+
+      statsDatasetBookFacts.forEach(
+        ({ book }) => {
+          const label =
+            getStatsBreakdownValue(
+              book,
+              statsBreakdown
+            );
+
+          counts.set(
+            label,
+            (counts.get(label) ?? 0) +
+              1
+          );
+        }
+      );
+
+      const datasetTotal =
+        statsDatasetBookFacts.length;
+
+      return Array.from(
+        counts.entries()
+      )
+        .map(([label, count]) => ({
+          label,
+          count,
+
+          percentage:
+            getStatsPercent(
+              count,
+              datasetTotal
+            ),
+        }))
+        .sort(
+          (a, b) =>
+            b.count - a.count ||
+            compareSuggestionText(
+              a.label,
+              b.label
+            )
+        );
+    }, [
+      statsDatasetBookFacts,
+      statsBreakdown,
+    ]);
+
+  const statsBreakdownMaxCount =
+    statsBreakdownRows[0]
+      ?.count ?? 0;
+
+  const statsPieRows =
+    useMemo(() => {
+      const totalCount =
+        statsBreakdownRows.reduce(
+          (
+            runningTotal,
+            row
+          ) =>
+            runningTotal +
+            row.count,
+          0
+        );
+
+      if (totalCount <= 0) {
+        return [];
+      }
+
+      const unknownRow =
+        statsBreakdownRows.find(
+          (row) =>
+            row.label ===
+            "Unknown"
+        );
+
+      const existingOtherRow =
+        statsBreakdownRows.find(
+          (row) =>
+            row.label ===
+            "Other"
+        );
+
+      const namedRows =
+        statsBreakdownRows.filter(
+          (row) =>
+            row.label !==
+              "Unknown" &&
+            row.label !==
+              "Other"
+        );
+
+      const visibleNamedLimit =
+        unknownRow
+          ? 5
+          : 6;
+
+      const visibleNamedRows =
+        namedRows.slice(
+          0,
+          visibleNamedLimit
+        );
+
+      const hiddenNamedCount =
+        namedRows
+          .slice(
+            visibleNamedLimit
+          )
+          .reduce(
+            (
+              runningTotal,
+              row
+            ) =>
+              runningTotal +
+              row.count,
+            0
+          );
+
+      const groupedOtherCount =
+        hiddenNamedCount +
+        (existingOtherRow
+          ?.count ?? 0);
+
+      const groupedRows = [
+        ...visibleNamedRows,
+
+        ...(unknownRow
+          ? [unknownRow]
+          : []),
+
+        ...(groupedOtherCount >
+        0
+          ? [
+              {
+                label: "Other",
+
+                count:
+                  groupedOtherCount,
+
+                percentage:
+                  getStatsPercent(
+                    groupedOtherCount,
+                    totalCount
+                  ),
+              },
+            ]
+          : []),
+      ];
+
+      return groupedRows.map(
+        (row, index) => ({
+          ...row,
+
+          fill:
+            STATS_PIE_COLORS[
+              index %
+                STATS_PIE_COLORS.length
+            ],
+        })
+      );
+    }, [statsBreakdownRows]);
+
+  const currentReadingItems =
+    useMemo(
+      () =>
+        activeReadingAttempts.map(
+          (attempt) => ({
+            attempt,
+
+            book:
+              booksByCatalogKey.get(
+                attempt.catalog_key
+              ),
+          })
+        ),
+      [
+        activeReadingAttempts,
+        booksByCatalogKey,
+      ]
+    );
+
+  const statsCurrentReadingGroups = [
+    {
+      readerId: "cj" as const,
+      label: "CJ",
+
+      items:
+        currentReadingItems.filter(
+          ({ attempt }) =>
+            attempt.reader_id ===
+            "cj"
+        ),
+    },
+    {
+      readerId: "jc" as const,
+      label: "Jade",
+
+      items:
+        currentReadingItems.filter(
+          ({ attempt }) =>
+            attempt.reader_id ===
+            "jc"
+        ),
+    },
+  ];
+
+  const activeStatsDataset =
+    STATS_DATASET_OPTIONS.find(
+      (option) =>
+        option.value ===
+        statsDataset
+    ) ??
+    STATS_DATASET_OPTIONS[0];
+
+  const activeStatsBreakdown =
+    STATS_BREAKDOWN_OPTIONS.find(
+      (option) =>
+        option.value ===
+        statsBreakdown
+    ) ??
+    STATS_BREAKDOWN_OPTIONS[0];
+
+  const statsOverviewCards = [
+    {
+      label: "Books owned",
+
+      value:
+        statsSummary.totalBooks
+          .toLocaleString(),
+
+      meta: "Whole collection",
+    },
+    {
+      label: "Known pages",
+
+      value:
+        statsSummary.totalPages
+          .toLocaleString(),
+
+      meta: `${statsSummary.pageCountBooks.toLocaleString()} books counted`,
+    },
+    {
+      label: "Average length",
+
+      value:
+        statsSummary.pageCountBooks >
+        0
+          ? `${statsSummary.averageBookPages.toLocaleString()} pages`
+          : "—",
+
+      meta: "Books with page data",
+    },
+    {
+      label: "Household reach",
+
+      value:
+        statsSummary.eitherReadBooks
+          .toLocaleString(),
+
+      meta: `${getStatsPercent(
+        statsSummary.eitherReadBooks,
+        statsSummary.totalBooks
+      )}% read by at least one`,
+    },
+    {
+      label: "CJ has read",
+
+      value:
+        statsSummary.cjReadBooks
+          .toLocaleString(),
+
+      meta: `${getStatsPercent(
+        statsSummary.cjReadBooks,
+        statsSummary.totalBooks
+      )}% of the library`,
+    },
+    {
+      label: "Jade has read",
+
+      value:
+        statsSummary.jadeReadBooks
+          .toLocaleString(),
+
+      meta: `${getStatsPercent(
+        statsSummary.jadeReadBooks,
+        statsSummary.totalBooks
+      )}% of the library`,
+    },
+    {
+      label: "Both have read",
+
+      value:
+        statsSummary.bothReadBooks
+          .toLocaleString(),
+
+      meta: "Shared reading overlap",
+    },
+    {
+      label: "Neither has read",
+
+      value:
+        statsSummary.neitherReadBooks
+          .toLocaleString(),
+
+      meta: "Fresh household territory",
+    },
+  ];
+
+  const statsCoverageRows = [
+    {
+      label: "Page count",
+      complete:
+        statsSummary.pageCountBooks,
+    },
+    {
+      label: "Publication year",
+      complete:
+        statsSummary
+          .publicationYearBooks,
+    },
+    {
+      label: "Cover image",
+      complete:
+        statsSummary.coverBooks,
+    },
+  ];
 
   function getChallengeEntryDisplayState(
     entry: ChallengeEntry,
@@ -5430,6 +6423,7 @@ export default function App() {
 
                                             <button
                                               type="button"
+                                              className="detailChallengeManageUseButton"
                                               disabled={
                                                 bookDetailHasChanges ||
                                                 actionIsSaving ||
@@ -5878,9 +6872,11 @@ export default function App() {
             "challenges"
           ? activeChallenge?.name ??
             "Challenges"
-          : activeTab === "update"
-            ? "Update"
-            : "Search";
+          : activeTab === "stats"
+            ? "Stats"
+            : activeTab === "update"
+              ? "Update"
+              : "Search";
 
   const headerMeta =
     activeTab === "map"
@@ -5918,17 +6914,19 @@ export default function App() {
                   ? "challenge"
                   : "challenges"
               }`
-          : activeTab === "update"
-            ? selectedUpdateFieldList
-                .length > 0
-              ? `${updateBooks.length} ${
-                  updateBooks.length ===
-                  1
-                    ? "book"
-                    : "books"
-                } in current queue`
-              : "Choose a research queue"
-            : `${books.length} books loaded`;
+          : activeTab === "stats"
+            ? `${statsSummary.totalBooks.toLocaleString()} books · ${statsSummary.totalPages.toLocaleString()} known pages`
+            : activeTab === "update"
+              ? selectedUpdateFieldList
+                  .length > 0
+                ? `${updateBooks.length} ${
+                    updateBooks.length ===
+                    1
+                      ? "book"
+                      : "books"
+                  } in current queue`
+                : "Choose a research queue"
+              : `${books.length} books loaded`;
 
   return (
     <main
@@ -6927,6 +7925,615 @@ export default function App() {
             )}
           </section>
         )
+      ) : activeTab === "stats" ? (
+        <section className="statsPanel">
+          <section className="statsIntro">
+            <p className="eyebrow">
+              Household library
+            </p>
+
+            <h2>
+              The collection by the
+              numbers
+            </h2>
+
+            <p>
+              Explore what you own,
+              what each of you has
+              read, and where the
+              collection’s metadata
+              still has gaps.
+            </p>
+
+            <p className="statsDataSource">
+              {sharedLibraryStateIsAuthoritative
+                ? "Read totals are live from the CJade household account."
+                : "Read totals are currently using the workbook CJ and JC checkboxes."}
+            </p>
+          </section>
+
+          <div className="statsOverviewGrid">
+            {statsOverviewCards.map(
+              (card) => (
+                <article
+                  key={card.label}
+                  className="statsMetricCard"
+                >
+                  <span className="statsMetricLabel">
+                    {card.label}
+                  </span>
+
+                  <AutoFitStatValue
+                    value={
+                      card.value
+                    }
+                  />
+
+                  <span className="statsMetricMeta">
+                    {card.meta}
+                  </span>
+                </article>
+              )
+            )}
+          </div>
+
+          <section className="statsSection">
+            <div className="statsSectionHeader">
+              <div>
+                <p className="eyebrow">
+                  Data coverage
+                </p>
+
+                <h2>
+                  How complete is the
+                  workbook?
+                </h2>
+              </div>
+
+              <p>
+                {statsSummary.totalBooks.toLocaleString()}{" "}
+                total books
+              </p>
+            </div>
+
+            <div className="statsCoverageList">
+              {statsCoverageRows.map(
+                (row) => {
+                  const percentage =
+                    getStatsPercent(
+                      row.complete,
+                      statsSummary.totalBooks
+                    );
+
+                  return (
+                    <div
+                      key={row.label}
+                      className="statsCoverageRow"
+                    >
+                      <div className="statsCoverageCopy">
+                        <strong>
+                          {row.label}
+                        </strong>
+
+                        <span>
+                          {row.complete.toLocaleString()}{" "}
+                          of{" "}
+                          {statsSummary.totalBooks.toLocaleString()}{" "}
+                          books
+                        </span>
+                      </div>
+
+                      <div
+                        className="statsCoverageTrack"
+                        role="progressbar"
+                        aria-label={`${row.label} coverage`}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-valuenow={
+                          percentage
+                        }
+                      >
+                        <span
+                          className="statsCoverageFill"
+                          style={{
+                            width: `${percentage}%`,
+                          }}
+                        />
+                      </div>
+
+                      <strong className="statsCoveragePercent">
+                        {percentage}%
+                      </strong>
+                    </div>
+                  );
+                }
+              )}
+            </div>
+          </section>
+
+          <section className="statsSection">
+            <div className="statsSectionHeader">
+              <div>
+                <p className="eyebrow">
+                  Currently reading
+                </p>
+
+                <h2>
+                  Household business
+                </h2>
+              </div>
+
+              <p>
+                Fully authorized
+                nosiness
+              </p>
+            </div>
+
+            {sharedReadingAttemptsAreAuthoritative ? (
+              <div className="statsCurrentGrid">
+                {statsCurrentReadingGroups.map(
+                  (group) => (
+                    <article
+                      key={
+                        group.readerId
+                      }
+                      className="statsReaderColumn"
+                    >
+                      <div className="statsReaderHeader">
+                        <h3>
+                          {group.label}
+                        </h3>
+
+                        <span>
+                          {
+                            group.items
+                              .length
+                          }{" "}
+                          active
+                        </span>
+                      </div>
+
+                      {group.items.length >
+                      0 ? (
+                        <div className="statsCurrentList">
+                          {group.items.map(
+                            ({
+                              attempt,
+                              book,
+                            }) => (
+                              <article
+                                key={
+                                  attempt.attempt_id
+                                }
+                                className="statsCurrentBook"
+                              >
+                                <strong>
+                                  {book?.title ??
+                                    attempt.catalog_key}
+                                </strong>
+
+                                <span>
+                                  {book?.author ??
+                                    "Library book"}
+                                </span>
+
+                                <span className="statsCurrentProgress">
+                                  {formatStatsReadingProgress(
+                                    attempt,
+                                    book
+                                  )}
+                                </span>
+                              </article>
+                            )
+                          )}
+                        </div>
+                      ) : (
+                        <p className="statsEmptyText">
+                          Nothing active
+                          right now.
+                        </p>
+                      )}
+                    </article>
+                  )
+                )}
+              </div>
+            ) : (
+              <p className="statsNotice">
+                Sign in to CJade to
+                load live current
+                reads.
+              </p>
+            )}
+          </section>
+
+          <section className="statsSection statsExplorer">
+            <div className="statsSectionHeader">
+              <div>
+                <p className="eyebrow">
+                  Chart explorer
+                </p>
+
+                <h2>
+                  Break it down
+                </h2>
+              </div>
+
+              <p>
+                {
+                  statsDatasetBookFacts
+                    .length
+                }{" "}
+                books included
+              </p>
+            </div>
+
+            <div className="statsControls">
+              <label className="statsSelectField">
+                <span>
+                  Books to include
+                </span>
+
+                <select
+                  value={statsDataset}
+                  onChange={(event) => {
+                    setStatsDataset(
+                      event.target
+                        .value as StatsDataset
+                    );
+                  }}
+                >
+                  {STATS_DATASET_OPTIONS.map(
+                    (option) => (
+                      <option
+                        key={
+                          option.value
+                        }
+                        value={
+                          option.value
+                        }
+                      >
+                        {
+                          option.label
+                        }
+                      </option>
+                    )
+                  )}
+                </select>
+              </label>
+
+              <label className="statsSelectField">
+                <span>
+                  Break down by
+                </span>
+
+                <select
+                  value={
+                    statsBreakdown
+                  }
+                  onChange={(event) => {
+                    setStatsBreakdown(
+                      event.target
+                        .value as StatsBreakdown
+                    );
+                  }}
+                >
+                  {STATS_BREAKDOWN_OPTIONS.map(
+                    (option) => (
+                      <option
+                        key={
+                          option.value
+                        }
+                        value={
+                          option.value
+                        }
+                      >
+                        {
+                          option.label
+                        }
+                      </option>
+                    )
+                  )}
+                </select>
+              </label>
+            </div>
+
+            <div className="statsDisplayControl">
+              <span className="statsDisplayLabel">
+                View as
+              </span>
+
+              <div
+                className="statsDisplayOptions"
+                role="group"
+                aria-label="Choose chart display"
+              >
+                {STATS_DISPLAY_OPTIONS.map(
+                  (option) => {
+                    const isActive =
+                      statsDisplay ===
+                      option.value;
+
+                    return (
+                      <button
+                        key={
+                          option.value
+                        }
+                        type="button"
+                        className={
+                          isActive
+                            ? "statsDisplayButton statsDisplayButtonActive"
+                            : "statsDisplayButton"
+                        }
+                        aria-pressed={
+                          isActive
+                        }
+                        onClick={() => {
+                          setStatsDisplay(
+                            option.value
+                          );
+                        }}
+                      >
+                        {
+                          option.label
+                        }
+                      </button>
+                    );
+                  }
+                )}
+              </div>
+            </div>
+
+            <div className="statsExplorerSummary">
+              <strong>
+                {
+                  activeStatsDataset.label
+                }
+              </strong>
+
+              <span>
+                {
+                  activeStatsDataset.description
+                }
+              </span>
+
+              <span>
+                Grouped by{" "}
+                {
+                  activeStatsBreakdown.label
+                }
+              </span>
+            </div>
+
+            {statsBreakdownRows.length >
+            0 ? (
+              <>
+                {statsDisplay ===
+                "bars" ? (
+                  <div className="statsBreakdownList">
+                    {statsBreakdownRows
+                      .slice(0, 15)
+                      .map((row) => {
+                        const relativeWidth =
+                          statsBreakdownMaxCount >
+                          0
+                            ? Math.round(
+                                (row.count /
+                                  statsBreakdownMaxCount) *
+                                  100
+                              )
+                            : 0;
+
+                        return (
+                          <article
+                            key={
+                              row.label
+                            }
+                            className="statsBreakdownRow"
+                          >
+                            <div className="statsBreakdownHeading">
+                              <strong>
+                                {
+                                  row.label
+                                }
+                              </strong>
+
+                              <span>
+                                {row.count.toLocaleString()}{" "}
+                                ·{" "}
+                                {
+                                  row.percentage
+                                }
+                                %
+                              </span>
+                            </div>
+
+                            <div
+                              className="statsBreakdownTrack"
+                              aria-hidden="true"
+                            >
+                              <span
+                                className="statsBreakdownFill"
+                                style={{
+                                  width: `${relativeWidth}%`,
+                                }}
+                              />
+                            </div>
+                          </article>
+                        );
+                      })}
+                  </div>
+                ) : statsDisplay ===
+                  "pie" ? (
+                  <div className="statsPieLayout">
+                    <div
+                      className="statsPieChart"
+                      role="img"
+                      aria-label={`${activeStatsDataset.label} grouped by ${activeStatsBreakdown.label}`}
+                    >
+                      <ResponsiveContainer
+                        width="100%"
+                        height="100%"
+                      >
+                        <PieChart
+                          accessibilityLayer
+                        >
+                          <Pie
+                            data={
+                              statsPieRows
+                            }
+                            dataKey="count"
+                            nameKey="label"
+                            innerRadius="52%"
+                            outerRadius="82%"
+                            paddingAngle={2}
+                            stroke="#fff8e9"
+                            strokeWidth={2}
+                            isAnimationActive={
+                              false
+                            }
+                          />
+
+                          <Tooltip
+                            formatter={(
+                              value
+                            ) => [
+                              Number(
+                                value ??
+                                  0
+                              ).toLocaleString(),
+                              "Books",
+                            ]}
+                          />
+                        </PieChart>
+                      </ResponsiveContainer>
+
+                      <div
+                        className="statsPieCenter"
+                        aria-hidden="true"
+                      >
+                        <strong>
+                          {statsDatasetBookFacts.length.toLocaleString()}
+                        </strong>
+
+                        <span>
+                          books
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="statsPieLegend">
+                      {statsPieRows.map(
+                        (row) => (
+                          <div
+                            key={
+                              row.label
+                            }
+                            className="statsPieLegendItem"
+                          >
+                            <span
+                              className="statsPieSwatch"
+                              style={{
+                                backgroundColor:
+                                  row.fill,
+                              }}
+                              aria-hidden="true"
+                            />
+
+                            <span className="statsPieLegendLabel">
+                              {
+                                row.label
+                              }
+                            </span>
+
+                            <span className="statsPieLegendValue">
+                              {row.count.toLocaleString()}{" "}
+                              ·{" "}
+                              {
+                                row.percentage
+                              }
+                              %
+                            </span>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="statsPlainList">
+                    {statsBreakdownRows
+                      .slice(0, 15)
+                      .map(
+                        (
+                          row,
+                          index
+                        ) => (
+                          <article
+                            key={
+                              row.label
+                            }
+                            className="statsPlainRow"
+                          >
+                            <span className="statsPlainRank">
+                              {index +
+                                1}
+                            </span>
+
+                            <div className="statsPlainCopy">
+                              <strong>
+                                {
+                                  row.label
+                                }
+                              </strong>
+
+                              <span>
+                                {row.count.toLocaleString()}{" "}
+                                books ·{" "}
+                                {
+                                  row.percentage
+                                }
+                                %
+                              </span>
+                            </div>
+                          </article>
+                        )
+                      )}
+                  </div>
+                )}
+
+                {statsDisplay !==
+                  "pie" &&
+                statsBreakdownRows.length >
+                  15 ? (
+                  <p className="statsListNote">
+                    Showing the top 15
+                    of{" "}
+                    {
+                      statsBreakdownRows.length
+                    }{" "}
+                    categories.
+                  </p>
+                ) : null}
+
+                {statsDisplay ===
+                  "pie" &&
+                statsBreakdownRows.length >
+                  statsPieRows.length ? (
+                  <p className="statsListNote">
+                    Smaller categories
+                    are grouped into
+                    Other for this
+                    view.
+                  </p>
+                ) : null}
+              </>
+            ) : (
+              <p className="statsEmptyText">
+                No books are available
+                for this combination.
+              </p>
+            )}
+          </section>
+        </section>
       ) : activeTab === "update" ? (
         selectedBook ? (
           renderBookDetail(
