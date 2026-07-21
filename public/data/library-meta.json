@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-21T16:46:07.647799+00:00",
+  "generatedAt": "2026-07-21T16:55:06.085945+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "sourceSheet": "List View",
   "bookCount": 1016,
@@ -16502,9 +16502,9 @@
     "webpQuality": 76,
     "cachePath": "C:\\library_app\\library-map\\public\\data\\library-cover-cache.json",
     "extractedCount": 1007,
-    "convertedCount": 2,
-    "cachedCount": 1005,
-    "deletedStaleCount": 2,
+    "convertedCount": 0,
+    "cachedCount": 1007,
+    "deletedStaleCount": 0,
     "missingAnchors": [
       {
         "catalogKey": "bardugo-leigh-shadow-and-bone",
