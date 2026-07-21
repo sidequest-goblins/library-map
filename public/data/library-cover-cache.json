@@ -8320,14 +8320,14 @@
       "title": "Song of the Forever Rains",
       "webpQuality": 76
     },
-    "melot-colin-wildwood": {
-      "author": "Colin Melot; Carson Ellis",
-      "catalogKey": "melot-colin-wildwood",
+    "meloy-colin-wildwood": {
+      "author": "Colin Meloy; Carson Ellis",
+      "catalogKey": "meloy-colin-wildwood",
       "imageExtension": "webp",
       "imageHash": "e53def1892e34c6883441a2f0855b60ce493fbc8413b75c29618d19bd6bacff6",
       "mediaPath": "xl/media/image640.png",
-      "outputFilename": "melot-colin-wildwood.webp",
-      "publicPath": "/data/covers/melot-colin-wildwood.webp",
+      "outputFilename": "meloy-colin-wildwood.webp",
+      "publicPath": "/data/covers/meloy-colin-wildwood.webp",
       "sourceRow": 43,
       "sourceSheet": "M",
       "title": "Wildwood",
@@ -12831,17 +12831,17 @@
       "title": "The Underground Railroad",
       "webpQuality": 76
     },
-    "whiteley-aliya-the-beauty": {
+    "whiteley-aliya-the-beauty-peace-pipe": {
       "author": "Aliya Whiteley",
-      "catalogKey": "whiteley-aliya-the-beauty",
+      "catalogKey": "whiteley-aliya-the-beauty-peace-pipe",
       "imageExtension": "webp",
       "imageHash": "784910c97292aa094e472b8982be5e49a83869390dd3ee94cdcf953a011ad576",
       "mediaPath": "xl/media/image986.jpeg",
-      "outputFilename": "whiteley-aliya-the-beauty.webp",
-      "publicPath": "/data/covers/whiteley-aliya-the-beauty.webp",
+      "outputFilename": "whiteley-aliya-the-beauty-peace-pipe.webp",
+      "publicPath": "/data/covers/whiteley-aliya-the-beauty-peace-pipe.webp",
       "sourceRow": 60,
       "sourceSheet": "W-Z",
-      "title": "The Beauty",
+      "title": "The Beauty & Peace, Pipe",
       "webpQuality": 76
     },
     "wiesel-elie-night": {
@@ -13092,6 +13092,6 @@
       "webpQuality": 76
     }
   },
-  "generatedAt": "2026-07-19T21:54:46.990414+00:00",
+  "generatedAt": "2026-07-21T16:46:07.404154+00:00",
   "version": 1
 }

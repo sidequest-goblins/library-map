@@ -1515,6 +1515,340 @@ select {
   color: var(--muted);
 }
 
+.updatePanel {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.updateIntro,
+.updateResults {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 248, 233, 0.95),
+      rgba(247, 236, 215, 0.88)
+    ),
+    var(--paper);
+  box-shadow:
+    0 12px 30px
+    rgba(76, 48, 30, 0.1);
+}
+
+.updateIntro h2,
+.updateIntro p,
+.updateResultsHeader h2,
+.updateResultsHeader p {
+  margin: 0;
+}
+
+.updateIntro h2,
+.updateResultsHeader h2 {
+  color: var(--brownDark);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+}
+
+.updateIntro > p:last-child,
+.updateResultsHeader > p {
+  color: var(--muted);
+}
+
+.updateFieldGrid {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(210px, 1fr)
+    );
+  gap: 0.65rem;
+}
+
+.updateFieldButton {
+  display: grid;
+  grid-template-columns:
+    auto
+    minmax(0, 1fr)
+    auto;
+  gap: 0.7rem;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  border:
+    1px solid
+    rgba(76, 48, 30, 0.16);
+  border-radius: 18px;
+  padding: 0.8rem;
+  color: var(--ink);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 250, 240, 0.94),
+      rgba(247, 236, 215, 0.8)
+    );
+  box-shadow:
+    0 8px 20px
+    rgba(76, 48, 30, 0.08);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.updateFieldButton:hover {
+  transform: translateY(-1px);
+  border-color:
+    rgba(82, 111, 69, 0.42);
+  box-shadow:
+    0 11px 24px
+    rgba(76, 48, 30, 0.12);
+}
+
+.updateFieldButton:focus-visible {
+  outline:
+    3px solid
+    rgba(201, 154, 69, 0.3);
+  outline-offset: 2px;
+}
+
+.updateFieldButtonActive {
+  border-color:
+    rgba(52, 72, 46, 0.46);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(169, 183, 141, 0.42),
+      rgba(255, 248, 233, 0.94)
+    );
+}
+
+.updateFieldIcon {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border:
+    1px solid
+    rgba(82, 111, 69, 0.22);
+  border-radius: 13px;
+  background:
+    rgba(255, 250, 240, 0.78);
+  font-size: 1.2rem;
+  box-shadow:
+    0 5px 12px
+    rgba(76, 48, 30, 0.07);
+}
+
+.updateFieldCopy {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.updateFieldCopy strong {
+  color: var(--brownDark);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: 1rem;
+}
+
+.updateFieldCopy > span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.updateFieldCount {
+  display: grid;
+  place-items: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  border:
+    1px solid
+    rgba(82, 111, 69, 0.25);
+  border-radius: 999px;
+  padding: 0 0.45rem;
+  color: var(--greenDark);
+  background:
+    rgba(169, 183, 141, 0.25);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.updateResultsHeader {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.updateList {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.updateCard {
+  display: grid;
+  gap: 0.65rem;
+  width: 100%;
+  min-width: 0;
+  border:
+    1px solid
+    rgba(76, 48, 30, 0.16);
+  border-radius: 18px;
+  padding: 0.9rem 1rem;
+  color: var(--ink);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 250, 240, 0.98),
+      rgba(247, 236, 215, 0.84)
+    ),
+    var(--paper);
+  box-shadow:
+    0 8px 20px
+    rgba(76, 48, 30, 0.08);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.updateCard:hover {
+  transform: translateY(-1px);
+  border-color:
+    rgba(82, 111, 69, 0.42);
+  box-shadow:
+    0 11px 24px
+    rgba(76, 48, 30, 0.12);
+}
+
+.updateCard:focus-visible {
+  outline:
+    3px solid
+    rgba(201, 154, 69, 0.3);
+  outline-offset: 2px;
+}
+
+.updateCardHeading {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.updateCard h3,
+.updateCard p {
+  margin: 0;
+}
+
+.updateCard h3 {
+  color: var(--brownDark);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: 1.06rem;
+}
+
+.updateAuthor,
+.updateLocation {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.updateAuthor {
+  margin-top:
+    0.2rem !important;
+}
+
+.updatePosition {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.updateMissingBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.updateMissingBadge {
+  width: fit-content;
+  border:
+    1px solid
+    rgba(184, 100, 80, 0.28);
+  border-radius: 999px;
+  padding: 0.24rem 0.5rem;
+  color: #864637;
+  background:
+    rgba(184, 100, 80, 0.11);
+  font-size: 0.72rem;
+  font-weight: 850;
+}
+
+.updateLocation {
+  padding-left: 0.55rem;
+  border-left:
+    3px solid
+    rgba(82, 111, 69, 0.34);
+  font-weight: 700;
+}
+
+.updateComplete {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  border:
+    1px solid
+    rgba(82, 111, 69, 0.3);
+  border-radius: 16px;
+  padding: 0.9rem;
+  background:
+    rgba(169, 183, 141, 0.2);
+}
+
+.updateComplete > span {
+  font-size: 1.5rem;
+}
+
+.updateComplete h3,
+.updateComplete p {
+  margin: 0;
+}
+
+.updateComplete h3 {
+  color: var(--greenDark);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+}
+
+.updateComplete p {
+  margin-top: 0.15rem;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
 .mapPanel {
   display: grid;
   gap: 1rem;
@@ -1652,8 +1986,13 @@ select {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .wantedList {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .wantedList,
+  .updateList {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
   }
 
   .wantedModeTabs {

@@ -46,7 +46,13 @@ type AppTab =
   | "search"
   | "map"
   | "challenges"
-  | "wanted";
+  | "wanted"
+  | "update";
+
+type UpdateField =
+  | "totalPages"
+  | "publicationYear"
+  | "coverImage";
 
 const APP_NAV_ITEMS: Array<{
   tab: AppTab;
@@ -78,7 +84,48 @@ const APP_NAV_ITEMS: Array<{
     icon: "📚",
     description: "View books and series we still need.",
   },
+  {
+    tab: "update",
+    label: "Update",
+    icon: "🛠️",
+    description: "Find books missing workbook details.",
+  },
 ];
+
+const UPDATE_FIELD_OPTIONS: Array<{
+  field: UpdateField;
+  label: string;
+  icon: string;
+  description: string;
+}> = [
+  {
+    field: "totalPages",
+    label: "Page count",
+    icon: "📄",
+    description: "Books without a total page count.",
+  },
+  {
+    field: "publicationYear",
+    label: "Publication year",
+    icon: "🗓️",
+    description: "Books without a publication year.",
+  },
+  {
+    field: "coverImage",
+    label: "Cover image",
+    icon: "🖼️",
+    description: "Books that do not have a cover yet.",
+  },
+];
+
+const UPDATE_FIELD_LABELS: Record<
+  UpdateField,
+  string
+> = {
+  totalPages: "Missing page count",
+  publicationYear: "Missing publication year",
+  coverImage: "Missing cover",
+};
 
 type WantedMode =
   | "toBuy"
@@ -716,6 +763,101 @@ function formatSearchSeriesLabel(book: Book): string {
   return `${cleanSeries} #${seriesNumber}`;
 }
 
+function getMissingUpdateFields(
+  book: Book
+): UpdateField[] {
+  const missingFields: UpdateField[] = [];
+
+  const totalPages =
+    Number(book.totalPages);
+
+  const publicationYear =
+    Number(book.publicationYear);
+
+  if (
+    !Number.isFinite(totalPages) ||
+    totalPages <= 0
+  ) {
+    missingFields.push(
+      "totalPages"
+    );
+  }
+
+  if (
+    !Number.isFinite(
+      publicationYear
+    ) ||
+    publicationYear <= 0
+  ) {
+    missingFields.push(
+      "publicationYear"
+    );
+  }
+
+  if (
+    !String(
+      book.coverImage ?? ""
+    ).trim()
+  ) {
+    missingFields.push(
+      "coverImage"
+    );
+  }
+
+  return missingFields;
+}
+
+function sortBooksForUpdate(
+  booksToSort: Book[]
+): Book[] {
+  const rowOrder: Record<
+    string,
+    number
+  > = {
+    Main: 0,
+    Front: 0,
+    Back: 1,
+  };
+
+  return [...booksToSort].sort(
+    (a, b) =>
+      compareSuggestionText(
+        a.room,
+        b.room
+      ) ||
+      compareSuggestionText(
+        a.bookcase,
+        b.bookcase
+      ) ||
+      compareSuggestionText(
+        a.shelf,
+        b.shelf
+      ) ||
+      (
+        (rowOrder[a.row] ?? 99) -
+        (rowOrder[b.row] ?? 99)
+      ) ||
+      (
+        (
+          a.shelfPosition ??
+          Number.MAX_SAFE_INTEGER
+        ) -
+        (
+          b.shelfPosition ??
+          Number.MAX_SAFE_INTEGER
+        )
+      ) ||
+      compareSuggestionText(
+        a.authorSort,
+        b.authorSort
+      ) ||
+      compareSuggestionText(
+        a.title,
+        b.title
+      )
+  );
+}
+
 function sortBooksForDetailShelf(booksToSort: Book[]): Book[] {
   return [...booksToSort].sort((a, b) => {
     const aPosition = a.shelfPosition;
@@ -1000,9 +1142,25 @@ export default function App() {
   const [loadError, setLoadError] = useState("");
   const [selectedBookcaseId, setSelectedBookcaseId] = useState("");
   const [selectedRoom, setSelectedRoom] = useState("");
-  const [activeTab, setActiveTab] = useState<AppTab>("search");
-  const [appMenuOpen, setAppMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] =
+    useState<AppTab>("search");
+
+  const [appMenuOpen, setAppMenuOpen] =
+    useState(false);
+
+  const [
+    selectedUpdateFields,
+    setSelectedUpdateFields,
+  ] = useState<
+    Record<UpdateField, boolean>
+  >({
+    totalPages: true,
+    publicationYear: true,
+    coverImage: true,
+  });
+
+  const [searchQuery, setSearchQuery] =
+    useState("");
   const [searchScope, setSearchScope] = useState<SearchScope>("all");
   const [authorNameMode, setAuthorNameMode] =
     useState<AuthorNameMode>("last");
@@ -1861,6 +2019,80 @@ export default function App() {
       searchSortDirection,
     ]
   );
+
+  const updateFieldCounts =
+    useMemo<
+      Record<
+        UpdateField,
+        number
+      >
+    >(() => {
+      const counts: Record<
+        UpdateField,
+        number
+      > = {
+        totalPages: 0,
+        publicationYear: 0,
+        coverImage: 0,
+      };
+
+      books.forEach((book) => {
+        getMissingUpdateFields(
+          book
+        ).forEach((field) => {
+          counts[field] += 1;
+        });
+      });
+
+      return counts;
+    }, [books]);
+
+  const selectedUpdateFieldList =
+    useMemo<UpdateField[]>(
+      () =>
+        UPDATE_FIELD_OPTIONS
+          .filter(
+            (option) =>
+              selectedUpdateFields[
+                option.field
+              ]
+          )
+          .map(
+            (option) =>
+              option.field
+          ),
+      [selectedUpdateFields]
+    );
+
+  const updateBooks =
+    useMemo(() => {
+      if (
+        selectedUpdateFieldList
+          .length === 0
+      ) {
+        return [];
+      }
+
+      const selectedFields =
+        new Set(
+          selectedUpdateFieldList
+        );
+
+      return sortBooksForUpdate(
+        books.filter((book) =>
+          getMissingUpdateFields(
+            book
+          ).some((field) =>
+            selectedFields.has(
+              field
+            )
+          )
+        )
+      );
+    }, [
+      books,
+      selectedUpdateFieldList,
+    ]);
 
   const booksById = useMemo(
     () =>
@@ -5381,29 +5613,67 @@ export default function App() {
                   {selectedBook.genre ? (
                     <div>
                       <dt>Genre</dt>
-                      <dd>{selectedBook.genre}</dd>
+                      <dd>
+                        {selectedBook.genre}
+                      </dd>
                     </div>
                   ) : null}
 
                   {selectedBook.publisher ? (
                     <div>
                       <dt>Publisher</dt>
-                      <dd>{selectedBook.publisher}</dd>
+                      <dd>
+                        {
+                          selectedBook.publisher
+                        }
+                      </dd>
+                    </div>
+                  ) : null}
+
+                  {selectedBook.publicationYear ? (
+                    <div>
+                      <dt>
+                        Publication year
+                      </dt>
+
+                      <dd>
+                        {
+                          selectedBook
+                            .publicationYear
+                        }
+                      </dd>
+                    </div>
+                  ) : null}
+
+                  {selectedBook.totalPages ? (
+                    <div>
+                      <dt>Page count</dt>
+
+                      <dd>
+                        {selectedBook.totalPages.toLocaleString()}{" "}
+                        pages
+                      </dd>
                     </div>
                   ) : null}
 
                   {selectedBook.format ? (
                     <div>
                       <dt>Format</dt>
-                      <dd>{selectedBook.format}</dd>
+                      <dd>
+                        {selectedBook.format}
+                      </dd>
                     </div>
                   ) : null}
 
                   {selectedBookSeriesName ? (
                     <div>
                       <dt>Series</dt>
+
                       <dd>
-                        {selectedBookSeriesName}
+                        {
+                          selectedBookSeriesName
+                        }
+
                         {selectedBook.seriesNumber !=
                         null
                           ? ` #${selectedBook.seriesNumber}`
@@ -5544,12 +5814,17 @@ export default function App() {
 
   const headerTitle =
     activeTab === "map"
-      ? selectedBookcase?.bookcase ?? "Map"
+      ? selectedBookcase?.bookcase ??
+        "Map"
       : activeTab === "wanted"
         ? "Wanted"
-        : activeTab === "challenges"
-          ? activeChallenge?.name ?? "Challenges"
-          : "Search";
+        : activeTab ===
+            "challenges"
+          ? activeChallenge?.name ??
+            "Challenges"
+          : activeTab === "update"
+            ? "Update"
+            : "Search";
 
   const headerMeta =
     activeTab === "map"
@@ -5560,23 +5835,44 @@ export default function App() {
         : `${bookcases.length} bookcases`
       : activeTab === "wanted"
         ? `${wantedTotal} wanted ${
-            wantedTotal === 1 ? "book" : "books"
+            wantedTotal === 1
+              ? "book"
+              : "books"
           }`
-        : activeTab === "challenges"
+        : activeTab ===
+            "challenges"
           ? activeChallengeReader
-            ? `${activeChallengeReader.readerName} · ${
+            ? `${
+                activeChallengeReader.readerName
+              } · ${
                 activeChallengeEntries.length
               } ${
-                activeChallengeEntries.length === 1
+                activeChallengeEntries.length ===
+                1
                   ? "book"
                   : "books"
               }`
-            : `${challengeData.challenges.length} ${
-                challengeData.challenges.length === 1
+            : `${
+                challengeData
+                  .challenges.length
+              } ${
+                challengeData
+                  .challenges.length ===
+                1
                   ? "challenge"
                   : "challenges"
               }`
-          : `${books.length} books loaded`;
+          : activeTab === "update"
+            ? selectedUpdateFieldList
+                .length > 0
+              ? `${updateBooks.length} ${
+                  updateBooks.length ===
+                  1
+                    ? "book"
+                    : "books"
+                } in current queue`
+              : "Choose a research queue"
+            : `${books.length} books loaded`;
 
   return (
     <main
@@ -6573,6 +6869,277 @@ export default function App() {
                 )}
               </>
             )}
+          </section>
+        )
+      ) : activeTab === "update" ? (
+        selectedBook ? (
+          renderBookDetail(
+            "Back to update list",
+            () =>
+              setSelectedBookId(
+                null
+              ),
+            updateBooks
+          )
+        ) : (
+          <section className="updatePanel">
+            <section className="updateIntro">
+              <p className="eyebrow">
+                Workbook helper
+              </p>
+
+              <h2>
+                Field research
+              </h2>
+
+              <p>
+                Choose one or more
+                missing fields, then
+                work through the books
+                in physical library
+                order.
+              </p>
+            </section>
+
+            <div
+              className="updateFieldGrid"
+              role="group"
+              aria-label="Choose missing fields"
+            >
+              {UPDATE_FIELD_OPTIONS.map(
+                (option) => {
+                  const isSelected =
+                    selectedUpdateFields[
+                      option.field
+                    ];
+
+                  const fieldCount =
+                    updateFieldCounts[
+                      option.field
+                    ];
+
+                  return (
+                    <button
+                      key={
+                        option.field
+                      }
+                      type="button"
+                      className={
+                        isSelected
+                          ? "updateFieldButton updateFieldButtonActive"
+                          : "updateFieldButton"
+                      }
+                      aria-pressed={
+                        isSelected
+                      }
+                      onClick={() => {
+                        setSelectedUpdateFields(
+                          (
+                            currentFields
+                          ) => ({
+                            ...currentFields,
+
+                            [option.field]:
+                              !currentFields[
+                                option
+                                  .field
+                              ],
+                          })
+                        );
+
+                        setSelectedBookId(
+                          null
+                        );
+                      }}
+                    >
+                      <span
+                        className="updateFieldIcon"
+                        aria-hidden="true"
+                      >
+                        {
+                          option.icon
+                        }
+                      </span>
+
+                      <span className="updateFieldCopy">
+                        <strong>
+                          {
+                            option.label
+                          }
+                        </strong>
+
+                        <span>
+                          {
+                            option.description
+                          }
+                        </span>
+                      </span>
+
+                      <span className="updateFieldCount">
+                        {fieldCount}
+                      </span>
+                    </button>
+                  );
+                }
+              )}
+            </div>
+
+            <section className="updateResults">
+              <div className="updateResultsHeader">
+                <div>
+                  <p className="eyebrow">
+                    Field research
+                    queue
+                  </p>
+
+                  <h2>
+                    Books to check
+                  </h2>
+                </div>
+
+                <p>
+                  {selectedUpdateFieldList
+                    .length === 0
+                    ? "No fields selected"
+                    : updateBooks.length ===
+                        1
+                      ? "1 book"
+                      : `${updateBooks.length} books`}
+                </p>
+              </div>
+
+              {selectedUpdateFieldList
+                .length === 0 ? (
+                <p className="emptySearch">
+                  Choose at least one
+                  missing field above.
+                </p>
+              ) : updateBooks.length >
+                0 ? (
+                <div className="updateList">
+                  {updateBooks.map(
+                    (book) => {
+                      const missingFields =
+                        getMissingUpdateFields(
+                          book
+                        ).filter(
+                          (field) =>
+                            selectedUpdateFieldList.includes(
+                              field
+                            )
+                        );
+
+                      const locationParts =
+                        [
+                          book.room &&
+                          book.room !==
+                            book.bookcase
+                            ? book.room
+                            : "",
+
+                          book.bookcase,
+                          book.shelf,
+
+                          book.row !==
+                          "Main"
+                            ? book.row
+                            : "",
+                        ].filter(
+                          Boolean
+                        );
+
+                      return (
+                        <button
+                          key={
+                            book.bookId
+                          }
+                          type="button"
+                          className="updateCard"
+                          onClick={() => {
+                            setSelectedBookId(
+                              book.bookId
+                            );
+                          }}
+                        >
+                          <div className="updateCardHeading">
+                            <div>
+                              <h3>
+                                {
+                                  book.title
+                                }
+                              </h3>
+
+                              <p className="updateAuthor">
+                                {
+                                  book.author
+                                }
+                              </p>
+                            </div>
+
+                            {book.shelfPosition !=
+                            null ? (
+                              <span className="updatePosition">
+                                Position{" "}
+                                {
+                                  book.shelfPosition
+                                }
+                              </span>
+                            ) : null}
+                          </div>
+
+                          <div className="updateMissingBadges">
+                            {missingFields.map(
+                              (
+                                field
+                              ) => (
+                                <span
+                                  key={
+                                    field
+                                  }
+                                  className="updateMissingBadge"
+                                >
+                                  {
+                                    UPDATE_FIELD_LABELS[
+                                      field
+                                    ]
+                                  }
+                                </span>
+                              )
+                            )}
+                          </div>
+
+                          <p className="updateLocation">
+                            {locationParts.join(
+                              " · "
+                            )}
+                          </p>
+                        </button>
+                      );
+                    }
+                  )}
+                </div>
+              ) : (
+                <section className="updateComplete">
+                  <span
+                    aria-hidden="true"
+                  >
+                    ✨
+                  </span>
+
+                  <div>
+                    <h3>
+                      Queue complete
+                    </h3>
+
+                    <p>
+                      Every book has
+                      the selected
+                      information.
+                    </p>
+                  </div>
+                </section>
+              )}
+            </section>
           </section>
         )
       ) : selectedBook ? (
