@@ -44,9 +44,41 @@ import type {
 
 type AppTab =
   | "search"
-  | "wanted"
+  | "map"
   | "challenges"
-  | "map";
+  | "wanted";
+
+const APP_NAV_ITEMS: Array<{
+  tab: AppTab;
+  label: string;
+  icon: string;
+  description: string;
+}> = [
+  {
+    tab: "search",
+    label: "Search",
+    icon: "🔍",
+    description: "Find books and open their details.",
+  },
+  {
+    tab: "map",
+    label: "Map",
+    icon: "🗺️",
+    description: "Browse the library by room and shelf.",
+  },
+  {
+    tab: "challenges",
+    label: "Challenges",
+    icon: "🏆",
+    description: "Track challenge books and reading progress.",
+  },
+  {
+    tab: "wanted",
+    label: "Wanted",
+    icon: "📚",
+    description: "View books and series we still need.",
+  },
+];
 
 type WantedMode =
   | "toBuy"
@@ -969,6 +1001,7 @@ export default function App() {
   const [selectedBookcaseId, setSelectedBookcaseId] = useState("");
   const [selectedRoom, setSelectedRoom] = useState("");
   const [activeTab, setActiveTab] = useState<AppTab>("search");
+  const [appMenuOpen, setAppMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchScope, setSearchScope] = useState<SearchScope>("all");
   const [authorNameMode, setAuthorNameMode] =
@@ -998,7 +1031,11 @@ export default function App() {
   ] = useState(-1);
   const mapReturnPositionRef =
     useRef<MapReturnPosition | null>(null);
+
   const searchAutocompleteRef =
+    useRef<HTMLDivElement | null>(null);
+
+  const appMenuRef =
     useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -1031,6 +1068,62 @@ export default function App() {
       );
     };
   }, []);
+
+  useEffect(() => {
+    if (!appMenuOpen) {
+      return;
+    }
+
+    function handleAppMenuPointerDown(
+      event: PointerEvent
+    ) {
+      const target = event.target;
+
+      if (!(target instanceof Node)) {
+        return;
+      }
+
+      if (
+        appMenuRef.current?.contains(
+          target
+        )
+      ) {
+        return;
+      }
+
+      setAppMenuOpen(false);
+    }
+
+    function handleAppMenuKeyDown(
+      event: globalThis.KeyboardEvent
+    ) {
+      if (event.key === "Escape") {
+        setAppMenuOpen(false);
+      }
+    }
+
+    document.addEventListener(
+      "pointerdown",
+      handleAppMenuPointerDown
+    );
+
+    document.addEventListener(
+      "keydown",
+      handleAppMenuKeyDown
+    );
+
+    return () => {
+      document.removeEventListener(
+        "pointerdown",
+        handleAppMenuPointerDown
+      );
+
+      document.removeEventListener(
+        "keydown",
+        handleAppMenuKeyDown
+      );
+    };
+  }, [appMenuOpen]);
 
   function openMapBookDetail(
     bookId: string,
@@ -3695,6 +3788,30 @@ export default function App() {
     action();
   }
 
+  function selectAppTab(
+    nextTab: AppTab
+  ) {
+    if (nextTab === activeTab) {
+      setAppMenuOpen(false);
+      return;
+    }
+
+    runAfterBookDetailDiscardCheck(
+      () => {
+        setActiveTab(nextTab);
+        setSelectedBookId(null);
+        setSearchSuggestionsOpen(false);
+        setActiveSearchSuggestionIndex(-1);
+        setAppMenuOpen(false);
+
+        window.scrollTo({
+          top: 0,
+          behavior: "auto",
+        });
+      }
+    );
+  }
+
   function toggleBookDetailDisclosure(
     section: BookDetailDisclosureKey
   ) {
@@ -5471,112 +5588,127 @@ export default function App() {
       }
     >
       <header className="appHeader">
-        <div>
-          <p className="eyebrow">Library Map</p>
-          <h1>{headerTitle}</h1>
-          <p className="bookcaseMeta">{headerMeta}</p>
+        <div className="appHeaderMainRow">
+          <div className="appHeaderTitleBlock">
+            <p className="eyebrow">
+              Library Map
+            </p>
+
+            <h1>{headerTitle}</h1>
+
+            <p className="bookcaseMeta">
+              {headerMeta}
+            </p>
+          </div>
+
+          <div
+            className="appMenu"
+            ref={appMenuRef}
+          >
+            <button
+              type="button"
+              className={
+                appMenuOpen
+                  ? "appMenuButton appMenuButtonOpen"
+                  : "appMenuButton"
+              }
+              aria-expanded={appMenuOpen}
+              aria-controls="library-app-menu"
+              aria-haspopup="menu"
+              onClick={() => {
+                setAppMenuOpen(
+                  (currentValue) =>
+                    !currentValue
+                );
+              }}
+            >
+              <span
+                className="appMenuButtonIcon"
+                aria-hidden="true"
+              >
+                {appMenuOpen
+                  ? "✕"
+                  : "☰"}
+              </span>
+
+              <span>
+                {appMenuOpen
+                  ? "Close"
+                  : "Menu"}
+              </span>
+            </button>
+
+            {appMenuOpen ? (
+              <nav
+                id="library-app-menu"
+                className="appMenuPanel"
+                aria-label="Library views"
+              >
+                {APP_NAV_ITEMS.map(
+                  (item) => {
+                    const isCurrent =
+                      item.tab ===
+                      activeTab;
+
+                    return (
+                      <button
+                        key={item.tab}
+                        type="button"
+                        className={
+                          isCurrent
+                            ? "appMenuItem appMenuItemActive"
+                            : "appMenuItem"
+                        }
+                        aria-current={
+                          isCurrent
+                            ? "page"
+                            : undefined
+                        }
+                        onClick={() => {
+                          selectAppTab(
+                            item.tab
+                          );
+                        }}
+                      >
+                        <span
+                          className="appMenuItemIcon"
+                          aria-hidden="true"
+                        >
+                          {item.icon}
+                        </span>
+
+                        <span className="appMenuItemCopy">
+                          <strong>
+                            {item.label}
+                          </strong>
+
+                          <span>
+                            {
+                              item.description
+                            }
+                          </span>
+                        </span>
+
+                        {isCurrent ? (
+                          <span className="appMenuCurrent">
+                            Current
+                          </span>
+                        ) : (
+                          <span
+                            className="appMenuArrow"
+                            aria-hidden="true"
+                          >
+                            →
+                          </span>
+                        )}
+                      </button>
+                    );
+                  }
+                )}
+              </nav>
+            ) : null}
+          </div>
         </div>
-
-        <nav
-          className="appTabs"
-          aria-label="Library views"
-        >
-          <button
-            type="button"
-            className={
-              activeTab === "search"
-                ? "appTab active"
-                : "appTab"
-            }
-            onClick={() => {
-              runAfterBookDetailDiscardCheck(
-                () => {
-                  setActiveTab(
-                    "search"
-                  );
-
-                  setSelectedBookId(
-                    null
-                  );
-                }
-              );
-            }}
-          >
-            Search
-          </button>
-
-          <button
-            type="button"
-            className={
-              activeTab === "map"
-                ? "appTab active"
-                : "appTab"
-            }
-            onClick={() => {
-              runAfterBookDetailDiscardCheck(
-                () => {
-                  setActiveTab(
-                    "map"
-                  );
-
-                  setSelectedBookId(
-                    null
-                  );
-                }
-              );
-            }}
-          >
-            Map
-          </button>
-
-          <button
-            type="button"
-            className={
-              activeTab === "challenges"
-                ? "appTab active"
-                : "appTab"
-            }
-            onClick={() => {
-              runAfterBookDetailDiscardCheck(
-                () => {
-                  setActiveTab(
-                    "challenges"
-                  );
-
-                  setSelectedBookId(
-                    null
-                  );
-                }
-              );
-            }}
-          >
-            Challenges
-          </button>
-
-          <button
-            type="button"
-            className={
-              activeTab === "wanted"
-                ? "appTab active"
-                : "appTab"
-            }
-            onClick={() => {
-              runAfterBookDetailDiscardCheck(
-                () => {
-                  setActiveTab(
-                    "wanted"
-                  );
-
-                  setSelectedBookId(
-                    null
-                  );
-                }
-              );
-            }}
-          >
-            Wanted
-          </button>
-        </nav>
 
         <div className="headerUtilityRow">
           <HouseholdAccountPanel
