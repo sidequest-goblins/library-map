@@ -3067,14 +3067,18 @@ export default function App() {
 
     window.requestAnimationFrame(
       () => {
-        document
-          .getElementById(
-            "update-research-queues"
-          )
-          ?.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
+        window.requestAnimationFrame(
+          () => {
+            document
+              .getElementById(
+                "update-results"
+              )
+              ?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+          }
+        );
       }
     );
   }
@@ -9252,7 +9256,10 @@ export default function App() {
               )}
             </div>
 
-            <section className="updateResults">
+            <section
+              id="update-results"
+              className="updateResults"
+            >
               <div className="updateResultsHeader">
                 <div>
                   <p className="eyebrow">

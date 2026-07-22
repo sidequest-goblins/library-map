@@ -3553,3 +3553,7 @@ select {
   outline: 3px solid currentColor;
   outline-offset: 3px;
 }
+
+#update-results {
+  scroll-margin-top: 1rem;
+}
