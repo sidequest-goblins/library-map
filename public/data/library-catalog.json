@@ -492,7 +492,7 @@
     "authorSort": "Alvarez, Julia",
     "firstName": "Julia",
     "lastName": "Alvarez",
-    "format": "",
+    "format": "Paperback",
     "jc": false,
     "cj": false,
     "lgbtq": false,
@@ -620,26 +620,6 @@
     "sourceRow": 32
   },
   {
-    "catalogKey": "audrain-ashley-the-push",
-    "title": "The Push",
-    "rawTitle": "The Push",
-    "coverImage": "/data/covers/audrain-ashley-the-push.webp",
-    "series": null,
-    "seriesTitle": null,
-    "seriesFormat": null,
-    "seriesNumber": null,
-    "author": "Ashley Audrain",
-    "authorSort": "Audrain, Ashley",
-    "firstName": "Ashley",
-    "lastName": "Audrain",
-    "format": "Paperback",
-    "jc": true,
-    "cj": false,
-    "lgbtq": false,
-    "sourceSheet": "A",
-    "sourceRow": 33
-  },
-  {
     "catalogKey": "aurelius-marcus-meditations",
     "title": "Meditations",
     "rawTitle": "Meditations",
@@ -657,7 +637,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "A",
-    "sourceRow": 34
+    "sourceRow": 33
   },
   {
     "catalogKey": "austen-jane-the-complete-novels-of-jane-austen",
@@ -677,7 +657,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "A",
-    "sourceRow": 35
+    "sourceRow": 34
   },
   {
     "catalogKey": "austin-reid-stewart-alberto-vargas-works-from-the-max-vargas-collection",
@@ -697,7 +677,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "A",
-    "sourceRow": 36
+    "sourceRow": 35
   },
   {
     "catalogKey": "avi-crispin-the-cross-of-lead",
@@ -717,7 +697,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "A",
-    "sourceRow": 37
+    "sourceRow": 36
   },
   {
     "catalogKey": "avnery-uri-israel-without-zionism",
@@ -737,7 +717,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "A",
-    "sourceRow": 38
+    "sourceRow": 37
   },
   {
     "catalogKey": "backman-fredrik-a-man-called-ove",
@@ -1312,7 +1292,7 @@
     "authorSort": "Bernhardt, Michele",
     "firstName": "Michele",
     "lastName": "Bernhardt",
-    "format": "",
+    "format": "Paperback",
     "jc": false,
     "cj": false,
     "lgbtq": false,
@@ -15332,7 +15312,7 @@
     "authorSort": "Pochoda, Ivy",
     "firstName": "Ivy",
     "lastName": "Pochoda",
-    "format": "",
+    "format": "Paperback",
     "jc": false,
     "cj": false,
     "lgbtq": false,
@@ -16132,7 +16112,7 @@
     "authorSort": "Rodda, Emily",
     "firstName": "Emily",
     "lastName": "Rodda",
-    "format": "",
+    "format": "Paperback",
     "jc": false,
     "cj": false,
     "lgbtq": false,
@@ -16172,7 +16152,7 @@
     "authorSort": "Rodda, Emily",
     "firstName": "Emily",
     "lastName": "Rodda",
-    "format": "",
+    "format": "Paperback",
     "jc": false,
     "cj": false,
     "lgbtq": false,
@@ -16212,7 +16192,7 @@
     "authorSort": "Rodda, Emily",
     "firstName": "Emily",
     "lastName": "Rodda",
-    "format": "",
+    "format": "Paperback",
     "jc": false,
     "cj": false,
     "lgbtq": false,
@@ -16252,7 +16232,7 @@
     "authorSort": "Rodda, Emily",
     "firstName": "Emily",
     "lastName": "Rodda",
-    "format": "",
+    "format": "Paperback",
     "jc": false,
     "cj": false,
     "lgbtq": false,
@@ -16272,7 +16252,7 @@
     "authorSort": "Rodda, Emily",
     "firstName": "Emily",
     "lastName": "Rodda",
-    "format": "",
+    "format": "Paperback",
     "jc": false,
     "cj": false,
     "lgbtq": false,
@@ -16312,7 +16292,7 @@
     "authorSort": "Rodda, Emily",
     "firstName": "Emily",
     "lastName": "Rodda",
-    "format": "",
+    "format": "Paperback",
     "jc": false,
     "cj": false,
     "lgbtq": false,
@@ -16352,7 +16332,7 @@
     "authorSort": "Rodda, Emily",
     "firstName": "Emily",
     "lastName": "Rodda",
-    "format": "",
+    "format": "Paperback",
     "jc": false,
     "cj": false,
     "lgbtq": false,

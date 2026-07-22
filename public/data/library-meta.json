@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-22T05:27:47.149784+00:00",
+  "generatedAt": "2026-07-22T22:12:49.094101+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "sourceSheet": "List View",
-  "bookCount": 1016,
+  "bookCount": 1015,
   "skippedBlankRows": 0,
   "headers": [
     "LGBTQ+",
@@ -48,7 +48,7 @@
   "unmappedBookcases": [],
   "catalogMatchFallbackRows": [
     {
-      "row": 541,
+      "row": 540,
       "matchType": "title-prefix",
       "listTitle": "The Hundred Years' War on Palestine",
       "catalogTitle": "The Hundred Years' War on Palestine: A History of Settler Colonialism and Resistance, 1917–2017",
@@ -57,10 +57,10 @@
   ],
   "catalogUnmatchedRows": [],
   "catalog": {
-    "catalogBookCount": 1016,
-    "catalogRowsWithTitles": 1016,
+    "catalogBookCount": 1015,
+    "catalogRowsWithTitles": 1015,
     "processedCatalogSheets": {
-      "A": 37,
+      "A": 36,
       "B": 68,
       "C": 81,
       "D": 38,
@@ -16502,16 +16502,16 @@
     "imageExtension": "webp",
     "webpQuality": 76,
     "cachePath": "C:\\library_app\\library-map\\public\\data\\library-cover-cache.json",
-    "extractedCount": 1016,
+    "extractedCount": 1015,
     "convertedCount": 0,
-    "cachedCount": 1016,
-    "deletedStaleCount": 0,
+    "cachedCount": 1015,
+    "deletedStaleCount": 1,
     "missingAnchors": [],
     "missingMediaFiles": [],
     "conversionErrors": [],
     "anchorReport": {
-      "totalAnchoredImages": 1016,
-      "mappedAnchoredImages": 1016,
+      "totalAnchoredImages": 1015,
+      "mappedAnchoredImages": 1015,
       "duplicateAnchorRows": [],
       "missingMediaTargets": [],
       "sheetsWithoutDrawings": [
@@ -16534,8 +16534,8 @@
         "W-Z"
       ],
       "cellImageReport": {
-        "totalCellImages": 1015,
-        "mappedCellImages": 1015,
+        "totalCellImages": 1014,
+        "mappedCellImages": 1014,
         "duplicateCellRows": [],
         "missingRichDataFiles": [],
         "missingRichValueIndexes": [],
@@ -16543,8 +16543,8 @@
         "missingMediaTargets": []
       }
     },
-    "outputFileCount": 1016,
-    "outputTotalBytes": 75969584
+    "outputFileCount": 1015,
+    "outputTotalBytes": 75943636
   },
   "imageInspectionEnabled": false,
   "images": null,
