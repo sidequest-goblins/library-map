@@ -62,6 +62,7 @@ type UpdateField =
   | "totalPages"
   | "publicationYear"
   | "coverImage"
+  | "origin"
   | "catalogMatch"
   | "classificationReview";
 
@@ -134,6 +135,7 @@ type StatsBreakdown =
   | "format"
   | "publicationDecade"
   | "publisher"
+  | "origin"
   | "author"
   | "room"
   | "bookcase"
@@ -204,6 +206,10 @@ const STATS_BREAKDOWN_OPTIONS: Array<{
   {
     value: "publisher",
     label: "Publisher",
+  },
+  {
+    value: "origin",
+    label: "Origin",
   },
   {
     value: "author",
@@ -320,6 +326,13 @@ const UPDATE_FIELD_OPTIONS: Array<{
     description: "Books that do not have a cover yet.",
   },
   {
+    field: "origin",
+    label: "Origin",
+    icon: "🛍️",
+    description:
+      "Books without an acquisition source.",
+  },
+  {
     field: "catalogMatch",
     label: "Catalog match",
     icon: "🔗",
@@ -341,6 +354,7 @@ const UPDATE_FIELD_LABELS: Record<
 > = {
   totalPages: "Missing page count",
   publicationYear: "Missing publication year",
+  origin: "Missing origin",
   coverImage: "Missing cover",
   catalogMatch: "Missing catalog match",
   classificationReview:
@@ -583,6 +597,12 @@ function getStatsBreakdownValue(
     case "publisher":
       return (
         String(book.publisher ?? "").trim() ||
+        "Unknown"
+      );
+
+    case "origin":
+      return (
+        String(book.origin ?? "").trim() ||
         "Unknown"
       );
 
@@ -1341,6 +1361,178 @@ function hasCompleteWorkbookText(
   );
 }
 
+type UpdateCoverageDefinition = {
+  label: string;
+  updateField: UpdateField;
+  classificationField?:
+    ClassificationReviewField;
+  isComplete: (book: Book) => boolean;
+};
+
+type UpdateCoverageRow =
+  UpdateCoverageDefinition & {
+    complete: number;
+  };
+
+const UPDATE_COVERAGE_DEFINITIONS:
+  UpdateCoverageDefinition[] = [
+  {
+    label: "Page count",
+    updateField: "totalPages",
+
+    isComplete: (book) => {
+      const value = Number(
+        book.totalPages
+      );
+
+      return (
+        Number.isFinite(value) &&
+        value > 0
+      );
+    },
+  },
+  {
+    label: "Publication year",
+    updateField: "publicationYear",
+
+    isComplete: (book) => {
+      const value = Number(
+        book.publicationYear
+      );
+
+      return (
+        Number.isFinite(value) &&
+        value > 0
+      );
+    },
+  },
+  {
+    label: "Cover image",
+    updateField: "coverImage",
+
+    isComplete: (book) =>
+      Boolean(
+        String(
+          book.coverImage ?? ""
+        ).trim()
+      ),
+  },
+  {
+    label: "Origin",
+    updateField: "origin",
+
+    isComplete: (book) =>
+      hasCompleteWorkbookText(
+        book.origin
+      ),
+  },
+  {
+    label: "Catalog match",
+    updateField: "catalogMatch",
+
+    isComplete: (book) => {
+      const matchType = String(
+        book.catalogMatchType ?? ""
+      )
+        .trim()
+        .toLowerCase();
+
+      return (
+        matchType === "exact" ||
+        matchType === "title-prefix"
+      );
+    },
+  },
+  {
+    label: "Author",
+    updateField:
+      "classificationReview",
+    classificationField: "author",
+
+    isComplete: (book) =>
+      hasCompleteWorkbookText(
+        book.author
+      ),
+  },
+  {
+    label: "Genre",
+    updateField:
+      "classificationReview",
+    classificationField: "genre",
+
+    isComplete: (book) =>
+      hasCompleteWorkbookText(
+        book.genre
+      ),
+  },
+  {
+    label: "Subgenre",
+    updateField:
+      "classificationReview",
+    classificationField: "subgenre",
+
+    isComplete: (book) =>
+      hasCompleteWorkbookText(
+        book.subgenre
+      ),
+  },
+  {
+    label: "Format",
+    updateField:
+      "classificationReview",
+    classificationField: "format",
+
+    isComplete: (book) =>
+      hasCompleteWorkbookText(
+        book.format
+      ),
+  },
+  {
+    label: "Publisher",
+    updateField:
+      "classificationReview",
+    classificationField: "publisher",
+
+    isComplete: (book) =>
+      hasCompleteWorkbookText(
+        book.publisher
+      ),
+  },
+  {
+    label: "Room",
+    updateField:
+      "classificationReview",
+    classificationField: "room",
+
+    isComplete: (book) =>
+      hasCompleteWorkbookText(
+        book.room
+      ),
+  },
+  {
+    label: "Bookcase",
+    updateField:
+      "classificationReview",
+    classificationField: "bookcase",
+
+    isComplete: (book) =>
+      hasCompleteWorkbookText(
+        book.bookcase
+      ),
+  },
+  {
+    label: "Shelf",
+    updateField:
+      "classificationReview",
+    classificationField: "shelf",
+
+    isComplete: (book) =>
+      hasCompleteWorkbookText(
+        book.shelf
+      ),
+  },
+];
+
 function getMissingUpdateFields(
   book: Book
 ): UpdateField[] {
@@ -1385,9 +1577,24 @@ function getMissingUpdateFields(
   }
 
   if (
-    !String(
-      book.catalogKey ?? ""
-    ).trim()
+    !hasCompleteWorkbookText(
+      book.origin
+    )
+  ) {
+    missingFields.push(
+      "origin"
+    );
+  }
+
+  const catalogMatchType = String(
+    book.catalogMatchType ?? ""
+  )
+    .trim()
+    .toLowerCase();
+
+  if (
+    !catalogMatchType ||
+    catalogMatchType === "missing"
   ) {
     missingFields.push(
       "catalogMatch"
@@ -1757,9 +1964,17 @@ export default function App() {
     totalPages: true,
     publicationYear: true,
     coverImage: true,
+    origin: false,
     catalogMatch: false,
     classificationReview: false,
   });
+
+  const [
+    selectedClassificationReviewField,
+    setSelectedClassificationReviewField,
+  ] = useState<
+    ClassificationReviewField | null
+  >(null);
 
   const [
     statsDataset,
@@ -2709,6 +2924,7 @@ export default function App() {
         totalPages: 0,
         publicationYear: 0,
         coverImage: 0,
+        origin: 0,
         catalogMatch: 0,
         classificationReview: 0,
       };
@@ -2759,204 +2975,109 @@ export default function App() {
         books.filter((book) =>
           getMissingUpdateFields(
             book
-          ).some((field) =>
-            selectedFields.has(
-              field
-            )
-          )
+          ).some((field) => {
+            if (
+              !selectedFields.has(
+                field
+              )
+            ) {
+              return false;
+            }
+
+            if (
+              field !==
+                "classificationReview" ||
+              !selectedClassificationReviewField
+            ) {
+              return true;
+            }
+
+            return getClassificationReviewIssues(
+              book
+            ).some(
+              (issue) =>
+                issue.field ===
+                selectedClassificationReviewField
+            );
+          })
         )
       );
     }, [
       books,
       selectedUpdateFieldList,
+      selectedClassificationReviewField,
     ]);
 
   const updateCoverageRows =
-    useMemo(() => {
-      const completeCounts = {
-        totalPages: 0,
-        publicationYear: 0,
-        coverImage: 0,
-        author: 0,
-        genre: 0,
-        subgenre: 0,
-        format: 0,
-        publisher: 0,
-        room: 0,
-        bookcase: 0,
-        shelf: 0,
-        catalogMatch: 0,
-      };
+    useMemo<UpdateCoverageRow[]>(
+      () =>
+        UPDATE_COVERAGE_DEFINITIONS.map(
+          (definition) => ({
+            ...definition,
 
-      books.forEach((book) => {
-        const totalPages = Number(
-          book.totalPages
-        );
+            complete:
+              books.reduce(
+                (
+                  runningTotal,
+                  book
+                ) =>
+                  runningTotal +
+                  (
+                    definition.isComplete(
+                      book
+                    )
+                      ? 1
+                      : 0
+                  ),
+                0
+              ),
+          })
+        ),
+      [books]
+    );
 
-        if (
-          Number.isFinite(totalPages) &&
-          totalPages > 0
-        ) {
-          completeCounts.totalPages += 1;
-        }
+  function openUpdateCoverageQueue(
+    row: UpdateCoverageRow
+  ) {
+    const nextSelectedFields =
+      Object.fromEntries(
+        UPDATE_FIELD_OPTIONS.map(
+          (option) => [
+            option.field,
 
-        const publicationYear = Number(
-          book.publicationYear
-        );
+            option.field ===
+              row.updateField,
+          ]
+        )
+      ) as Record<
+        UpdateField,
+        boolean
+      >;
 
-        if (
-          Number.isFinite(
-            publicationYear
-          ) &&
-          publicationYear > 0
-        ) {
-          completeCounts.publicationYear += 1;
-        }
+    setSelectedUpdateFields(
+      nextSelectedFields
+    );
 
-        if (
-          String(
-            book.coverImage ?? ""
-          ).trim()
-        ) {
-          completeCounts.coverImage += 1;
-        }
+    setSelectedClassificationReviewField(
+      row.classificationField ??
+        null
+    );
 
-        if (
-          hasCompleteWorkbookText(
-            book.author
+    setSelectedBookId(null);
+
+    window.requestAnimationFrame(
+      () => {
+        document
+          .getElementById(
+            "update-research-queues"
           )
-        ) {
-          completeCounts.author += 1;
-        }
-
-        if (
-          hasCompleteWorkbookText(
-            book.genre
-          )
-        ) {
-          completeCounts.genre += 1;
-        }
-
-        if (
-          hasCompleteWorkbookText(
-            book.subgenre
-          )
-        ) {
-          completeCounts.subgenre += 1;
-        }
-
-        if (
-          hasCompleteWorkbookText(
-            book.format
-          )
-        ) {
-          completeCounts.format += 1;
-        }
-
-        if (
-          hasCompleteWorkbookText(
-            book.publisher
-          )
-        ) {
-          completeCounts.publisher += 1;
-        }
-
-        if (
-          hasCompleteWorkbookText(
-            book.room
-          )
-        ) {
-          completeCounts.room += 1;
-        }
-
-        if (
-          hasCompleteWorkbookText(
-            book.bookcase
-          )
-        ) {
-          completeCounts.bookcase += 1;
-        }
-
-        if (
-          hasCompleteWorkbookText(
-            book.shelf
-          )
-        ) {
-          completeCounts.shelf += 1;
-        }
-
-        if (
-          String(
-            book.catalogKey ?? ""
-          ).trim()
-        ) {
-          completeCounts.catalogMatch += 1;
-        }
-      });
-
-      return [
-        {
-          label: "Page count",
-          complete:
-            completeCounts.totalPages,
-        },
-        {
-          label: "Publication year",
-          complete:
-            completeCounts.publicationYear,
-        },
-        {
-          label: "Cover image",
-          complete:
-            completeCounts.coverImage,
-        },
-        {
-          label: "Catalog match",
-          complete:
-            completeCounts.catalogMatch,
-        },
-        {
-          label: "Author",
-          complete:
-            completeCounts.author,
-        },
-        {
-          label: "Genre",
-          complete:
-            completeCounts.genre,
-        },
-        {
-          label: "Subgenre",
-          complete:
-            completeCounts.subgenre,
-        },
-        {
-          label: "Format",
-          complete:
-            completeCounts.format,
-        },
-        {
-          label: "Publisher",
-          complete:
-            completeCounts.publisher,
-        },
-        {
-          label: "Room",
-          complete:
-            completeCounts.room,
-        },
-        {
-          label: "Bookcase",
-          complete:
-            completeCounts.bookcase,
-        },
-        {
-          label: "Shelf",
-          complete:
-            completeCounts.shelf,
-        },
-      ];
-    }, [books]);
+          ?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+      }
+    );
+  }
 
   const booksById = useMemo(
     () =>
@@ -3057,6 +3178,7 @@ export default function App() {
       let pageCountBooks = 0;
       let publicationYearBooks = 0;
       let coverBooks = 0;
+      let originBooks = 0;
       let cjReadBooks = 0;
       let jadeReadBooks = 0;
       let eitherReadBooks = 0;
@@ -3105,6 +3227,14 @@ export default function App() {
             coverBooks += 1;
           }
 
+          if (
+            hasCompleteWorkbookText(
+              book.origin
+            )
+          ) {
+            originBooks += 1;
+          }
+
           if (cjRead) {
             cjReadBooks += 1;
           }
@@ -3132,6 +3262,7 @@ export default function App() {
         pageCountBooks,
         publicationYearBooks,
         coverBooks,
+        originBooks,
         cjReadBooks,
         jadeReadBooks,
         eitherReadBooks,
@@ -3520,6 +3651,11 @@ export default function App() {
       label: "Cover image",
       complete:
         statsSummary.coverBooks,
+    },
+    {
+      label: "Origin",
+      complete:
+        statsSummary.originBooks,
     },
   ];
 
@@ -7018,6 +7154,15 @@ export default function App() {
                     </div>
                   ) : null}
 
+                  {selectedBook.origin ? (
+                    <div>
+                      <dt>Origin</dt>
+                      <dd>
+                        {selectedBook.origin}
+                      </dd>
+                    </div>
+                  ) : null}
+
                   {selectedBook.publicationYear ? (
                     <div>
                       <dt>
@@ -8933,7 +9078,27 @@ export default function App() {
                     return (
                       <div
                         key={row.label}
-                        className="statsCoverageRow"
+                        className="statsCoverageRow updateCoverageRowButton"
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`Open the ${row.label} update queue`}
+                        onClick={() => {
+                          openUpdateCoverageQueue(
+                            row
+                          );
+                        }}
+                        onKeyDown={(event) => {
+                          if (
+                            event.key === "Enter" ||
+                            event.key === " "
+                          ) {
+                            event.preventDefault();
+
+                            openUpdateCoverageQueue(
+                              row
+                            );
+                          }
+                        }}
                       >
                         <div className="statsCoverageCopy">
                           <strong>
@@ -8978,6 +9143,7 @@ export default function App() {
             </section>
 
             <div
+              id="update-reasearch-queues"
               className="updateFieldGrid"
               role="group"
               aria-label="Choose update queues"
@@ -9009,22 +9175,48 @@ export default function App() {
                         isSelected
                       }
                       onClick={() => {
+                        setSelectedBookId(
+                          null
+                        );
+
+                        if (
+                          option.field ===
+                            "classificationReview" &&
+                          selectedClassificationReviewField
+                        ) {
+                          setSelectedClassificationReviewField(
+                            null
+                          );
+
+                          setSelectedUpdateFields(
+                            (currentFields) => ({
+                              ...currentFields,
+                              classificationReview:
+                                true,
+                            })
+                          );
+
+                          return;
+                        }
+
+                        if (
+                          option.field ===
+                          "classificationReview"
+                        ) {
+                          setSelectedClassificationReviewField(
+                            null
+                          );
+                        }
+
                         setSelectedUpdateFields(
-                          (
-                            currentFields
-                          ) => ({
+                          (currentFields) => ({
                             ...currentFields,
 
                             [option.field]:
                               !currentFields[
-                                option
-                                  .field
+                                option.field
                               ],
                           })
-                        );
-
-                        setSelectedBookId(
-                          null
                         );
                       }}
                     >
@@ -9112,6 +9304,11 @@ export default function App() {
                         )
                           ? getClassificationReviewIssues(
                               book
+                            ).filter(
+                              (issue) =>
+                                !selectedClassificationReviewField ||
+                                issue.field ===
+                                  selectedClassificationReviewField
                             )
                           : [];
 

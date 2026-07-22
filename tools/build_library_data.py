@@ -1936,6 +1936,7 @@ def main() -> None:
             "genre": get("genre"),
             "subgenre": get("subgenre"),
             "publisher": get("publisher"),
+            "origin": get("origin"),
             "publicationYear": parse_optional_int(get("year")),
             "totalPages": parse_optional_int(get("pages")),
             "catalogKey": catalog_key,

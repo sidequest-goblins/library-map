@@ -3536,3 +3536,20 @@ select {
     align-items: end;
   }
 }
+
+.updateCoverageRowButton {
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    filter 140ms ease;
+}
+
+.updateCoverageRowButton:hover {
+  transform: translateY(-1px);
+  filter: brightness(0.98);
+}
+
+.updateCoverageRowButton:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
