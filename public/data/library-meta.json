@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-21T17:15:42.568275+00:00",
+  "generatedAt": "2026-07-22T03:32:46.028678+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "sourceSheet": "List View",
   "bookCount": 1016,
@@ -13,6 +13,7 @@
     "Genre",
     "Subgenre",
     "Publisher",
+    "Origin",
     "Year",
     "Pages",
     "Bookcase",
@@ -47,7 +48,7 @@
   "unmappedBookcases": [],
   "catalogMatchFallbackRows": [
     {
-      "row": 542,
+      "row": 541,
       "matchType": "title-prefix",
       "listTitle": "The Hundred Years' War on Palestine",
       "catalogTitle": "The Hundred Years' War on Palestine: A History of Settler Colonialism and Resistance, 1917–2017",
@@ -16501,80 +16502,16 @@
     "imageExtension": "webp",
     "webpQuality": 76,
     "cachePath": "C:\\library_app\\library-map\\public\\data\\library-cover-cache.json",
-    "extractedCount": 1007,
-    "convertedCount": 0,
-    "cachedCount": 1007,
-    "deletedStaleCount": 0,
-    "missingAnchors": [
-      {
-        "catalogKey": "bardugo-leigh-shadow-and-bone",
-        "title": "Shadow and Bone",
-        "author": "Leigh Bardugo",
-        "sourceSheet": "B",
-        "sourceRow": 15
-      },
-      {
-        "catalogKey": "bardugo-leigh-siege-and-storm",
-        "title": "Siege and Storm",
-        "author": "Leigh Bardugo",
-        "sourceSheet": "B",
-        "sourceRow": 16
-      },
-      {
-        "catalogKey": "bardugo-leigh-six-of-crows",
-        "title": "Six of Crows",
-        "author": "Leigh Bardugo",
-        "sourceSheet": "B",
-        "sourceRow": 18
-      },
-      {
-        "catalogKey": "bardugo-leigh-the-crooked-kingdom",
-        "title": "The Crooked Kingdom",
-        "author": "Leigh Bardugo",
-        "sourceSheet": "B",
-        "sourceRow": 19
-      },
-      {
-        "catalogKey": "barnes-jennifer-lynn-the-hawthorne-legacy",
-        "title": "The Hawthorne Legacy",
-        "author": "Jennifer Lynn Barnes",
-        "sourceSheet": "B",
-        "sourceRow": 21
-      },
-      {
-        "catalogKey": "blake-olivie-masters-of-death",
-        "title": "Masters of Death",
-        "author": "Olivie Blake",
-        "sourceSheet": "B",
-        "sourceRow": 41
-      },
-      {
-        "catalogKey": "brown-pierce-red-rising",
-        "title": "Red Rising",
-        "author": "Pierce Brown",
-        "sourceSheet": "B",
-        "sourceRow": 63
-      },
-      {
-        "catalogKey": "clamp-tsubasa-reservoir-chronicle-vol-5",
-        "title": "Tsubasa: RESERVoir CHRoNiCLE, Vol. 5",
-        "author": "Clamp",
-        "sourceSheet": "C",
-        "sourceRow": 60
-      },
-      {
-        "catalogKey": "didion-joan-the-year-of-magical-thinking",
-        "title": "The Year of Magical Thinking",
-        "author": "Joan Didion",
-        "sourceSheet": "D",
-        "sourceRow": 28
-      }
-    ],
+    "extractedCount": 1016,
+    "convertedCount": 1,
+    "cachedCount": 1015,
+    "deletedStaleCount": 1,
+    "missingAnchors": [],
     "missingMediaFiles": [],
     "conversionErrors": [],
     "anchorReport": {
-      "totalAnchoredImages": 1007,
-      "mappedAnchoredImages": 1007,
+      "totalAnchoredImages": 1016,
+      "mappedAnchoredImages": 1016,
       "duplicateAnchorRows": [],
       "missingMediaTargets": [],
       "sheetsWithoutDrawings": [
@@ -16597,8 +16534,8 @@
         "W-Z"
       ],
       "cellImageReport": {
-        "totalCellImages": 1006,
-        "mappedCellImages": 1006,
+        "totalCellImages": 1015,
+        "mappedCellImages": 1015,
         "duplicateCellRows": [],
         "missingRichDataFiles": [],
         "missingRichValueIndexes": [],
@@ -16606,8 +16543,8 @@
         "missingMediaTargets": []
       }
     },
-    "outputFileCount": 1007,
-    "outputTotalBytes": 74760070
+    "outputFileCount": 1016,
+    "outputTotalBytes": 75969584
   },
   "imageInspectionEnabled": false,
   "images": null,

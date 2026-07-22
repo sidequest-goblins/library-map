@@ -62,15 +62,18 @@ type UpdateField =
   | "totalPages"
   | "publicationYear"
   | "coverImage"
+  | "catalogMatch"
   | "classificationReview";
 
 type ClassificationReviewField =
+  | "author"
   | "genre"
   | "subgenre"
   | "format"
   | "publisher"
   | "room"
-  | "bookcase";
+  | "bookcase"
+  | "shelf";
 
 type ClassificationReviewIssue = {
   field: ClassificationReviewField;
@@ -83,6 +86,10 @@ const CLASSIFICATION_REVIEW_FIELDS: Array<{
   field: ClassificationReviewField;
   label: string;
 }> = [
+  {
+    field: "author",
+    label: "Author",
+  },
   {
     field: "genre",
     label: "Genre",
@@ -106,6 +113,10 @@ const CLASSIFICATION_REVIEW_FIELDS: Array<{
   {
     field: "bookcase",
     label: "Bookcase",
+  },
+  {
+    field: "shelf",
+    label: "Shelf",
   },
 ];
 
@@ -309,6 +320,13 @@ const UPDATE_FIELD_OPTIONS: Array<{
     description: "Books that do not have a cover yet.",
   },
   {
+    field: "catalogMatch",
+    label: "Catalog match",
+    icon: "🔗",
+    description:
+      "List View books without a matching Catalog entry.",
+  },
+  {
     field: "classificationReview",
     label: "Unknown / Other",
     icon: "🔎",
@@ -324,6 +342,7 @@ const UPDATE_FIELD_LABELS: Record<
   totalPages: "Missing page count",
   publicationYear: "Missing publication year",
   coverImage: "Missing cover",
+  catalogMatch: "Missing catalog match",
   classificationReview:
     "Review Unknown / Other",
 };
@@ -1306,6 +1325,22 @@ function getClassificationReviewIssues(
   );
 }
 
+function hasCompleteWorkbookText(
+  value: unknown
+): boolean {
+  const normalizedValue = String(
+    value ?? ""
+  )
+    .trim()
+    .toLowerCase();
+
+  return (
+    Boolean(normalizedValue) &&
+    normalizedValue !== "unknown" &&
+    normalizedValue !== "other"
+  );
+}
+
 function getMissingUpdateFields(
   book: Book
 ): UpdateField[] {
@@ -1346,6 +1381,16 @@ function getMissingUpdateFields(
   ) {
     missingFields.push(
       "coverImage"
+    );
+  }
+
+  if (
+    !String(
+      book.catalogKey ?? ""
+    ).trim()
+  ) {
+    missingFields.push(
+      "catalogMatch"
     );
   }
 
@@ -1712,6 +1757,7 @@ export default function App() {
     totalPages: true,
     publicationYear: true,
     coverImage: true,
+    catalogMatch: false,
     classificationReview: false,
   });
 
@@ -2663,6 +2709,7 @@ export default function App() {
         totalPages: 0,
         publicationYear: 0,
         coverImage: 0,
+        catalogMatch: 0,
         classificationReview: 0,
       };
 
@@ -2723,6 +2770,193 @@ export default function App() {
       books,
       selectedUpdateFieldList,
     ]);
+
+  const updateCoverageRows =
+    useMemo(() => {
+      const completeCounts = {
+        totalPages: 0,
+        publicationYear: 0,
+        coverImage: 0,
+        author: 0,
+        genre: 0,
+        subgenre: 0,
+        format: 0,
+        publisher: 0,
+        room: 0,
+        bookcase: 0,
+        shelf: 0,
+        catalogMatch: 0,
+      };
+
+      books.forEach((book) => {
+        const totalPages = Number(
+          book.totalPages
+        );
+
+        if (
+          Number.isFinite(totalPages) &&
+          totalPages > 0
+        ) {
+          completeCounts.totalPages += 1;
+        }
+
+        const publicationYear = Number(
+          book.publicationYear
+        );
+
+        if (
+          Number.isFinite(
+            publicationYear
+          ) &&
+          publicationYear > 0
+        ) {
+          completeCounts.publicationYear += 1;
+        }
+
+        if (
+          String(
+            book.coverImage ?? ""
+          ).trim()
+        ) {
+          completeCounts.coverImage += 1;
+        }
+
+        if (
+          hasCompleteWorkbookText(
+            book.author
+          )
+        ) {
+          completeCounts.author += 1;
+        }
+
+        if (
+          hasCompleteWorkbookText(
+            book.genre
+          )
+        ) {
+          completeCounts.genre += 1;
+        }
+
+        if (
+          hasCompleteWorkbookText(
+            book.subgenre
+          )
+        ) {
+          completeCounts.subgenre += 1;
+        }
+
+        if (
+          hasCompleteWorkbookText(
+            book.format
+          )
+        ) {
+          completeCounts.format += 1;
+        }
+
+        if (
+          hasCompleteWorkbookText(
+            book.publisher
+          )
+        ) {
+          completeCounts.publisher += 1;
+        }
+
+        if (
+          hasCompleteWorkbookText(
+            book.room
+          )
+        ) {
+          completeCounts.room += 1;
+        }
+
+        if (
+          hasCompleteWorkbookText(
+            book.bookcase
+          )
+        ) {
+          completeCounts.bookcase += 1;
+        }
+
+        if (
+          hasCompleteWorkbookText(
+            book.shelf
+          )
+        ) {
+          completeCounts.shelf += 1;
+        }
+
+        if (
+          String(
+            book.catalogKey ?? ""
+          ).trim()
+        ) {
+          completeCounts.catalogMatch += 1;
+        }
+      });
+
+      return [
+        {
+          label: "Page count",
+          complete:
+            completeCounts.totalPages,
+        },
+        {
+          label: "Publication year",
+          complete:
+            completeCounts.publicationYear,
+        },
+        {
+          label: "Cover image",
+          complete:
+            completeCounts.coverImage,
+        },
+        {
+          label: "Catalog match",
+          complete:
+            completeCounts.catalogMatch,
+        },
+        {
+          label: "Author",
+          complete:
+            completeCounts.author,
+        },
+        {
+          label: "Genre",
+          complete:
+            completeCounts.genre,
+        },
+        {
+          label: "Subgenre",
+          complete:
+            completeCounts.subgenre,
+        },
+        {
+          label: "Format",
+          complete:
+            completeCounts.format,
+        },
+        {
+          label: "Publisher",
+          complete:
+            completeCounts.publisher,
+        },
+        {
+          label: "Room",
+          complete:
+            completeCounts.room,
+        },
+        {
+          label: "Bookcase",
+          complete:
+            completeCounts.bookcase,
+        },
+        {
+          label: "Shelf",
+          complete:
+            completeCounts.shelf,
+        },
+      ];
+    }, [books]);
 
   const booksById = useMemo(
     () =>
@@ -8658,17 +8892,95 @@ export default function App() {
 
               <p>
                 Choose one or more
-                missing fields, then
-                work through the books
-                in physical library
-                order.
+                research or review
+                queues, then work
+                through the books in
+                physical library order.
               </p>
+            </section>
+
+            <section className="statsSection">
+              <div className="statsSectionHeader">
+                <div>
+                  <p className="eyebrow">
+                    Workbook coverage
+                  </p>
+
+                  <h2>
+                    Required data health
+                  </h2>
+                </div>
+
+                <p>
+                  {books.length.toLocaleString()}{" "}
+                  total books
+                </p>
+              </div>
+
+              <div className="statsCoverageList">
+                {updateCoverageRows.map(
+                  (row) => {
+                    const missing =
+                      books.length -
+                      row.complete;
+
+                    const percentage =
+                      getStatsPercent(
+                        row.complete,
+                        books.length
+                      );
+
+                    return (
+                      <div
+                        key={row.label}
+                        className="statsCoverageRow"
+                      >
+                        <div className="statsCoverageCopy">
+                          <strong>
+                            {row.label}
+                          </strong>
+
+                          <span>
+                            {row.complete.toLocaleString()}{" "}
+                            complete
+                            {missing > 0
+                              ? ` · ${missing.toLocaleString()} to check`
+                              : " · none missing"}
+                          </span>
+                        </div>
+
+                        <div
+                          className="statsCoverageTrack"
+                          role="progressbar"
+                          aria-label={`${row.label} coverage`}
+                          aria-valuemin={0}
+                          aria-valuemax={100}
+                          aria-valuenow={
+                            percentage
+                          }
+                        >
+                          <span
+                            className="statsCoverageFill"
+                            style={{
+                              width: `${percentage}%`,
+                            }}
+                          />
+                        </div>
+
+                        <strong className="statsCoveragePercent">
+                          {percentage}%
+                        </strong>
+                      </div>
+                    );
+                  }
+                )}
+              </div>
             </section>
 
             <div
               className="updateFieldGrid"
               role="group"
-              aria-label="Choose missing fields"
+              aria-label="Choose update queues"
             >
               {UPDATE_FIELD_OPTIONS.map(
                 (option) => {
@@ -8776,7 +9088,8 @@ export default function App() {
                 .length === 0 ? (
                 <p className="emptySearch">
                   Choose at least one
-                  missing field above.
+                  research or review
+                  queue above.
                 </p>
               ) : updateBooks.length >
                 0 ? (
