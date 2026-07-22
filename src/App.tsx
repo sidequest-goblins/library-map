@@ -61,7 +61,53 @@ type AppTab =
 type UpdateField =
   | "totalPages"
   | "publicationYear"
-  | "coverImage";
+  | "coverImage"
+  | "classificationReview";
+
+type ClassificationReviewField =
+  | "genre"
+  | "subgenre"
+  | "format"
+  | "publisher"
+  | "room"
+  | "bookcase";
+
+type ClassificationReviewIssue = {
+  field: ClassificationReviewField;
+  label: string;
+  workbookValue: string;
+  displayValue: string;
+};
+
+const CLASSIFICATION_REVIEW_FIELDS: Array<{
+  field: ClassificationReviewField;
+  label: string;
+}> = [
+  {
+    field: "genre",
+    label: "Genre",
+  },
+  {
+    field: "subgenre",
+    label: "Subgenre",
+  },
+  {
+    field: "format",
+    label: "Format",
+  },
+  {
+    field: "publisher",
+    label: "Publisher",
+  },
+  {
+    field: "room",
+    label: "Room",
+  },
+  {
+    field: "bookcase",
+    label: "Bookcase",
+  },
+];
 
 type StatsDataset =
   | "collection"
@@ -262,6 +308,13 @@ const UPDATE_FIELD_OPTIONS: Array<{
     icon: "🖼️",
     description: "Books that do not have a cover yet.",
   },
+  {
+    field: "classificationReview",
+    label: "Unknown / Other",
+    icon: "🔎",
+    description:
+      "Books with blank, Unknown, or Other category values.",
+  },
 ];
 
 const UPDATE_FIELD_LABELS: Record<
@@ -271,6 +324,8 @@ const UPDATE_FIELD_LABELS: Record<
   totalPages: "Missing page count",
   publicationYear: "Missing publication year",
   coverImage: "Missing cover",
+  classificationReview:
+    "Review Unknown / Other",
 };
 
 type WantedMode =
@@ -1216,16 +1271,53 @@ function formatSearchSeriesLabel(book: Book): string {
   return `${cleanSeries} #${seriesNumber}`;
 }
 
+function getClassificationReviewIssues(
+  book: Book
+): ClassificationReviewIssue[] {
+  return CLASSIFICATION_REVIEW_FIELDS.flatMap(
+    ({ field, label }) => {
+      const workbookValue = String(
+        book[field] ?? ""
+      ).trim();
+
+      const normalizedValue =
+        workbookValue.toLowerCase();
+
+      const needsReview =
+        !workbookValue ||
+        normalizedValue === "unknown" ||
+        normalizedValue === "other";
+
+      if (!needsReview) {
+        return [];
+      }
+
+      return [
+        {
+          field,
+          label,
+          workbookValue,
+          displayValue: workbookValue
+            ? workbookValue
+            : "blank → Unknown",
+        },
+      ];
+    }
+  );
+}
+
 function getMissingUpdateFields(
   book: Book
 ): UpdateField[] {
   const missingFields: UpdateField[] = [];
 
-  const totalPages =
-    Number(book.totalPages);
+  const totalPages = Number(
+    book.totalPages
+  );
 
-  const publicationYear =
-    Number(book.publicationYear);
+  const publicationYear = Number(
+    book.publicationYear
+  );
 
   if (
     !Number.isFinite(totalPages) ||
@@ -1254,6 +1346,16 @@ function getMissingUpdateFields(
   ) {
     missingFields.push(
       "coverImage"
+    );
+  }
+
+  if (
+    getClassificationReviewIssues(
+      book
+    ).length > 0
+  ) {
+    missingFields.push(
+      "classificationReview"
     );
   }
 
@@ -1610,6 +1712,7 @@ export default function App() {
     totalPages: true,
     publicationYear: true,
     coverImage: true,
+    classificationReview: false,
   });
 
   const [
@@ -2560,6 +2663,7 @@ export default function App() {
         totalPages: 0,
         publicationYear: 0,
         coverImage: 0,
+        classificationReview: 0,
       };
 
       books.forEach((book) => {
@@ -8689,6 +8793,15 @@ export default function App() {
                             )
                         );
 
+                      const classificationReviewIssues =
+                        selectedUpdateFieldList.includes(
+                          "classificationReview"
+                        )
+                          ? getClassificationReviewIssues(
+                              book
+                            )
+                          : [];
+
                       const locationParts =
                         [
                           book.room &&
@@ -8749,22 +8862,46 @@ export default function App() {
 
                           <div className="updateMissingBadges">
                             {missingFields.map(
-                              (
-                                field
-                              ) => (
-                                <span
-                                  key={
-                                    field
-                                  }
-                                  className="updateMissingBadge"
-                                >
-                                  {
-                                    UPDATE_FIELD_LABELS[
-                                      field
-                                    ]
-                                  }
-                                </span>
-                              )
+                              (field) =>
+                                field ===
+                                "classificationReview"
+                                  ? classificationReviewIssues.map(
+                                      (
+                                        issue
+                                      ) => (
+                                        <span
+                                          key={`classificationReview-${issue.field}`}
+                                          className="updateMissingBadge"
+                                          title={
+                                            issue.workbookValue
+                                              ? `${issue.label} workbook value: ${issue.workbookValue}`
+                                              : `${issue.label} is blank in the exported workbook data`
+                                          }
+                                        >
+                                          {
+                                            issue.label
+                                          }
+                                          :{" "}
+                                          {
+                                            issue.displayValue
+                                          }
+                                        </span>
+                                      )
+                                    )
+                                  : (
+                                      <span
+                                        key={
+                                          field
+                                        }
+                                        className="updateMissingBadge"
+                                      >
+                                        {
+                                          UPDATE_FIELD_LABELS[
+                                            field
+                                          ]
+                                        }
+                                      </span>
+                                    )
                             )}
                           </div>
 
