@@ -255,7 +255,24 @@ const STATS_PIE_COLORS = [
   "#8ea176",
   "#d7b86f",
   "#6f604b",
+  "#3f665f",
+  "#9a6a8d",
+  "#d28a5f",
+  "#6f7f9a",
+  "#a85f6a",
+  "#7f8c4d",
+  "#b08a5a",
+  "#5f4f77",
 ];
+
+const STATS_PIE_TARGET_OTHER_SHARE =
+  0.25;
+
+const STATS_PIE_MIN_VISIBLE_CATEGORIES =
+  4;
+
+const STATS_PIE_MAX_VISIBLE_CATEGORIES =
+  14;
 
 const APP_NAV_ITEMS: Array<{
   tab: AppTab;
@@ -474,6 +491,8 @@ const EMPTY_BOOK_DETAIL_DISCLOSURE_STATE:
   };
 
 const SEARCH_PAGE_SIZE = 25;
+
+const STATS_PAGE_SIZE = 15;
 
 const EMPTY_WANTED_LISTS: WantedLists = {
   toBuy: [],
@@ -1997,6 +2016,11 @@ export default function App() {
     "bars"
   );
 
+  const [
+    statsPage,
+    setStatsPage,
+  ] = useState(1);
+
   const [searchQuery, setSearchQuery] =
     useState("");
   const [searchScope, setSearchScope] = useState<SearchScope>("all");
@@ -2036,6 +2060,13 @@ export default function App() {
 
   const appMenuRef =
     useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setStatsPage(1);
+  }, [
+    statsDataset,
+    statsBreakdown,
+  ]);
 
   useEffect(() => {
     function handleAutocompletePointerDown(
@@ -3383,6 +3414,46 @@ export default function App() {
     statsBreakdownRows[0]
       ?.count ?? 0;
 
+  const totalStatsPages =
+    Math.max(
+      1,
+      Math.ceil(
+        statsBreakdownRows.length /
+          STATS_PAGE_SIZE
+      )
+    );
+
+  const safeStatsPage =
+    Math.min(
+      statsPage,
+      totalStatsPages
+    );
+
+  const pagedStatsBreakdownRows =
+    statsBreakdownRows.slice(
+      (
+        safeStatsPage - 1
+      ) * STATS_PAGE_SIZE,
+      safeStatsPage *
+        STATS_PAGE_SIZE
+    );
+
+  const firstStatsRowNumber =
+    statsBreakdownRows.length > 0
+      ? (
+          safeStatsPage - 1
+        ) *
+          STATS_PAGE_SIZE +
+        1
+      : 0;
+
+  const lastStatsRowNumber =
+    Math.min(
+      safeStatsPage *
+        STATS_PAGE_SIZE,
+      statsBreakdownRows.length
+    );
+    
   const statsPieRows =
     useMemo(() => {
       const totalCount =
@@ -3400,46 +3471,38 @@ export default function App() {
         return [];
       }
 
-      const unknownRow =
-        statsBreakdownRows.find(
-          (row) =>
-            row.label ===
-            "Unknown"
+      const minimumVisibleCount =
+        Math.min(
+          STATS_PIE_MIN_VISIBLE_CATEGORIES,
+          statsBreakdownRows.length
         );
 
-      const existingOtherRow =
-        statsBreakdownRows.find(
-          (row) =>
-            row.label ===
-            "Other"
+      const maximumVisibleCount =
+        Math.min(
+          STATS_PIE_MAX_VISIBLE_CATEGORIES,
+          statsBreakdownRows.length
         );
 
-      const namedRows =
-        statsBreakdownRows.filter(
-          (row) =>
-            row.label !==
-              "Unknown" &&
-            row.label !==
-              "Other"
-        );
+      let visibleCount =
+        minimumVisibleCount;
 
-      const visibleNamedLimit =
-        unknownRow
-          ? 5
-          : 6;
+      while (
+        visibleCount <
+        maximumVisibleCount
+      ) {
+        const remainingRows =
+          statsBreakdownRows.slice(
+            visibleCount
+          );
 
-      const visibleNamedRows =
-        namedRows.slice(
-          0,
-          visibleNamedLimit
-        );
+        if (
+          remainingRows.length <= 1
+        ) {
+          break;
+        }
 
-      const hiddenNamedCount =
-        namedRows
-          .slice(
-            visibleNamedLimit
-          )
-          .reduce(
+        const remainingCount =
+          remainingRows.reduce(
             (
               runningTotal,
               row
@@ -3449,23 +3512,103 @@ export default function App() {
             0
           );
 
+        const remainingShare =
+          remainingCount /
+          totalCount;
+
+        if (
+          remainingShare <=
+          STATS_PIE_TARGET_OTHER_SHARE
+        ) {
+          break;
+        }
+
+        visibleCount += 1;
+      }
+
+      const possibleGroupedRows =
+        statsBreakdownRows.slice(
+          visibleCount
+        );
+
+      const shouldGroupRows =
+        possibleGroupedRows.length > 1;
+
+      const visibleRows =
+        shouldGroupRows
+          ? statsBreakdownRows.slice(
+              0,
+              visibleCount
+            )
+          : statsBreakdownRows;
+
+      const groupedRows =
+        shouldGroupRows
+          ? possibleGroupedRows
+          : [];
+
       const groupedOtherCount =
-        hiddenNamedCount +
-        (existingOtherRow
-          ?.count ?? 0);
+        groupedRows.reduce(
+          (
+            runningTotal,
+            row
+          ) =>
+            runningTotal +
+            row.count,
+          0
+        );
 
-      const groupedRows = [
-        ...visibleNamedRows,
+      const groupedCategoryLabels =
+        groupedRows
+          .map(
+            (row) => row.label
+          )
+          .filter(
+            (label) =>
+              label !== "Other"
+          );
 
-        ...(unknownRow
-          ? [unknownRow]
-          : []),
+      const previewLabels =
+        groupedCategoryLabels.slice(
+          0,
+          3
+        );
 
-        ...(groupedOtherCount >
-        0
+      const groupedOtherLegendLabel =
+        previewLabels.length > 0
+          ? `Other (${previewLabels.join(
+              ", "
+            )}${
+              groupedCategoryLabels.length >
+              3
+                ? ", etc."
+                : ""
+            })`
+          : "Other";
+
+      const pieRows = [
+        ...visibleRows.map(
+          (row) => ({
+            ...row,
+
+            pieKey:
+              `category:${row.label}`,
+
+            legendLabel:
+              row.label,
+          })
+        ),
+
+        ...(shouldGroupRows
           ? [
               {
+                pieKey:
+                  "grouped-other",
+
                 label: "Other",
+
+                legendLabel:
+                  groupedOtherLegendLabel,
 
                 count:
                   groupedOtherCount,
@@ -3480,7 +3623,7 @@ export default function App() {
           : []),
       ];
 
-      return groupedRows.map(
+      return pieRows.map(
         (row, index) => ({
           ...row,
 
@@ -8797,9 +8940,8 @@ export default function App() {
                 {statsDisplay ===
                 "bars" ? (
                   <div className="statsBreakdownList">
-                    {statsBreakdownRows
-                      .slice(0, 15)
-                      .map((row) => {
+                    {pagedStatsBreakdownRows.map(
+                      (row) => {
                         const relativeWidth =
                           statsBreakdownMaxCount >
                           0
@@ -8882,13 +9024,18 @@ export default function App() {
 
                           <Tooltip
                             formatter={(
-                              value
+                              value,
+                              _name,
+                              item
                             ) => [
                               Number(
                                 value ??
                                   0
                               ).toLocaleString(),
-                              "Books",
+                              String(
+                                item.payload.label ??
+                                  "Books"
+                              ),
                             ]}
                           />
                         </PieChart>
@@ -8913,7 +9060,7 @@ export default function App() {
                         (row) => (
                           <div
                             key={
-                              row.label
+                              row.pieKey
                             }
                             className="statsPieLegendItem"
                           >
@@ -8928,7 +9075,7 @@ export default function App() {
 
                             <span className="statsPieLegendLabel">
                               {
-                                row.label
+                                row.legendLabel
                               }
                             </span>
 
@@ -8947,9 +9094,7 @@ export default function App() {
                   </div>
                 ) : (
                   <div className="statsPlainList">
-                    {statsBreakdownRows
-                      .slice(0, 15)
-                      .map(
+                    {pagedStatsBreakdownRows.map(
                         (
                           row,
                           index
@@ -8961,7 +9106,11 @@ export default function App() {
                             className="statsPlainRow"
                           >
                             <span className="statsPlainRank">
-                              {index +
+                              {(
+                                safeStatsPage - 1
+                              ) *
+                                STATS_PAGE_SIZE +
+                                index +
                                 1}
                             </span>
 
@@ -8990,15 +9139,64 @@ export default function App() {
                 {statsDisplay !==
                   "pie" &&
                 statsBreakdownRows.length >
-                  15 ? (
-                  <p className="statsListNote">
-                    Showing the top 15
-                    of{" "}
-                    {
-                      statsBreakdownRows.length
-                    }{" "}
-                    categories.
-                  </p>
+                  0 ? (
+                  <>
+                    <p className="statsListNote">
+                      Showing{" "}
+                      {firstStatsRowNumber}
+                      –{lastStatsRowNumber} of{" "}
+                      {
+                        statsBreakdownRows.length
+                      }{" "}
+                      categories.
+                    </p>
+
+                    {totalStatsPages > 1 ? (
+                      <div className="paginationControls">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setStatsPage(
+                              (page) =>
+                                Math.max(
+                                  1,
+                                  page - 1
+                                )
+                            );
+                          }}
+                          disabled={
+                            safeStatsPage === 1
+                          }
+                        >
+                          Previous
+                        </button>
+
+                        <span>
+                          Page {safeStatsPage} of{" "}
+                          {totalStatsPages}
+                        </span>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setStatsPage(
+                              (page) =>
+                                Math.min(
+                                  totalStatsPages,
+                                  page + 1
+                                )
+                            );
+                          }}
+                          disabled={
+                            safeStatsPage ===
+                            totalStatsPages
+                          }
+                        >
+                          Next
+                        </button>
+                      </div>
+                    ) : null}
+                  </>
                 ) : null}
 
                 {statsDisplay ===
@@ -9007,9 +9205,12 @@ export default function App() {
                   statsPieRows.length ? (
                   <p className="statsListNote">
                     Smaller categories
-                    are grouped into
-                    Other for this
-                    view.
+                    are grouped
+                    adaptively. Up to 14
+                    named categories are
+                    shown before the
+                    remainder becomes
+                    Other.
                   </p>
                 ) : null}
               </>
