@@ -30940,7 +30940,42 @@
     "notes": ""
   },
   {
-    "bookId": "book-00885-stevenson-bryan-just-mercy",
+    "bookId": "book-00885-stein-max-vine-and-tea",
+    "title": "Vine and Tea",
+    "rawTitle": "Vine and Tea",
+    "catalogTitle": "Vine and Tea",
+    "catalogRawTitle": "Vine and Tea",
+    "catalogMatchType": "exact",
+    "shelfPosition": null,
+    "series": null,
+    "seriesTitle": null,
+    "seriesFormat": null,
+    "seriesNumber": null,
+    "author": "Max Stein",
+    "authorSort": "Stein, Max",
+    "firstName": "Max",
+    "lastName": "Stein",
+    "genre": "Poetry",
+    "subgenre": "Poetry / Anthology",
+    "publisher": "",
+    "origin": "Gift",
+    "publicationYear": null,
+    "totalPages": null,
+    "catalogKey": "stein-max-vine-and-tea",
+    "format": "Paperback",
+    "jc": true,
+    "cj": false,
+    "lgbtq": false,
+    "coverImage": "/data/covers/stein-max-vine-and-tea.webp",
+    "room": "",
+    "bookcase": "",
+    "shelf": "",
+    "row": "Main",
+    "rawShelf": "",
+    "notes": ""
+  },
+  {
+    "bookId": "book-00886-stevenson-bryan-just-mercy",
     "title": "Just Mercy",
     "rawTitle": "Just Mercy",
     "catalogTitle": "Just Mercy",
@@ -30975,7 +31010,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00886-straight-susan-i-been-in-sorrow-s-kitchen-and-licked-out-all",
+    "bookId": "book-00887-straight-susan-i-been-in-sorrow-s-kitchen-and-licked-out-all",
     "title": "I Been in Sorrow's Kitchen and Licked Out All the Pots",
     "rawTitle": "I Been in Sorrow's Kitchen and Licked Out All the Pots",
     "catalogTitle": "I Been in Sorrow's Kitchen and Licked Out All the Pots",
@@ -31010,7 +31045,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00887-straube-lindsay-kiss-of-the-basilisk",
+    "bookId": "book-00888-straube-lindsay-kiss-of-the-basilisk",
     "title": "Kiss of the Basilisk",
     "rawTitle": "Kiss of the Basilisk",
     "catalogTitle": "Kiss of the Basilisk",
@@ -31045,7 +31080,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00888-straube-lindsay-between-two-kings",
+    "bookId": "book-00889-straube-lindsay-between-two-kings",
     "title": "Between Two Kings",
     "rawTitle": "Between Two Kings",
     "catalogTitle": "Between Two Kings",
@@ -31080,7 +31115,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00889-stroud-jonathan-the-amulet-of-samarkand",
+    "bookId": "book-00890-stroud-jonathan-the-amulet-of-samarkand",
     "title": "The Amulet of Samarkand",
     "rawTitle": "The Amulet of Samarkand",
     "catalogTitle": "The Amulet of Samarkand",
@@ -31115,7 +31150,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00890-stroud-jonathan-the-golem-s-eye",
+    "bookId": "book-00891-stroud-jonathan-the-golem-s-eye",
     "title": "The Golem's Eye",
     "rawTitle": "The Golem's Eye",
     "catalogTitle": "The Golem's Eye",
@@ -31150,7 +31185,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00891-sutanto-jesse-q-vera-wong-s-unsolicited-advice-for-murderers",
+    "bookId": "book-00892-sutanto-jesse-q-vera-wong-s-unsolicited-advice-for-murderers",
     "title": "Vera Wong's Unsolicited Advice for Murderers",
     "rawTitle": "Vera Wong's Unsolicited Advice for Murderers",
     "catalogTitle": "Vera Wong's Unsolicited Advice for Murderers",
@@ -31185,7 +31220,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00892-sutanto-jesse-q-didn-t-see-that-coming",
+    "bookId": "book-00893-sutanto-jesse-q-didn-t-see-that-coming",
     "title": "Didn't See That Coming",
     "rawTitle": "Didn't See That Coming",
     "catalogTitle": "Didn't See That Coming",
@@ -31220,7 +31255,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00893-sutherland-krystal-house-of-hollow",
+    "bookId": "book-00894-sutherland-krystal-house-of-hollow",
     "title": "House of Hollow",
     "rawTitle": "House of Hollow",
     "catalogTitle": "House of Hollow",
@@ -31255,7 +31290,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00894-sutherland-krystal-the-invocations",
+    "bookId": "book-00895-sutherland-krystal-the-invocations",
     "title": "The Invocations",
     "rawTitle": "The Invocations",
     "catalogTitle": "The Invocations",
@@ -31290,7 +31325,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00895-swann-brian-coming-to-light-contemporary-translations-of-the",
+    "bookId": "book-00896-swann-brian-coming-to-light-contemporary-translations-of-the",
     "title": "Coming to Light: Contemporary Translations of the Native Literatures of North America",
     "rawTitle": "Coming to Light: Contemporary Translations of the Native Literatures of North America",
     "catalogTitle": "Coming to Light: Contemporary Translations of the Native Literatures of North America",
@@ -31325,7 +31360,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00896-swanson-peter-the-kind-worth-killing",
+    "bookId": "book-00897-swanson-peter-the-kind-worth-killing",
     "title": "The Kind Worth Killing",
     "rawTitle": "The Kind Worth Killing",
     "catalogTitle": "The Kind Worth Killing",
@@ -31360,7 +31395,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00897-tahir-sabaa-all-my-rage",
+    "bookId": "book-00898-tahir-sabaa-all-my-rage",
     "title": "All My Rage",
     "rawTitle": "All My Rage",
     "catalogTitle": "All My Rage",
@@ -31395,7 +31430,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00898-takaya-natsuki-fruits-basket-collector-s-edition-vol-1",
+    "bookId": "book-00899-takaya-natsuki-fruits-basket-collector-s-edition-vol-1",
     "title": "Fruits Basket Collector's Edition, Vol. 1",
     "rawTitle": "Fruits Basket Collector's Edition, Vol. 1",
     "catalogTitle": "Fruits Basket Collector's Edition, Vol. 1",
@@ -31430,7 +31465,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00899-takaya-natsuki-fruits-basket-collector-s-edition-vol-2",
+    "bookId": "book-00900-takaya-natsuki-fruits-basket-collector-s-edition-vol-2",
     "title": "Fruits Basket Collector's Edition, Vol. 2",
     "rawTitle": "Fruits Basket Collector's Edition, Vol. 2",
     "catalogTitle": "Fruits Basket Collector's Edition, Vol. 2",
@@ -31465,7 +31500,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00900-takaya-natsuki-fruits-basket-collector-s-edition-vol-3",
+    "bookId": "book-00901-takaya-natsuki-fruits-basket-collector-s-edition-vol-3",
     "title": "Fruits Basket Collector's Edition, Vol. 3",
     "rawTitle": "Fruits Basket Collector's Edition, Vol. 3",
     "catalogTitle": "Fruits Basket Collector's Edition, Vol. 3",
@@ -31500,7 +31535,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00901-takaya-natsuki-fruits-basket-collector-s-edition-vol-4",
+    "bookId": "book-00902-takaya-natsuki-fruits-basket-collector-s-edition-vol-4",
     "title": "Fruits Basket Collector's Edition, Vol. 4",
     "rawTitle": "Fruits Basket Collector's Edition, Vol. 4",
     "catalogTitle": "Fruits Basket Collector's Edition, Vol. 4",
@@ -31535,7 +31570,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00902-takaya-natsuki-fruits-basket-collector-s-edition-vol-5",
+    "bookId": "book-00903-takaya-natsuki-fruits-basket-collector-s-edition-vol-5",
     "title": "Fruits Basket Collector's Edition, Vol. 5",
     "rawTitle": "Fruits Basket Collector's Edition, Vol. 5",
     "catalogTitle": "Fruits Basket Collector's Edition, Vol. 5",
@@ -31570,7 +31605,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00903-takaya-natsuki-fruits-basket-collector-s-edition-vol-6",
+    "bookId": "book-00904-takaya-natsuki-fruits-basket-collector-s-edition-vol-6",
     "title": "Fruits Basket Collector's Edition, Vol. 6",
     "rawTitle": "Fruits Basket Collector's Edition, Vol. 6",
     "catalogTitle": "Fruits Basket Collector's Edition, Vol. 6",
@@ -31605,7 +31640,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00904-takaya-natsuki-fruits-basket-collector-s-edition-vol-7",
+    "bookId": "book-00905-takaya-natsuki-fruits-basket-collector-s-edition-vol-7",
     "title": "Fruits Basket Collector's Edition, Vol. 7",
     "rawTitle": "Fruits Basket Collector's Edition, Vol. 7",
     "catalogTitle": "Fruits Basket Collector's Edition, Vol. 7",
@@ -31640,7 +31675,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00905-takaya-natsuki-fruits-basket-collector-s-edition-vol-8",
+    "bookId": "book-00906-takaya-natsuki-fruits-basket-collector-s-edition-vol-8",
     "title": "Fruits Basket Collector's Edition, Vol. 8",
     "rawTitle": "Fruits Basket Collector's Edition, Vol. 8",
     "catalogTitle": "Fruits Basket Collector's Edition, Vol. 8",
@@ -31675,7 +31710,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00906-takaya-natsuki-fruits-basket-collector-s-edition-vol-9",
+    "bookId": "book-00907-takaya-natsuki-fruits-basket-collector-s-edition-vol-9",
     "title": "Fruits Basket Collector's Edition, Vol. 9",
     "rawTitle": "Fruits Basket Collector's Edition, Vol. 9",
     "catalogTitle": "Fruits Basket Collector's Edition, Vol. 9",
@@ -31710,7 +31745,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00907-takaya-natsuki-fruits-basket-collector-s-edition-vol-10",
+    "bookId": "book-00908-takaya-natsuki-fruits-basket-collector-s-edition-vol-10",
     "title": "Fruits Basket Collector's Edition, Vol. 10",
     "rawTitle": "Fruits Basket Collector's Edition, Vol. 10",
     "catalogTitle": "Fruits Basket Collector's Edition, Vol. 10",
@@ -31745,7 +31780,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00908-takaya-natsuki-fruits-basket-collector-s-edition-vol-11",
+    "bookId": "book-00909-takaya-natsuki-fruits-basket-collector-s-edition-vol-11",
     "title": "Fruits Basket Collector's Edition, Vol. 11",
     "rawTitle": "Fruits Basket Collector's Edition, Vol. 11",
     "catalogTitle": "Fruits Basket Collector's Edition, Vol. 11",
@@ -31780,7 +31815,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00909-takaya-natsuki-fruits-basket-collector-s-edition-vol-12",
+    "bookId": "book-00910-takaya-natsuki-fruits-basket-collector-s-edition-vol-12",
     "title": "Fruits Basket Collector's Edition, Vol. 12",
     "rawTitle": "Fruits Basket Collector's Edition, Vol. 12",
     "catalogTitle": "Fruits Basket Collector's Edition, Vol. 12",
@@ -31815,7 +31850,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00910-tamblyn-amber-any-man",
+    "bookId": "book-00911-tamblyn-amber-any-man",
     "title": "Any Man",
     "rawTitle": "Any Man",
     "catalogTitle": "Any Man",
@@ -31850,7 +31885,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00911-tan-amy-saving-fish-from-drowning",
+    "bookId": "book-00912-tan-amy-saving-fish-from-drowning",
     "title": "Saving Fish from Drowning",
     "rawTitle": "Saving Fish from Drowning",
     "catalogTitle": "Saving Fish from Drowning",
@@ -31885,7 +31920,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00912-tao-shen-the-poet-empress",
+    "bookId": "book-00913-tao-shen-the-poet-empress",
     "title": "The Poet Empress",
     "rawTitle": "The Poet Empress",
     "catalogTitle": "The Poet Empress",
@@ -31920,7 +31955,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00913-taylor-laini-daughter-of-smoke-bone",
+    "bookId": "book-00914-taylor-laini-daughter-of-smoke-bone",
     "title": "Daughter of Smoke & Bone",
     "rawTitle": "Daughter of Smoke & Bone",
     "catalogTitle": "Daughter of Smoke & Bone",
@@ -31955,7 +31990,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00914-tekiela-stan-birds-of-arizona",
+    "bookId": "book-00915-tekiela-stan-birds-of-arizona",
     "title": "Birds of Arizona",
     "rawTitle": "Birds of Arizona",
     "catalogTitle": "Birds of Arizona",
@@ -31990,7 +32025,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00915-tekiela-stan-mammals-of-arizona",
+    "bookId": "book-00916-tekiela-stan-mammals-of-arizona",
     "title": "Mammals of Arizona",
     "rawTitle": "Mammals of Arizona",
     "catalogTitle": "Mammals of Arizona",
@@ -32025,7 +32060,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00916-tekiela-stan-cactus-of-arizona",
+    "bookId": "book-00917-tekiela-stan-cactus-of-arizona",
     "title": "Cactus of Arizona",
     "rawTitle": "Cactus of Arizona",
     "catalogTitle": "Cactus of Arizona",
@@ -32060,7 +32095,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00917-tekiela-stan-wildflowers-of-arizona-field-guide",
+    "bookId": "book-00918-tekiela-stan-wildflowers-of-arizona-field-guide",
     "title": "Wildflowers of Arizona Field Guide",
     "rawTitle": "Wildflowers of Arizona Field Guide",
     "catalogTitle": "Wildflowers of Arizona Field Guide",
@@ -32095,7 +32130,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00918-five-lesbian-brothers-the-five-lesbian-brother-s-guide-to-li",
+    "bookId": "book-00919-five-lesbian-brothers-the-five-lesbian-brother-s-guide-to-li",
     "title": "The Five Lesbian Brother's Guide to Life",
     "rawTitle": "The Five Lesbian Brother's Guide to Life",
     "catalogTitle": "The Five Lesbian Brother's Guide to Life",
@@ -32130,7 +32165,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00919-the-new-york-times-pride-fifty-years-of-parades-and-protests",
+    "bookId": "book-00920-the-new-york-times-pride-fifty-years-of-parades-and-protests",
     "title": "Pride: Fifty Years of Parades and Protests",
     "rawTitle": "Pride: Fifty Years of Parades and Protests",
     "catalogTitle": "Pride: Fifty Years of Parades and Protests",
@@ -32165,7 +32200,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00920-thomas-garen-yes-we-can-a-biography-of-president-barack-obam",
+    "bookId": "book-00921-thomas-garen-yes-we-can-a-biography-of-president-barack-obam",
     "title": "Yes We Can: A Biography of President Barack Obama",
     "rawTitle": "Yes We Can: A Biography of President Barack Obama",
     "catalogTitle": "Yes We Can: A Biography of President Barack Obama",
@@ -32200,7 +32235,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00921-thomas-scott-kill-creek",
+    "bookId": "book-00922-thomas-scott-kill-creek",
     "title": "Kill Creek",
     "rawTitle": "Kill Creek",
     "catalogTitle": "Kill Creek",
@@ -32235,7 +32270,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00922-thorne-rebecca-can-t-spell-treason-without-tea",
+    "bookId": "book-00923-thorne-rebecca-can-t-spell-treason-without-tea",
     "title": "Can't Spell Treason Without Tea",
     "rawTitle": "Can't Spell Treason Without Tea",
     "catalogTitle": "Can't Spell Treason Without Tea",
@@ -32270,7 +32305,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00923-todd-matthew-pride-the-story-of-the-lgbtq-equality-movement",
+    "bookId": "book-00924-todd-matthew-pride-the-story-of-the-lgbtq-equality-movement",
     "title": "Pride: The Story of the LGBTQ Equality Movement",
     "rawTitle": "Pride: The Story of the LGBTQ Equality Movement",
     "catalogTitle": "Pride: The Story of the LGBTQ Equality Movement",
@@ -32305,7 +32340,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00924-tremblay-paul-a-head-full-of-ghosts",
+    "bookId": "book-00925-tremblay-paul-a-head-full-of-ghosts",
     "title": "A Head Full of Ghosts",
     "rawTitle": "A Head Full of Ghosts",
     "catalogTitle": "A Head Full of Ghosts",
@@ -32340,7 +32375,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00925-trenou-dosse-via-signs-skymates-the-ultimate-guide-to-astrol",
+    "bookId": "book-00926-trenou-dosse-via-signs-skymates-the-ultimate-guide-to-astrol",
     "title": "Signs & Skymates: The Ultimate Guide to Astrological Compatibility",
     "rawTitle": "Signs & Skymates: The Ultimate Guide to Astrological Compatibility",
     "catalogTitle": "Signs & Skymates: The Ultimate Guide to Astrological Compatibility",
@@ -32375,7 +32410,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00926-trussoni-danielle-the-ancestor",
+    "bookId": "book-00927-trussoni-danielle-the-ancestor",
     "title": "The Ancestor",
     "rawTitle": "The Ancestor",
     "catalogTitle": "The Ancestor",
@@ -32410,7 +32445,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00927-turnbull-cadwell-no-gods-no-monsters",
+    "bookId": "book-00928-turnbull-cadwell-no-gods-no-monsters",
     "title": "No Gods, No Monsters",
     "rawTitle": "No Gods, No Monsters",
     "catalogTitle": "No Gods, No Monsters",
@@ -32445,7 +32480,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00928-turner-alexis-taxidermy",
+    "bookId": "book-00929-turner-alexis-taxidermy",
     "title": "Taxidermy",
     "rawTitle": "Taxidermy",
     "catalogTitle": "Taxidermy",
@@ -32480,7 +32515,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00929-uketsu-strange-pictures",
+    "bookId": "book-00930-uketsu-strange-pictures",
     "title": "Strange Pictures",
     "rawTitle": "Strange Pictures",
     "catalogTitle": "Strange Pictures",
@@ -32515,7 +32550,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00930-ung-loung-first-they-killed-my-father-a-daughter-of-cambodia",
+    "bookId": "book-00931-ung-loung-first-they-killed-my-father-a-daughter-of-cambodia",
     "title": "First They Killed My Father: A Daughter of Cambodia Remembers",
     "rawTitle": "First They Killed My Father: A Daughter of Cambodia Remembers",
     "catalogTitle": "First They Killed My Father: A Daughter of Cambodia Remembers",
@@ -32550,7 +32585,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00931-van-der-kolk-bessel-the-body-keeps-the-score",
+    "bookId": "book-00932-van-der-kolk-bessel-the-body-keeps-the-score",
     "title": "The Body Keeps the Score",
     "rawTitle": "The Body Keeps the Score",
     "catalogTitle": "The Body Keeps the Score",
@@ -32585,7 +32620,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00932-van-pelt-shelby-remarkably-bright-creatures",
+    "bookId": "book-00933-van-pelt-shelby-remarkably-bright-creatures",
     "title": "Remarkably Bright Creatures",
     "rawTitle": "Remarkably Bright Creatures",
     "catalogTitle": "Remarkably Bright Creatures",
@@ -32620,7 +32655,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00933-various-irish-fairy-and-folk-tales",
+    "bookId": "book-00934-various-irish-fairy-and-folk-tales",
     "title": "Irish Fairy and Folk Tales",
     "rawTitle": "Irish Fairy and Folk Tales",
     "catalogTitle": "Irish Fairy and Folk Tales",
@@ -32655,7 +32690,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00934-vaughan-sarah-women-who-changed-the-world",
+    "bookId": "book-00935-vaughan-sarah-women-who-changed-the-world",
     "title": "Women Who Changed the World",
     "rawTitle": "Women Who Changed the World",
     "catalogTitle": "Women Who Changed the World",
@@ -32690,7 +32725,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00935-villafa-e-le-n-in-s-a-story-for-all-seasons-un-cuento-para-c",
+    "bookId": "book-00936-villafa-e-le-n-in-s-a-story-for-all-seasons-un-cuento-para-c",
     "title": "A Story for All Seasons: Un cuento para cada estación",
     "rawTitle": "A Story for All Seasons: Un cuento para cada estación",
     "catalogTitle": "A Story for All Seasons: Un cuento para cada estación",
@@ -32725,7 +32760,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00936-virgil-the-aeneid",
+    "bookId": "book-00937-virgil-the-aeneid",
     "title": "The Aeneid",
     "rawTitle": "The Aeneid",
     "catalogTitle": "The Aeneid",
@@ -32760,7 +32795,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00937-vuong-ocean-on-earth-we-re-briefly-gorgeous",
+    "bookId": "book-00938-vuong-ocean-on-earth-we-re-briefly-gorgeous",
     "title": "On Earth We're Briefly Gorgeous",
     "rawTitle": "On Earth We're Briefly Gorgeous",
     "catalogTitle": "On Earth We're Briefly Gorgeous",
@@ -32795,7 +32830,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00938-wakatama-allfrey-ellah-africa39-new-writing-from-africa-sout",
+    "bookId": "book-00939-wakatama-allfrey-ellah-africa39-new-writing-from-africa-sout",
     "title": "Africa39: New Writing from Africa South of the Sahara",
     "rawTitle": "Africa39: New Writing from Africa South of the Sahara",
     "catalogTitle": "Africa39: New Writing from Africa South of the Sahara",
@@ -32830,7 +32865,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00939-walker-alice-revolutionary-petunias",
+    "bookId": "book-00940-walker-alice-revolutionary-petunias",
     "title": "Revolutionary Petunias",
     "rawTitle": "Revolutionary Petunias",
     "catalogTitle": "Revolutionary Petunias",
@@ -32865,7 +32900,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00940-walker-alice-the-color-purple",
+    "bookId": "book-00941-walker-alice-the-color-purple",
     "title": "The Color Purple",
     "rawTitle": "The Color Purple",
     "catalogTitle": "The Color Purple",
@@ -32900,7 +32935,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00941-walker-pete-complex-ptsd-from-surviving-to-thriving",
+    "bookId": "book-00942-walker-pete-complex-ptsd-from-surviving-to-thriving",
     "title": "Complex PTSD: From Surviving to Thriving",
     "rawTitle": "Complex PTSD: From Surviving to Thriving",
     "catalogTitle": "Complex PTSD: From Surviving to Thriving",
@@ -32935,7 +32970,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00942-walls-jeannette-half-broke-horses",
+    "bookId": "book-00943-walls-jeannette-half-broke-horses",
     "title": "Half Broke Horses",
     "rawTitle": "Half Broke Horses",
     "catalogTitle": "Half-Broke Horses",
@@ -32970,7 +33005,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00943-walls-jeannette-the-glass-castle",
+    "bookId": "book-00944-walls-jeannette-the-glass-castle",
     "title": "The Glass Castle",
     "rawTitle": "The Glass Castle",
     "catalogTitle": "The Glass Castle",
@@ -33005,7 +33040,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00944-walls-jeannette-the-silver-star",
+    "bookId": "book-00945-walls-jeannette-the-silver-star",
     "title": "The Silver Star",
     "rawTitle": "The Silver Star",
     "catalogTitle": "The Silver Star",
@@ -33040,7 +33075,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00945-ware-ruth-the-death-of-mrs-westaway",
+    "bookId": "book-00946-ware-ruth-the-death-of-mrs-westaway",
     "title": "The Death of Mrs. Westaway",
     "rawTitle": "The Death of Mrs. Westaway",
     "catalogTitle": "The Death of Mrs. Westaway",
@@ -33075,7 +33110,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00946-watase-yuu-alice-19th-vol-1",
+    "bookId": "book-00947-watase-yuu-alice-19th-vol-1",
     "title": "Alice 19th, Vol. 1",
     "rawTitle": "Alice 19th, Vol. 1",
     "catalogTitle": "Alice 19th, Vol. 1",
@@ -33110,7 +33145,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00947-watase-yuu-alice-19th-vol-2",
+    "bookId": "book-00948-watase-yuu-alice-19th-vol-2",
     "title": "Alice 19th, Vol. 2",
     "rawTitle": "Alice 19th, Vol. 2",
     "catalogTitle": "Alice 19th, Vol. 2",
@@ -33145,7 +33180,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00948-watase-yuu-alice-19th-vol-3",
+    "bookId": "book-00949-watase-yuu-alice-19th-vol-3",
     "title": "Alice 19th, Vol. 3",
     "rawTitle": "Alice 19th, Vol. 3",
     "catalogTitle": "Alice 19th, Vol. 3",
@@ -33180,7 +33215,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00949-watase-yuu-alice-19th-vol-4",
+    "bookId": "book-00950-watase-yuu-alice-19th-vol-4",
     "title": "Alice 19th, Vol. 4",
     "rawTitle": "Alice 19th, Vol. 4",
     "catalogTitle": "Alice 19th, Vol. 4",
@@ -33215,7 +33250,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00950-watase-yuu-alice-19th-vol-5",
+    "bookId": "book-00951-watase-yuu-alice-19th-vol-5",
     "title": "Alice 19th, Vol. 5",
     "rawTitle": "Alice 19th, Vol. 5",
     "catalogTitle": "Alice 19th, Vol. 5",
@@ -33250,7 +33285,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00951-watase-yuu-alice-19th-vol-6",
+    "bookId": "book-00952-watase-yuu-alice-19th-vol-6",
     "title": "Alice 19th, Vol. 6",
     "rawTitle": "Alice 19th, Vol. 6",
     "catalogTitle": "Alice 19th, Vol. 6",
@@ -33285,7 +33320,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00952-watase-yuu-alice-19th-vol-7",
+    "bookId": "book-00953-watase-yuu-alice-19th-vol-7",
     "title": "Alice 19th, Vol. 7",
     "rawTitle": "Alice 19th, Vol. 7",
     "catalogTitle": "Alice 19th, Vol. 7",
@@ -33320,7 +33355,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00953-waters-sarah-affinity",
+    "bookId": "book-00954-waters-sarah-affinity",
     "title": "Affinity",
     "rawTitle": "Affinity",
     "catalogTitle": "Affinity",
@@ -33355,7 +33390,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00954-waters-sarah-fingersmith",
+    "bookId": "book-00955-waters-sarah-fingersmith",
     "title": "Fingersmith",
     "rawTitle": "Fingersmith",
     "catalogTitle": "Fingersmith",
@@ -33390,7 +33425,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00955-waters-sarah-the-paying-guests",
+    "bookId": "book-00956-waters-sarah-the-paying-guests",
     "title": "The Paying Guests",
     "rawTitle": "The Paying Guests",
     "catalogTitle": "The Paying Guests",
@@ -33425,7 +33460,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00956-watsuki-nobuhiro-rurouni-kenshin-vol-1",
+    "bookId": "book-00957-watsuki-nobuhiro-rurouni-kenshin-vol-1",
     "title": "Rurouni Kenshin, Vol. 1",
     "rawTitle": "Rurouni Kenshin, Vol. 1",
     "catalogTitle": "Rurouni Kenshin, Vol. 1",
@@ -33460,7 +33495,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00957-watsuki-nobuhiro-rurouni-kenshin-vol-2",
+    "bookId": "book-00958-watsuki-nobuhiro-rurouni-kenshin-vol-2",
     "title": "Rurouni Kenshin, Vol. 2",
     "rawTitle": "Rurouni Kenshin, Vol. 2",
     "catalogTitle": "Rurouni Kenshin, Vol. 2",
@@ -33495,7 +33530,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00958-watsuki-nobuhiro-rurouni-kenshin-vol-3",
+    "bookId": "book-00959-watsuki-nobuhiro-rurouni-kenshin-vol-3",
     "title": "Rurouni Kenshin, Vol. 3",
     "rawTitle": "Rurouni Kenshin, Vol. 3",
     "catalogTitle": "Rurouni Kenshin, Vol. 3",
@@ -33530,7 +33565,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00959-watsuki-nobuhiro-rurouni-kenshin-vol-4",
+    "bookId": "book-00960-watsuki-nobuhiro-rurouni-kenshin-vol-4",
     "title": "Rurouni Kenshin, Vol. 4",
     "rawTitle": "Rurouni Kenshin, Vol. 4",
     "catalogTitle": "Rurouni Kenshin, Vol. 4",
@@ -33565,7 +33600,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00960-watsuki-nobuhiro-rurouni-kenshin-vol-5",
+    "bookId": "book-00961-watsuki-nobuhiro-rurouni-kenshin-vol-5",
     "title": "Rurouni Kenshin, Vol. 5",
     "rawTitle": "Rurouni Kenshin, Vol. 5",
     "catalogTitle": "Rurouni Kenshin, Vol. 5",
@@ -33600,7 +33635,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00961-watsuki-nobuhiro-rurouni-kenshin-vol-6",
+    "bookId": "book-00962-watsuki-nobuhiro-rurouni-kenshin-vol-6",
     "title": "Rurouni Kenshin, Vol. 6",
     "rawTitle": "Rurouni Kenshin, Vol. 6",
     "catalogTitle": "Rurouni Kenshin, Vol. 6",
@@ -33635,7 +33670,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00962-watsuki-nobuhiro-rurouni-kenshin-vol-7",
+    "bookId": "book-00963-watsuki-nobuhiro-rurouni-kenshin-vol-7",
     "title": "Rurouni Kenshin, Vol. 7",
     "rawTitle": "Rurouni Kenshin, Vol. 7",
     "catalogTitle": "Rurouni Kenshin, Vol. 7",
@@ -33670,7 +33705,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00963-watsuki-nobuhiro-rurouni-kenshin-vol-8",
+    "bookId": "book-00964-watsuki-nobuhiro-rurouni-kenshin-vol-8",
     "title": "Rurouni Kenshin, Vol. 8",
     "rawTitle": "Rurouni Kenshin, Vol. 8",
     "catalogTitle": "Rurouni Kenshin, Vol. 8",
@@ -33705,7 +33740,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00964-watsuki-nobuhiro-rurouni-kenshin-vol-9",
+    "bookId": "book-00965-watsuki-nobuhiro-rurouni-kenshin-vol-9",
     "title": "Rurouni Kenshin, Vol. 9",
     "rawTitle": "Rurouni Kenshin, Vol. 9",
     "catalogTitle": "Rurouni Kenshin, Vol. 9",
@@ -33740,7 +33775,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00965-watsuki-nobuhiro-rurouni-kenshin-vol-10",
+    "bookId": "book-00966-watsuki-nobuhiro-rurouni-kenshin-vol-10",
     "title": "Rurouni Kenshin, Vol. 10",
     "rawTitle": "Rurouni Kenshin, Vol. 10",
     "catalogTitle": "Rurouni Kenshin, Vol. 10",
@@ -33775,7 +33810,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00966-watsuki-nobuhiro-rurouni-kenshin-vol-11",
+    "bookId": "book-00967-watsuki-nobuhiro-rurouni-kenshin-vol-11",
     "title": "Rurouni Kenshin, Vol. 11",
     "rawTitle": "Rurouni Kenshin, Vol. 11",
     "catalogTitle": "Rurouni Kenshin, Vol. 11",
@@ -33810,7 +33845,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00967-watsuki-nobuhiro-rurouni-kenshin-vol-12",
+    "bookId": "book-00968-watsuki-nobuhiro-rurouni-kenshin-vol-12",
     "title": "Rurouni Kenshin, Vol. 12",
     "rawTitle": "Rurouni Kenshin, Vol. 12",
     "catalogTitle": "Rurouni Kenshin, Vol. 12",
@@ -33845,7 +33880,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00968-watsuki-nobuhiro-rurouni-kenshin-vol-13",
+    "bookId": "book-00969-watsuki-nobuhiro-rurouni-kenshin-vol-13",
     "title": "Rurouni Kenshin, Vol. 13",
     "rawTitle": "Rurouni Kenshin, Vol. 13",
     "catalogTitle": "Rurouni Kenshin, Vol. 13",
@@ -33880,7 +33915,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00969-watsuki-nobuhiro-rurouni-kenshin-vol-14",
+    "bookId": "book-00970-watsuki-nobuhiro-rurouni-kenshin-vol-14",
     "title": "Rurouni Kenshin, Vol. 14",
     "rawTitle": "Rurouni Kenshin, Vol. 14",
     "catalogTitle": "Rurouni Kenshin, Vol. 14",
@@ -33915,7 +33950,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00970-watsuki-nobuhiro-rurouni-kenshin-vol-15",
+    "bookId": "book-00971-watsuki-nobuhiro-rurouni-kenshin-vol-15",
     "title": "Rurouni Kenshin, Vol. 15",
     "rawTitle": "Rurouni Kenshin, Vol. 15",
     "catalogTitle": "Rurouni Kenshin, Vol. 15",
@@ -33950,7 +33985,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00971-watsuki-nobuhiro-rurouni-kenshin-vol-16",
+    "bookId": "book-00972-watsuki-nobuhiro-rurouni-kenshin-vol-16",
     "title": "Rurouni Kenshin, Vol. 16",
     "rawTitle": "Rurouni Kenshin, Vol. 16",
     "catalogTitle": "Rurouni Kenshin, Vol. 16",
@@ -33985,7 +34020,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00972-watsuki-nobuhiro-rurouni-kenshin-vol-17",
+    "bookId": "book-00973-watsuki-nobuhiro-rurouni-kenshin-vol-17",
     "title": "Rurouni Kenshin, Vol. 17",
     "rawTitle": "Rurouni Kenshin, Vol. 17",
     "catalogTitle": "Rurouni Kenshin, Vol. 17",
@@ -34020,7 +34055,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00973-watsuki-nobuhiro-rurouni-kenshin-vol-18",
+    "bookId": "book-00974-watsuki-nobuhiro-rurouni-kenshin-vol-18",
     "title": "Rurouni Kenshin, Vol. 18",
     "rawTitle": "Rurouni Kenshin, Vol. 18",
     "catalogTitle": "Rurouni Kenshin, Vol. 18",
@@ -34055,7 +34090,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00974-watsuki-nobuhiro-rurouni-kenshin-vol-19",
+    "bookId": "book-00975-watsuki-nobuhiro-rurouni-kenshin-vol-19",
     "title": "Rurouni Kenshin, Vol. 19",
     "rawTitle": "Rurouni Kenshin, Vol. 19",
     "catalogTitle": "Rurouni Kenshin, Vol. 19",
@@ -34090,7 +34125,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00975-watsuki-nobuhiro-rurouni-kenshin-vol-20",
+    "bookId": "book-00976-watsuki-nobuhiro-rurouni-kenshin-vol-20",
     "title": "Rurouni Kenshin, Vol. 20",
     "rawTitle": "Rurouni Kenshin, Vol. 20",
     "catalogTitle": "Rurouni Kenshin, Vol. 20",
@@ -34125,7 +34160,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00976-watsuki-nobuhiro-rurouni-kenshin-vol-21",
+    "bookId": "book-00977-watsuki-nobuhiro-rurouni-kenshin-vol-21",
     "title": "Rurouni Kenshin, Vol. 21",
     "rawTitle": "Rurouni Kenshin, Vol. 21",
     "catalogTitle": "Rurouni Kenshin, Vol. 21",
@@ -34160,7 +34195,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00977-watsuki-nobuhiro-rurouni-kenshin-vol-22",
+    "bookId": "book-00978-watsuki-nobuhiro-rurouni-kenshin-vol-22",
     "title": "Rurouni Kenshin, Vol. 22",
     "rawTitle": "Rurouni Kenshin, Vol. 22",
     "catalogTitle": "Rurouni Kenshin, Vol. 22",
@@ -34195,7 +34230,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00978-watsuki-nobuhiro-rurouni-kenshin-vol-23",
+    "bookId": "book-00979-watsuki-nobuhiro-rurouni-kenshin-vol-23",
     "title": "Rurouni Kenshin, Vol. 23",
     "rawTitle": "Rurouni Kenshin, Vol. 23",
     "catalogTitle": "Rurouni Kenshin, Vol. 23",
@@ -34230,7 +34265,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00979-watsuki-nobuhiro-rurouni-kenshin-vol-24",
+    "bookId": "book-00980-watsuki-nobuhiro-rurouni-kenshin-vol-24",
     "title": "Rurouni Kenshin, Vol. 24",
     "rawTitle": "Rurouni Kenshin, Vol. 24",
     "catalogTitle": "Rurouni Kenshin, Vol. 24",
@@ -34265,7 +34300,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00980-watsuki-nobuhiro-rurouni-kenshin-vol-25",
+    "bookId": "book-00981-watsuki-nobuhiro-rurouni-kenshin-vol-25",
     "title": "Rurouni Kenshin, Vol. 25",
     "rawTitle": "Rurouni Kenshin, Vol. 25",
     "catalogTitle": "Rurouni Kenshin, Vol. 25",
@@ -34300,7 +34335,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00981-watsuki-nobuhiro-rurouni-kenshin-vol-26",
+    "bookId": "book-00982-watsuki-nobuhiro-rurouni-kenshin-vol-26",
     "title": "Rurouni Kenshin, Vol. 26",
     "rawTitle": "Rurouni Kenshin, Vol. 26",
     "catalogTitle": "Rurouni Kenshin, Vol. 26",
@@ -34335,7 +34370,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00982-watsuki-nobuhiro-rurouni-kenshin-vol-27",
+    "bookId": "book-00983-watsuki-nobuhiro-rurouni-kenshin-vol-27",
     "title": "Rurouni Kenshin, Vol. 27",
     "rawTitle": "Rurouni Kenshin, Vol. 27",
     "catalogTitle": "Rurouni Kenshin, Vol. 27",
@@ -34370,7 +34405,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00983-watsuki-nobuhiro-rurouni-kenshin-vol-28",
+    "bookId": "book-00984-watsuki-nobuhiro-rurouni-kenshin-vol-28",
     "title": "Rurouni Kenshin, Vol. 28",
     "rawTitle": "Rurouni Kenshin, Vol. 28",
     "catalogTitle": "Rurouni Kenshin, Vol. 28",
@@ -34405,7 +34440,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00984-weathers-beck-left-for-dead-my-journey-home-from-everest",
+    "bookId": "book-00985-weathers-beck-left-for-dead-my-journey-home-from-everest",
     "title": "Left for Dead: My Journey Home from Everest",
     "rawTitle": "Left for Dead: My Journey Home from Everest",
     "catalogTitle": "Left for Dead: My Journey Home from Everest",
@@ -34440,7 +34475,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00985-weigall-arthur-sappho-of-lesbos-her-life-and-times",
+    "bookId": "book-00986-weigall-arthur-sappho-of-lesbos-her-life-and-times",
     "title": "Sappho of Lesbos: Her Life and Times",
     "rawTitle": "Sappho of Lesbos: Her Life and Times",
     "catalogTitle": "Sappho of Lesbos: Her Life and Times",
@@ -34475,7 +34510,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00986-weir-andy-project-hail-mary",
+    "bookId": "book-00987-weir-andy-project-hail-mary",
     "title": "Project Hail Mary",
     "rawTitle": "Project Hail Mary",
     "catalogTitle": "Project Hail Mary",
@@ -34510,7 +34545,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00987-weir-andy-the-martian",
+    "bookId": "book-00988-weir-andy-the-martian",
     "title": "The Martian",
     "rawTitle": "The Martian",
     "catalogTitle": "The Martian",
@@ -34545,7 +34580,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00988-wells-martha-the-murderbot-diaries-vol-1",
+    "bookId": "book-00989-wells-martha-the-murderbot-diaries-vol-1",
     "title": "The Murderbot Diaries, Vol. 1",
     "rawTitle": "The Murderbot Diaries, Vol. 1",
     "catalogTitle": "The Murderbot Diaries, Vol. 1",
@@ -34580,7 +34615,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00989-wen-zhao-am-lie-song-of-silver-flame-like-night",
+    "bookId": "book-00990-wen-zhao-am-lie-song-of-silver-flame-like-night",
     "title": "Song of Silver, Flame Like Night",
     "rawTitle": "Song of Silver, Flame Like Night",
     "catalogTitle": "Song of Silver, Flame Like Night",
@@ -34615,7 +34650,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00990-westover-tara-educated",
+    "bookId": "book-00991-westover-tara-educated",
     "title": "Educated",
     "rawTitle": "Educated",
     "catalogTitle": "Educated",
@@ -34650,7 +34685,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00991-westover-tara-una-educaci-n",
+    "bookId": "book-00992-westover-tara-una-educaci-n",
     "title": "Una educación",
     "rawTitle": "Una educación",
     "catalogTitle": "Una educación",
@@ -34685,7 +34720,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00992-white-andrew-joseph-hell-followed-with-us",
+    "bookId": "book-00993-white-andrew-joseph-hell-followed-with-us",
     "title": "Hell Followed With Us",
     "rawTitle": "Hell Followed With Us",
     "catalogTitle": "Hell Followed With Us",
@@ -34720,7 +34755,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00993-white-kiersten-hide",
+    "bookId": "book-00994-white-kiersten-hide",
     "title": "Hide",
     "rawTitle": "Hide",
     "catalogTitle": "Hide",
@@ -34755,7 +34790,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00994-whitehead-colson-the-nickel-boys",
+    "bookId": "book-00995-whitehead-colson-the-nickel-boys",
     "title": "The Nickel Boys",
     "rawTitle": "The Nickel Boys",
     "catalogTitle": "The Nickel Boys",
@@ -34790,7 +34825,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00995-whitehead-colson-the-underground-railroad",
+    "bookId": "book-00996-whitehead-colson-the-underground-railroad",
     "title": "The Underground Railroad",
     "rawTitle": "The Underground Railroad",
     "catalogTitle": "The Underground Railroad",
@@ -34825,7 +34860,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00996-whiteley-aliya-the-beauty-peace-pipe",
+    "bookId": "book-00997-whiteley-aliya-the-beauty-peace-pipe",
     "title": "The Beauty & Peace, Pipe",
     "rawTitle": "The Beauty & Peace, Pipe",
     "catalogTitle": "The Beauty & Peace, Pipe",
@@ -34860,7 +34895,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00997-wiesel-elie-night",
+    "bookId": "book-00998-wiesel-elie-night",
     "title": "Night",
     "rawTitle": "Night",
     "catalogTitle": "Night",
@@ -34895,7 +34930,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00998-wilkerson-isabel-caste-the-origins-of-our-discontents",
+    "bookId": "book-00999-wilkerson-isabel-caste-the-origins-of-our-discontents",
     "title": "Caste: The Origins of Our Discontents",
     "rawTitle": "Caste: The Origins of Our Discontents",
     "catalogTitle": "Caste: The Origins of Our Discontents",
@@ -34930,7 +34965,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-00999-williams-tia-seven-days-in-june",
+    "bookId": "book-01000-williams-tia-seven-days-in-june",
     "title": "Seven Days in June",
     "rawTitle": "Seven Days in June",
     "catalogTitle": "Seven Days in June",
@@ -34965,7 +35000,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-01000-williams-a-susan-the-penguin-book-of-modern-fantasy-by-women",
+    "bookId": "book-01001-williams-a-susan-the-penguin-book-of-modern-fantasy-by-women",
     "title": "The Penguin Book of Modern Fantasy by Women",
     "rawTitle": "The Penguin Book of Modern Fantasy by Women",
     "catalogTitle": "The Penguin Book of Modern Fantasy by Women",
@@ -35000,7 +35035,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-01001-wishnia-kenneth-jewish-noir-contemporary-tales-of-crime-and",
+    "bookId": "book-01002-wishnia-kenneth-jewish-noir-contemporary-tales-of-crime-and",
     "title": "Jewish Noir: Contemporary Tales of Crime and Other Dark Deeds",
     "rawTitle": "Jewish Noir: Contemporary Tales of Crime and Other Dark Deeds",
     "catalogTitle": "Jewish Noir: Contemporary Tales of Crime and Other Dark Deeds",
@@ -35035,7 +35070,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-01002-wong-david-john-dies-at-the-end",
+    "bookId": "book-01003-wong-david-john-dies-at-the-end",
     "title": "John Dies at the End",
     "rawTitle": "John Dies at the End",
     "catalogTitle": "John Dies at the End",
@@ -35070,7 +35105,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-01003-wood-bari-the-tribe",
+    "bookId": "book-01004-wood-bari-the-tribe",
     "title": "The Tribe",
     "rawTitle": "The Tribe",
     "catalogTitle": "The Tribe",
@@ -35105,7 +35140,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-01004-wood-ghislaine-art-nouveau-and-the-erotic",
+    "bookId": "book-01005-wood-ghislaine-art-nouveau-and-the-erotic",
     "title": "Art Nouveau and the Erotic",
     "rawTitle": "Art Nouveau and the Erotic",
     "catalogTitle": "Art Nouveau and the Erotic",
@@ -35140,7 +35175,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-01005-yarros-rebecca-fourth-wing",
+    "bookId": "book-01006-yarros-rebecca-fourth-wing",
     "title": "Fourth Wing",
     "rawTitle": "Fourth Wing",
     "catalogTitle": "Fourth Wing",
@@ -35175,7 +35210,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-01006-yoder-rachel-nightbitch",
+    "bookId": "book-01007-yoder-rachel-nightbitch",
     "title": "Nightbitch",
     "rawTitle": "Nightbitch",
     "catalogTitle": "Nightbitch",
@@ -35210,7 +35245,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-01007-yu-li-the-carnal-prayer-mat",
+    "bookId": "book-01008-yu-li-the-carnal-prayer-mat",
     "title": "The Carnal Prayer Mat",
     "rawTitle": "The Carnal Prayer Mat",
     "catalogTitle": "The Carnal Prayer Mat",
@@ -35245,7 +35280,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-01008-yuzuki-asako-butter",
+    "bookId": "book-01009-yuzuki-asako-butter",
     "title": "Butter",
     "rawTitle": "Butter",
     "catalogTitle": "Butter",
@@ -35280,7 +35315,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-01009-zauner-michelle-crying-in-h-mart",
+    "bookId": "book-01010-zauner-michelle-crying-in-h-mart",
     "title": "Crying in H Mart",
     "rawTitle": "Crying in H Mart",
     "catalogTitle": "Crying in H Mart",
@@ -35315,7 +35350,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-01010-zevin-gabrielle-the-storied-life-of-a-j-fikry",
+    "bookId": "book-01011-zevin-gabrielle-the-storied-life-of-a-j-fikry",
     "title": "The Storied Life of A.J. Fikry",
     "rawTitle": "The Storied Life of A.J. Fikry",
     "catalogTitle": "The Storied Life of A.J. Fikry",
@@ -35350,7 +35385,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-01011-zevin-gabrielle-tomorrow-and-tomorrow-and-tomorrow",
+    "bookId": "book-01012-zevin-gabrielle-tomorrow-and-tomorrow-and-tomorrow",
     "title": "Tomorrow, and Tomorrow, and Tomorrow",
     "rawTitle": "Tomorrow, and Tomorrow, and Tomorrow",
     "catalogTitle": "Tomorrow, and Tomorrow, and Tomorrow",
@@ -35385,7 +35420,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-01012-zhao-xiran-jay-iron-widow",
+    "bookId": "book-01013-zhao-xiran-jay-iron-widow",
     "title": "Iron Widow",
     "rawTitle": "Iron Widow",
     "catalogTitle": "Iron Widow",
@@ -35420,7 +35455,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-01013-zimmerman-bonnie-the-safe-sea-of-women-lesbian-fiction-1969",
+    "bookId": "book-01014-zimmerman-bonnie-the-safe-sea-of-women-lesbian-fiction-1969",
     "title": "The Safe Sea of Women: Lesbian Fiction 1969-1989",
     "rawTitle": "The Safe Sea of Women: Lesbian Fiction 1969-1989",
     "catalogTitle": "The Safe Sea of Women: Lesbian Fiction 1969-1989",
@@ -35455,7 +35490,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-01014-zimmerman-larry-jay-native-north-america",
+    "bookId": "book-01015-zimmerman-larry-jay-native-north-america",
     "title": "Native North America",
     "rawTitle": "Native North America",
     "catalogTitle": "Native North America",
@@ -35490,7 +35525,7 @@
     "notes": ""
   },
   {
-    "bookId": "book-01015-zisson-steve-a-punk-rock-future-a-science-fiction-anthology",
+    "bookId": "book-01016-zisson-steve-a-punk-rock-future-a-science-fiction-anthology",
     "title": "A Punk Rock Future: A Science Fiction Anthology",
     "rawTitle": "A Punk Rock Future: A Science Fiction Anthology",
     "catalogTitle": "A Punk Rock Future: A Science Fiction Anthology",

@@ -150,6 +150,33 @@ type StatsCountMode =
   | "works"
   | "volumes";
 
+type StatsWorkAuditBook = {
+  bookId: string;
+  title: string;
+  rawSeries: string;
+  seriesTitle: string;
+  seriesNumber: string;
+  catalogKey: string;
+  countedAsNewWork: boolean;
+};
+
+type StatsWorkAuditGroup = {
+  workKey: string;
+  workType:
+    | "series"
+    | "standalone";
+  label: string;
+  reason: string;
+  books: StatsWorkAuditBook[];
+};
+
+type StatsWorkAudit = {
+  authorLabel: string;
+  sourceBookCount: number;
+  workCount: number;
+  groups: StatsWorkAuditGroup[];
+};
+
 const STATS_DATASET_OPTIONS: Array<{
   value: StatsDataset;
   label: string;
@@ -758,19 +785,198 @@ function getStatsAuthorNames(
     : ["Unknown"];
 }
 
-function getStatsWorkKey(
+type StatsWorkResolution = {
+  workKey: string;
+
+  seriesName: string;
+
+  workType:
+    | "series"
+    | "standalone";
+
+  reason: string;
+};
+
+type StatsWorkSeriesOverride = {
+  seriesName: string;
+
+  authorKeys: string[];
+
+  titlePattern: RegExp;
+
+  description: string;
+};
+
+/*
+ * These are intentional Stats-only overrides for unusual
+ * publication formats that do not use the workbook's normal
+ * Series column.
+ *
+ * They do not modify the workbook data or exported JSON.
+ */
+const STATS_WORK_SERIES_OVERRIDES:
+  StatsWorkSeriesOverride[] = [
+  {
+    seriesName:
+      "I Hear the Sunspot",
+
+    authorKeys: [
+      "yuki fumino",
+    ],
+
+    titlePattern:
+      /^i hear the sunspot(?:,|$)/,
+
+    description:
+      "the I Hear the Sunspot series, including the Limit arc",
+  },
+  {
+    seriesName:
+      "Parasyte",
+
+    authorKeys: [
+      "hitoshi iwaaki",
+    ],
+
+    titlePattern:
+      /^parasyte,\s*vol\.?\s*\d+/,
+
+    description:
+      "the Parasyte Full Color Collection volumes",
+  },
+  {
+    seriesName:
+      "Solo Leveling",
+
+    authorKeys: [
+      "chugong",
+      "dubu",
+    ],
+
+    titlePattern:
+      /^solo leveling,\s*vol\.?\s*\d+.*\(manhwa\)/,
+
+    description:
+      "the Solo Leveling manhwa, including its side-story volumes",
+  },
+  {
+    seriesName:
+      "Teahouse",
+
+    authorKeys: [
+      "emirain",
+    ],
+
+    titlePattern:
+      /^teahouse,\s*ch\.?\s*\d+/,
+
+    description:
+      "the physical Teahouse webcomic chapter editions",
+  },
+];
+
+function getStatsWorkbookSeriesName(
   book: Book
 ): string {
-  const seriesName = String(
+  return String(
     book.seriesTitle ??
       book.series?.split("|")[0] ??
       ""
   ).trim();
+}
 
-  if (seriesName) {
-    return `series:${normalizeInlineSearchText(
-      seriesName
-    )}`;
+function getStatsWorkSeriesOverride(
+  book: Book
+): StatsWorkSeriesOverride | null {
+  const normalizedTitle =
+    normalizeInlineSearchText(
+      book.title
+    );
+
+  const creditedAuthorKeys =
+    new Set(
+      getStatsAuthorNames(book).map(
+        (author) =>
+          normalizeInlineSearchText(
+            author
+          )
+      )
+    );
+
+  return (
+    STATS_WORK_SERIES_OVERRIDES.find(
+      (override) => {
+        const creditsMatchingAuthor =
+          override.authorKeys.some(
+            (authorKey) =>
+              creditedAuthorKeys.has(
+                authorKey
+              )
+          );
+
+        return (
+          creditsMatchingAuthor &&
+          override.titlePattern.test(
+            normalizedTitle
+          )
+        );
+      }
+    ) ?? null
+  );
+}
+
+function getStatsWorkResolution(
+  book: Book
+): StatsWorkResolution {
+  const seriesOverride =
+    getStatsWorkSeriesOverride(
+      book
+    );
+
+  if (seriesOverride) {
+    const normalizedSeriesName =
+      normalizeInlineSearchText(
+        seriesOverride.seriesName
+      );
+
+    return {
+      workKey:
+        `series:${normalizedSeriesName}`,
+
+      seriesName:
+        seriesOverride.seriesName,
+
+      workType:
+        "series",
+
+      reason:
+        `Code override: this title matches ${seriesOverride.description}. ` +
+        `The workbook data remains unchanged.`,
+    };
+  }
+
+  const workbookSeriesName =
+    getStatsWorkbookSeriesName(
+      book
+    );
+
+  if (workbookSeriesName) {
+    return {
+      workKey:
+        `series:${normalizeInlineSearchText(
+          workbookSeriesName
+        )}`,
+
+      seriesName:
+        workbookSeriesName,
+
+      workType:
+        "series",
+
+      reason:
+        `The workbook series value resolves to “${workbookSeriesName}”, ` +
+        `so every book with that resolved value shares this work key.`,
+    };
   }
 
   const individualBookKey =
@@ -779,7 +985,27 @@ function getStatsWorkKey(
         book.bookId
     ).trim();
 
-  return `book:${individualBookKey}`;
+  return {
+    workKey:
+      `book:${individualBookKey}`,
+
+    seriesName:
+      "",
+
+    workType:
+      "standalone",
+
+    reason:
+      "No workbook series value or Stats override matched, so this book receives its own standalone work key.",
+  };
+}
+
+function getStatsWorkKey(
+  book: Book
+): string {
+  return getStatsWorkResolution(
+    book
+  ).workKey;
 }
 
 function formatStatsReadingProgress(
@@ -2113,6 +2339,11 @@ export default function App() {
     statsPage,
     setStatsPage,
   ] = useState(1);
+
+  const [
+    statsDebugAuthorKey,
+    setStatsDebugAuthorKey,
+  ] = useState("");
 
   const [searchQuery, setSearchQuery] =
     useState("");
@@ -3604,6 +3835,256 @@ export default function App() {
       statsBreakdown,
       statsCountMode,
     ]);
+
+  const statsDebugAuthorOptions =
+    useMemo(() => {
+      if (
+        statsBreakdown !==
+        "author"
+      ) {
+        return [];
+      }
+
+      return statsBreakdownRows.map(
+        (row) => ({
+          key:
+            normalizeInlineSearchText(
+              row.label
+            ) || "unknown",
+
+          label: row.label,
+          count: row.count,
+        })
+      );
+    }, [
+      statsBreakdown,
+      statsBreakdownRows,
+    ]);
+
+  useEffect(() => {
+    if (
+      statsBreakdown !==
+        "author" ||
+      statsCountMode !==
+        "works"
+    ) {
+      setStatsDebugAuthorKey("");
+
+      return;
+    }
+
+    setStatsDebugAuthorKey(
+      (currentAuthorKey) => {
+        const currentAuthorStillExists =
+          statsDebugAuthorOptions.some(
+            (option) =>
+              option.key ===
+              currentAuthorKey
+          );
+
+        if (
+          currentAuthorStillExists
+        ) {
+          return currentAuthorKey;
+        }
+
+        return (
+          statsDebugAuthorOptions[0]
+            ?.key ?? ""
+        );
+      }
+    );
+  }, [
+    statsBreakdown,
+    statsCountMode,
+    statsDebugAuthorOptions,
+  ]);
+
+  const statsWorkAudit =
+    useMemo<StatsWorkAudit | null>(
+      () => {
+        if (
+          statsBreakdown !==
+            "author" ||
+          statsCountMode !==
+            "works" ||
+          !statsDebugAuthorKey
+        ) {
+          return null;
+        }
+
+        const selectedAuthor =
+          statsDebugAuthorOptions.find(
+            (option) =>
+              option.key ===
+              statsDebugAuthorKey
+          );
+
+        if (!selectedAuthor) {
+          return null;
+        }
+
+        const groupsByWorkKey =
+          new Map<
+            string,
+            StatsWorkAuditGroup
+          >();
+
+        let sourceBookCount = 0;
+
+        statsDatasetBookFacts.forEach(
+          ({ book }) => {
+            const bookCreditsAuthor =
+              getStatsAuthorNames(
+                book
+              ).some(
+                (author) =>
+                  (
+                    normalizeInlineSearchText(
+                      author
+                    ) ||
+                    "unknown"
+                  ) ===
+                  statsDebugAuthorKey
+              );
+
+            if (
+              !bookCreditsAuthor
+            ) {
+              return;
+            }
+
+            sourceBookCount += 1;
+
+            const workResolution =
+              getStatsWorkResolution(
+                book
+              );
+
+            const existingGroup =
+              groupsByWorkKey.get(
+                workResolution.workKey
+              );
+
+            const auditBook:
+              StatsWorkAuditBook = {
+              bookId: book.bookId,
+
+              title:
+                String(
+                  book.title ?? ""
+                ).trim() ||
+                "(Untitled book)",
+
+              rawSeries:
+                String(
+                  book.series ?? ""
+                ).trim(),
+
+              seriesTitle:
+                String(
+                  book.seriesTitle ?? ""
+                ).trim(),
+
+              seriesNumber:
+                book.seriesNumber ===
+                  null ||
+                book.seriesNumber ===
+                  undefined
+                  ? ""
+                  : String(
+                      book.seriesNumber
+                    ).trim(),
+
+              catalogKey:
+                String(
+                  book.catalogKey ?? ""
+                ).trim(),
+
+              countedAsNewWork:
+                !existingGroup,
+            };
+
+            if (existingGroup) {
+              existingGroup.books.push(
+                auditBook
+              );
+
+              return;
+            }
+
+            groupsByWorkKey.set(
+              workResolution.workKey,
+              {
+                workKey:
+                  workResolution.workKey,
+
+                workType:
+                  workResolution.workType,
+
+                label:
+                  workResolution.seriesName ||
+                  auditBook.title,
+
+                reason:
+                  workResolution.reason,
+
+                books: [
+                  auditBook,
+                ],
+              }
+            );
+          }
+        );
+
+        const groups =
+          Array.from(
+            groupsByWorkKey.values()
+          ).sort(
+            (a, b) => {
+              const aTypeOrder =
+                a.workType ===
+                "standalone"
+                  ? 0
+                  : 1;
+
+              const bTypeOrder =
+                b.workType ===
+                "standalone"
+                  ? 0
+                  : 1;
+
+              return (
+                aTypeOrder -
+                  bTypeOrder ||
+                compareSuggestionText(
+                  a.label,
+                  b.label
+                )
+              );
+            }
+          );
+
+        return {
+          authorLabel:
+            selectedAuthor.label,
+
+          sourceBookCount,
+
+          workCount:
+            groups.length,
+
+          groups,
+        };
+      },
+      [
+        statsBreakdown,
+        statsCountMode,
+        statsDatasetBookFacts,
+        statsDebugAuthorKey,
+        statsDebugAuthorOptions,
+      ]
+    );
 
   const statsBreakdownTotal =
     statsBreakdownRows.reduce(
@@ -9238,6 +9719,262 @@ export default function App() {
                   creator.
                 </p>
               ) : null}
+
+            {statsBreakdown ===
+              "author" &&
+            statsCountMode ===
+              "works" ? (
+              <details className="statsWorkDebugger">
+                <summary className="statsWorkDebuggerSummary">
+                  <span className="statsWorkDebuggerTitle">
+                    🔍 Audit counted
+                    works
+                  </span>
+
+                  <span className="statsWorkDebuggerMeta">
+                    Show exactly what
+                    increased an
+                    author’s total
+                  </span>
+                </summary>
+
+                <div className="statsWorkDebuggerContent">
+                  <label className="statsSelectField statsWorkDebuggerAuthor">
+                    <span>
+                      Author to inspect
+                    </span>
+
+                    <select
+                      value={
+                        statsDebugAuthorKey
+                      }
+                      onChange={(
+                        event
+                      ) => {
+                        setStatsDebugAuthorKey(
+                          event.target
+                            .value
+                        );
+                      }}
+                    >
+                      {statsDebugAuthorOptions.map(
+                        (option) => (
+                          <option
+                            key={
+                              option.key
+                            }
+                            value={
+                              option.key
+                            }
+                          >
+                            {
+                              option.label
+                            }{" "}
+                            —{" "}
+                            {
+                              option.count
+                            }{" "}
+                            {option.count ===
+                            1
+                              ? "work"
+                              : "works"}
+                          </option>
+                        )
+                      )}
+                    </select>
+                  </label>
+
+                  {statsWorkAudit ? (
+                    <>
+                      <div className="statsWorkAuditSummary">
+                        <strong>
+                          {
+                            statsWorkAudit.authorLabel
+                          }
+                        </strong>
+
+                        <span>
+                          {statsWorkAudit.workCount.toLocaleString()}{" "}
+                          {statsWorkAudit.workCount ===
+                          1
+                            ? "work"
+                            : "works"}{" "}
+                          counted from{" "}
+                          {statsWorkAudit.sourceBookCount.toLocaleString()}{" "}
+                          matching{" "}
+                          {statsWorkAudit.sourceBookCount ===
+                          1
+                            ? "book"
+                            : "books"}
+                          .
+                        </span>
+                      </div>
+
+                      <div className="statsWorkAuditGroups">
+                        {statsWorkAudit.groups.map(
+                          (group) => (
+                            <details
+                              key={
+                                group.workKey
+                              }
+                              className={
+                                group.workType ===
+                                "standalone"
+                                  ? "statsWorkAuditGroup statsWorkAuditGroupWarning"
+                                  : "statsWorkAuditGroup"
+                              }
+                            >
+                              <summary className="statsWorkAuditGroupSummary">
+                                <span
+                                  className={
+                                    group.workType ===
+                                    "standalone"
+                                      ? "statsWorkAuditType statsWorkAuditTypeWarning"
+                                      : "statsWorkAuditType"
+                                  }
+                                >
+                                  {group.workType ===
+                                  "series"
+                                    ? "Series"
+                                    : "Standalone"}
+                                </span>
+
+                                <span className="statsWorkAuditGroupCopy">
+                                  <strong>
+                                    {
+                                      group.label
+                                    }
+                                  </strong>
+
+                                  <span>
+                                    {group.books.length.toLocaleString()}{" "}
+                                    source{" "}
+                                    {group.books.length ===
+                                    1
+                                      ? "book"
+                                      : "books"}
+                                  </span>
+                                </span>
+
+                                <span className="statsWorkAuditGroupCount">
+                                  +1 work
+                                </span>
+                              </summary>
+
+                              <div className="statsWorkAuditGroupContent">
+                                <p className="statsWorkAuditReason">
+                                  {
+                                    group.reason
+                                  }
+                                </p>
+
+                                <p className="statsWorkAuditKey">
+                                  <span>
+                                    Work key
+                                  </span>
+
+                                  <code>
+                                    {
+                                      group.workKey
+                                    }
+                                  </code>
+                                </p>
+
+                                <div className="statsWorkAuditBookList">
+                                  {group.books.map(
+                                    (
+                                      auditBook
+                                    ) => (
+                                      <article
+                                        key={
+                                          auditBook.bookId
+                                        }
+                                        className="statsWorkAuditBook"
+                                      >
+                                        <div className="statsWorkAuditBookHeader">
+                                          <strong>
+                                            {
+                                              auditBook.title
+                                            }
+                                          </strong>
+
+                                          <span
+                                            className={
+                                              auditBook.countedAsNewWork
+                                                ? "statsWorkAuditBookStatus statsWorkAuditBookStatusCounted"
+                                                : "statsWorkAuditBookStatus"
+                                            }
+                                          >
+                                            {auditBook.countedAsNewWork
+                                              ? "+1 work"
+                                              : "Grouped with existing work"}
+                                          </span>
+                                        </div>
+
+                                        <dl className="statsWorkAuditFields">
+                                          <div>
+                                            <dt>
+                                              seriesTitle
+                                            </dt>
+
+                                            <dd>
+                                              {auditBook.seriesTitle ||
+                                                "(blank)"}
+                                            </dd>
+                                          </div>
+
+                                          <div>
+                                            <dt>
+                                              series
+                                            </dt>
+
+                                            <dd>
+                                              {auditBook.rawSeries ||
+                                                "(blank)"}
+                                            </dd>
+                                          </div>
+
+                                          <div>
+                                            <dt>
+                                              seriesNumber
+                                            </dt>
+
+                                            <dd>
+                                              {auditBook.seriesNumber ||
+                                                "(blank)"}
+                                            </dd>
+                                          </div>
+
+                                          <div>
+                                            <dt>
+                                              catalogKey
+                                            </dt>
+
+                                            <dd>
+                                              {auditBook.catalogKey ||
+                                                "(blank)"}
+                                            </dd>
+                                          </div>
+                                        </dl>
+                                      </article>
+                                    )
+                                  )}
+                                </div>
+                              </div>
+                            </details>
+                          )
+                        )}
+                      </div>
+                    </>
+                  ) : (
+                    <p className="statsEmptyText">
+                      Choose an author
+                      to inspect.
+                    </p>
+                  )}
+                </div>
+              </details>
+            ) : null}
 
             {statsBreakdownRows.length >
             0 ? (

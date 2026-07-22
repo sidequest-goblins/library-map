@@ -17700,6 +17700,26 @@
     "sourceRow": 65
   },
   {
+    "catalogKey": "stein-max-vine-and-tea",
+    "title": "Vine and Tea",
+    "rawTitle": "Vine and Tea",
+    "coverImage": "/data/covers/stein-max-vine-and-tea.webp",
+    "series": null,
+    "seriesTitle": null,
+    "seriesFormat": null,
+    "seriesNumber": null,
+    "author": "Max Stein",
+    "authorSort": "Stein, Max",
+    "firstName": "Max",
+    "lastName": "Stein",
+    "format": "Paperback",
+    "jc": true,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "S",
+    "sourceRow": 66
+  },
+  {
     "catalogKey": "stevenson-bryan-just-mercy",
     "title": "Just Mercy",
     "rawTitle": "Just Mercy",
@@ -17717,7 +17737,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 66
+    "sourceRow": 67
   },
   {
     "catalogKey": "straight-susan-i-been-in-sorrow-s-kitchen-and-licked-out-all-the-pots",
@@ -17737,7 +17757,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 67
+    "sourceRow": 68
   },
   {
     "catalogKey": "straube-lindsay-between-two-kings",
@@ -17757,7 +17777,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 69
+    "sourceRow": 70
   },
   {
     "catalogKey": "straube-lindsay-kiss-of-the-basilisk",
@@ -17777,7 +17797,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 68
+    "sourceRow": 69
   },
   {
     "catalogKey": "stroud-jonathan-the-amulet-of-samarkand",
@@ -17797,7 +17817,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 70
+    "sourceRow": 71
   },
   {
     "catalogKey": "stroud-jonathan-the-golem-s-eye",
@@ -17817,7 +17837,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 71
+    "sourceRow": 72
   },
   {
     "catalogKey": "sutanto-jesse-q-didn-t-see-that-coming",
@@ -17837,7 +17857,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 72
+    "sourceRow": 73
   },
   {
     "catalogKey": "sutanto-jesse-q-vera-wong-s-unsolicited-advice-for-murderers",
@@ -17857,7 +17877,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 73
+    "sourceRow": 74
   },
   {
     "catalogKey": "sutherland-krystal-house-of-hollow",
@@ -17877,7 +17897,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 74
+    "sourceRow": 75
   },
   {
     "catalogKey": "sutherland-krystal-the-invocations",
@@ -17897,7 +17917,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "S",
-    "sourceRow": 75
+    "sourceRow": 76
   },
   {
     "catalogKey": "swann-brian-coming-to-light-contemporary-translations-of-the-native-literatures-of-north-america",
@@ -17917,7 +17937,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 76
+    "sourceRow": 77
   },
   {
     "catalogKey": "swanson-peter-the-kind-worth-killing",
@@ -17937,7 +17957,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 77
+    "sourceRow": 78
   },
   {
     "catalogKey": "tahir-sabaa-all-my-rage",

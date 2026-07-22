@@ -2999,6 +2999,469 @@ select {
     );
 }
 
+.statsWorkDebugger {
+  display: grid;
+  overflow: hidden;
+  border:
+    1px solid
+    rgba(82, 111, 69, 0.28);
+  border-radius: 17px;
+  background:
+    rgba(
+      255,
+      250,
+      240,
+      0.68
+    );
+}
+
+.statsWorkDebuggerSummary {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto
+    auto;
+  gap: 0.45rem 0.75rem;
+  align-items: center;
+  min-width: 0;
+  padding: 0.8rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.statsWorkDebuggerSummary::-webkit-details-marker {
+  display: none;
+}
+
+.statsWorkDebuggerSummary::after {
+  content: "⌄";
+  display: grid;
+  place-items: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border:
+    1px solid
+    rgba(82, 111, 69, 0.24);
+  border-radius: 999px;
+  color: var(--greenDark);
+  background:
+    rgba(
+      169,
+      183,
+      141,
+      0.2
+    );
+  font-weight: 900;
+  line-height: 1;
+  transform:
+    rotate(-90deg);
+  transition:
+    transform 160ms ease,
+    background 160ms ease;
+}
+
+.statsWorkDebugger[open]
+  > .statsWorkDebuggerSummary::after {
+  transform: rotate(0deg);
+}
+
+.statsWorkDebuggerSummary:hover::after {
+  background:
+    rgba(
+      169,
+      183,
+      141,
+      0.34
+    );
+}
+
+.statsWorkDebuggerSummary:focus-visible {
+  outline:
+    3px solid
+    rgba(201, 154, 69, 0.28);
+  outline-offset: -3px;
+}
+
+.statsWorkDebuggerTitle {
+  color: var(--brownDark);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-weight: 850;
+}
+
+.statsWorkDebuggerMeta {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 750;
+  text-align: right;
+}
+
+.statsWorkDebuggerContent {
+  display: grid;
+  gap: 0.8rem;
+  padding: 0.85rem;
+  border-top:
+    1px solid
+    rgba(76, 48, 30, 0.12);
+}
+
+.statsWorkDebuggerAuthor {
+  width: min(
+    100%,
+    430px
+  );
+}
+
+.statsWorkAuditSummary {
+  display: grid;
+  gap: 0.15rem;
+  border-left:
+    4px solid
+    rgba(82, 111, 69, 0.46);
+  border-radius:
+    0 12px 12px 0;
+  padding: 0.65rem 0.75rem;
+  background:
+    rgba(
+      169,
+      183,
+      141,
+      0.15
+    );
+}
+
+.statsWorkAuditSummary strong {
+  color: var(--brownDark);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: 1rem;
+}
+
+.statsWorkAuditSummary span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.statsWorkAuditGroups {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.statsWorkAuditGroup {
+  display: grid;
+  overflow: hidden;
+  border:
+    1px solid
+    rgba(82, 111, 69, 0.2);
+  border-radius: 14px;
+  background:
+    rgba(
+      255,
+      250,
+      240,
+      0.74
+    );
+}
+
+.statsWorkAuditGroupWarning {
+  border-color:
+    rgba(
+      184,
+      100,
+      80,
+      0.34
+    );
+  background:
+    rgba(
+      255,
+      244,
+      239,
+      0.72
+    );
+}
+
+.statsWorkAuditGroupSummary {
+  display: grid;
+  grid-template-columns:
+    auto
+    minmax(0, 1fr)
+    auto
+    auto;
+  gap: 0.55rem;
+  align-items: center;
+  min-width: 0;
+  padding: 0.7rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.statsWorkAuditGroupSummary::-webkit-details-marker {
+  display: none;
+}
+
+.statsWorkAuditGroupSummary::after {
+  content: "⌄";
+  color: var(--greenDark);
+  font-size: 1rem;
+  font-weight: 900;
+  transform:
+    rotate(-90deg);
+  transition:
+    transform 150ms ease;
+}
+
+.statsWorkAuditGroup[open]
+  > .statsWorkAuditGroupSummary::after {
+  transform: rotate(0deg);
+}
+
+.statsWorkAuditGroupSummary:focus-visible {
+  outline:
+    3px solid
+    rgba(201, 154, 69, 0.28);
+  outline-offset: -3px;
+}
+
+.statsWorkAuditType {
+  width: fit-content;
+  border:
+    1px solid
+    rgba(82, 111, 69, 0.26);
+  border-radius: 999px;
+  padding: 0.24rem 0.48rem;
+  color: var(--greenDark);
+  background:
+    rgba(
+      169,
+      183,
+      141,
+      0.22
+    );
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.statsWorkAuditTypeWarning {
+  color: #864637;
+  border-color:
+    rgba(
+      184,
+      100,
+      80,
+      0.32
+    );
+  background:
+    rgba(
+      184,
+      100,
+      80,
+      0.12
+    );
+}
+
+.statsWorkAuditGroupCopy {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.statsWorkAuditGroupCopy strong {
+  color: var(--brownDark);
+  overflow-wrap: anywhere;
+}
+
+.statsWorkAuditGroupCopy span {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.statsWorkAuditGroupCount {
+  color: var(--greenDark);
+  font-size: 0.72rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.statsWorkAuditGroupContent {
+  display: grid;
+  gap: 0.7rem;
+  padding:
+    0 0.75rem 0.75rem;
+  border-top:
+    1px solid
+    rgba(76, 48, 30, 0.1);
+}
+
+.statsWorkAuditReason {
+  margin:
+    0.7rem 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.statsWorkAuditKey {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+}
+
+.statsWorkAuditKey > span {
+  color: var(--greenDark);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.statsWorkAuditKey code {
+  display: block;
+  width: 100%;
+  overflow-wrap: anywhere;
+  border:
+    1px solid
+    rgba(76, 48, 30, 0.14);
+  border-radius: 9px;
+  padding: 0.45rem 0.55rem;
+  color: var(--brownDark);
+  background:
+    rgba(
+      76,
+      48,
+      30,
+      0.06
+    );
+  font-size: 0.74rem;
+}
+
+.statsWorkAuditBookList {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.statsWorkAuditBook {
+  display: grid;
+  gap: 0.55rem;
+  min-width: 0;
+  border:
+    1px solid
+    rgba(76, 48, 30, 0.12);
+  border-radius: 12px;
+  padding: 0.65rem;
+  background:
+    rgba(
+      255,
+      250,
+      240,
+      0.76
+    );
+}
+
+.statsWorkAuditBookHeader {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.7rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.statsWorkAuditBookHeader strong {
+  flex: 1 1 190px;
+  color: var(--brownDark);
+  overflow-wrap: anywhere;
+}
+
+.statsWorkAuditBookStatus {
+  width: fit-content;
+  border:
+    1px solid
+    rgba(76, 48, 30, 0.16);
+  border-radius: 999px;
+  padding: 0.22rem 0.45rem;
+  color: var(--muted);
+  background:
+    rgba(
+      255,
+      250,
+      240,
+      0.82
+    );
+  font-size: 0.67rem;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.statsWorkAuditBookStatusCounted {
+  color: var(--greenDark);
+  border-color:
+    rgba(82, 111, 69, 0.28);
+  background:
+    rgba(
+      169,
+      183,
+      141,
+      0.24
+    );
+}
+
+.statsWorkAuditFields {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(160px, 1fr)
+    );
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.statsWorkAuditFields div {
+  min-width: 0;
+}
+
+.statsWorkAuditFields dt {
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.statsWorkAuditFields dd {
+  margin: 0.12rem 0 0;
+  color: var(--ink);
+  font-size: 0.74rem;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 560px) {
+  .statsWorkDebuggerSummary {
+    grid-template-columns:
+      minmax(0, 1fr)
+      auto;
+  }
+
+  .statsWorkDebuggerMeta {
+    display: none;
+  }
+
+  .statsWorkAuditGroupSummary {
+    grid-template-columns:
+      auto
+      minmax(0, 1fr)
+      auto;
+  }
+
+  .statsWorkAuditGroupCount {
+    display: none;
+  }
+}
+
 /* ========================================================================== */
 /* UPDATE */
 /* ========================================================================== */

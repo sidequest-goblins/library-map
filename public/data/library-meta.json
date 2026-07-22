@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-22T22:12:49.094101+00:00",
+  "generatedAt": "2026-07-22T23:35:24.488534+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "sourceSheet": "List View",
-  "bookCount": 1015,
+  "bookCount": 1016,
   "skippedBlankRows": 0,
   "headers": [
     "LGBTQ+",
@@ -57,8 +57,8 @@
   ],
   "catalogUnmatchedRows": [],
   "catalog": {
-    "catalogBookCount": 1015,
-    "catalogRowsWithTitles": 1015,
+    "catalogBookCount": 1016,
+    "catalogRowsWithTitles": 1016,
     "processedCatalogSheets": {
       "A": 36,
       "B": 68,
@@ -75,7 +75,7 @@
       "N-O": 51,
       "P-Q": 41,
       "R": 46,
-      "S": 76,
+      "S": 77,
       "T-V": 40,
       "W-Z": 78
     },
@@ -16502,16 +16502,16 @@
     "imageExtension": "webp",
     "webpQuality": 76,
     "cachePath": "C:\\library_app\\library-map\\public\\data\\library-cover-cache.json",
-    "extractedCount": 1015,
-    "convertedCount": 0,
+    "extractedCount": 1016,
+    "convertedCount": 1,
     "cachedCount": 1015,
-    "deletedStaleCount": 1,
+    "deletedStaleCount": 0,
     "missingAnchors": [],
     "missingMediaFiles": [],
     "conversionErrors": [],
     "anchorReport": {
-      "totalAnchoredImages": 1015,
-      "mappedAnchoredImages": 1015,
+      "totalAnchoredImages": 1016,
+      "mappedAnchoredImages": 1016,
       "duplicateAnchorRows": [],
       "missingMediaTargets": [],
       "sheetsWithoutDrawings": [
@@ -16534,8 +16534,8 @@
         "W-Z"
       ],
       "cellImageReport": {
-        "totalCellImages": 1014,
-        "mappedCellImages": 1014,
+        "totalCellImages": 1015,
+        "mappedCellImages": 1015,
         "duplicateCellRows": [],
         "missingRichDataFiles": [],
         "missingRichValueIndexes": [],
@@ -16543,8 +16543,8 @@
         "missingMediaTargets": []
       }
     },
-    "outputFileCount": 1015,
-    "outputTotalBytes": 75943636
+    "outputFileCount": 1016,
+    "outputTotalBytes": 75950206
   },
   "imageInspectionEnabled": false,
   "images": null,
