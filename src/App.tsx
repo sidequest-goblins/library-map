@@ -146,6 +146,10 @@ type StatsDisplay =
   | "pie"
   | "list";
 
+type StatsCountMode =
+  | "works"
+  | "volumes";
+
 const STATS_DATASET_OPTIONS: Array<{
   value: StatsDataset;
   label: string;
@@ -244,6 +248,20 @@ const STATS_DISPLAY_OPTIONS: Array<{
   {
     value: "list",
     label: "List",
+  },
+];
+
+const STATS_COUNT_MODE_OPTIONS: Array<{
+  value: StatsCountMode;
+  label: string;
+}> = [
+  {
+    value: "works",
+    label: "Works",
+  },
+  {
+    value: "volumes",
+    label: "Volumes",
   },
 ];
 
@@ -694,6 +712,74 @@ function getStatsBreakdownValue(
       return "800+ pages";
     }
   }
+}
+
+function getStatsAuthorNames(
+  book: Book
+): string[] {
+  const rawAuthor = String(
+    book.author ?? ""
+  ).trim();
+
+  if (!rawAuthor) {
+    return ["Unknown"];
+  }
+
+  const uniqueAuthors =
+    new Map<string, string>();
+
+  rawAuthor
+    .split(/\s*;\s*|\r?\n+/)
+    .map((author) => author.trim())
+    .filter(Boolean)
+    .forEach((author) => {
+      const authorKey =
+        normalizeInlineSearchText(
+          author
+        );
+
+      if (
+        authorKey &&
+        !uniqueAuthors.has(
+          authorKey
+        )
+      ) {
+        uniqueAuthors.set(
+          authorKey,
+          author
+        );
+      }
+    });
+
+  return uniqueAuthors.size > 0
+    ? Array.from(
+        uniqueAuthors.values()
+      )
+    : ["Unknown"];
+}
+
+function getStatsWorkKey(
+  book: Book
+): string {
+  const seriesName = String(
+    book.seriesTitle ??
+      book.series?.split("|")[0] ??
+      ""
+  ).trim();
+
+  if (seriesName) {
+    return `series:${normalizeInlineSearchText(
+      seriesName
+    )}`;
+  }
+
+  const individualBookKey =
+    String(
+      book.catalogKey ??
+        book.bookId
+    ).trim();
+
+  return `book:${individualBookKey}`;
 }
 
 function formatStatsReadingProgress(
@@ -2017,6 +2103,13 @@ export default function App() {
   );
 
   const [
+    statsCountMode,
+    setStatsCountMode,
+  ] = useState<StatsCountMode>(
+    "works"
+  );
+
+  const [
     statsPage,
     setStatsPage,
   ] = useState(1);
@@ -2066,6 +2159,7 @@ export default function App() {
   }, [
     statsDataset,
     statsBreakdown,
+    statsCountMode,
   ]);
 
   useEffect(() => {
@@ -3363,40 +3457,140 @@ export default function App() {
   const statsBreakdownRows =
     useMemo(() => {
       const counts =
-        new Map<string, number>();
+        new Map<
+          string,
+          {
+            label: string;
+            count: number;
+          }
+        >();
+
+      const seenWorksByAuthor =
+        new Map<
+          string,
+          Set<string>
+        >();
+
+      function addCount(
+        label: string
+      ) {
+        const countKey =
+          statsBreakdown === "author"
+            ? normalizeInlineSearchText(
+                label
+              ) || "unknown"
+            : label;
+
+        const currentCount =
+          counts.get(countKey);
+
+        counts.set(countKey, {
+          label:
+            currentCount?.label ??
+            label,
+
+          count:
+            (currentCount?.count ??
+              0) + 1,
+        });
+      }
 
       statsDatasetBookFacts.forEach(
         ({ book }) => {
-          const label =
+          if (
+            statsBreakdown ===
+            "author"
+          ) {
+            const authors =
+              getStatsAuthorNames(
+                book
+              );
+
+            const workKey =
+              getStatsWorkKey(book);
+
+            authors.forEach(
+              (author) => {
+                const authorKey =
+                  normalizeInlineSearchText(
+                    author
+                  ) || "unknown";
+
+                if (
+                  statsCountMode ===
+                  "works"
+                ) {
+                  const seenWorks =
+                    seenWorksByAuthor.get(
+                      authorKey
+                    ) ??
+                    new Set<string>();
+
+                  if (
+                    seenWorks.has(
+                      workKey
+                    )
+                  ) {
+                    return;
+                  }
+
+                  seenWorks.add(
+                    workKey
+                  );
+
+                  seenWorksByAuthor.set(
+                    authorKey,
+                    seenWorks
+                  );
+                }
+
+                addCount(author);
+              }
+            );
+
+            return;
+          }
+
+          addCount(
             getStatsBreakdownValue(
               book,
               statsBreakdown
-            );
-
-          counts.set(
-            label,
-            (counts.get(label) ?? 0) +
-              1
+            )
           );
         }
       );
 
       const datasetTotal =
-        statsDatasetBookFacts.length;
+        Array.from(
+          counts.values()
+        ).reduce(
+          (
+            runningTotal,
+            row
+          ) =>
+            runningTotal +
+            row.count,
+          0
+        );
 
       return Array.from(
-        counts.entries()
+        counts.values()
       )
-        .map(([label, count]) => ({
-          label,
-          count,
+        .map(
+          ({
+            label,
+            count,
+          }) => ({
+            label,
+            count,
 
-          percentage:
-            getStatsPercent(
-              count,
-              datasetTotal
-            ),
-        }))
+            percentage:
+              getStatsPercent(
+                count,
+                datasetTotal
+              ),
+          })
+        )
         .sort(
           (a, b) =>
             b.count - a.count ||
@@ -3408,7 +3602,45 @@ export default function App() {
     }, [
       statsDatasetBookFacts,
       statsBreakdown,
+      statsCountMode,
     ]);
+
+  const statsBreakdownTotal =
+    statsBreakdownRows.reduce(
+      (
+        runningTotal,
+        row
+      ) =>
+        runningTotal +
+        row.count,
+      0
+    );
+
+  const statsCountSingular =
+    statsBreakdown === "author"
+      ? statsCountMode ===
+        "works"
+        ? "work"
+        : "volume"
+      : "book";
+
+  const statsCountPlural =
+    statsBreakdown === "author"
+      ? statsCountMode ===
+        "works"
+        ? "works"
+        : "volumes"
+      : "books";
+
+  function formatStatsBreakdownCount(
+    count: number
+  ): string {
+    return `${count.toLocaleString()} ${
+      count === 1
+        ? statsCountSingular
+        : statsCountPlural
+    }`;
+  }
 
   const statsBreakdownMaxCount =
     statsBreakdownRows[0]
@@ -8867,6 +9099,53 @@ export default function App() {
               </label>
             </div>
 
+            {statsBreakdown ===
+              "author" ? (
+                <div className="statsDisplayControl">
+                  <span className="statsDisplayLabel">
+                    Count authors by
+                  </span>
+
+                  <div
+                    className="statsDisplayOptions"
+                    role="group"
+                    aria-label="Choose whether author statistics count works or volumes"
+                  >
+                    {STATS_COUNT_MODE_OPTIONS.map(
+                      (option) => {
+                        const isActive =
+                          statsCountMode ===
+                          option.value;
+
+                        return (
+                          <button
+                            key={
+                              option.value
+                            }
+                            type="button"
+                            className={
+                              isActive
+                                ? "statsDisplayButton statsDisplayButtonActive"
+                                : "statsDisplayButton"
+                            }
+                            aria-pressed={
+                              isActive
+                            }
+                            onClick={() => {
+                              setStatsCountMode(
+                                option.value
+                              );
+                            }}
+                          >
+                            {option.label}
+                          </button>
+                        );
+                      }
+                    )}
+                  </div>
+                </div>
+              ) : null}
+
             <div className="statsDisplayControl">
               <span className="statsDisplayLabel">
                 View as
@@ -8932,7 +9211,33 @@ export default function App() {
                   activeStatsBreakdown.label
                 }
               </span>
+
+              {statsBreakdown ===
+                "author" ? (
+                  <span>
+                    Counted as{" "}
+                    {statsCountMode ===
+                    "works"
+                      ? "works"
+                      : "volumes"}
+                  </span>
+                ) : null}
+
             </div>
+
+            {statsBreakdown ===
+              "author" ? (
+                <p className="statsListNote">
+                  Works count each
+                  series once per
+                  credited creator.
+                  Standalone books
+                  count individually,
+                  and co-authored works
+                  count once for each
+                  creator.
+                </p>
+              ) : null}
 
             {statsBreakdownRows.length >
             0 ? (
@@ -9046,11 +9351,14 @@ export default function App() {
                         aria-hidden="true"
                       >
                         <strong>
-                          {statsDatasetBookFacts.length.toLocaleString()}
+                          {statsBreakdownTotal.toLocaleString()}
                         </strong>
 
                         <span>
-                          books
+                          {statsBreakdownTotal ===
+                          1
+                            ? statsCountSingular
+                            : statsCountPlural}
                         </span>
                       </div>
                     </div>
@@ -9122,8 +9430,10 @@ export default function App() {
                               </strong>
 
                               <span>
-                                {row.count.toLocaleString()}{" "}
-                                books ·{" "}
+                                {formatStatsBreakdownCount(
+                                  row.count
+                                )}{" "}
+                                ·{" "}
                                 {
                                   row.percentage
                                 }
