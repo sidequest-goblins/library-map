@@ -50,6 +50,14 @@ import type {
   WantedLists, 
 } from "./data/libraryTypes";
 
+/*
+ * Master switch for temporary developer-only tools.
+ *
+ * true  = show and run debugging features
+ * false = keep debugging features dormant
+ */
+const DEBUG_MODE: boolean = false;
+
 type AppTab =
   | "search"
   | "map"
@@ -3839,8 +3847,11 @@ export default function App() {
   const statsDebugAuthorOptions =
     useMemo(() => {
       if (
+        !DEBUG_MODE ||
         statsBreakdown !==
-        "author"
+          "author" ||
+        statsCountMode !==
+          "works"
       ) {
         return [];
       }
@@ -3859,10 +3870,12 @@ export default function App() {
     }, [
       statsBreakdown,
       statsBreakdownRows,
+      statsCountMode,
     ]);
 
   useEffect(() => {
     if (
+      !DEBUG_MODE ||
       statsBreakdown !==
         "author" ||
       statsCountMode !==
@@ -3904,6 +3917,7 @@ export default function App() {
     useMemo<StatsWorkAudit | null>(
       () => {
         if (
+          !DEBUG_MODE ||
           statsBreakdown !==
             "author" ||
           statsCountMode !==
@@ -9720,7 +9734,8 @@ export default function App() {
                 </p>
               ) : null}
 
-            {statsBreakdown ===
+            {DEBUG_MODE &&
+            statsBreakdown ===
               "author" &&
             statsCountMode ===
               "works" ? (
