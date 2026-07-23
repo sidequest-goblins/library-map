@@ -441,6 +441,12 @@ type ReadingAttemptFeedback = {
   message: string;
 } | null;
 
+type BookRatingFeedback = {
+  stateKey: string;
+  kind: "success" | "error";
+  message: string;
+} | null;
+
 type ChallengeAttemptAction =
   | "link"
   | "start"
@@ -640,6 +646,142 @@ function getStatsPercent(
 
   return Math.round(
     (part / total) * 100
+  );
+}
+
+const BOOK_RATING_VALUES = [
+  1,
+  2,
+  3,
+  4,
+  5,
+] as const;
+
+function BookRatingControl({
+  readerName,
+  value,
+  isRead,
+  disabled,
+  isSaving,
+  feedback,
+  onChange,
+}: {
+  readerName: string;
+  value: number | null;
+  isRead: boolean;
+  disabled: boolean;
+  isSaving: boolean;
+  feedback: BookRatingFeedback;
+  onChange: (
+    nextRating: number | null
+  ) => void;
+}) {
+  const controlsDisabled =
+    disabled ||
+    isSaving ||
+    !isRead;
+
+  return (
+    <article className="bookRatingCard">
+      <div className="bookRatingHeader">
+        <strong>
+          {readerName}
+        </strong>
+
+        <span>
+          {value === null
+            ? "Not rated"
+            : `${value} / 5`}
+        </span>
+      </div>
+
+      <div
+        className="bookRatingStars"
+        role="group"
+        aria-label={`${readerName}'s rating`}
+      >
+        {BOOK_RATING_VALUES.map(
+          (starValue) => {
+            const isFilled =
+              value !== null &&
+              starValue <= value;
+
+            return (
+              <button
+                key={starValue}
+                type="button"
+                className={
+                  isFilled
+                    ? "bookRatingStar bookRatingStarActive"
+                    : "bookRatingStar"
+                }
+                aria-label={`Rate ${starValue} out of 5`}
+                aria-pressed={
+                  value ===
+                  starValue
+                }
+                disabled={
+                  controlsDisabled
+                }
+                onClick={() => {
+                  onChange(
+                    starValue
+                  );
+                }}
+              >
+                ★
+              </button>
+            );
+          }
+        )}
+      </div>
+
+      <div className="bookRatingFooter">
+        <span className="bookRatingHint">
+          {!isRead
+            ? "Mark this book read before rating it."
+            : isSaving
+              ? "Saving rating…"
+              : "Tap a star to save your rating."}
+        </span>
+
+        {value !== null &&
+        isRead ? (
+          <button
+            type="button"
+            className="bookRatingClear"
+            disabled={
+              disabled ||
+              isSaving
+            }
+            onClick={() => {
+              onChange(null);
+            }}
+          >
+            Clear
+          </button>
+        ) : null}
+      </div>
+
+      {feedback ? (
+        <p
+          className={
+            feedback.kind ===
+            "error"
+              ? "bookRatingFeedback bookRatingFeedbackError"
+              : "bookRatingFeedback bookRatingFeedbackSuccess"
+          }
+          role={
+            feedback.kind ===
+            "error"
+              ? "alert"
+              : "status"
+          }
+        >
+          {feedback.message}
+        </p>
+      ) : null}
+    </article>
   );
 }
 
@@ -2218,6 +2360,20 @@ export default function App() {
   ] = useState("");
 
   const [
+    ratingSavingKey,
+    setRatingSavingKey,
+  ] = useState<string | null>(
+    null
+  );
+
+  const [
+    bookRatingFeedback,
+    setBookRatingFeedback,
+  ] = useState<BookRatingFeedback>(
+    null
+  );
+
+  const [
     readingAttempts,
     setReadingAttempts,
   ] = useState<
@@ -2344,6 +2500,11 @@ export default function App() {
   );
 
   const [
+    statsProseOnly,
+    setStatsProseOnly,
+  ] = useState(false);
+
+  const [
     statsPage,
     setStatsPage,
   ] = useState(1);
@@ -2399,6 +2560,7 @@ export default function App() {
     statsDataset,
     statsBreakdown,
     statsCountMode,
+    statsProseOnly,
   ]);
 
   useEffect(() => {
@@ -3693,6 +3855,24 @@ export default function App() {
       statsDataset,
     ]);
 
+  const statsChartBookFacts =
+    useMemo(
+      () =>
+        statsProseOnly
+          ? statsDatasetBookFacts.filter(
+              ({ book }) =>
+                normalizeInlineSearchText(
+                  book.genre
+                ) !==
+                "manga / graphic novels"
+            )
+          : statsDatasetBookFacts,
+      [
+        statsDatasetBookFacts,
+        statsProseOnly,
+      ]
+    );
+
   const statsBreakdownRows =
     useMemo(() => {
       const counts =
@@ -3734,7 +3914,7 @@ export default function App() {
         });
       }
 
-      statsDatasetBookFacts.forEach(
+      statsChartBookFacts.forEach(
         ({ book }) => {
           if (
             statsBreakdown ===
@@ -3839,7 +4019,7 @@ export default function App() {
             )
         );
     }, [
-      statsDatasetBookFacts,
+      statsChartBookFacts,
       statsBreakdown,
       statsCountMode,
     ]);
@@ -3946,7 +4126,7 @@ export default function App() {
 
         let sourceBookCount = 0;
 
-        statsDatasetBookFacts.forEach(
+        statsChartBookFacts.forEach(
           ({ book }) => {
             const bookCreditsAuthor =
               getStatsAuthorNames(
@@ -4094,7 +4274,7 @@ export default function App() {
       [
         statsBreakdown,
         statsCountMode,
-        statsDatasetBookFacts,
+        statsChartBookFacts,
         statsDebugAuthorKey,
         statsDebugAuthorOptions,
       ]
@@ -4989,6 +5169,199 @@ export default function App() {
 
     setReadStatusError("");
     setBookDetailSaveError("");
+  }
+
+  async function saveBookRating(
+    book: Book,
+    readerId: LibraryReaderId,
+    nextRating: number | null
+  ) {
+    const catalogKey =
+      book.catalogKey?.trim() ?? "";
+
+    const stateKey = catalogKey
+      ? makeLibraryStateKey(
+          readerId,
+          catalogKey
+        )
+      : "";
+
+    const readerName =
+      readerId === "cj"
+        ? "CJ"
+        : "Jade";
+
+    if (
+      !householdSession ||
+      libraryStateLoadStatus !==
+        "ready"
+    ) {
+      setBookRatingFeedback({
+        stateKey,
+        kind: "error",
+        message:
+          "Household library state must finish loading before saving a rating.",
+      });
+
+      return;
+    }
+
+    if (!catalogKey) {
+      setBookRatingFeedback({
+        stateKey,
+        kind: "error",
+        message:
+          "This book does not have a catalog key, so its rating cannot be saved safely.",
+      });
+
+      return;
+    }
+
+    if (
+      nextRating !== null &&
+      (
+        !Number.isFinite(
+          nextRating
+        ) ||
+        nextRating < 0.5 ||
+        nextRating > 5 ||
+        !Number.isInteger(
+          nextRating * 2
+        )
+      )
+    ) {
+      setBookRatingFeedback({
+        stateKey,
+        kind: "error",
+        message:
+          "Ratings must be between 0.5 and 5 in half-star steps.",
+      });
+
+      return;
+    }
+
+    const existingState =
+      libraryStateByKey.get(
+        stateKey
+      );
+
+    if (!existingState) {
+      setBookRatingFeedback({
+        stateKey,
+        kind: "error",
+        message:
+          "The shared reader record for this book is unavailable.",
+      });
+
+      return;
+    }
+
+    if (!existingState.is_read) {
+      setBookRatingFeedback({
+        stateKey,
+        kind: "error",
+        message:
+          `${readerName} must mark this book read before rating it.`,
+      });
+
+      return;
+    }
+
+    if (ratingSavingKey) {
+      return;
+    }
+
+    setRatingSavingKey(
+      stateKey
+    );
+
+    setBookRatingFeedback(null);
+
+    try {
+      const { error } =
+        await supabase
+          .from(
+            "library_reader_book_state"
+          )
+          .update({
+            rating:
+              nextRating,
+          })
+          .eq(
+            "user_id",
+            householdSession.user.id
+          )
+          .eq(
+            "reader_id",
+            readerId
+          )
+          .eq(
+            "catalog_key",
+            catalogKey
+          );
+
+      if (error) {
+        throw error;
+      }
+
+      const refreshedRows =
+        await fetchLibraryStateRows(
+          householdSession.user.id
+        );
+
+      const refreshedState =
+        refreshedRows.find(
+          (stateRow) =>
+            stateRow.reader_id ===
+              readerId &&
+            stateRow.catalog_key ===
+              catalogKey
+        );
+
+      const refreshedRating =
+        refreshedState?.rating ??
+        null;
+
+      if (
+        refreshedRating !==
+        nextRating
+      ) {
+        throw new Error(
+          "The rating update finished, but the saved value did not reload correctly."
+        );
+      }
+
+      setLibraryStateRows(
+        refreshedRows
+      );
+
+      setBookRatingFeedback({
+        stateKey,
+        kind: "success",
+        message:
+          nextRating === null
+            ? `${readerName}'s rating was cleared.`
+            : `${readerName}'s ${nextRating}-star rating was saved.`,
+      });
+    } catch (error) {
+      console.error(
+        "Could not save book rating.",
+        error
+      );
+
+      setBookRatingFeedback({
+        stateKey,
+        kind: "error",
+        message:
+          error instanceof Error
+            ? `Rating failed to save: ${error.message}`
+            : "Rating failed to save because of an unknown Supabase error.",
+      });
+    } finally {
+      setRatingSavingKey(
+        null
+      );
+    }
   }
 
   function bookHasPendingDetailChanges(
@@ -6584,6 +6957,50 @@ export default function App() {
           ]
         : persistedSelectedBookJcRead;
 
+    const selectedBookCjState =
+      cjReadStatusKey
+        ? libraryStateByKey.get(
+            cjReadStatusKey
+          )
+        : undefined;
+
+    const selectedBookJcState =
+      jcReadStatusKey
+        ? libraryStateByKey.get(
+            jcReadStatusKey
+          )
+        : undefined;
+
+    const selectedBookCjRating =
+      selectedBookCjState
+        ?.rating ?? null;
+
+    const selectedBookJcRating =
+      selectedBookJcState
+        ?.rating ?? null;
+
+    const cjRatingIsSaving =
+      ratingSavingKey ===
+      cjReadStatusKey;
+
+    const jcRatingIsSaving =
+      ratingSavingKey ===
+      jcReadStatusKey;
+
+    const cjRatingFeedback =
+      bookRatingFeedback
+        ?.stateKey ===
+      cjReadStatusKey
+        ? bookRatingFeedback
+        : null;
+
+    const jcRatingFeedback =
+      bookRatingFeedback
+        ?.stateKey ===
+      jcReadStatusKey
+        ? bookRatingFeedback
+        : null;
+
     const cjReadStatusHasChanges =
       Boolean(
         cjReadStatusKey &&
@@ -6978,6 +7395,94 @@ export default function App() {
                   {readStatusError}
                 </p>
               ) : null}
+            </section>
+
+            <section className="detailSection">
+              <p className="detailLabel">
+                Ratings
+              </p>
+
+              {readStatusCanEdit ? (
+                <div className="bookRatingGrid">
+                  <BookRatingControl
+                    readerName="CJ"
+                    value={
+                      selectedBookCjRating
+                    }
+                    isRead={
+                      selectedBookCjRead
+                    }
+                    disabled={
+                      bookDetailHasChanges ||
+                      ratingSavingKey !==
+                        null ||
+                      readStatusSavingKey !==
+                        null ||
+                      readingAttemptSavingKey !==
+                        null ||
+                      challengeAttemptSavingKey !==
+                        null
+                    }
+                    isSaving={
+                      cjRatingIsSaving
+                    }
+                    feedback={
+                      cjRatingFeedback
+                    }
+                    onChange={(
+                      nextRating
+                    ) => {
+                      void saveBookRating(
+                        selectedBook,
+                        "cj",
+                        nextRating
+                      );
+                    }}
+                  />
+
+                  <BookRatingControl
+                    readerName="Jade"
+                    value={
+                      selectedBookJcRating
+                    }
+                    isRead={
+                      selectedBookJcRead
+                    }
+                    disabled={
+                      bookDetailHasChanges ||
+                      ratingSavingKey !==
+                        null ||
+                      readStatusSavingKey !==
+                        null ||
+                      readingAttemptSavingKey !==
+                        null ||
+                      challengeAttemptSavingKey !==
+                        null
+                    }
+                    isSaving={
+                      jcRatingIsSaving
+                    }
+                    feedback={
+                      jcRatingFeedback
+                    }
+                    onChange={(
+                      nextRating
+                    ) => {
+                      void saveBookRating(
+                        selectedBook,
+                        "jc",
+                        nextRating
+                      );
+                    }}
+                  />
+                </div>
+              ) : (
+                <p className="detailMuted">
+                  Sign in to load and
+                  edit household
+                  ratings.
+                </p>
+              )}
             </section>
 
             <section className="detailSection">
@@ -9517,7 +10022,7 @@ export default function App() {
 
               <p>
                 {
-                  statsDatasetBookFacts
+                  statsChartBookFacts
                     .length
                 }{" "}
                 books included
@@ -9593,6 +10098,33 @@ export default function App() {
                 </select>
               </label>
             </div>
+
+            <label className="statsFilterToggle">
+              <input
+                type="checkbox"
+                checked={
+                  statsProseOnly
+                }
+                onChange={(event) => {
+                  setStatsProseOnly(
+                    event.target
+                      .checked
+                  );
+                }}
+              />
+
+              <span className="statsFilterToggleCopy">
+                <strong>
+                  Prose only
+                </strong>
+
+                <span>
+                  Exclude Manga /
+                  Graphic Novels from
+                  this chart.
+                </span>
+              </span>
+            </label>
 
             {statsBreakdown ===
               "author" ? (
@@ -9718,6 +10250,12 @@ export default function App() {
                   </span>
                 ) : null}
 
+              {statsProseOnly ? (
+                <span>
+                  Manga / Graphic
+                  Novels excluded
+                </span>
+              ) : null}
             </div>
 
             {statsBreakdown ===

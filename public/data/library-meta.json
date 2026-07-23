@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-22T23:35:24.488534+00:00",
+  "generatedAt": "2026-07-23T01:05:56.611820+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "sourceSheet": "List View",
   "bookCount": 1016,
@@ -20,7 +20,9 @@
     "Shelf",
     "Position",
     "Series Sort",
-    "Volume Sort"
+    "Volume Sort",
+    "Last Sort",
+    "First Sort"
   ],
   "bookcaseRooms": {
     "Office": "Office",
@@ -46,15 +48,7 @@
   ],
   "unusedBookcases": [],
   "unmappedBookcases": [],
-  "catalogMatchFallbackRows": [
-    {
-      "row": 540,
-      "matchType": "title-prefix",
-      "listTitle": "The Hundred Years' War on Palestine",
-      "catalogTitle": "The Hundred Years' War on Palestine: A History of Settler Colonialism and Resistance, 1917–2017",
-      "author": "Rashid Khalidi"
-    }
-  ],
+  "catalogMatchFallbackRows": [],
   "catalogUnmatchedRows": [],
   "catalog": {
     "catalogBookCount": 1016,
@@ -16503,8 +16497,8 @@
     "webpQuality": 76,
     "cachePath": "C:\\library_app\\library-map\\public\\data\\library-cover-cache.json",
     "extractedCount": 1016,
-    "convertedCount": 1,
-    "cachedCount": 1015,
+    "convertedCount": 0,
+    "cachedCount": 1016,
     "deletedStaleCount": 0,
     "missingAnchors": [],
     "missingMediaFiles": [],

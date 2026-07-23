@@ -980,6 +980,168 @@ select {
   font-weight: 700;
 }
 
+.bookRatingGrid {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(220px, 1fr)
+    );
+  gap: 0.65rem;
+}
+
+.bookRatingCard {
+  display: grid;
+  gap: 0.55rem;
+  min-width: 0;
+  border:
+    1px solid
+    rgba(76, 48, 30, 0.14);
+  border-radius: 16px;
+  padding: 0.8rem;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 250, 240, 0.88),
+      rgba(247, 236, 215, 0.68)
+    );
+}
+
+.bookRatingHeader {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.bookRatingHeader strong {
+  color: var(--brownDark);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: 1rem;
+}
+
+.bookRatingHeader span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.bookRatingStars {
+  display: flex;
+  gap: 0.18rem;
+  align-items: center;
+}
+
+.bookRatingStar {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 0;
+  border-radius: 10px;
+  padding: 0;
+  color:
+    rgba(76, 48, 30, 0.22);
+  background: transparent;
+  font-size: 1.85rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    transform 120ms ease,
+    color 120ms ease,
+    background 120ms ease;
+}
+
+.bookRatingStar:hover:not(:disabled) {
+  transform:
+    translateY(-2px)
+    scale(1.06);
+  color: var(--gold);
+  background:
+    rgba(201, 154, 69, 0.12);
+}
+
+.bookRatingStar:focus-visible {
+  outline:
+    3px solid
+    rgba(201, 154, 69, 0.3);
+  outline-offset: 1px;
+}
+
+.bookRatingStarActive {
+  color: var(--gold);
+  text-shadow:
+    0 2px 5px
+    rgba(122, 77, 43, 0.18);
+}
+
+.bookRatingStar:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+  transform: none;
+}
+
+.bookRatingFooter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bookRatingHint {
+  flex: 1 1 170px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
+.bookRatingClear {
+  border:
+    1px solid
+    rgba(76, 48, 30, 0.18);
+  border-radius: 999px;
+  padding: 0.3rem 0.55rem;
+  color: var(--muted);
+  background:
+    rgba(255, 250, 240, 0.76);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.bookRatingClear:hover:not(:disabled) {
+  color: #8a3429;
+  border-color:
+    rgba(138, 52, 41, 0.32);
+  background:
+    rgba(255, 242, 236, 0.9);
+}
+
+.bookRatingClear:disabled {
+  cursor: wait;
+  opacity: 0.5;
+}
+
+.bookRatingFeedback {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.bookRatingFeedbackSuccess {
+  color: var(--greenDark);
+}
+
+.bookRatingFeedbackError {
+  color: #8a3429;
+}
+
 .readingAttemptGrid {
   display: grid;
   gap: 0.65rem;
@@ -2650,6 +2812,47 @@ select {
       minmax(210px, 1fr)
     );
   gap: 0.7rem;
+}
+
+.statsFilterToggle {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  border:
+    1px solid
+    rgba(82, 111, 69, 0.24);
+  border-radius: 15px;
+  padding: 0.65rem 0.75rem;
+  background:
+    rgba(169, 183, 141, 0.13);
+  cursor: pointer;
+}
+
+.statsFilterToggle input {
+  flex: 0 0 auto;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin: 0;
+  accent-color: var(--green);
+  cursor: pointer;
+}
+
+.statsFilterToggleCopy {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.statsFilterToggleCopy strong {
+  color: var(--brownDark);
+  font-size: 0.85rem;
+}
+
+.statsFilterToggleCopy span {
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.35;
 }
 
 .statsSelectField {
