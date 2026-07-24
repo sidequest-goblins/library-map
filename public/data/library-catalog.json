@@ -800,6 +800,26 @@
     "sourceRow": 5
   },
   {
+    "catalogKey": "backman-fredrik-my-grandmother-asked-me-to-tell-you-she-s-sorry",
+    "title": "My Grandmother Asked Me to Tell You She's Sorry",
+    "rawTitle": "My Grandmother Asked Me to Tell You She's Sorry",
+    "coverImage": "/data/covers/backman-fredrik-my-grandmother-asked-me-to-tell-you-she-s-sorry.webp",
+    "series": null,
+    "seriesTitle": null,
+    "seriesFormat": null,
+    "seriesNumber": null,
+    "author": "Fredrik Backman",
+    "authorSort": "Backman, Fredrik",
+    "firstName": "Fredrik",
+    "lastName": "Backman",
+    "format": "Paperback",
+    "jc": false,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "B",
+    "sourceRow": 6
+  },
+  {
     "catalogKey": "bailey-christine-k-100-things-to-do-in-phoenix-before-you-die",
     "title": "100 Things To Do in Phoenix Before You Die",
     "rawTitle": "100 Things To Do in Phoenix Before You Die",
@@ -817,7 +837,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 6
+    "sourceRow": 7
   },
   {
     "catalogKey": "bailey-fran-practical-houseplant-book",
@@ -837,7 +857,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 7
+    "sourceRow": 8
   },
   {
     "catalogKey": "bailey-tessa-hook-line-and-sinker",
@@ -857,7 +877,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 9
+    "sourceRow": 10
   },
   {
     "catalogKey": "bailey-tessa-it-happened-one-summer",
@@ -877,7 +897,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 8
+    "sourceRow": 9
   },
   {
     "catalogKey": "bailey-tessa-sucedi-un-verano",
@@ -897,7 +917,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 10
+    "sourceRow": 11
   },
   {
     "catalogKey": "bailey-tessa-too-hot-to-handle",
@@ -917,7 +937,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 11
+    "sourceRow": 12
   },
   {
     "catalogKey": "baldree-travis-bookshops-bonedust",
@@ -937,7 +957,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "B",
-    "sourceRow": 12
+    "sourceRow": 13
   },
   {
     "catalogKey": "baldree-travis-legends-lattes",
@@ -957,7 +977,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "B",
-    "sourceRow": 13
+    "sourceRow": 14
   },
   {
     "catalogKey": "bardugo-leigh-ninth-house",
@@ -977,7 +997,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 14
+    "sourceRow": 15
   },
   {
     "catalogKey": "bardugo-leigh-ruin-and-rising",
@@ -997,7 +1017,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 17
+    "sourceRow": 18
   },
   {
     "catalogKey": "bardugo-leigh-shadow-and-bone",
@@ -1017,7 +1037,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 15
+    "sourceRow": 16
   },
   {
     "catalogKey": "bardugo-leigh-siege-and-storm",
@@ -1037,7 +1057,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 16
+    "sourceRow": 17
   },
   {
     "catalogKey": "bardugo-leigh-six-of-crows",
@@ -1057,7 +1077,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "B",
-    "sourceRow": 18
+    "sourceRow": 19
   },
   {
     "catalogKey": "bardugo-leigh-the-crooked-kingdom",
@@ -1077,7 +1097,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 19
+    "sourceRow": 20
   },
   {
     "catalogKey": "barnes-jennifer-lynn-the-final-gambit",
@@ -1097,7 +1117,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 22
+    "sourceRow": 23
   },
   {
     "catalogKey": "barnes-jennifer-lynn-the-hawthorne-legacy",
@@ -1117,7 +1137,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 21
+    "sourceRow": 22
   },
   {
     "catalogKey": "barnes-jennifer-lynn-the-inheritance-games",
@@ -1137,7 +1157,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 20
+    "sourceRow": 21
   },
   {
     "catalogKey": "barnes-john-tales-of-the-madman-underground",
@@ -1157,7 +1177,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 23
+    "sourceRow": 24
   },
   {
     "catalogKey": "barnhill-kelly-when-women-were-dragons",
@@ -1177,7 +1197,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "B",
-    "sourceRow": 24
+    "sourceRow": 25
   },
   {
     "catalogKey": "bazterrica-agustina-nineteen-claws-and-a-black-bird",
@@ -1197,7 +1217,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 25
+    "sourceRow": 26
   },
   {
     "catalogKey": "beagle-peter-s-the-last-unicorn",
@@ -1217,7 +1237,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 26
+    "sourceRow": 27
   },
   {
     "catalogKey": "bennett-virginia-cowgirl-poetry-one-hundred-years-of-ridin-and-rhymin",
@@ -1237,7 +1257,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 27
+    "sourceRow": 28
   },
   {
     "catalogKey": "benz-derek-the-revenge-of-the-shadow-king",
@@ -1257,7 +1277,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 28
+    "sourceRow": 29
   },
   {
     "catalogKey": "berendt-john-midnight-in-the-garden-of-good-and-evil",
@@ -1277,7 +1297,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 29
+    "sourceRow": 30
   },
   {
     "catalogKey": "bernhardt-michele-colorstrology-what-your-birthday-color-says-about-you",
@@ -1297,7 +1317,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 30
+    "sourceRow": 31
   },
   {
     "catalogKey": "bertino-marie-helene-beautyland",
@@ -1317,7 +1337,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 31
+    "sourceRow": 32
   },
   {
     "catalogKey": "beukes-lauren-afterland",
@@ -1337,7 +1357,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 32
+    "sourceRow": 33
   },
   {
     "catalogKey": "beukes-lauren-the-shining-girls",
@@ -1357,7 +1377,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 33
+    "sourceRow": 34
   },
   {
     "catalogKey": "bickman-connie-tribe-of-women-a-photojournalist-chronicles-the-lives-of-her-sisters-around-the-globe",
@@ -1377,7 +1397,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 34
+    "sourceRow": 35
   },
   {
     "catalogKey": "bird-kai-american-prometheus-the-triumph-and-tragedy-of-j-robert-oppenheimer",
@@ -1397,7 +1417,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 35
+    "sourceRow": 36
   },
   {
     "catalogKey": "birkenmayer-sigmund-s-introduction-to-the-polish-language",
@@ -1417,7 +1437,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 36
+    "sourceRow": 37
   },
   {
     "catalogKey": "bishop-anne-dreams-made-flesh",
@@ -1437,7 +1457,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 38
+    "sourceRow": 39
   },
   {
     "catalogKey": "bishop-anne-the-black-jewels-trilogy-daughter-of-the-blood-heir-to-the-shadows-queen-of-the-darkness",
@@ -1457,7 +1477,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 37
+    "sourceRow": 38
   },
   {
     "catalogKey": "black-holly-the-cruel-prince",
@@ -1477,7 +1497,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 39
+    "sourceRow": 40
   },
   {
     "catalogKey": "black-holly-the-wicked-king",
@@ -1497,7 +1517,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 40
+    "sourceRow": 41
   },
   {
     "catalogKey": "blake-olivie-masters-of-death",
@@ -1517,7 +1537,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "B",
-    "sourceRow": 41
+    "sourceRow": 42
   },
   {
     "catalogKey": "bornstein-kate-gender-outlaws-the-next-generation",
@@ -1537,7 +1557,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 42
+    "sourceRow": 43
   },
   {
     "catalogKey": "boulley-angeline-firekeeper-s-daughter",
@@ -1557,7 +1577,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 43
+    "sourceRow": 44
   },
   {
     "catalogKey": "bowers-faubion-the-classic-tradition-of-haiku-an-anthology",
@@ -1577,7 +1597,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 44
+    "sourceRow": 45
   },
   {
     "catalogKey": "bradbury-ray-something-wicked-this-way-comes",
@@ -1597,7 +1617,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 45
+    "sourceRow": 46
   },
   {
     "catalogKey": "bradford-barbara-taylor-a-woman-of-substance",
@@ -1617,7 +1637,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 46
+    "sourceRow": 47
   },
   {
     "catalogKey": "bragg-rick-somebody-told-me-the-newspaper-stories-of-rick-bragg",
@@ -1637,7 +1657,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 47
+    "sourceRow": 48
   },
   {
     "catalogKey": "braithwaite-oyinkan-my-sister-the-serial-killer",
@@ -1657,7 +1677,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 48
+    "sourceRow": 49
   },
   {
     "catalogKey": "braitman-laurel-animal-madness-inside-their-minds",
@@ -1677,7 +1697,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 49
+    "sourceRow": 50
   },
   {
     "catalogKey": "brannen-peter-the-ends-of-the-world-volcanic-apocalypses-lethal-oceans-and-our-quest-to-understand-earth-s-past-mass-extinctions",
@@ -1697,7 +1717,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 50
+    "sourceRow": 51
   },
   {
     "catalogKey": "braude-jacob-m-new-treasury-of-stories-for-every-speaking-and-writing-occasion",
@@ -1717,7 +1737,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 51
+    "sourceRow": 52
   },
   {
     "catalogKey": "brewer-heather-eighth-grade-bites",
@@ -1737,7 +1757,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 52
+    "sourceRow": 53
   },
   {
     "catalogKey": "brewer-heather-eleventh-grade-burns",
@@ -1757,7 +1777,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 55
+    "sourceRow": 56
   },
   {
     "catalogKey": "brewer-heather-ninth-grade-slays",
@@ -1777,7 +1797,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 53
+    "sourceRow": 54
   },
   {
     "catalogKey": "brewer-heather-tenth-grade-bleeds",
@@ -1797,7 +1817,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 54
+    "sourceRow": 55
   },
   {
     "catalogKey": "brom-the-child-thief",
@@ -1817,7 +1837,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 56
+    "sourceRow": 57
   },
   {
     "catalogKey": "bronski-michael-a-queer-history-of-the-united-states",
@@ -1837,7 +1857,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 57
+    "sourceRow": 58
   },
   {
     "catalogKey": "bronte-emily-wuthering-heights",
@@ -1857,7 +1877,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 58
+    "sourceRow": 59
   },
   {
     "catalogKey": "brooks-max-world-war-z-an-oral-history-of-the-zombie-war",
@@ -1877,7 +1897,27 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 59
+    "sourceRow": 60
+  },
+  {
+    "catalogKey": "broome-brian-punch-me-up-to-the-gods",
+    "title": "Punch Me Up to the Gods",
+    "rawTitle": "Punch Me Up to the Gods",
+    "coverImage": "/data/covers/broome-brian-punch-me-up-to-the-gods.webp",
+    "series": null,
+    "seriesTitle": null,
+    "seriesFormat": null,
+    "seriesNumber": null,
+    "author": "Brian Broome",
+    "authorSort": "Broome, Brian",
+    "firstName": "Brian",
+    "lastName": "Broome",
+    "format": "Paperback",
+    "jc": false,
+    "cj": false,
+    "lgbtq": true,
+    "sourceSheet": "B",
+    "sourceRow": 61
   },
   {
     "catalogKey": "brosh-allie-hyperbole-and-a-half-unfortunate-situations-flawed-coping-mechanisms-mayhem-and-other-things-that-happened",
@@ -1897,7 +1937,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 60
+    "sourceRow": 62
   },
   {
     "catalogKey": "brothers-grimm-grimms-fairy-tales",
@@ -1917,7 +1957,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 61
+    "sourceRow": 63
   },
   {
     "catalogKey": "brown-daniel-james-the-indifferent-stars-above-the-harrowing-saga-of-the-donner-party",
@@ -1937,7 +1977,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 62
+    "sourceRow": 64
   },
   {
     "catalogKey": "brown-pierce-red-rising",
@@ -1957,7 +1997,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 63
+    "sourceRow": 65
   },
   {
     "catalogKey": "brown-rita-mae-rubyfruit-jungle",
@@ -1977,7 +2017,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "B",
-    "sourceRow": 64
+    "sourceRow": 66
   },
   {
     "catalogKey": "bugliosi-victor-helter-skelter-the-true-story-of-the-manson-murders",
@@ -1997,7 +2037,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 65
+    "sourceRow": 67
   },
   {
     "catalogKey": "burke-david-street-spanish-1-the-best-of-spanish-slang",
@@ -2017,7 +2057,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 66
+    "sourceRow": 68
   },
   {
     "catalogKey": "burke-david-street-spanish-3-the-best-of-naughty-spanish",
@@ -2037,7 +2077,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 67
+    "sourceRow": 69
   },
   {
     "catalogKey": "burroughs-william-s-queer",
@@ -2057,7 +2097,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "B",
-    "sourceRow": 68
+    "sourceRow": 70
   },
   {
     "catalogKey": "buxbaum-gerda-icons-of-fashion-the-20th-century",
@@ -2077,7 +2117,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "B",
-    "sourceRow": 69
+    "sourceRow": 71
   },
   {
     "catalogKey": "campbell-andy-queer-x-design-50-years-of-signs-symbols-banners-logos-and-graphic-art-of-lgbtq",
@@ -7368,10 +7408,10 @@
     "seriesTitle": null,
     "seriesFormat": null,
     "seriesNumber": null,
-    "author": "David Grene",
+    "author": "David Grene; Richard Lattimore",
     "authorSort": "Grene, David",
-    "firstName": "David",
-    "lastName": "Grene",
+    "firstName": "David;Richard",
+    "lastName": "Grene;Lattimore",
     "format": "Paperback",
     "jc": false,
     "cj": false,
@@ -8300,6 +8340,26 @@
     "sourceRow": 44
   },
   {
+    "catalogKey": "hitchens-christopher-god-is-not-great-how-religion-poisons-everything",
+    "title": "God Is Not Great: How Religion Poisons Everything",
+    "rawTitle": "God Is Not Great: How Religion Poisons Everything",
+    "coverImage": "/data/covers/hitchens-christopher-god-is-not-great-how-religion-poisons-everything.webp",
+    "series": null,
+    "seriesTitle": null,
+    "seriesFormat": null,
+    "seriesNumber": null,
+    "author": "Christopher Hitchens",
+    "authorSort": "Hitchens, Christopher",
+    "firstName": "Christopher",
+    "lastName": "Hitchens",
+    "format": "Paperback",
+    "jc": false,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "H",
+    "sourceRow": 45
+  },
+  {
     "catalogKey": "hoffman-paul-g-spooky-southwest-tales-of-hauntings-strange-happenings-and-other-local-lore",
     "title": "Spooky Southwest: Tales Of Hauntings, Strange Happenings, And Other Local Lore",
     "rawTitle": "Spooky Southwest: Tales Of Hauntings, Strange Happenings, And Other Local Lore",
@@ -8317,7 +8377,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 45
+    "sourceRow": 46
   },
   {
     "catalogKey": "hogan-steve-completely-queer-the-gay-and-lesbian-encyclopedia",
@@ -8337,7 +8397,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "H",
-    "sourceRow": 46
+    "sourceRow": 47
   },
   {
     "catalogKey": "holloway-joel-ellis-dictionary-of-birds-of-the-united-states-scientific-and-common-names",
@@ -8357,7 +8417,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 47
+    "sourceRow": 48
   },
   {
     "catalogKey": "holt-marion-p-1001-pitfalls-in-spanish",
@@ -8377,7 +8437,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 48
+    "sourceRow": 49
   },
   {
     "catalogKey": "homer-the-iliad",
@@ -8397,7 +8457,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 49
+    "sourceRow": 50
   },
   {
     "catalogKey": "homer-the-odyssey",
@@ -8417,7 +8477,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 50
+    "sourceRow": 51
   },
   {
     "catalogKey": "hooks-bell-all-about-love-new-visions",
@@ -8437,7 +8497,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 51
+    "sourceRow": 52
   },
   {
     "catalogKey": "hooper-kay-chill-of-fear",
@@ -8457,7 +8517,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 52
+    "sourceRow": 53
   },
   {
     "catalogKey": "hosein-kevin-jared-hungry-ghosts",
@@ -8477,7 +8537,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 53
+    "sourceRow": 54
   },
   {
     "catalogKey": "house-silas-southernmost",
@@ -8497,7 +8557,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "H",
-    "sourceRow": 54
+    "sourceRow": 55
   },
   {
     "catalogKey": "huang-ana-twisted-games",
@@ -8517,7 +8577,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 56
+    "sourceRow": 57
   },
   {
     "catalogKey": "huang-ana-twisted-lies",
@@ -8537,7 +8597,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 57
+    "sourceRow": 58
   },
   {
     "catalogKey": "huang-ana-twisted-love",
@@ -8557,7 +8617,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 55
+    "sourceRow": 56
   },
   {
     "catalogKey": "hunter-cara-murder-in-the-family",
@@ -8577,7 +8637,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 58
+    "sourceRow": 59
   },
   {
     "catalogKey": "hyde-chambers-fredrick-audrey-tibetan-folk-tales",
@@ -8597,7 +8657,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 59
+    "sourceRow": 60
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-1-light-novel",
@@ -8617,7 +8677,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 60
+    "sourceRow": 61
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-1-manga",
@@ -8637,7 +8697,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 68
+    "sourceRow": 69
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-10-manga",
@@ -8657,7 +8717,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 77
+    "sourceRow": 78
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-11-manga",
@@ -8677,7 +8737,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 78
+    "sourceRow": 79
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-12-manga",
@@ -8697,7 +8757,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 79
+    "sourceRow": 80
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-13-manga",
@@ -8717,7 +8777,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 80
+    "sourceRow": 81
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-2-light-novel",
@@ -8737,7 +8797,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 61
+    "sourceRow": 62
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-2-manga",
@@ -8757,7 +8817,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 69
+    "sourceRow": 70
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-3-light-novel",
@@ -8777,7 +8837,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 62
+    "sourceRow": 63
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-3-manga",
@@ -8797,7 +8857,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 70
+    "sourceRow": 71
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-4-light-novel",
@@ -8817,7 +8877,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 63
+    "sourceRow": 64
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-4-manga",
@@ -8837,7 +8897,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 71
+    "sourceRow": 72
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-5-light-novel",
@@ -8857,7 +8917,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 64
+    "sourceRow": 65
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-5-manga",
@@ -8877,7 +8937,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 72
+    "sourceRow": 73
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-6-light-novel",
@@ -8897,7 +8957,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 65
+    "sourceRow": 66
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-6-manga",
@@ -8917,7 +8977,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 73
+    "sourceRow": 74
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-7-light-novel",
@@ -8937,7 +8997,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 66
+    "sourceRow": 67
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-7-manga",
@@ -8957,7 +9017,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 74
+    "sourceRow": 75
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-8-light-novel",
@@ -8977,7 +9037,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 67
+    "sourceRow": 68
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-8-manga",
@@ -8997,7 +9057,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 75
+    "sourceRow": 76
   },
   {
     "catalogKey": "hyuuga-natsu-the-apothecary-diaries-vol-9-manga",
@@ -9017,7 +9077,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "H",
-    "sourceRow": 76
+    "sourceRow": 77
   },
   {
     "catalogKey": "ifueko-jordan-raybearer",
@@ -10837,7 +10897,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 26
+    "sourceRow": 25
   },
   {
     "catalogKey": "king-stephen-doctor-sleep",
@@ -10857,7 +10917,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 28
+    "sourceRow": 29
   },
   {
     "catalogKey": "king-stephen-full-dark-no-stars",
@@ -10877,7 +10937,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 27
+    "sourceRow": 26
   },
   {
     "catalogKey": "king-stephen-holly",
@@ -10897,7 +10957,27 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 25
+    "sourceRow": 28
+  },
+  {
+    "catalogKey": "king-stephen-if-it-bleeds",
+    "title": "If It Bleeds",
+    "rawTitle": "If It Bleeds",
+    "coverImage": "/data/covers/king-stephen-if-it-bleeds.webp",
+    "series": "Holly Gibney",
+    "seriesTitle": "Holly Gibney",
+    "seriesFormat": null,
+    "seriesNumber": 2,
+    "author": "Stephen King",
+    "authorSort": "King, Stephen",
+    "firstName": "Stephen",
+    "lastName": "King",
+    "format": "Paperback",
+    "jc": true,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "K",
+    "sourceRow": 27
   },
   {
     "catalogKey": "king-stephen-mr-mercedes",
@@ -10937,7 +11017,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 29
+    "sourceRow": 30
   },
   {
     "catalogKey": "kingsolver-barbara-pigs-in-heaven",
@@ -10957,7 +11037,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 31
+    "sourceRow": 32
   },
   {
     "catalogKey": "kingsolver-barbara-the-bean-trees",
@@ -10977,7 +11057,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 30
+    "sourceRow": 31
   },
   {
     "catalogKey": "kingsolver-barbara-the-poisonwood-bible",
@@ -10997,7 +11077,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 32
+    "sourceRow": 33
   },
   {
     "catalogKey": "kiste-gwendolyn-reluctant-immortals",
@@ -11017,7 +11097,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 33
+    "sourceRow": 34
   },
   {
     "catalogKey": "kizu-natsuki-given-vol-1",
@@ -11037,7 +11117,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "K",
-    "sourceRow": 34
+    "sourceRow": 35
   },
   {
     "catalogKey": "kizu-natsuki-given-vol-2",
@@ -11057,7 +11137,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "K",
-    "sourceRow": 35
+    "sourceRow": 36
   },
   {
     "catalogKey": "kizu-natsuki-given-vol-3",
@@ -11077,7 +11157,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "K",
-    "sourceRow": 36
+    "sourceRow": 37
   },
   {
     "catalogKey": "kizu-natsuki-given-vol-4",
@@ -11097,7 +11177,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "K",
-    "sourceRow": 37
+    "sourceRow": 38
   },
   {
     "catalogKey": "kizu-natsuki-given-vol-5",
@@ -11117,7 +11197,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "K",
-    "sourceRow": 38
+    "sourceRow": 39
   },
   {
     "catalogKey": "klein-naomi-the-shock-doctrine-the-rise-of-disaster-capitalism",
@@ -11137,7 +11217,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 39
+    "sourceRow": 40
   },
   {
     "catalogKey": "klemperer-victor-i-will-bear-witness-1933-41-a-diary-of-the-nazi-years",
@@ -11157,7 +11237,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 40
+    "sourceRow": 41
   },
   {
     "catalogKey": "klune-t-j-the-house-in-the-cerulean-sea",
@@ -11177,7 +11257,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "K",
-    "sourceRow": 41
+    "sourceRow": 42
   },
   {
     "catalogKey": "kohda-claire-woman-eating",
@@ -11197,7 +11277,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 42
+    "sourceRow": 43
   },
   {
     "catalogKey": "kon-satoshi-dream-fossil-the-complete-stories-of-satoshi-kon",
@@ -11217,7 +11297,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 43
+    "sourceRow": 44
   },
   {
     "catalogKey": "koontz-dean-phantoms",
@@ -11237,7 +11317,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 44
+    "sourceRow": 45
   },
   {
     "catalogKey": "koontz-dean-strangers",
@@ -11257,7 +11337,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 45
+    "sourceRow": 46
   },
   {
     "catalogKey": "kracht-matt-the-field-guide-to-dumb-birds-of-north-america",
@@ -11277,7 +11357,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 46
+    "sourceRow": 47
   },
   {
     "catalogKey": "krakauer-jon-into-thin-air-a-personal-account-of-the-mt-everest-disaster",
@@ -11297,7 +11377,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 47
+    "sourceRow": 48
   },
   {
     "catalogKey": "krakauer-jon-missoula-rape-and-the-justice-system-in-a-college-town",
@@ -11317,7 +11397,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 48
+    "sourceRow": 49
   },
   {
     "catalogKey": "krakauer-jon-under-the-banner-of-heaven-a-story-of-violent-faith",
@@ -11337,7 +11417,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 49
+    "sourceRow": 50
   },
   {
     "catalogKey": "krakauer-jon-where-men-win-glory-the-odyssey-of-pat-tillman",
@@ -11357,7 +11437,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 50
+    "sourceRow": 51
   },
   {
     "catalogKey": "kraus-daniel-whalefall",
@@ -11377,7 +11457,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 51
+    "sourceRow": 52
   },
   {
     "catalogKey": "kuang-r-f-babel",
@@ -11397,7 +11477,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 52
+    "sourceRow": 53
   },
   {
     "catalogKey": "kuang-r-f-katabasis",
@@ -11417,7 +11497,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 53
+    "sourceRow": 54
   },
   {
     "catalogKey": "kuang-r-f-the-burning-god",
@@ -11437,7 +11517,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 56
+    "sourceRow": 57
   },
   {
     "catalogKey": "kuang-r-f-the-dragon-republic",
@@ -11457,7 +11537,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 55
+    "sourceRow": 56
   },
   {
     "catalogKey": "kuang-r-f-the-poppy-war",
@@ -11477,7 +11557,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 54
+    "sourceRow": 55
   },
   {
     "catalogKey": "kuang-r-f-yellowface",
@@ -11497,7 +11577,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 57
+    "sourceRow": 58
   },
   {
     "catalogKey": "kui-ryoko-delicious-in-dungeon-vol-1",
@@ -11517,7 +11597,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 58
+    "sourceRow": 59
   },
   {
     "catalogKey": "kui-ryoko-delicious-in-dungeon-vol-5",
@@ -11537,7 +11617,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 59
+    "sourceRow": 60
   },
   {
     "catalogKey": "kukafka-danya-girl-in-snow",
@@ -11557,7 +11637,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 60
+    "sourceRow": 61
   },
   {
     "catalogKey": "kukafka-danya-notes-on-an-execution",
@@ -11577,7 +11657,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 61
+    "sourceRow": 62
   },
   {
     "catalogKey": "kuroki-poppy-gate-to-kagoshima",
@@ -11597,7 +11677,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 62
+    "sourceRow": 63
   },
   {
     "catalogKey": "kwame-adjei-brenyah-nana-chain-gang-all-stars",
@@ -11617,7 +11697,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "K",
-    "sourceRow": 63
+    "sourceRow": 64
   },
   {
     "catalogKey": "kwan-kevin-china-rich-girlfriend",
@@ -11637,7 +11717,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 65
+    "sourceRow": 66
   },
   {
     "catalogKey": "kwan-kevin-crazy-rich-asians",
@@ -11657,7 +11737,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "K",
-    "sourceRow": 64
+    "sourceRow": 65
   },
   {
     "catalogKey": "lacey-catherine-biography-of-x",
@@ -11880,6 +11960,26 @@
     "sourceRow": 12
   },
   {
+    "catalogKey": "lee-fonda-jade-city",
+    "title": "Jade City",
+    "rawTitle": "Jade City",
+    "coverImage": "/data/covers/lee-fonda-jade-city.webp",
+    "series": "The Green Bone Saga",
+    "seriesTitle": "The Green Bone Saga",
+    "seriesFormat": null,
+    "seriesNumber": 1,
+    "author": "Fonda Lee",
+    "authorSort": "Lee, Fonda",
+    "firstName": "Fonda",
+    "lastName": "Lee",
+    "format": "Paperback",
+    "jc": false,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "L",
+    "sourceRow": 13
+  },
+  {
     "catalogKey": "leibovitz-annie-women",
     "title": "Women",
     "rawTitle": "Women",
@@ -11897,7 +11997,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "L",
-    "sourceRow": 13
+    "sourceRow": 14
   },
   {
     "catalogKey": "levay-simon-gay-straight-and-the-reason-why-the-science-of-sexual-orientation",
@@ -11917,7 +12017,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "L",
-    "sourceRow": 14
+    "sourceRow": 15
   },
   {
     "catalogKey": "liang-ann-a-song-to-drown-rivers",
@@ -11937,7 +12037,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "L",
-    "sourceRow": 15
+    "sourceRow": 16
   },
   {
     "catalogKey": "lili-uokalani-hawaii-s-story",
@@ -11957,7 +12057,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "L",
-    "sourceRow": 16
+    "sourceRow": 17
   },
   {
     "catalogKey": "lim-louisa-indelible-city-dispossession-and-defiance-in-hong-kong",
@@ -11977,7 +12077,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "L",
-    "sourceRow": 17
+    "sourceRow": 18
   },
   {
     "catalogKey": "linford-jenny-a-pocket-guide-to-trees",
@@ -11997,7 +12097,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "L",
-    "sourceRow": 18
+    "sourceRow": 19
   },
   {
     "catalogKey": "lippman-stanley-b-c-primer",
@@ -12017,7 +12117,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "L",
-    "sourceRow": 19
+    "sourceRow": 20
   },
   {
     "catalogKey": "litt-woon-long-the-way-through-the-woods-overcoming-grief-through-nature",
@@ -12037,7 +12137,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "L",
-    "sourceRow": 20
+    "sourceRow": 21
   },
   {
     "catalogKey": "livy-the-early-history-of-rome",
@@ -12057,7 +12157,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "L",
-    "sourceRow": 21
+    "sourceRow": 22
   },
   {
     "catalogKey": "loewer-peter-tough-plants-for-tough-places",
@@ -12077,7 +12177,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "L",
-    "sourceRow": 22
+    "sourceRow": 23
   },
   {
     "catalogKey": "loulan-joann-lesbian-sex",
@@ -12097,7 +12197,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "L",
-    "sourceRow": 23
+    "sourceRow": 24
   },
   {
     "catalogKey": "lovecraft-h-p-the-lovecraft-compendium",
@@ -12117,7 +12217,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "L",
-    "sourceRow": 24
+    "sourceRow": 25
   },
   {
     "catalogKey": "lovelace-amanda-the-witch-doesn-t-burn-in-this-one",
@@ -12137,7 +12237,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "L",
-    "sourceRow": 26
+    "sourceRow": 27
   },
   {
     "catalogKey": "lovelace-amanda-to-make-monsters-out-of-girls",
@@ -12157,7 +12257,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "L",
-    "sourceRow": 25
+    "sourceRow": 26
   },
   {
     "catalogKey": "maas-sarah-j-a-court-of-frost-and-starlight",
@@ -12840,6 +12940,26 @@
     "sourceRow": 35
   },
   {
+    "catalogKey": "mcnamara-michelle-i-ll-be-gone-in-the-dark-one-woman-s-obsessive-search-for-the-golden-state-killer",
+    "title": "I'll Be Gone in the Dark: One Woman's Obsessive Search for the Golden State Killer",
+    "rawTitle": "I'll Be Gone in the Dark: One Woman's Obsessive Search for the Golden State Killer",
+    "coverImage": "/data/covers/mcnamara-michelle-i-ll-be-gone-in-the-dark-one-woman-s-obsessive-search-for-the-golden-state-killer.webp",
+    "series": null,
+    "seriesTitle": null,
+    "seriesFormat": null,
+    "seriesNumber": null,
+    "author": "Michelle McNamara",
+    "authorSort": "McNamara, Michelle",
+    "firstName": "Michelle",
+    "lastName": "McNamara",
+    "format": "",
+    "jc": false,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "M",
+    "sourceRow": 36
+  },
+  {
     "catalogKey": "mcqueen-latanya-when-the-reckoning-comes",
     "title": "When the Reckoning Comes",
     "rawTitle": "When the Reckoning Comes",
@@ -12857,7 +12977,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 36
+    "sourceRow": 37
   },
   {
     "catalogKey": "mcquiston-casey-one-last-stop",
@@ -12877,7 +12997,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 37
+    "sourceRow": 38
   },
   {
     "catalogKey": "mcquiston-casey-red-white-royal-blue",
@@ -12897,7 +13017,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 38
+    "sourceRow": 39
   },
   {
     "catalogKey": "mcquiston-casey-the-pairing",
@@ -12917,7 +13037,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 39
+    "sourceRow": 40
   },
   {
     "catalogKey": "mellor-lee-behind-the-horror-true-stories-that-inspired-horror-movies",
@@ -12937,7 +13057,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 40
+    "sourceRow": 41
   },
   {
     "catalogKey": "mellow-e-j-dance-of-a-burning-sea",
@@ -12957,7 +13077,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 42
+    "sourceRow": 43
   },
   {
     "catalogKey": "mellow-e-j-song-of-the-forever-rains",
@@ -12977,7 +13097,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 41
+    "sourceRow": 42
   },
   {
     "catalogKey": "meloy-colin-wildwood",
@@ -12997,7 +13117,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 43
+    "sourceRow": 44
   },
   {
     "catalogKey": "meyer-stephenie-the-host",
@@ -13017,7 +13137,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 44
+    "sourceRow": 45
   },
   {
     "catalogKey": "miller-chanel-know-my-name",
@@ -13037,7 +13157,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 45
+    "sourceRow": 46
   },
   {
     "catalogKey": "miller-madeline-circe",
@@ -13057,7 +13177,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 46
+    "sourceRow": 47
   },
   {
     "catalogKey": "miller-madeline-the-song-of-achilles",
@@ -13077,7 +13197,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 47
+    "sourceRow": 48
   },
   {
     "catalogKey": "montell-amanda-cultish-the-language-of-fanaticism",
@@ -13097,7 +13217,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 48
+    "sourceRow": 49
   },
   {
     "catalogKey": "moore-christopher-bloodsucking-fiends",
@@ -13117,7 +13237,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 49
+    "sourceRow": 50
   },
   {
     "catalogKey": "moore-christopher-you-suck",
@@ -13137,7 +13257,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 50
+    "sourceRow": 51
   },
   {
     "catalogKey": "moore-kate-the-radium-girls-the-scary-but-true-story-of-the-poison-that-made-people-glow-in-the-dark",
@@ -13157,7 +13277,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 51
+    "sourceRow": 52
   },
   {
     "catalogKey": "moran-caitlin-how-to-build-a-girl",
@@ -13177,7 +13297,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 52
+    "sourceRow": 53
   },
   {
     "catalogKey": "moreno-garcia-silvia-certain-dark-things",
@@ -13197,7 +13317,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 53
+    "sourceRow": 54
   },
   {
     "catalogKey": "moreno-garcia-silvia-gods-of-jade-and-shadow",
@@ -13217,7 +13337,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 54
+    "sourceRow": 55
   },
   {
     "catalogKey": "moreno-garcia-silvia-mexican-gothic",
@@ -13237,7 +13357,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 55
+    "sourceRow": 56
   },
   {
     "catalogKey": "moreno-garcia-silvia-the-beautiful-ones",
@@ -13257,7 +13377,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 56
+    "sourceRow": 57
   },
   {
     "catalogKey": "moreno-garcia-silvia-the-daughter-of-doctor-moreau",
@@ -13277,7 +13397,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 57
+    "sourceRow": 58
   },
   {
     "catalogKey": "morgenstern-erin-el-circo-de-la-noche",
@@ -13297,7 +13417,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 58
+    "sourceRow": 59
   },
   {
     "catalogKey": "morgenstern-erin-the-night-circus",
@@ -13317,7 +13437,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 59
+    "sourceRow": 60
   },
   {
     "catalogKey": "morgenstern-erin-the-starless-sea",
@@ -13337,7 +13457,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 60
+    "sourceRow": 61
   },
   {
     "catalogKey": "morin-jack-anal-pleasure-health-a-guide-for-men-and-women",
@@ -13357,7 +13477,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 61
+    "sourceRow": 62
   },
   {
     "catalogKey": "morrison-chandler-dead-inside",
@@ -13377,7 +13497,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 62
+    "sourceRow": 63
   },
   {
     "catalogKey": "morrison-toni-song-of-solomon",
@@ -13397,7 +13517,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 63
+    "sourceRow": 64
   },
   {
     "catalogKey": "morrison-toni-sula",
@@ -13417,7 +13537,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 64
+    "sourceRow": 65
   },
   {
     "catalogKey": "morrison-toni-the-bluest-eye",
@@ -13437,7 +13557,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 65
+    "sourceRow": 66
   },
   {
     "catalogKey": "moshfegh-ottessa-my-year-of-rest-and-relaxation",
@@ -13457,7 +13577,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 66
+    "sourceRow": 67
   },
   {
     "catalogKey": "muir-tamsyn-gideon-the-ninth",
@@ -13477,7 +13597,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 67
+    "sourceRow": 68
   },
   {
     "catalogKey": "murakami-haruki-blind-willow-sleeping-woman",
@@ -13497,7 +13617,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 68
+    "sourceRow": 69
   },
   {
     "catalogKey": "murakami-haruki-dance-dance-dance",
@@ -13517,7 +13637,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 69
+    "sourceRow": 70
   },
   {
     "catalogKey": "murakami-haruki-kafka-on-the-shore",
@@ -13537,7 +13657,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 70
+    "sourceRow": 71
   },
   {
     "catalogKey": "murakami-haruki-killing-commendatore",
@@ -13557,7 +13677,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 71
+    "sourceRow": 72
   },
   {
     "catalogKey": "murakami-haruki-norwegian-wood",
@@ -13577,7 +13697,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 72
+    "sourceRow": 73
   },
   {
     "catalogKey": "murakami-haruki-south-of-the-border-west-of-the-sun",
@@ -13597,7 +13717,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 73
+    "sourceRow": 74
   },
   {
     "catalogKey": "murakami-haruki-the-wind-up-bird-chronicle",
@@ -13617,7 +13737,27 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 74
+    "sourceRow": 75
+  },
+  {
+    "catalogKey": "murata-sayaka-convenience-store-woman",
+    "title": "Convenience Store Woman",
+    "rawTitle": "Convenience Store Woman",
+    "coverImage": "/data/covers/murata-sayaka-convenience-store-woman.webp",
+    "series": null,
+    "seriesTitle": null,
+    "seriesFormat": null,
+    "seriesNumber": null,
+    "author": "Sayaka Murata",
+    "authorSort": "Murata, Sayaka",
+    "firstName": "Sayaka",
+    "lastName": "Murata",
+    "format": "Paperback",
+    "jc": true,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "M",
+    "sourceRow": 76
   },
   {
     "catalogKey": "murbager-nell-ghosts-of-the-adobe-walls",
@@ -13637,7 +13777,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 75
+    "sourceRow": 77
   },
   {
     "catalogKey": "murphy-hiscock-arin-the-green-witch-your-complete-guide-to-the-natural-magic-of-herbs-flowers-essential-oils-and-more",
@@ -13657,7 +13797,27 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 76
+    "sourceRow": 78
+  },
+  {
+    "catalogKey": "nagamatsu-sequoia-how-high-we-go-in-the-dark",
+    "title": "How High We Go in the Dark",
+    "rawTitle": "How High We Go in the Dark",
+    "coverImage": "/data/covers/nagamatsu-sequoia-how-high-we-go-in-the-dark.webp",
+    "series": null,
+    "seriesTitle": null,
+    "seriesFormat": null,
+    "seriesNumber": null,
+    "author": "Sequoia Nagamatsu",
+    "authorSort": "Nagamatsu, Sequoia",
+    "firstName": "Sequoia",
+    "lastName": "Nagamatsu",
+    "format": "Paperback",
+    "jc": true,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "N-O",
+    "sourceRow": 2
   },
   {
     "catalogKey": "nagendra-harini-the-bangalore-detectives-club",
@@ -13677,7 +13837,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 2
+    "sourceRow": 3
   },
   {
     "catalogKey": "nagoski-emily-come-as-you-are-the-surprising-new-science-that-will-transform-your-sex-life",
@@ -13697,7 +13857,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 3
+    "sourceRow": 4
   },
   {
     "catalogKey": "napoli-james-the-official-dictionary-of-sarcasm-a-lexicon-for-those-of-us-who-are-better-and-smarter-than-the-rest-of-you",
@@ -13717,7 +13877,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 4
+    "sourceRow": 5
   },
   {
     "catalogKey": "nassi-robert-j-spanish-first-year",
@@ -13737,7 +13897,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 5
+    "sourceRow": 6
   },
   {
     "catalogKey": "national-geographic-essential-visual-history-of-world-mythology",
@@ -13757,7 +13917,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 6
+    "sourceRow": 7
   },
   {
     "catalogKey": "neale-hurston-zora-their-eyes-were-watching-god",
@@ -13777,7 +13937,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 7
+    "sourceRow": 8
   },
   {
     "catalogKey": "neese-ashley-how-to-breathe-25-simple-practices-for-calm-joy-and-resilience",
@@ -13797,7 +13957,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 8
+    "sourceRow": 9
   },
   {
     "catalogKey": "nethercott-gennarose-thistlefoot",
@@ -13817,7 +13977,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 9
+    "sourceRow": 10
   },
   {
     "catalogKey": "nezhukumatathil-aimee-world-of-wonders-in-praise-of-fireflies-whale-sharks-and-other-astonishments",
@@ -13837,7 +13997,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 10
+    "sourceRow": 11
   },
   {
     "catalogKey": "ng-celeste-everything-i-never-told-you",
@@ -13857,7 +14017,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 11
+    "sourceRow": 12
   },
   {
     "catalogKey": "ngozi-adichie-chimamanda-we-should-all-be-feminists",
@@ -13877,7 +14037,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 12
+    "sourceRow": 13
   },
   {
     "catalogKey": "nguyen-viet-thanh-the-committed",
@@ -13897,7 +14057,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 15
+    "sourceRow": 16
   },
   {
     "catalogKey": "nguyen-viet-thanh-the-refugees",
@@ -13917,7 +14077,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 13
+    "sourceRow": 14
   },
   {
     "catalogKey": "nguyen-viet-thanh-the-sympathizer",
@@ -13937,7 +14097,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 14
+    "sourceRow": 15
   },
   {
     "catalogKey": "nicholas-chani-you-were-born-for-this-astrology-for-radical-self-acceptance",
@@ -13957,7 +14117,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 16
+    "sourceRow": 17
   },
   {
     "catalogKey": "nimmo-jenny-midnight-for-charlie-bone",
@@ -13977,7 +14137,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 17
+    "sourceRow": 18
   },
   {
     "catalogKey": "nix-garth-lirael",
@@ -13997,7 +14157,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 18
+    "sourceRow": 19
   },
   {
     "catalogKey": "noah-trevor-born-a-crime-stories-from-a-south-african-childhood",
@@ -14017,7 +14177,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 19
+    "sourceRow": 20
   },
   {
     "catalogKey": "northup-solomon-12-years-a-slave",
@@ -14037,7 +14197,27 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 20
+    "sourceRow": 21
+  },
+  {
+    "catalogKey": "novak-naomi-a-deadly-education",
+    "title": "A Deadly Education",
+    "rawTitle": "A Deadly Education",
+    "coverImage": "/data/covers/novak-naomi-a-deadly-education.webp",
+    "series": "The Scholomance",
+    "seriesTitle": "The Scholomance",
+    "seriesFormat": null,
+    "seriesNumber": 1,
+    "author": "Naomi Novak",
+    "authorSort": "Novak, Naomi",
+    "firstName": "Naomi",
+    "lastName": "Novak",
+    "format": "Paperback",
+    "jc": false,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "N-O",
+    "sourceRow": 22
   },
   {
     "catalogKey": "novak-naomi-uprooted",
@@ -14057,7 +14237,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 21
+    "sourceRow": 23
   },
   {
     "catalogKey": "novi-sara-true-biz",
@@ -14077,7 +14257,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 22
+    "sourceRow": 24
   },
   {
     "catalogKey": "o-connor-flannery-the-complete-stories",
@@ -14097,7 +14277,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 23
+    "sourceRow": 25
   },
   {
     "catalogKey": "o-donoghue-caroline-all-our-hidden-gifts",
@@ -14117,7 +14297,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 24
+    "sourceRow": 26
   },
   {
     "catalogKey": "o-guilin-peadar-the-call",
@@ -14137,7 +14317,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 25
+    "sourceRow": 27
   },
   {
     "catalogKey": "o-neill-tom-chaos-charles-manson-the-cia-and-the-secret-history-of-the-sixties",
@@ -14157,7 +14337,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 26
+    "sourceRow": 28
   },
   {
     "catalogKey": "oates-joyce-carol-american-gothic-tales",
@@ -14177,7 +14357,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 27
+    "sourceRow": 29
   },
   {
     "catalogKey": "odell-jenny-how-to-do-nothing-resisting-the-attention-economy",
@@ -14197,7 +14377,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 28
+    "sourceRow": 30
   },
   {
     "catalogKey": "okorafor-nnedi-akata-warrior",
@@ -14217,7 +14397,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 31
+    "sourceRow": 33
   },
   {
     "catalogKey": "okorafor-nnedi-akata-witch",
@@ -14237,7 +14417,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 30
+    "sourceRow": 32
   },
   {
     "catalogKey": "okorafor-nnedi-binti-the-complete-trilogy",
@@ -14257,7 +14437,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 29
+    "sourceRow": 31
   },
   {
     "catalogKey": "okosun-ehigbor-forged-by-blood",
@@ -14277,7 +14457,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 32
+    "sourceRow": 34
   },
   {
     "catalogKey": "okubo-min-citizen-13660",
@@ -14297,7 +14477,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 33
+    "sourceRow": 35
   },
   {
     "catalogKey": "olde-heuvelt-thomas-hex",
@@ -14317,7 +14497,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 34
+    "sourceRow": 36
   },
   {
     "catalogKey": "olsen-jenni-trouble-in-mind-stories-from-a-neuropsychologist-s-casebook",
@@ -14337,7 +14517,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 35
+    "sourceRow": 37
   },
   {
     "catalogKey": "one-one-punch-man-vol-1",
@@ -14357,7 +14537,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 36
+    "sourceRow": 38
   },
   {
     "catalogKey": "orange-tommy-there-there",
@@ -14377,7 +14557,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 37
+    "sourceRow": 39
   },
   {
     "catalogKey": "orlando-carissa-the-september-house",
@@ -14397,7 +14577,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 38
+    "sourceRow": 40
   },
   {
     "catalogKey": "orwell-george-1984",
@@ -14417,7 +14597,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 39
+    "sourceRow": 41
   },
   {
     "catalogKey": "orwell-george-animal-farm",
@@ -14437,7 +14617,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 40
+    "sourceRow": 42
   },
   {
     "catalogKey": "oseman-alice-heartstopper-vol-1",
@@ -14457,7 +14637,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 41
+    "sourceRow": 43
   },
   {
     "catalogKey": "oseman-alice-heartstopper-vol-2",
@@ -14477,7 +14657,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 42
+    "sourceRow": 44
   },
   {
     "catalogKey": "oseman-alice-heartstopper-vol-3",
@@ -14497,7 +14677,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 43
+    "sourceRow": 45
   },
   {
     "catalogKey": "oseman-alice-heartstopper-vol-4",
@@ -14517,7 +14697,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 44
+    "sourceRow": 46
   },
   {
     "catalogKey": "oseman-alice-heartstopper-vol-5",
@@ -14537,7 +14717,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 45
+    "sourceRow": 47
   },
   {
     "catalogKey": "oseman-alice-loveless",
@@ -14557,7 +14737,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 46
+    "sourceRow": 48
   },
   {
     "catalogKey": "oseman-alice-nick-and-charlie",
@@ -14577,7 +14757,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 47
+    "sourceRow": 49
   },
   {
     "catalogKey": "oseman-alice-radio-silence",
@@ -14597,7 +14777,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 48
+    "sourceRow": 50
   },
   {
     "catalogKey": "oseman-alice-solitaire",
@@ -14617,7 +14797,27 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 49
+    "sourceRow": 51
+  },
+  {
+    "catalogKey": "oshetsky-claire-poor-deer",
+    "title": "Poor Deer",
+    "rawTitle": "Poor Deer",
+    "coverImage": "/data/covers/oshetsky-claire-poor-deer.webp",
+    "series": null,
+    "seriesTitle": null,
+    "seriesFormat": null,
+    "seriesNumber": null,
+    "author": "Claire Oshetsky",
+    "authorSort": "Oshetsky, Claire",
+    "firstName": "Claire",
+    "lastName": "Oshetsky",
+    "format": "Paperback",
+    "jc": false,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "N-O",
+    "sourceRow": 52
   },
   {
     "catalogKey": "oyeyemi-helen-mr-fox",
@@ -14637,7 +14837,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 50
+    "sourceRow": 53
   },
   {
     "catalogKey": "oyeyemi-helen-the-icarus-girl",
@@ -14657,7 +14857,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 51
+    "sourceRow": 54
   },
   {
     "catalogKey": "oyeyemi-helen-white-is-for-witching",
@@ -14677,7 +14877,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 52
+    "sourceRow": 55
   },
   {
     "catalogKey": "page-shelly-night-of-the-living-queers-13-tales-of-terror-delight",
@@ -16900,6 +17100,26 @@
     "sourceRow": 25
   },
   {
+    "catalogKey": "sebastian-cat-you-should-be-so-lucky",
+    "title": "You Should Be So Lucky",
+    "rawTitle": "You Should Be So Lucky",
+    "coverImage": "/data/covers/sebastian-cat-you-should-be-so-lucky.webp",
+    "series": "Midcentury NYC",
+    "seriesTitle": "Midcentury NYC",
+    "seriesFormat": null,
+    "seriesNumber": 2,
+    "author": "Cat Sebastian",
+    "authorSort": "Sebastian, Cat",
+    "firstName": "Cat",
+    "lastName": "Sebastian",
+    "format": "Paperback",
+    "jc": false,
+    "cj": false,
+    "lgbtq": true,
+    "sourceSheet": "S",
+    "sourceRow": 26
+  },
+  {
     "catalogKey": "serna-isabel-crazy-plant-lady",
     "title": "Crazy Plant Lady",
     "rawTitle": "Crazy Plant Lady",
@@ -16917,7 +17137,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 26
+    "sourceRow": 27
   },
   {
     "catalogKey": "shannon-samantha-a-day-of-fallen-night",
@@ -16937,7 +17157,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "S",
-    "sourceRow": 28
+    "sourceRow": 29
   },
   {
     "catalogKey": "shannon-samantha-the-bone-season",
@@ -16957,7 +17177,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 27
+    "sourceRow": 28
   },
   {
     "catalogKey": "shannon-samantha-the-priory-of-the-orange-tree",
@@ -16977,7 +17197,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "S",
-    "sourceRow": 29
+    "sourceRow": 30
   },
   {
     "catalogKey": "shelley-mary-frankenstein",
@@ -16997,7 +17217,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 30
+    "sourceRow": 31
   },
   {
     "catalogKey": "shroff-parini-the-bandit-queens",
@@ -17017,7 +17237,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 31
+    "sourceRow": 32
   },
   {
     "catalogKey": "shuker-karl-dragons-a-natural-history",
@@ -17037,7 +17257,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 32
+    "sourceRow": 33
   },
   {
     "catalogKey": "sibley-emma-the-little-book-of-house-plants-and-other-greenery",
@@ -17057,7 +17277,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 33
+    "sourceRow": 34
   },
   {
     "catalogKey": "sill-ben-a-field-guide-to-little-known-and-seldom-seen-birds-of-north-america",
@@ -17077,7 +17297,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 34
+    "sourceRow": 35
   },
   {
     "catalogKey": "silvera-adam-they-both-die-at-the-end",
@@ -17097,7 +17317,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "S",
-    "sourceRow": 35
+    "sourceRow": 36
   },
   {
     "catalogKey": "silverstein-shel-falling-up",
@@ -17117,7 +17337,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 36
+    "sourceRow": 37
   },
   {
     "catalogKey": "silverstein-shel-where-the-sidewalk-ends",
@@ -17137,7 +17357,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 37
+    "sourceRow": 38
   },
   {
     "catalogKey": "simmons-dan-the-terror",
@@ -17157,7 +17377,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 38
+    "sourceRow": 39
   },
   {
     "catalogKey": "simone-sierra-midnight-mass",
@@ -17177,7 +17397,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 40
+    "sourceRow": 41
   },
   {
     "catalogKey": "simone-sierra-priest",
@@ -17197,7 +17417,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 39
+    "sourceRow": 40
   },
   {
     "catalogKey": "simone-sierra-saint",
@@ -17217,7 +17437,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "S",
-    "sourceRow": 42
+    "sourceRow": 43
   },
   {
     "catalogKey": "simone-sierra-sinner",
@@ -17237,7 +17457,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 41
+    "sourceRow": 42
   },
   {
     "catalogKey": "simpson-joe-touching-the-void-the-true-story-of-one-man-s-miraculous-survival",
@@ -17257,7 +17477,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 43
+    "sourceRow": 44
   },
   {
     "catalogKey": "sisley-emily-l-the-joy-of-lesbian-sex-a-tender-and-liberated-guide-to-the-pleasures-and-problems-of-a-lesbian-lifestyle",
@@ -17277,7 +17497,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "S",
-    "sourceRow": 44
+    "sourceRow": 45
   },
   {
     "catalogKey": "skloot-rebecca-the-immortal-life-of-henrietta-lacks",
@@ -17297,7 +17517,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 45
+    "sourceRow": 46
   },
   {
     "catalogKey": "smith-scott-the-ruins",
@@ -17317,7 +17537,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 46
+    "sourceRow": 47
   },
   {
     "catalogKey": "smythe-rachel-lore-olympus-vol-1",
@@ -17337,7 +17557,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 47
+    "sourceRow": 48
   },
   {
     "catalogKey": "smythe-rachel-lore-olympus-vol-2",
@@ -17357,7 +17577,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 48
+    "sourceRow": 49
   },
   {
     "catalogKey": "smythe-rachel-lore-olympus-vol-3",
@@ -17377,7 +17597,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 49
+    "sourceRow": 50
   },
   {
     "catalogKey": "smythe-rachel-lore-olympus-vol-4",
@@ -17397,7 +17617,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 50
+    "sourceRow": 51
   },
   {
     "catalogKey": "smythe-rachel-lore-olympus-vol-5",
@@ -17417,7 +17637,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 51
+    "sourceRow": 52
   },
   {
     "catalogKey": "smythe-rachel-lore-olympus-vol-6",
@@ -17437,7 +17657,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 52
+    "sourceRow": 53
   },
   {
     "catalogKey": "smythe-rachel-lore-olympus-vol-7",
@@ -17457,7 +17677,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 53
+    "sourceRow": 54
   },
   {
     "catalogKey": "snicket-lemony-the-austere-academy",
@@ -17477,7 +17697,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 57
+    "sourceRow": 58
   },
   {
     "catalogKey": "snicket-lemony-the-bad-beginning",
@@ -17497,7 +17717,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 54
+    "sourceRow": 55
   },
   {
     "catalogKey": "snicket-lemony-the-carnivorous-carnival",
@@ -17517,7 +17737,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 60
+    "sourceRow": 61
   },
   {
     "catalogKey": "snicket-lemony-the-ersatz-elevator",
@@ -17537,7 +17757,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 58
+    "sourceRow": 59
   },
   {
     "catalogKey": "snicket-lemony-the-miserable-mill",
@@ -17557,7 +17777,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 56
+    "sourceRow": 57
   },
   {
     "catalogKey": "snicket-lemony-the-vile-village",
@@ -17577,7 +17797,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 59
+    "sourceRow": 60
   },
   {
     "catalogKey": "snicket-lemony-the-wide-window",
@@ -17597,7 +17817,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 55
+    "sourceRow": 56
   },
   {
     "catalogKey": "solomon-rivers-the-deep",
@@ -17617,7 +17837,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "S",
-    "sourceRow": 61
+    "sourceRow": 62
   },
   {
     "catalogKey": "sonnie-amy-hillbilly-nationalists-urban-race-rebels-and-black-power-community-organizing-in-radical-times",
@@ -17637,7 +17857,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 62
+    "sourceRow": 63
   },
   {
     "catalogKey": "soto-christopher-nepantla-an-anthology-dedicated-to-queer-poets-of-color",
@@ -17657,7 +17877,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "S",
-    "sourceRow": 63
+    "sourceRow": 64
   },
   {
     "catalogKey": "stage-zoje-baby-teeth",
@@ -17677,7 +17897,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 64
+    "sourceRow": 65
   },
   {
     "catalogKey": "stallworth-ron-black-klansman-a-memoir",
@@ -17697,7 +17917,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 65
+    "sourceRow": 66
   },
   {
     "catalogKey": "stein-max-vine-and-tea",
@@ -17717,7 +17937,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 66
+    "sourceRow": 67
   },
   {
     "catalogKey": "stevenson-bryan-just-mercy",
@@ -17737,7 +17957,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 67
+    "sourceRow": 68
   },
   {
     "catalogKey": "straight-susan-i-been-in-sorrow-s-kitchen-and-licked-out-all-the-pots",
@@ -17757,7 +17977,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 68
+    "sourceRow": 69
   },
   {
     "catalogKey": "straube-lindsay-between-two-kings",
@@ -17777,7 +17997,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 70
+    "sourceRow": 71
   },
   {
     "catalogKey": "straube-lindsay-kiss-of-the-basilisk",
@@ -17797,7 +18017,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 69
+    "sourceRow": 70
   },
   {
     "catalogKey": "stroud-jonathan-the-amulet-of-samarkand",
@@ -17817,7 +18037,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 71
+    "sourceRow": 72
   },
   {
     "catalogKey": "stroud-jonathan-the-golem-s-eye",
@@ -17837,7 +18057,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 72
+    "sourceRow": 73
   },
   {
     "catalogKey": "sutanto-jesse-q-didn-t-see-that-coming",
@@ -17857,7 +18077,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 73
+    "sourceRow": 74
   },
   {
     "catalogKey": "sutanto-jesse-q-vera-wong-s-unsolicited-advice-for-murderers",
@@ -17877,7 +18097,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 74
+    "sourceRow": 75
   },
   {
     "catalogKey": "sutherland-krystal-house-of-hollow",
@@ -17897,7 +18117,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 75
+    "sourceRow": 76
   },
   {
     "catalogKey": "sutherland-krystal-the-invocations",
@@ -17917,7 +18137,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "S",
-    "sourceRow": 76
+    "sourceRow": 77
   },
   {
     "catalogKey": "swann-brian-coming-to-light-contemporary-translations-of-the-native-literatures-of-north-america",
@@ -17937,7 +18157,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 77
+    "sourceRow": 78
   },
   {
     "catalogKey": "swanson-peter-the-kind-worth-killing",
@@ -17957,7 +18177,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 78
+    "sourceRow": 79
   },
   {
     "catalogKey": "tahir-sabaa-all-my-rage",
@@ -18454,10 +18674,30 @@
     "lastName": "Thorne",
     "format": "Paperback",
     "jc": false,
-    "cj": false,
+    "cj": true,
     "lgbtq": true,
     "sourceSheet": "T-V",
     "sourceRow": 26
+  },
+  {
+    "catalogKey": "tinti-hannah-small-odysseys-selected-shorts-presents-35-new-stories",
+    "title": "Small Odysseys: Selected Shorts Presents 35 New Stories",
+    "rawTitle": "Small Odysseys: Selected Shorts Presents 35 New Stories",
+    "coverImage": "/data/covers/tinti-hannah-small-odysseys-selected-shorts-presents-35-new-stories.webp",
+    "series": null,
+    "seriesTitle": null,
+    "seriesFormat": null,
+    "seriesNumber": null,
+    "author": "Hannah Tinti",
+    "authorSort": "Tinti, Hannah",
+    "firstName": "Hannah",
+    "lastName": "Tinti",
+    "format": "Paperback",
+    "jc": false,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "T-V",
+    "sourceRow": 27
   },
   {
     "catalogKey": "todd-matthew-pride-the-story-of-the-lgbtq-equality-movement",
@@ -18477,7 +18717,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "T-V",
-    "sourceRow": 27
+    "sourceRow": 28
   },
   {
     "catalogKey": "tremblay-paul-a-head-full-of-ghosts",
@@ -18497,7 +18737,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "T-V",
-    "sourceRow": 28
+    "sourceRow": 29
   },
   {
     "catalogKey": "trenou-dosse-via-signs-skymates-the-ultimate-guide-to-astrological-compatibility",
@@ -18517,7 +18757,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "T-V",
-    "sourceRow": 29
+    "sourceRow": 30
   },
   {
     "catalogKey": "trussoni-danielle-the-ancestor",
@@ -18537,7 +18777,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "T-V",
-    "sourceRow": 30
+    "sourceRow": 31
   },
   {
     "catalogKey": "turnbull-cadwell-no-gods-no-monsters",
@@ -18557,7 +18797,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "T-V",
-    "sourceRow": 31
+    "sourceRow": 32
   },
   {
     "catalogKey": "turner-alexis-taxidermy",
@@ -18577,7 +18817,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "T-V",
-    "sourceRow": 32
+    "sourceRow": 33
   },
   {
     "catalogKey": "uketsu-strange-pictures",
@@ -18597,7 +18837,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "T-V",
-    "sourceRow": 33
+    "sourceRow": 34
   },
   {
     "catalogKey": "ung-loung-first-they-killed-my-father-a-daughter-of-cambodia-remembers",
@@ -18617,7 +18857,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "T-V",
-    "sourceRow": 34
+    "sourceRow": 35
   },
   {
     "catalogKey": "van-der-kolk-bessel-the-body-keeps-the-score",
@@ -18637,7 +18877,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "T-V",
-    "sourceRow": 35
+    "sourceRow": 36
   },
   {
     "catalogKey": "van-pelt-shelby-remarkably-bright-creatures",
@@ -18657,7 +18897,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "T-V",
-    "sourceRow": 36
+    "sourceRow": 37
   },
   {
     "catalogKey": "various-irish-fairy-and-folk-tales",
@@ -18677,7 +18917,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "T-V",
-    "sourceRow": 37
+    "sourceRow": 38
   },
   {
     "catalogKey": "vaughan-sarah-women-who-changed-the-world",
@@ -18697,7 +18937,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "T-V",
-    "sourceRow": 38
+    "sourceRow": 39
   },
   {
     "catalogKey": "villafa-e-le-n-in-s-a-story-for-all-seasons-un-cuento-para-cada-estaci-n",
@@ -18717,7 +18957,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "T-V",
-    "sourceRow": 39
+    "sourceRow": 40
   },
   {
     "catalogKey": "virgil-the-aeneid",
@@ -18737,7 +18977,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "T-V",
-    "sourceRow": 40
+    "sourceRow": 41
   },
   {
     "catalogKey": "vuong-ocean-on-earth-we-re-briefly-gorgeous",
@@ -18757,7 +18997,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "T-V",
-    "sourceRow": 41
+    "sourceRow": 42
   },
   {
     "catalogKey": "wakatama-allfrey-ellah-africa39-new-writing-from-africa-south-of-the-sahara",
@@ -18900,6 +19140,26 @@
     "sourceRow": 8
   },
   {
+    "catalogKey": "ward-catriona-the-last-house-on-needless-street",
+    "title": "The Last House on Needless Street",
+    "rawTitle": "The Last House on Needless Street",
+    "coverImage": "/data/covers/ward-catriona-the-last-house-on-needless-street.webp",
+    "series": null,
+    "seriesTitle": null,
+    "seriesFormat": null,
+    "seriesNumber": null,
+    "author": "Catriona Ward",
+    "authorSort": "Ward, Catriona",
+    "firstName": "Catriona",
+    "lastName": "Ward",
+    "format": "Paperback",
+    "jc": true,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "W-Z",
+    "sourceRow": 9
+  },
+  {
     "catalogKey": "ware-ruth-the-death-of-mrs-westaway",
     "title": "The Death of Mrs. Westaway",
     "rawTitle": "The Death of Mrs. Westaway",
@@ -18917,7 +19177,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 9
+    "sourceRow": 10
   },
   {
     "catalogKey": "watase-yuu-alice-19th-vol-1",
@@ -18937,7 +19197,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 10
+    "sourceRow": 11
   },
   {
     "catalogKey": "watase-yuu-alice-19th-vol-2",
@@ -18957,7 +19217,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 11
+    "sourceRow": 12
   },
   {
     "catalogKey": "watase-yuu-alice-19th-vol-3",
@@ -18977,7 +19237,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 12
+    "sourceRow": 13
   },
   {
     "catalogKey": "watase-yuu-alice-19th-vol-4",
@@ -18997,7 +19257,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 13
+    "sourceRow": 14
   },
   {
     "catalogKey": "watase-yuu-alice-19th-vol-5",
@@ -19017,7 +19277,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 14
+    "sourceRow": 15
   },
   {
     "catalogKey": "watase-yuu-alice-19th-vol-6",
@@ -19037,7 +19297,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 15
+    "sourceRow": 16
   },
   {
     "catalogKey": "watase-yuu-alice-19th-vol-7",
@@ -19057,7 +19317,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 16
+    "sourceRow": 17
   },
   {
     "catalogKey": "waters-sarah-affinity",
@@ -19077,7 +19337,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "W-Z",
-    "sourceRow": 17
+    "sourceRow": 18
   },
   {
     "catalogKey": "waters-sarah-fingersmith",
@@ -19097,7 +19357,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "W-Z",
-    "sourceRow": 18
+    "sourceRow": 19
   },
   {
     "catalogKey": "waters-sarah-the-paying-guests",
@@ -19117,7 +19377,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "W-Z",
-    "sourceRow": 19
+    "sourceRow": 20
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-1",
@@ -19137,7 +19397,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 20
+    "sourceRow": 21
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-10",
@@ -19157,7 +19417,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 29
+    "sourceRow": 30
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-11",
@@ -19177,7 +19437,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 30
+    "sourceRow": 31
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-12",
@@ -19197,7 +19457,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 31
+    "sourceRow": 32
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-13",
@@ -19217,7 +19477,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 32
+    "sourceRow": 33
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-14",
@@ -19237,7 +19497,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 33
+    "sourceRow": 34
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-15",
@@ -19257,7 +19517,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 34
+    "sourceRow": 35
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-16",
@@ -19277,7 +19537,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 35
+    "sourceRow": 36
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-17",
@@ -19297,7 +19557,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 36
+    "sourceRow": 37
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-18",
@@ -19317,7 +19577,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 37
+    "sourceRow": 38
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-19",
@@ -19337,7 +19597,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 38
+    "sourceRow": 39
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-2",
@@ -19357,7 +19617,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 21
+    "sourceRow": 22
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-20",
@@ -19377,7 +19637,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 39
+    "sourceRow": 40
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-21",
@@ -19397,7 +19657,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 40
+    "sourceRow": 41
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-22",
@@ -19417,7 +19677,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 41
+    "sourceRow": 42
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-23",
@@ -19437,7 +19697,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 42
+    "sourceRow": 43
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-24",
@@ -19457,7 +19717,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 43
+    "sourceRow": 44
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-25",
@@ -19477,7 +19737,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 44
+    "sourceRow": 45
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-26",
@@ -19497,7 +19757,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 45
+    "sourceRow": 46
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-27",
@@ -19517,7 +19777,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 46
+    "sourceRow": 47
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-28",
@@ -19537,7 +19797,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 47
+    "sourceRow": 48
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-3",
@@ -19557,7 +19817,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 22
+    "sourceRow": 23
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-4",
@@ -19577,7 +19837,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 23
+    "sourceRow": 24
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-5",
@@ -19597,7 +19857,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 24
+    "sourceRow": 25
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-6",
@@ -19617,7 +19877,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 25
+    "sourceRow": 26
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-7",
@@ -19637,7 +19897,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 26
+    "sourceRow": 27
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-8",
@@ -19657,7 +19917,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 27
+    "sourceRow": 28
   },
   {
     "catalogKey": "watsuki-nobuhiro-rurouni-kenshin-vol-9",
@@ -19677,7 +19937,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 28
+    "sourceRow": 29
   },
   {
     "catalogKey": "weathers-beck-left-for-dead-my-journey-home-from-everest",
@@ -19697,7 +19957,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 48
+    "sourceRow": 49
   },
   {
     "catalogKey": "weigall-arthur-sappho-of-lesbos-her-life-and-times",
@@ -19717,7 +19977,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "W-Z",
-    "sourceRow": 49
+    "sourceRow": 50
   },
   {
     "catalogKey": "weir-andy-project-hail-mary",
@@ -19737,7 +19997,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 50
+    "sourceRow": 51
   },
   {
     "catalogKey": "weir-andy-the-martian",
@@ -19757,7 +20017,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 51
+    "sourceRow": 52
   },
   {
     "catalogKey": "wells-martha-the-murderbot-diaries-vol-1",
@@ -19777,7 +20037,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 52
+    "sourceRow": 53
   },
   {
     "catalogKey": "wen-zhao-am-lie-song-of-silver-flame-like-night",
@@ -19797,7 +20057,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 53
+    "sourceRow": 54
   },
   {
     "catalogKey": "westover-tara-educated",
@@ -19817,7 +20077,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 54
+    "sourceRow": 55
   },
   {
     "catalogKey": "westover-tara-una-educaci-n",
@@ -19837,7 +20097,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 55
+    "sourceRow": 56
   },
   {
     "catalogKey": "white-andrew-joseph-hell-followed-with-us",
@@ -19857,7 +20117,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "W-Z",
-    "sourceRow": 56
+    "sourceRow": 57
   },
   {
     "catalogKey": "white-kiersten-hide",
@@ -19877,7 +20137,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "W-Z",
-    "sourceRow": 57
+    "sourceRow": 58
   },
   {
     "catalogKey": "whitehead-colson-the-nickel-boys",
@@ -19897,7 +20157,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 58
+    "sourceRow": 59
   },
   {
     "catalogKey": "whitehead-colson-the-underground-railroad",
@@ -19917,7 +20177,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 59
+    "sourceRow": 60
   },
   {
     "catalogKey": "whiteley-aliya-the-beauty-peace-pipe",
@@ -19937,7 +20197,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 60
+    "sourceRow": 61
   },
   {
     "catalogKey": "wiesel-elie-night",
@@ -19957,7 +20217,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 61
+    "sourceRow": 62
   },
   {
     "catalogKey": "wilkerson-isabel-caste-the-origins-of-our-discontents",
@@ -19977,7 +20237,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 62
+    "sourceRow": 63
   },
   {
     "catalogKey": "williams-a-susan-the-penguin-book-of-modern-fantasy-by-women",
@@ -19997,7 +20257,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 63
+    "sourceRow": 64
   },
   {
     "catalogKey": "williams-tia-seven-days-in-june",
@@ -20017,7 +20277,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 64
+    "sourceRow": 65
   },
   {
     "catalogKey": "wishnia-kenneth-jewish-noir-contemporary-tales-of-crime-and-other-dark-deeds",
@@ -20037,7 +20297,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 65
+    "sourceRow": 66
   },
   {
     "catalogKey": "wong-david-john-dies-at-the-end",
@@ -20057,7 +20317,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 66
+    "sourceRow": 67
   },
   {
     "catalogKey": "wood-bari-the-tribe",
@@ -20077,7 +20337,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 67
+    "sourceRow": 68
   },
   {
     "catalogKey": "wood-ghislaine-art-nouveau-and-the-erotic",
@@ -20097,7 +20357,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 68
+    "sourceRow": 69
   },
   {
     "catalogKey": "yarros-rebecca-fourth-wing",
@@ -20117,7 +20377,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 69
+    "sourceRow": 70
   },
   {
     "catalogKey": "yoder-rachel-nightbitch",
@@ -20137,7 +20397,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 70
+    "sourceRow": 71
   },
   {
     "catalogKey": "yu-li-the-carnal-prayer-mat",
@@ -20157,7 +20417,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 71
+    "sourceRow": 72
   },
   {
     "catalogKey": "yuzuki-asako-butter",
@@ -20177,7 +20437,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 72
+    "sourceRow": 73
   },
   {
     "catalogKey": "zauner-michelle-crying-in-h-mart",
@@ -20197,7 +20457,27 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 73
+    "sourceRow": 74
+  },
+  {
+    "catalogKey": "zevin-gabrielle-the-hole-we-re-in",
+    "title": "The Hole We're In",
+    "rawTitle": "The Hole We're In",
+    "coverImage": "/data/covers/zevin-gabrielle-the-hole-we-re-in.webp",
+    "series": null,
+    "seriesTitle": null,
+    "seriesFormat": null,
+    "seriesNumber": null,
+    "author": "Gabrielle Zevin",
+    "authorSort": "Zevin, Gabrielle",
+    "firstName": "Gabrielle",
+    "lastName": "Zevin",
+    "format": "Paperback",
+    "jc": false,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "W-Z",
+    "sourceRow": 75
   },
   {
     "catalogKey": "zevin-gabrielle-the-storied-life-of-a-j-fikry",
@@ -20217,7 +20497,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 74
+    "sourceRow": 76
   },
   {
     "catalogKey": "zevin-gabrielle-tomorrow-and-tomorrow-and-tomorrow",
@@ -20237,7 +20517,27 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 75
+    "sourceRow": 77
+  },
+  {
+    "catalogKey": "zevin-gabrielle-young-jane-young",
+    "title": "Young Jane Young",
+    "rawTitle": "Young Jane Young",
+    "coverImage": "/data/covers/zevin-gabrielle-young-jane-young.webp",
+    "series": null,
+    "seriesTitle": null,
+    "seriesFormat": null,
+    "seriesNumber": null,
+    "author": "Gabrielle Zevin",
+    "authorSort": "Zevin, Gabrielle",
+    "firstName": "Gabrielle",
+    "lastName": "Zevin",
+    "format": "",
+    "jc": false,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "W-Z",
+    "sourceRow": 78
   },
   {
     "catalogKey": "zhao-xiran-jay-iron-widow",
@@ -20257,7 +20557,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "W-Z",
-    "sourceRow": 76
+    "sourceRow": 79
   },
   {
     "catalogKey": "zimmerman-bonnie-the-safe-sea-of-women-lesbian-fiction-1969-1989",
@@ -20277,7 +20577,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "W-Z",
-    "sourceRow": 77
+    "sourceRow": 80
   },
   {
     "catalogKey": "zimmerman-larry-jay-native-north-america",
@@ -20297,7 +20597,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 78
+    "sourceRow": 81
   },
   {
     "catalogKey": "zisson-steve-a-punk-rock-future-a-science-fiction-anthology",
@@ -20317,6 +20617,6 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "W-Z",
-    "sourceRow": 79
+    "sourceRow": 82
   }
 ]

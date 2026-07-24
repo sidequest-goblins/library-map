@@ -586,22 +586,7 @@
       "sourceRow": 40
     },
     {
-      "wantedId": "wanted-to-buy-0040-to-buy-lee-fonda-jade-city",
-      "listType": "to-buy",
-      "title": "Jade City",
-      "rawTitle": "Jade City",
-      "series": null,
-      "seriesTitle": null,
-      "seriesNumber": null,
-      "author": "Fonda Lee",
-      "authorSort": "Lee, Fonda",
-      "firstName": "Fonda",
-      "lastName": "Lee",
-      "sourceSheet": "To Buy",
-      "sourceRow": 41
-    },
-    {
-      "wantedId": "wanted-to-buy-0041-to-buy-lindsay-joan-picnic-at-hanging-rock",
+      "wantedId": "wanted-to-buy-0040-to-buy-lindsay-joan-picnic-at-hanging-rock",
       "listType": "to-buy",
       "title": "Picnic at Hanging Rock",
       "rawTitle": "Picnic at Hanging Rock",
@@ -613,10 +598,10 @@
       "firstName": "Joan",
       "lastName": "Lindsay",
       "sourceSheet": "To Buy",
-      "sourceRow": 42
+      "sourceRow": 41
     },
     {
-      "wantedId": "wanted-to-buy-0042-to-buy-mcdowell-michael-the-elementals",
+      "wantedId": "wanted-to-buy-0041-to-buy-mcdowell-michael-the-elementals",
       "listType": "to-buy",
       "title": "The Elementals",
       "rawTitle": "The Elementals",
@@ -628,10 +613,10 @@
       "firstName": "Michael",
       "lastName": "McDowell",
       "sourceSheet": "To Buy",
-      "sourceRow": 43
+      "sourceRow": 42
     },
     {
-      "wantedId": "wanted-to-buy-0043-to-buy-mcmahon-jennifer-the-children-on-the-hill",
+      "wantedId": "wanted-to-buy-0042-to-buy-mcmahon-jennifer-the-children-on-the-hill",
       "listType": "to-buy",
       "title": "The Children on the Hill",
       "rawTitle": "The Children on the Hill",
@@ -643,10 +628,10 @@
       "firstName": "Jennifer",
       "lastName": "McMahon",
       "sourceSheet": "To Buy",
-      "sourceRow": 44
+      "sourceRow": 43
     },
     {
-      "wantedId": "wanted-to-buy-0044-to-buy-moreno-gus-this-thing-between-us",
+      "wantedId": "wanted-to-buy-0043-to-buy-moreno-gus-this-thing-between-us",
       "listType": "to-buy",
       "title": "This Thing Between Us",
       "rawTitle": "This Thing Between Us",
@@ -658,10 +643,10 @@
       "firstName": "Gus",
       "lastName": "Moreno",
       "sourceSheet": "To Buy",
-      "sourceRow": 45
+      "sourceRow": 44
     },
     {
-      "wantedId": "wanted-to-buy-0045-to-buy-morgan-beth-a-touch-of-jen",
+      "wantedId": "wanted-to-buy-0044-to-buy-morgan-beth-a-touch-of-jen",
       "listType": "to-buy",
       "title": "A Touch of Jen",
       "rawTitle": "A Touch of Jen",
@@ -673,10 +658,10 @@
       "firstName": "Beth",
       "lastName": "Morgan",
       "sourceSheet": "To Buy",
-      "sourceRow": 46
+      "sourceRow": 45
     },
     {
-      "wantedId": "wanted-to-buy-0046-to-buy-moshfegh-odessa-lapvona",
+      "wantedId": "wanted-to-buy-0045-to-buy-moshfegh-odessa-lapvona",
       "listType": "to-buy",
       "title": "Lapvona",
       "rawTitle": "Lapvona",
@@ -688,10 +673,10 @@
       "firstName": "Odessa",
       "lastName": "Moshfegh",
       "sourceSheet": "To Buy",
-      "sourceRow": 47
+      "sourceRow": 46
     },
     {
-      "wantedId": "wanted-to-buy-0047-to-buy-murata-sayaka-earthlings",
+      "wantedId": "wanted-to-buy-0046-to-buy-murata-sayaka-earthlings",
       "listType": "to-buy",
       "title": "Earthlings",
       "rawTitle": "Earthlings",
@@ -703,25 +688,10 @@
       "firstName": "Sayaka",
       "lastName": "Murata",
       "sourceSheet": "To Buy",
-      "sourceRow": 48
+      "sourceRow": 47
     },
     {
-      "wantedId": "wanted-to-buy-0048-to-buy-murata-sayaka-convenience-store-woman",
-      "listType": "to-buy",
-      "title": "Convenience Store Woman",
-      "rawTitle": "Convenience Store Woman",
-      "series": null,
-      "seriesTitle": null,
-      "seriesNumber": null,
-      "author": "Sayaka Murata",
-      "authorSort": "Murata, Sayaka",
-      "firstName": "Sayaka",
-      "lastName": "Murata",
-      "sourceSheet": "To Buy",
-      "sourceRow": 49
-    },
-    {
-      "wantedId": "wanted-to-buy-0049-to-buy-nayler-ray-the-mountain-in-the-sea",
+      "wantedId": "wanted-to-buy-0047-to-buy-nayler-ray-the-mountain-in-the-sea",
       "listType": "to-buy",
       "title": "The Mountain in the Sea",
       "rawTitle": "The Mountain in the Sea",
@@ -733,10 +703,10 @@
       "firstName": "Ray",
       "lastName": "Nayler",
       "sourceSheet": "To Buy",
-      "sourceRow": 50
+      "sourceRow": 48
     },
     {
-      "wantedId": "wanted-to-buy-0050-to-buy-nethercott-gennarose-fifty-beasts-to-break-your-heart",
+      "wantedId": "wanted-to-buy-0048-to-buy-nethercott-gennarose-fifty-beasts-to-break-your-heart",
       "listType": "to-buy",
       "title": "Fifty Beasts to Break Your Heart",
       "rawTitle": "Fifty Beasts to Break Your Heart",
@@ -748,10 +718,10 @@
       "firstName": "Gennarose",
       "lastName": "Nethercott",
       "sourceSheet": "To Buy",
-      "sourceRow": 51
+      "sourceRow": 49
     },
     {
-      "wantedId": "wanted-to-buy-0051-to-buy-olde-heuvelt-thomas-oracle",
+      "wantedId": "wanted-to-buy-0049-to-buy-olde-heuvelt-thomas-oracle",
       "listType": "to-buy",
       "title": "Oracle",
       "rawTitle": "Oracle",
@@ -763,10 +733,10 @@
       "firstName": "Thomas",
       "lastName": "Olde Heuvelt",
       "sourceSheet": "To Buy",
-      "sourceRow": 52
+      "sourceRow": 50
     },
     {
-      "wantedId": "wanted-to-buy-0052-to-buy-olde-heuvelt-thomas-echo",
+      "wantedId": "wanted-to-buy-0050-to-buy-olde-heuvelt-thomas-echo",
       "listType": "to-buy",
       "title": "Echo",
       "rawTitle": "Echo",
@@ -778,10 +748,10 @@
       "firstName": "Thomas",
       "lastName": "Olde Heuvelt",
       "sourceSheet": "To Buy",
-      "sourceRow": 53
+      "sourceRow": 51
     },
     {
-      "wantedId": "wanted-to-buy-0053-to-buy-ottone-robert-p-the-vile-thing-we-created",
+      "wantedId": "wanted-to-buy-0051-to-buy-ottone-robert-p-the-vile-thing-we-created",
       "listType": "to-buy",
       "title": "The Vile Thing We Created",
       "rawTitle": "The Vile Thing We Created",
@@ -793,10 +763,10 @@
       "firstName": "Robert P.",
       "lastName": "Ottone",
       "sourceSheet": "To Buy",
-      "sourceRow": 54
+      "sourceRow": 52
     },
     {
-      "wantedId": "wanted-to-buy-0054-to-buy-parks-ramage-jonathan-yes-daddy",
+      "wantedId": "wanted-to-buy-0052-to-buy-parks-ramage-jonathan-yes-daddy",
       "listType": "to-buy",
       "title": "Yes, Daddy",
       "rawTitle": "Yes, Daddy",
@@ -808,10 +778,10 @@
       "firstName": "Jonathan",
       "lastName": "Parks-Ramage",
       "sourceSheet": "To Buy",
-      "sourceRow": 55
+      "sourceRow": 53
     },
     {
-      "wantedId": "wanted-to-buy-0055-to-buy-payne-tj-intercepts",
+      "wantedId": "wanted-to-buy-0053-to-buy-payne-tj-intercepts",
       "listType": "to-buy",
       "title": "Intercepts",
       "rawTitle": "Intercepts",
@@ -823,10 +793,10 @@
       "firstName": "TJ",
       "lastName": "Payne",
       "sourceSheet": "To Buy",
-      "sourceRow": 56
+      "sourceRow": 54
     },
     {
-      "wantedId": "wanted-to-buy-0056-to-buy-peele-jordan-out-there-screaming",
+      "wantedId": "wanted-to-buy-0054-to-buy-peele-jordan-out-there-screaming",
       "listType": "to-buy",
       "title": "Out There Screaming",
       "rawTitle": "Out There Screaming",
@@ -838,10 +808,10 @@
       "firstName": "Jordan",
       "lastName": "Peele",
       "sourceSheet": "To Buy",
-      "sourceRow": 57
+      "sourceRow": 55
     },
     {
-      "wantedId": "wanted-to-buy-0057-to-buy-plath-sylvia-the-bell-jar",
+      "wantedId": "wanted-to-buy-0055-to-buy-plath-sylvia-the-bell-jar",
       "listType": "to-buy",
       "title": "The Bell Jar",
       "rawTitle": "The Bell Jar",
@@ -853,10 +823,10 @@
       "firstName": "Sylvia",
       "lastName": "Plath",
       "sourceSheet": "To Buy",
-      "sourceRow": 58
+      "sourceRow": 56
     },
     {
-      "wantedId": "wanted-to-buy-0058-to-buy-samano-cordova-gerardo-monstrilio",
+      "wantedId": "wanted-to-buy-0056-to-buy-samano-cordova-gerardo-monstrilio",
       "listType": "to-buy",
       "title": "Monstrilio",
       "rawTitle": "Monstrilio",
@@ -868,10 +838,10 @@
       "firstName": "Gerardo",
       "lastName": "Samano Cordova",
       "sourceSheet": "To Buy",
-      "sourceRow": 59
+      "sourceRow": 57
     },
     {
-      "wantedId": "wanted-to-buy-0059-to-buy-scalzi-john-the-kaiju-preservation-society",
+      "wantedId": "wanted-to-buy-0057-to-buy-scalzi-john-the-kaiju-preservation-society",
       "listType": "to-buy",
       "title": "The Kaiju Preservation Society",
       "rawTitle": "The Kaiju Preservation Society",
@@ -883,10 +853,10 @@
       "firstName": "John",
       "lastName": "Scalzi",
       "sourceSheet": "To Buy",
-      "sourceRow": 60
+      "sourceRow": 58
     },
     {
-      "wantedId": "wanted-to-buy-0060-to-buy-sebastian-cat-we-could-be-so-good",
+      "wantedId": "wanted-to-buy-0058-to-buy-sebastian-cat-we-could-be-so-good",
       "listType": "to-buy",
       "title": "We Could Be So Good",
       "rawTitle": "We Could Be So Good",
@@ -898,10 +868,10 @@
       "firstName": "Cat",
       "lastName": "Sebastian",
       "sourceSheet": "To Buy",
-      "sourceRow": 61
+      "sourceRow": 59
     },
     {
-      "wantedId": "wanted-to-buy-0061-to-buy-song-jade-chlorine",
+      "wantedId": "wanted-to-buy-0059-to-buy-song-jade-chlorine",
       "listType": "to-buy",
       "title": "Chlorine",
       "rawTitle": "Chlorine",
@@ -913,10 +883,10 @@
       "firstName": "Jade",
       "lastName": "Song",
       "sourceSheet": "To Buy",
-      "sourceRow": 62
+      "sourceRow": 60
     },
     {
-      "wantedId": "wanted-to-buy-0062-to-buy-stage-zoje-wonderland",
+      "wantedId": "wanted-to-buy-0060-to-buy-stage-zoje-wonderland",
       "listType": "to-buy",
       "title": "Wonderland",
       "rawTitle": "Wonderland",
@@ -928,10 +898,10 @@
       "firstName": "Zoje",
       "lastName": "Stage",
       "sourceSheet": "To Buy",
-      "sourceRow": 63
+      "sourceRow": 61
     },
     {
-      "wantedId": "wanted-to-buy-0063-to-buy-starling-caitlin-the-luminous-dead",
+      "wantedId": "wanted-to-buy-0061-to-buy-starling-caitlin-the-luminous-dead",
       "listType": "to-buy",
       "title": "The Luminous Dead",
       "rawTitle": "The Luminous Dead",
@@ -943,10 +913,10 @@
       "firstName": "Caitlin",
       "lastName": "Starling",
       "sourceSheet": "To Buy",
-      "sourceRow": 64
+      "sourceRow": 62
     },
     {
-      "wantedId": "wanted-to-buy-0064-to-buy-summers-chelsea-g-a-certain-hunger",
+      "wantedId": "wanted-to-buy-0062-to-buy-summers-chelsea-g-a-certain-hunger",
       "listType": "to-buy",
       "title": "A Certain Hunger",
       "rawTitle": "A Certain Hunger",
@@ -958,10 +928,10 @@
       "firstName": "Chelsea G.",
       "lastName": "Summers",
       "sourceSheet": "To Buy",
-      "sourceRow": 65
+      "sourceRow": 63
     },
     {
-      "wantedId": "wanted-to-buy-0065-to-buy-thorne-jennifer-diavola",
+      "wantedId": "wanted-to-buy-0063-to-buy-thorne-jennifer-diavola",
       "listType": "to-buy",
       "title": "Diavola",
       "rawTitle": "Diavola",
@@ -973,10 +943,10 @@
       "firstName": "Jennifer",
       "lastName": "Thorne",
       "sourceSheet": "To Buy",
-      "sourceRow": 66
+      "sourceRow": 64
     },
     {
-      "wantedId": "wanted-to-buy-0066-to-buy-thorne-jennifer-lute",
+      "wantedId": "wanted-to-buy-0064-to-buy-thorne-jennifer-lute",
       "listType": "to-buy",
       "title": "Lute",
       "rawTitle": "Lute",
@@ -988,10 +958,10 @@
       "firstName": "Jennifer",
       "lastName": "Thorne",
       "sourceSheet": "To Buy",
-      "sourceRow": 67
+      "sourceRow": 65
     },
     {
-      "wantedId": "wanted-to-buy-0067-to-buy-van-wey-andrew-head-like-a-hole",
+      "wantedId": "wanted-to-buy-0065-to-buy-van-wey-andrew-head-like-a-hole",
       "listType": "to-buy",
       "title": "Head Like a Hole",
       "rawTitle": "Head Like a Hole",
@@ -1003,10 +973,10 @@
       "firstName": "Andrew",
       "lastName": "Van Wey",
       "sourceSheet": "To Buy",
-      "sourceRow": 68
+      "sourceRow": 66
     },
     {
-      "wantedId": "wanted-to-buy-0068-to-buy-vandelly-t-marie-theme-music",
+      "wantedId": "wanted-to-buy-0066-to-buy-vandelly-t-marie-theme-music",
       "listType": "to-buy",
       "title": "Theme Music",
       "rawTitle": "Theme Music",
@@ -1018,10 +988,10 @@
       "firstName": "T. Marie",
       "lastName": "Vandelly",
       "sourceSheet": "To Buy",
-      "sourceRow": 69
+      "sourceRow": 67
     },
     {
-      "wantedId": "wanted-to-buy-0069-to-buy-vandermeer-jeff-annihilation",
+      "wantedId": "wanted-to-buy-0067-to-buy-vandermeer-jeff-annihilation",
       "listType": "to-buy",
       "title": "Annihilation",
       "rawTitle": "Annihilation",
@@ -1033,10 +1003,10 @@
       "firstName": "Jeff",
       "lastName": "Vandermeer",
       "sourceSheet": "To Buy",
-      "sourceRow": 70
+      "sourceRow": 68
     },
     {
-      "wantedId": "wanted-to-buy-0070-to-buy-ward-catriona-sundial",
+      "wantedId": "wanted-to-buy-0068-to-buy-ward-catriona-sundial",
       "listType": "to-buy",
       "title": "Sundial",
       "rawTitle": "Sundial",
@@ -1048,10 +1018,10 @@
       "firstName": "Catriona",
       "lastName": "Ward",
       "sourceSheet": "To Buy",
-      "sourceRow": 71
+      "sourceRow": 69
     },
     {
-      "wantedId": "wanted-to-buy-0071-to-buy-ward-catriona-little-eve",
+      "wantedId": "wanted-to-buy-0069-to-buy-ward-catriona-little-eve",
       "listType": "to-buy",
       "title": "Little Eve",
       "rawTitle": "Little Eve",
@@ -1063,10 +1033,10 @@
       "firstName": "Catriona",
       "lastName": "Ward",
       "sourceSheet": "To Buy",
-      "sourceRow": 72
+      "sourceRow": 70
     },
     {
-      "wantedId": "wanted-to-buy-0072-to-buy-ward-catriona-looking-glass-sound",
+      "wantedId": "wanted-to-buy-0070-to-buy-ward-catriona-looking-glass-sound",
       "listType": "to-buy",
       "title": "Looking Glass Sound",
       "rawTitle": "Looking Glass Sound",
@@ -1078,10 +1048,10 @@
       "firstName": "Catriona",
       "lastName": "Ward",
       "sourceSheet": "To Buy",
-      "sourceRow": 73
+      "sourceRow": 71
     },
     {
-      "wantedId": "wanted-to-buy-0073-to-buy-whitehead-colson-zone-one",
+      "wantedId": "wanted-to-buy-0071-to-buy-whitehead-colson-zone-one",
       "listType": "to-buy",
       "title": "Zone One",
       "rawTitle": "Zone One",
@@ -1093,10 +1063,10 @@
       "firstName": "Colson",
       "lastName": "Whitehead",
       "sourceSheet": "To Buy",
-      "sourceRow": 74
+      "sourceRow": 72
     },
     {
-      "wantedId": "wanted-to-buy-0074-to-buy-wilkes-ally-where-the-dead-wait",
+      "wantedId": "wanted-to-buy-0072-to-buy-wilkes-ally-where-the-dead-wait",
       "listType": "to-buy",
       "title": "Where the Dead Wait",
       "rawTitle": "Where the Dead Wait",
@@ -1108,10 +1078,10 @@
       "firstName": "Ally",
       "lastName": "Wilkes",
       "sourceSheet": "To Buy",
-      "sourceRow": 75
+      "sourceRow": 73
     },
     {
-      "wantedId": "wanted-to-buy-0075-to-buy-willson-nicole-tidepool",
+      "wantedId": "wanted-to-buy-0073-to-buy-willson-nicole-tidepool",
       "listType": "to-buy",
       "title": "Tidepool",
       "rawTitle": "Tidepool",
@@ -1123,10 +1093,10 @@
       "firstName": "Nicole",
       "lastName": "Willson",
       "sourceSheet": "To Buy",
-      "sourceRow": 76
+      "sourceRow": 74
     },
     {
-      "wantedId": "wanted-to-buy-0076-to-buy-winn-alice-in-memoriam",
+      "wantedId": "wanted-to-buy-0074-to-buy-winn-alice-in-memoriam",
       "listType": "to-buy",
       "title": "In Memoriam",
       "rawTitle": "In Memoriam",
@@ -1138,10 +1108,10 @@
       "firstName": "Alice",
       "lastName": "Winn",
       "sourceSheet": "To Buy",
-      "sourceRow": 77
+      "sourceRow": 75
     },
     {
-      "wantedId": "wanted-to-buy-0077-to-buy-winstead-ashley-the-last-housewife",
+      "wantedId": "wanted-to-buy-0075-to-buy-winstead-ashley-the-last-housewife",
       "listType": "to-buy",
       "title": "The Last Housewife",
       "rawTitle": "The Last Housewife",
@@ -1153,10 +1123,10 @@
       "firstName": "Ashley",
       "lastName": "Winstead",
       "sourceSheet": "To Buy",
-      "sourceRow": 78
+      "sourceRow": 76
     },
     {
-      "wantedId": "wanted-to-buy-0078-to-buy-yuszczuk-marina-thirst",
+      "wantedId": "wanted-to-buy-0076-to-buy-yuszczuk-marina-thirst",
       "listType": "to-buy",
       "title": "Thirst",
       "rawTitle": "Thirst",
@@ -1168,7 +1138,7 @@
       "firstName": "Marina",
       "lastName": "Yuszczuk",
       "sourceSheet": "To Buy",
-      "sourceRow": 79
+      "sourceRow": 77
     }
   ],
   "seriesToComplete": [
