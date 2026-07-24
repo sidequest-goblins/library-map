@@ -23,6 +23,10 @@
               "currentPage": null,
               "totalPages": 254,
               "naturalTitleLetter": "A",
+              "naturalAuthorLetters": [
+                "I",
+                "N"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 2
@@ -40,6 +44,10 @@
               "currentPage": null,
               "totalPages": 476,
               "naturalTitleLetter": "B",
+              "naturalAuthorLetters": [
+                "M",
+                "T"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 3
@@ -57,6 +65,10 @@
               "currentPage": null,
               "totalPages": 408,
               "naturalTitleLetter": "C",
+              "naturalAuthorLetters": [
+                "A",
+                "N"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 4
@@ -74,6 +86,10 @@
               "currentPage": null,
               "totalPages": 398,
               "naturalTitleLetter": "D",
+              "naturalAuthorLetters": [
+                "B",
+                "C"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 5
@@ -91,6 +107,10 @@
               "currentPage": null,
               "totalPages": 298,
               "naturalTitleLetter": "E",
+              "naturalAuthorLetters": [
+                "C",
+                "D"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 6
@@ -108,6 +128,10 @@
               "currentPage": null,
               "totalPages": 384,
               "naturalTitleLetter": "F",
+              "naturalAuthorLetters": [
+                "E",
+                "H"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 7
@@ -125,6 +149,10 @@
               "currentPage": null,
               "totalPages": 290,
               "naturalTitleLetter": "G",
+              "naturalAuthorLetters": [
+                "K",
+                "P"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 8
@@ -142,6 +170,10 @@
               "currentPage": null,
               "totalPages": 398,
               "naturalTitleLetter": "H",
+              "naturalAuthorLetters": [
+                "A",
+                "W"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 9
@@ -159,6 +191,10 @@
               "currentPage": null,
               "totalPages": 438,
               "naturalTitleLetter": "I",
+              "naturalAuthorLetters": [
+                "G",
+                "M"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 10
@@ -176,6 +212,10 @@
               "currentPage": null,
               "totalPages": 301,
               "naturalTitleLetter": "J",
+              "naturalAuthorLetters": [
+                "A",
+                "R"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 11
@@ -193,6 +233,10 @@
               "currentPage": null,
               "totalPages": 515,
               "naturalTitleLetter": "K",
+              "naturalAuthorLetters": [
+                "L",
+                "S"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 12
@@ -210,6 +254,10 @@
               "currentPage": null,
               "totalPages": 275,
               "naturalTitleLetter": "L",
+              "naturalAuthorLetters": [
+                "L",
+                "V"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 13
@@ -227,6 +275,10 @@
               "currentPage": null,
               "totalPages": 337,
               "naturalTitleLetter": "M",
+              "naturalAuthorLetters": [
+                "B",
+                "F"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 14
@@ -244,6 +296,10 @@
               "currentPage": null,
               "totalPages": 304,
               "naturalTitleLetter": "N",
+              "naturalAuthorLetters": [
+                "D",
+                "K"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 15
@@ -261,6 +317,10 @@
               "currentPage": null,
               "totalPages": 588,
               "naturalTitleLetter": "O",
+              "naturalAuthorLetters": [
+                "E",
+                "M"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 16
@@ -278,6 +338,10 @@
               "currentPage": null,
               "totalPages": 527,
               "naturalTitleLetter": "P",
+              "naturalAuthorLetters": [
+                "K",
+                "R"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 17
@@ -295,6 +359,10 @@
               "currentPage": null,
               "totalPages": 232,
               "naturalTitleLetter": "S",
+              "naturalAuthorLetters": [
+                "G",
+                "Y"
+              ],
               "wildcard": true,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 18
@@ -312,6 +380,10 @@
               "currentPage": null,
               "totalPages": 307,
               "naturalTitleLetter": "R",
+              "naturalAuthorLetters": [
+                "G",
+                "K"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 19
@@ -329,6 +401,10 @@
               "currentPage": null,
               "totalPages": 411,
               "naturalTitleLetter": "S",
+              "naturalAuthorLetters": [
+                "C",
+                "S"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 20
@@ -346,6 +422,10 @@
               "currentPage": null,
               "totalPages": 336,
               "naturalTitleLetter": "C",
+              "naturalAuthorLetters": [
+                "R",
+                "T"
+              ],
               "wildcard": true,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 21
@@ -363,6 +443,9 @@
               "currentPage": null,
               "totalPages": 435,
               "naturalTitleLetter": "U",
+              "naturalAuthorLetters": [
+                "N"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 22
@@ -380,6 +463,10 @@
               "currentPage": null,
               "totalPages": 333,
               "naturalTitleLetter": "V",
+              "naturalAuthorLetters": [
+                "J",
+                "S"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 23
@@ -397,6 +484,10 @@
               "currentPage": null,
               "totalPages": 283,
               "naturalTitleLetter": "W",
+              "naturalAuthorLetters": [
+                "H",
+                "O"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 24
@@ -414,6 +505,10 @@
               "currentPage": null,
               "totalPages": 364,
               "naturalTitleLetter": "B",
+              "naturalAuthorLetters": [
+                "C",
+                "L"
+              ],
               "wildcard": true,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 25
@@ -431,6 +526,10 @@
               "currentPage": null,
               "totalPages": 319,
               "naturalTitleLetter": "Y",
+              "naturalAuthorLetters": [
+                "K",
+                "R"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 26
@@ -448,6 +547,10 @@
               "currentPage": null,
               "totalPages": 362,
               "naturalTitleLetter": "W",
+              "naturalAuthorLetters": [
+                "B",
+                "K"
+              ],
               "wildcard": true,
               "sourceSheet": "ABC - CJ",
               "sourceRow": 27
@@ -471,6 +574,10 @@
               "currentPage": null,
               "totalPages": 254,
               "naturalTitleLetter": "A",
+              "naturalAuthorLetters": [
+                "I",
+                "N"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 2
@@ -488,6 +595,10 @@
               "currentPage": null,
               "totalPages": 292,
               "naturalTitleLetter": "B",
+              "naturalAuthorLetters": [
+                "M",
+                "S"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 3
@@ -505,6 +616,10 @@
               "currentPage": null,
               "totalPages": 320,
               "naturalTitleLetter": "C",
+              "naturalAuthorLetters": [
+                "B",
+                "H"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 4
@@ -522,6 +637,10 @@
               "currentPage": null,
               "totalPages": 303,
               "naturalTitleLetter": "D",
+              "naturalAuthorLetters": [
+                "D",
+                "I"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 5
@@ -539,6 +658,10 @@
               "currentPage": null,
               "totalPages": 295,
               "naturalTitleLetter": "E",
+              "naturalAuthorLetters": [
+                "B",
+                "J"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 6
@@ -556,6 +679,10 @@
               "currentPage": null,
               "totalPages": 197,
               "naturalTitleLetter": "F",
+              "naturalAuthorLetters": [
+                "M",
+                "S"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 7
@@ -573,6 +700,10 @@
               "currentPage": null,
               "totalPages": 334,
               "naturalTitleLetter": "G",
+              "naturalAuthorLetters": [
+                "M",
+                "S"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 8
@@ -590,6 +721,10 @@
               "currentPage": null,
               "totalPages": 444,
               "naturalTitleLetter": "G",
+              "naturalAuthorLetters": [
+                "M",
+                "T"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 9
@@ -607,6 +742,10 @@
               "currentPage": null,
               "totalPages": 431,
               "naturalTitleLetter": "H",
+              "naturalAuthorLetters": [
+                "A",
+                "D"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 10
@@ -624,6 +763,10 @@
               "currentPage": null,
               "totalPages": 398,
               "naturalTitleLetter": "H",
+              "naturalAuthorLetters": [
+                "J",
+                "N"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 11
@@ -641,6 +784,10 @@
               "currentPage": null,
               "totalPages": 391,
               "naturalTitleLetter": "I",
+              "naturalAuthorLetters": [
+                "X",
+                "Z"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 12
@@ -658,6 +805,9 @@
               "currentPage": null,
               "totalPages": 265,
               "naturalTitleLetter": "I",
+              "naturalAuthorLetters": [
+                "L"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 13
@@ -675,6 +825,10 @@
               "currentPage": null,
               "totalPages": 301,
               "naturalTitleLetter": "J",
+              "naturalAuthorLetters": [
+                "A",
+                "R"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 14
@@ -692,6 +846,10 @@
               "currentPage": null,
               "totalPages": 475,
               "naturalTitleLetter": "K",
+              "naturalAuthorLetters": [
+                "P",
+                "V"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 15
@@ -709,6 +867,10 @@
               "currentPage": null,
               "totalPages": 275,
               "naturalTitleLetter": "L",
+              "naturalAuthorLetters": [
+                "L",
+                "V"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 16
@@ -726,6 +888,10 @@
               "currentPage": null,
               "totalPages": 303,
               "naturalTitleLetter": "M",
+              "naturalAuthorLetters": [
+                "H",
+                "M"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 17
@@ -743,6 +909,10 @@
               "currentPage": null,
               "totalPages": 450,
               "naturalTitleLetter": "N",
+              "naturalAuthorLetters": [
+                "B",
+                "L"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 18
@@ -760,6 +930,10 @@
               "currentPage": null,
               "totalPages": 367,
               "naturalTitleLetter": "N",
+              "naturalAuthorLetters": [
+                "K",
+                "R"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 19
@@ -777,6 +951,10 @@
               "currentPage": null,
               "totalPages": 265,
               "naturalTitleLetter": "O",
+              "naturalAuthorLetters": [
+                "D",
+                "E"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 20
@@ -794,6 +972,10 @@
               "currentPage": null,
               "totalPages": 386,
               "naturalTitleLetter": "P",
+              "naturalAuthorLetters": [
+                "S",
+                "T"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 21
@@ -811,6 +993,10 @@
               "currentPage": null,
               "totalPages": 198,
               "naturalTitleLetter": "Q",
+              "naturalAuthorLetters": [
+                "D",
+                "J"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 22
@@ -828,6 +1014,10 @@
               "currentPage": null,
               "totalPages": 393,
               "naturalTitleLetter": "R",
+              "naturalAuthorLetters": [
+                "J",
+                "Q"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
               "sourceRow": 23
@@ -845,6 +1035,10 @@
               "currentPage": null,
               "totalPages": 392,
               "naturalTitleLetter": "R",
+              "naturalAuthorLetters": [
+                "C",
+                "M"
+              ],
               "wildcard": true,
               "sourceSheet": "ABC - JC",
               "sourceRow": 24
@@ -862,6 +1056,10 @@
               "currentPage": null,
               "totalPages": 503,
               "naturalTitleLetter": "S",
+              "naturalAuthorLetters": [
+                "C",
+                "R"
+              ],
               "wildcard": true,
               "sourceSheet": "ABC - JC",
               "sourceRow": 25
@@ -879,6 +1077,10 @@
               "currentPage": null,
               "totalPages": 290,
               "naturalTitleLetter": "T",
+              "naturalAuthorLetters": [
+                "O",
+                "T"
+              ],
               "wildcard": true,
               "sourceSheet": "ABC - JC",
               "sourceRow": 26
@@ -896,6 +1098,9 @@
               "currentPage": null,
               "totalPages": 435,
               "naturalTitleLetter": "U",
+              "naturalAuthorLetters": [
+                "N"
+              ],
               "wildcard": true,
               "sourceSheet": "ABC - JC",
               "sourceRow": 27
@@ -913,6 +1118,10 @@
               "currentPage": null,
               "totalPages": 207,
               "naturalTitleLetter": "V",
+              "naturalAuthorLetters": [
+                "A",
+                "T"
+              ],
               "wildcard": true,
               "sourceSheet": "ABC - JC",
               "sourceRow": 28
@@ -930,6 +1139,10 @@
               "currentPage": null,
               "totalPages": 359,
               "naturalTitleLetter": "V",
+              "naturalAuthorLetters": [
+                "C",
+                "M"
+              ],
               "wildcard": true,
               "sourceSheet": "ABC - JC",
               "sourceRow": 29
@@ -947,6 +1160,10 @@
               "currentPage": null,
               "totalPages": 166,
               "naturalTitleLetter": "W",
+              "naturalAuthorLetters": [
+                "A",
+                "G"
+              ],
               "wildcard": true,
               "sourceSheet": "ABC - JC",
               "sourceRow": 30
@@ -964,6 +1181,10 @@
               "currentPage": null,
               "totalPages": 385,
               "naturalTitleLetter": "Y",
+              "naturalAuthorLetters": [
+                "C",
+                "M"
+              ],
               "wildcard": true,
               "sourceSheet": "ABC - JC",
               "sourceRow": 31
@@ -993,6 +1214,10 @@
               "currentPage": null,
               "totalPages": null,
               "naturalTitleLetter": "C",
+              "naturalAuthorLetters": [
+                "A",
+                "J"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 2
@@ -1010,6 +1235,10 @@
               "currentPage": null,
               "totalPages": 223,
               "naturalTitleLetter": "M",
+              "naturalAuthorLetters": [
+                "B",
+                "O"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 3
@@ -1027,6 +1256,10 @@
               "currentPage": null,
               "totalPages": 181,
               "naturalTitleLetter": "R",
+              "naturalAuthorLetters": [
+                "C",
+                "P"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 4
@@ -1044,6 +1277,10 @@
               "currentPage": null,
               "totalPages": 481,
               "naturalTitleLetter": "P",
+              "naturalAuthorLetters": [
+                "D",
+                "S"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 5
@@ -1061,6 +1298,12 @@
               "currentPage": null,
               "totalPages": 198,
               "naturalTitleLetter": "T",
+              "naturalAuthorLetters": [
+                "A",
+                "E",
+                "G",
+                "M"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 6
@@ -1078,6 +1321,10 @@
               "currentPage": null,
               "totalPages": 317,
               "naturalTitleLetter": "W",
+              "naturalAuthorLetters": [
+                "F",
+                "S"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 7
@@ -1095,6 +1342,10 @@
               "currentPage": null,
               "totalPages": 357,
               "naturalTitleLetter": "P",
+              "naturalAuthorLetters": [
+                "G",
+                "L"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 8
@@ -1112,6 +1363,10 @@
               "currentPage": null,
               "totalPages": 288,
               "naturalTitleLetter": "M",
+              "naturalAuthorLetters": [
+                "H",
+                "M"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 9
@@ -1129,6 +1384,10 @@
               "currentPage": null,
               "totalPages": 367,
               "naturalTitleLetter": "R",
+              "naturalAuthorLetters": [
+                "I",
+                "J"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 10
@@ -1146,6 +1405,10 @@
               "currentPage": null,
               "totalPages": 620,
               "naturalTitleLetter": "B",
+              "naturalAuthorLetters": [
+                "J",
+                "M"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 11
@@ -1163,6 +1426,10 @@
               "currentPage": null,
               "totalPages": 541,
               "naturalTitleLetter": "K",
+              "naturalAuthorLetters": [
+                "K",
+                "R"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 12
@@ -1180,6 +1447,10 @@
               "currentPage": null,
               "totalPages": 139,
               "naturalTitleLetter": "C",
+              "naturalAuthorLetters": [
+                "J",
+                "L"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 13
@@ -1197,6 +1468,10 @@
               "currentPage": null,
               "totalPages": 241,
               "naturalTitleLetter": "H",
+              "naturalAuthorLetters": [
+                "C",
+                "M"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 14
@@ -1214,6 +1489,10 @@
               "currentPage": null,
               "totalPages": 289,
               "naturalTitleLetter": "H",
+              "naturalAuthorLetters": [
+                "N",
+                "S"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 15
@@ -1231,6 +1510,10 @@
               "currentPage": null,
               "totalPages": 356,
               "naturalTitleLetter": "B",
+              "naturalAuthorLetters": [
+                "N",
+                "O"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 16
@@ -1248,6 +1531,10 @@
               "currentPage": null,
               "totalPages": 364,
               "naturalTitleLetter": "S",
+              "naturalAuthorLetters": [
+                "L",
+                "P"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 17
@@ -1265,6 +1552,10 @@
               "currentPage": null,
               "totalPages": 280,
               "naturalTitleLetter": "L",
+              "naturalAuthorLetters": [
+                "A",
+                "S"
+              ],
               "wildcard": true,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 18
@@ -1282,6 +1573,10 @@
               "currentPage": null,
               "totalPages": 367,
               "naturalTitleLetter": "N",
+              "naturalAuthorLetters": [
+                "K",
+                "R"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 19
@@ -1299,6 +1594,10 @@
               "currentPage": null,
               "totalPages": 335,
               "naturalTitleLetter": "B",
+              "naturalAuthorLetters": [
+                "P",
+                "S"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 20
@@ -1316,6 +1615,10 @@
               "currentPage": null,
               "totalPages": 418,
               "naturalTitleLetter": "D",
+              "naturalAuthorLetters": [
+                "L",
+                "T"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 21
@@ -1333,6 +1636,10 @@
               "currentPage": null,
               "totalPages": 417,
               "naturalTitleLetter": "T",
+              "naturalAuthorLetters": [
+                "H",
+                "J"
+              ],
               "wildcard": true,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 22
@@ -1350,6 +1657,10 @@
               "currentPage": null,
               "totalPages": 242,
               "naturalTitleLetter": "O",
+              "naturalAuthorLetters": [
+                "O",
+                "V"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 23
@@ -1367,6 +1678,10 @@
               "currentPage": null,
               "totalPages": 328,
               "naturalTitleLetter": "L",
+              "naturalAuthorLetters": [
+                "C",
+                "W"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 24
@@ -1384,6 +1699,10 @@
               "currentPage": null,
               "totalPages": 369,
               "naturalTitleLetter": "O",
+              "naturalAuthorLetters": [
+                "G",
+                "X"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 25
@@ -1401,6 +1720,10 @@
               "currentPage": null,
               "totalPages": 300,
               "naturalTitleLetter": "H",
+              "naturalAuthorLetters": [
+                "G",
+                "Y"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 26
@@ -1418,6 +1741,10 @@
               "currentPage": null,
               "totalPages": 294,
               "naturalTitleLetter": "Y",
+              "naturalAuthorLetters": [
+                "G",
+                "Z"
+              ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
               "sourceRow": 27

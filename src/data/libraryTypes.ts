@@ -78,6 +78,7 @@ export type ChallengeEntry = {
   currentPage: number | null;
   totalPages: number | null;
   naturalTitleLetter: string;
+  naturalAuthorLetters?: string[];
   wildcard: boolean;
   sourceSheet?: string;
   sourceRow?: number;

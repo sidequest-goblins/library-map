@@ -1341,6 +1341,8 @@ def build_challenge_data(
                         else None,
                     "naturalTitleLetter":
                         natural_letter,
+                    "naturalAuthorLetters":
+                        sorted(author_letters),
                     "wildcard":
                         wildcard,
                     "sourceSheet":

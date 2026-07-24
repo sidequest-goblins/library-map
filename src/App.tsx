@@ -9748,8 +9748,17 @@ export default function App() {
                                     {entry.wildcard ? (
                                       <span className="challengeBadge challengeWildcardBadge">
                                         Wildcard ·{" "}
-                                        {entry.naturalTitleLetter}{" "}
-                                        title
+                                        {activeChallenge?.challengeId ===
+                                        "abc-author"
+                                          ? `${
+                                              entry.naturalAuthorLetters?.join(
+                                                "/"
+                                              ) || "?"
+                                            } author`
+                                          : `${
+                                              entry.naturalTitleLetter ||
+                                              "?"
+                                            } title`}
                                       </span>
                                     ) : null}
                                   </span>
