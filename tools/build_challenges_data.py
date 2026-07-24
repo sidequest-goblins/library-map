@@ -580,26 +580,58 @@ def split_semicolon_values(
 def author_initial_letters(
     author_first: Any,
     author_last: Any,
-) -> set[str]:
-    """Return every usable first/last-name initial for an entry."""
+) -> list[str]:
+    """Return author initials in first-name, then last-name order."""
 
-    initials: set[str] = set()
+    first_names = split_semicolon_values(
+        author_first
+    )
 
-    for value in (
-        author_first,
-        author_last,
+    last_names = split_semicolon_values(
+        author_last
+    )
+
+    initials: list[str] = []
+    seen: set[str] = set()
+
+    for index in range(
+        max(
+            len(first_names),
+            len(last_names),
+        )
     ):
-        for name in split_semicolon_values(
-            value
+        first_name = (
+            first_names[index]
+            if index < len(first_names)
+            else ""
+        )
+
+        last_name = (
+            last_names[index]
+            if index < len(last_names)
+            else ""
+        )
+
+        for name in (
+            first_name,
+            last_name,
         ):
             normalized_name = normalize_text(
                 name
             )
 
-            if normalized_name:
-                initials.add(
-                    normalized_name[0].upper()
-                )
+            if not normalized_name:
+                continue
+
+            initial = (
+                normalized_name[0].upper()
+            )
+
+            if initial in seen:
+                continue
+
+            seen.add(initial)
+            initials.append(initial)
 
     return initials
 
@@ -1342,7 +1374,7 @@ def build_challenge_data(
                     "naturalTitleLetter":
                         natural_letter,
                     "naturalAuthorLetters":
-                        sorted(author_letters),
+                        author_letters,
                     "wildcard":
                         wildcard,
                     "sourceSheet":
