@@ -43,6 +43,10 @@ TITLE_SUBTITLE_SEPARATORS = (
     " - ",
 )
 
+AUTHOR_INITIAL_CHALLENGE_IDS = {
+    "abc-author",
+}
+
 EXPECTED_HEADERS = {
     "letter": {"letter"},
     "title": {"title"},
@@ -136,10 +140,8 @@ def normalized_title_variants(
 def slugify(value: Any) -> str:
     return normalize_text(value).replace(" ", "-")
 
-
 def display_text(value: Any) -> str:
     return str(value or "").strip()
-
 
 def natural_title_letter(title: str) -> str:
     words = normalize_text(title).split()
@@ -151,7 +153,6 @@ def natural_title_letter(title: str) -> str:
         return ""
 
     return words[0][0].upper()
-
 
 def coerce_bool(value: Any) -> bool:
     if isinstance(value, bool):
@@ -170,7 +171,6 @@ def coerce_bool(value: Any) -> bool:
         "complete",
         "completed",
     }
-
 
 def coerce_number(
     value: Any,
@@ -209,11 +209,9 @@ def coerce_number(
         else number
     )
 
-
 # ---------------------------------------------------------------------------
 # Minimal .xlsx reader
 # ---------------------------------------------------------------------------
-
 
 def column_index_from_reference(
     reference: str,
@@ -238,7 +236,6 @@ def column_index_from_reference(
         )
 
     return index - 1
-
 
 def read_shared_strings(
     archive: zipfile.ZipFile,
@@ -267,7 +264,6 @@ def read_shared_strings(
         )
 
     return values
-
 
 def read_cell_value(
     cell: ET.Element,
@@ -321,7 +317,6 @@ def read_cell_value(
         if number.is_integer()
         else number
     )
-
 
 def workbook_sheet_paths(
     archive: zipfile.ZipFile,
@@ -383,7 +378,6 @@ def workbook_sheet_paths(
         )
 
     return sheets
-
 
 def read_worksheet_rows(
     archive: zipfile.ZipFile,
@@ -462,7 +456,6 @@ def read_worksheet_rows(
 
     return output
 
-
 def read_workbook(
     path: Path,
 ) -> list[
@@ -509,17 +502,14 @@ def read_workbook(
             f"{path}"
         ) from exc
 
-
 # ---------------------------------------------------------------------------
 # Workbook validation and library matching
 # ---------------------------------------------------------------------------
-
 
 def canonical_header(value: Any) -> str:
     return normalize_text(
         value
     ).replace("_", " ")
-
 
 def resolve_headers(
     sheet_name: str,
@@ -566,7 +556,6 @@ def resolve_headers(
 
     return resolved
 
-
 def value_at(
     values: list[Any],
     index: int,
@@ -576,7 +565,6 @@ def value_at(
         if index < len(values)
         else None
     )
-
 
 def split_semicolon_values(
     value: Any,
@@ -589,6 +577,31 @@ def split_semicolon_values(
         if part.strip()
     ]
 
+def author_initial_letters(
+    author_first: Any,
+    author_last: Any,
+) -> set[str]:
+    """Return every usable first/last-name initial for an entry."""
+
+    initials: set[str] = set()
+
+    for value in (
+        author_first,
+        author_last,
+    ):
+        for name in split_semicolon_values(
+            value
+        ):
+            normalized_name = normalize_text(
+                name
+            )
+
+            if normalized_name:
+                initials.add(
+                    normalized_name[0].upper()
+                )
+
+    return initials
 
 def author_pairs(
     book: dict[str, Any],
@@ -656,7 +669,6 @@ def author_pairs(
         )
     ]
 
-
 def title_variants(
     book: dict[str, Any],
 ) -> set[str]:
@@ -677,7 +689,6 @@ def title_variants(
         )
 
     return variants
-
 
 def unique_books(
     books: Iterable[
@@ -704,7 +715,6 @@ def unique_books(
         output.append(book)
 
     return output
-
 
 def build_book_indexes(
     books: list[
@@ -769,7 +779,6 @@ def build_book_indexes(
         "by_title":
             dict(by_title),
     }
-
 
 def match_book(
     title: str,
@@ -880,7 +889,6 @@ def match_book(
         [],
     )
 
-
 def load_books(
     path: Path,
 ) -> list[dict[str, Any]]:
@@ -907,11 +915,9 @@ def load_books(
 
     return data
 
-
 # ---------------------------------------------------------------------------
 # Challenge JSON generation
 # ---------------------------------------------------------------------------
-
 
 def build_challenge_data(
     workbook_path: Path,
@@ -1037,6 +1043,11 @@ def build_challenge_data(
             reader_name
         )
 
+        is_author_initial_challenge = (
+            challenge_id
+            in AUTHOR_INITIAL_CHALLENGE_IDS
+        )
+
         challenge_names[
             challenge_id
         ] = challenge_name
@@ -1103,6 +1114,22 @@ def build_challenge_data(
                 )
             )
 
+            template_only_row = (
+                bool(letter)
+                and not any(
+                    (
+                        title,
+                        author_first,
+                        author_last,
+                    )
+                )
+            )
+
+            # Allows pre-filled A-Z/Wildcard template rows
+            # to remain in otherwise empty challenge sheets.
+            if template_only_row:
+                continue
+
             if not any(
                 (
                     letter,
@@ -1123,6 +1150,42 @@ def build_challenge_data(
                     "Letter and Title are "
                     "required"
                 )
+
+            explicit_wildcard = (
+                normalize_text(letter)
+                == "wildcard"
+            )
+
+            author_letters = (
+                author_initial_letters(
+                    author_first,
+                    author_last,
+                )
+            )
+
+            if is_author_initial_challenge:
+                if not author_letters:
+                    raise BuildError(
+                        f"Sheet {sheet_name!r}, "
+                        f"row {row_number}: "
+                        "ABC Author entries must "
+                        "contain an author First "
+                        "or Last name"
+                    )
+
+                if (
+                    not explicit_wildcard
+                    and (
+                        len(letter) != 1
+                        or not letter.isalpha()
+                    )
+                ):
+                    raise BuildError(
+                        f"Sheet {sheet_name!r}, "
+                        f"row {row_number}: "
+                        "Letter must be A-Z or "
+                        "'Wildcard'"
+                    )
 
             (
                 matched_book,
@@ -1194,12 +1257,21 @@ def build_challenge_data(
                 )
             )
 
-            wildcard = (
-                len(letter) == 1
-                and letter.isalpha()
-                and natural_letter
-                != letter
-            )
+            if explicit_wildcard:
+                wildcard = True
+
+            elif is_author_initial_challenge:
+                wildcard = (
+                    letter not in author_letters
+                )
+
+            else:
+                wildcard = (
+                    len(letter) == 1
+                    and letter.isalpha()
+                    and natural_letter
+                    != letter
+                )
 
             identity_key = (
                 catalog_key
@@ -1278,6 +1350,36 @@ def build_challenge_data(
                 }
             )
 
+        if not entries:
+            challenge_readers.pop(
+                reader_id,
+                None,
+            )
+
+            reader_names.pop(
+                (
+                    challenge_id,
+                    reader_id,
+                ),
+                None,
+            )
+
+            if not challenge_readers:
+                challenges.pop(
+                    challenge_id,
+                    None,
+                )
+
+                challenge_names.pop(
+                    challenge_id,
+                    None,
+                )
+
+            warnings.append(
+                "Skipped template-only "
+                f"sheet: {sheet_name!r}"
+            )
+
     if not challenges:
         raise BuildError(
             "No challenge sheets found. "
@@ -1354,11 +1456,9 @@ def build_challenge_data(
         warnings,
     )
 
-
 # ---------------------------------------------------------------------------
 # Command-line behavior
 # ---------------------------------------------------------------------------
-
 
 def default_workbook_path() -> Path:
     configured = os.environ.get(
@@ -1377,7 +1477,6 @@ def default_workbook_path() -> Path:
         / "MyLibrary"
         / "CHALLENGES.xlsx"
     )
-
 
 def parse_args() -> argparse.Namespace:
     repo_root = (
@@ -1466,7 +1565,6 @@ def parse_args() -> argparse.Namespace:
 
     return parser.parse_args()
 
-
 def summarize(
     data: dict[str, Any],
 ) -> dict[str, int]:
@@ -1511,7 +1609,6 @@ def summarize(
                 for entry in entries
             ),
     }
-
 
 def first_difference(
     left: Any,
@@ -1598,7 +1695,6 @@ def first_difference(
         )
 
     return None
-
 
 def main() -> int:
     args = parse_args()
@@ -1807,7 +1903,6 @@ def main() -> int:
     )
 
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())
