@@ -1,0 +1,4 @@
+openpyxl
+PyInstaller
+PySide6
+pywin32

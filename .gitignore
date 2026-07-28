@@ -24,3 +24,20 @@ dist-ssr
 *.sw?
 
 tools/book-id-backups/
+
+.venv/
+
+# Python environments and cache
+.venv/
+__pycache__/
+*.py[cod]
+
+# PyInstaller output
+build/
+dist/
+
+# Future packaged Library Clerk files
+Library Clerk Files/
+
+# Local app debris
+*.log
