@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T03:34:30.295192+00:00",
+  "generatedAt": "2026-07-28T23:44:53.605099+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "sourceSheet": "List View",
   "bookCount": 1033,
@@ -54,7 +54,14 @@
   "unusedBookcases": [],
   "unmappedBookcases": [],
   "catalogMatchFallbackRows": [],
-  "catalogUnmatchedRows": [],
+  "catalogUnmatchedRows": [
+    {
+      "row": 98,
+      "title": "Grimm's Fairy Tales",
+      "author": "Brothers Grimm",
+      "catalogKey": "brothers-grimm-grimm-s-fairy-tales"
+    }
+  ],
   "catalog": {
     "catalogBookCount": 1033,
     "catalogRowsWithTitles": 1033,
