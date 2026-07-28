@@ -1781,13 +1781,20 @@ def main() -> None:
     sheet = find_sheet_with_headers(
         workbook,
         required_headers={
+            "isbn",
+            "year",
+            "pages",
             "title",
+            "series",
             "first",
             "last",
             "genre",
+            "subgenre",
             "publisher",
+            "origin",
             "bookcase",
             "shelf",
+            "position",
         },
         label="List View",
     )
@@ -1803,13 +1810,20 @@ def main() -> None:
     header_indexes = {normalize_header(header): index for index, header in enumerate(headers)}
 
     required_headers = [
+        "isbn",
+        "year",
+        "pages",
         "title",
+        "series",
         "first",
         "last",
         "genre",
+        "subgenre",
         "publisher",
+        "origin",
         "bookcase",
         "shelf",
+        "position",
     ]
 
     missing_headers = [
@@ -1918,13 +1932,27 @@ def main() -> None:
             catalog_match["lgbtq"] = lgbtq
 
         book = {
-            "bookId": make_book_id(len(books) + 1, title, author_sort),
+            "bookId": make_book_id(
+                len(books) + 1,
+                title,
+                author_sort,
+            ),
             "title": title,
             "rawTitle": raw_title,
-            "catalogTitle": catalog_match["title"] if catalog_match else title,
-            "catalogRawTitle": catalog_match["rawTitle"] if catalog_match else raw_title,
+            "catalogTitle": (
+                catalog_match["title"]
+                if catalog_match
+                else title
+            ),
+            "catalogRawTitle": (
+                catalog_match["rawTitle"]
+                if catalog_match
+                else raw_title
+            ),
             "catalogMatchType": catalog_match_type,
-            "shelfPosition": parse_optional_int(get("position")),
+            "shelfPosition": parse_optional_int(
+                get("position")
+            ),
             "series": series,
             "seriesTitle": series_title,
             "seriesFormat": series_format,
@@ -1937,14 +1965,35 @@ def main() -> None:
             "subgenre": get("subgenre"),
             "publisher": get("publisher"),
             "origin": get("origin"),
-            "publicationYear": parse_optional_int(get("year")),
-            "totalPages": parse_optional_int(get("pages")),
+            "isbn": get("isbn"),
+            "publicationYear": parse_optional_int(
+                get("year")
+            ),
+            "totalPages": parse_optional_int(
+                get("pages")
+            ),
             "catalogKey": catalog_key,
-            "format": catalog_match["format"] if catalog_match else "",
-            "jc": catalog_match["jc"] if catalog_match else False,
-            "cj": catalog_match["cj"] if catalog_match else False,
+            "format": (
+                catalog_match["format"]
+                if catalog_match
+                else ""
+            ),
+            "jc": (
+                catalog_match["jc"]
+                if catalog_match
+                else False
+            ),
+            "cj": (
+                catalog_match["cj"]
+                if catalog_match
+                else False
+            ),
             "lgbtq": lgbtq,
-            "coverImage": catalog_match.get("coverImage") if catalog_match else None,
+            "coverImage": (
+                catalog_match.get("coverImage")
+                if catalog_match
+                else None
+            ),
             "room": room,
             "bookcase": bookcase,
             "shelf": shelf,

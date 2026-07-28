@@ -10040,26 +10040,6 @@
     "sourceRow": 49
   },
   {
-    "catalogKey": "jamc-jac-the-grip-of-it",
-    "title": "The Grip of It",
-    "rawTitle": "The Grip of It",
-    "coverImage": "/data/covers/jamc-jac-the-grip-of-it.webp",
-    "series": null,
-    "seriesTitle": null,
-    "seriesFormat": null,
-    "seriesNumber": null,
-    "author": "Jac Jamc",
-    "authorSort": "Jamc, Jac",
-    "firstName": "Jac",
-    "lastName": "Jamc",
-    "format": "Paperback",
-    "jc": true,
-    "cj": false,
-    "lgbtq": false,
-    "sourceSheet": "I-J",
-    "sourceRow": 50
-  },
-  {
     "catalogKey": "james-marlon-black-leopard-red-wolf",
     "title": "Black Leopard, Red Wolf",
     "rawTitle": "Black Leopard, Red Wolf",
@@ -10118,6 +10098,26 @@
     "lgbtq": false,
     "sourceSheet": "I-J",
     "sourceRow": 53
+  },
+  {
+    "catalogKey": "jemc-jac-the-grip-of-it",
+    "title": "The Grip of It",
+    "rawTitle": "The Grip of It",
+    "coverImage": "/data/covers/jemc-jac-the-grip-of-it.webp",
+    "series": null,
+    "seriesTitle": null,
+    "seriesFormat": null,
+    "seriesNumber": null,
+    "author": "Jac Jemc",
+    "authorSort": "Jemc, Jac",
+    "firstName": "Jac",
+    "lastName": "Jemc",
+    "format": "Paperback",
+    "jc": true,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "I-J",
+    "sourceRow": 50
   },
   {
     "catalogKey": "jemisin-n-k-far-sector",
@@ -12557,6 +12557,26 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
+    "sourceRow": 17
+  },
+  {
+    "catalogKey": "marx-karl-the-communist-manifesto",
+    "title": "The Communist Manifesto",
+    "rawTitle": "The Communist Manifesto",
+    "coverImage": "/data/covers/marx-karl-the-communist-manifesto.webp",
+    "series": null,
+    "seriesTitle": null,
+    "seriesFormat": null,
+    "seriesNumber": null,
+    "author": "Karl Marx; Friedrich Engels",
+    "authorSort": "Marx, Karl",
+    "firstName": "Karl;Friedrich",
+    "lastName": "Marx;Engels",
+    "format": "Paperback",
+    "jc": false,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "M",
     "sourceRow": 16
   },
   {
@@ -12577,7 +12597,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 17
+    "sourceRow": 18
   },
   {
     "catalogKey": "matoh-sanami-fake-vol-2",
@@ -12597,7 +12617,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 18
+    "sourceRow": 19
   },
   {
     "catalogKey": "matoh-sanami-fake-vol-3",
@@ -12617,7 +12637,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 19
+    "sourceRow": 20
   },
   {
     "catalogKey": "matoh-sanami-fake-vol-4",
@@ -12637,7 +12657,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 20
+    "sourceRow": 21
   },
   {
     "catalogKey": "matoh-sanami-fake-vol-5",
@@ -12657,7 +12677,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 21
+    "sourceRow": 22
   },
   {
     "catalogKey": "matoh-sanami-fake-vol-6",
@@ -12677,7 +12697,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 22
+    "sourceRow": 23
   },
   {
     "catalogKey": "matoh-sanami-fake-vol-7",
@@ -12697,7 +12717,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 23
+    "sourceRow": 24
   },
   {
     "catalogKey": "mcauliffe-emily-arizona-facts-and-symbols",
@@ -12717,7 +12737,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 24
+    "sourceRow": 25
   },
   {
     "catalogKey": "mcbratney-sam-guess-how-much-i-love-you",
@@ -12737,7 +12757,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 25
+    "sourceRow": 26
   },
   {
     "catalogKey": "mcbride-james-the-heaven-earth-grocery-store",
@@ -12757,7 +12777,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 26
+    "sourceRow": 27
   },
   {
     "catalogKey": "mcbride-karyl-will-i-ever-be-good-enough-healing-the-daughters-of-narcissistic-mothers",
@@ -12777,7 +12797,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 27
+    "sourceRow": 28
   },
   {
     "catalogKey": "mccarthy-cormac-the-road",
@@ -12797,7 +12817,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 28
+    "sourceRow": 29
   },
   {
     "catalogKey": "mcdaniel-tiffany-betty",
@@ -12817,7 +12837,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 29
+    "sourceRow": 30
   },
   {
     "catalogKey": "mcdonald-kel-the-girl-who-married-a-skull-and-other-african-stories",
@@ -12837,7 +12857,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 30
+    "sourceRow": 31
   },
   {
     "catalogKey": "mcfadden-freida-the-housemaid",
@@ -12857,7 +12877,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 31
+    "sourceRow": 32
   },
   {
     "catalogKey": "mckinty-adrian-the-chain",
@@ -12877,7 +12897,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 32
+    "sourceRow": 33
   },
   {
     "catalogKey": "mckinty-adrian-the-island",
@@ -12897,7 +12917,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 33
+    "sourceRow": 34
   },
   {
     "catalogKey": "mcmahon-jennifer-my-darling-girl",
@@ -12917,7 +12937,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 34
+    "sourceRow": 35
   },
   {
     "catalogKey": "mcmahon-jennifer-the-drowning-kind",
@@ -12937,7 +12957,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 35
+    "sourceRow": 36
   },
   {
     "catalogKey": "mcnamara-michelle-i-ll-be-gone-in-the-dark-one-woman-s-obsessive-search-for-the-golden-state-killer",
@@ -12957,7 +12977,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 36
+    "sourceRow": 37
   },
   {
     "catalogKey": "mcqueen-latanya-when-the-reckoning-comes",
@@ -12977,7 +12997,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 37
+    "sourceRow": 38
   },
   {
     "catalogKey": "mcquiston-casey-one-last-stop",
@@ -12997,7 +13017,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 38
+    "sourceRow": 39
   },
   {
     "catalogKey": "mcquiston-casey-red-white-royal-blue",
@@ -13017,7 +13037,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 39
+    "sourceRow": 40
   },
   {
     "catalogKey": "mcquiston-casey-the-pairing",
@@ -13037,7 +13057,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 40
+    "sourceRow": 41
   },
   {
     "catalogKey": "mellor-lee-behind-the-horror-true-stories-that-inspired-horror-movies",
@@ -13057,7 +13077,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 41
+    "sourceRow": 42
   },
   {
     "catalogKey": "mellow-e-j-dance-of-a-burning-sea",
@@ -13077,7 +13097,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 43
+    "sourceRow": 44
   },
   {
     "catalogKey": "mellow-e-j-song-of-the-forever-rains",
@@ -13097,7 +13117,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 42
+    "sourceRow": 43
   },
   {
     "catalogKey": "meloy-colin-wildwood",
@@ -13117,7 +13137,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 44
+    "sourceRow": 45
   },
   {
     "catalogKey": "meyer-stephenie-the-host",
@@ -13137,7 +13157,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 45
+    "sourceRow": 46
   },
   {
     "catalogKey": "miller-chanel-know-my-name",
@@ -13157,7 +13177,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 46
+    "sourceRow": 47
   },
   {
     "catalogKey": "miller-madeline-circe",
@@ -13177,7 +13197,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 47
+    "sourceRow": 48
   },
   {
     "catalogKey": "miller-madeline-the-song-of-achilles",
@@ -13197,7 +13217,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 48
+    "sourceRow": 49
   },
   {
     "catalogKey": "montell-amanda-cultish-the-language-of-fanaticism",
@@ -13217,7 +13237,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 49
+    "sourceRow": 50
   },
   {
     "catalogKey": "moore-christopher-bloodsucking-fiends",
@@ -13237,7 +13257,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 50
+    "sourceRow": 51
   },
   {
     "catalogKey": "moore-christopher-you-suck",
@@ -13257,7 +13277,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 51
+    "sourceRow": 52
   },
   {
     "catalogKey": "moore-kate-the-radium-girls-the-scary-but-true-story-of-the-poison-that-made-people-glow-in-the-dark",
@@ -13277,7 +13297,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 52
+    "sourceRow": 53
   },
   {
     "catalogKey": "moran-caitlin-how-to-build-a-girl",
@@ -13297,7 +13317,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 53
+    "sourceRow": 54
   },
   {
     "catalogKey": "moreno-garcia-silvia-certain-dark-things",
@@ -13317,7 +13337,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 54
+    "sourceRow": 55
   },
   {
     "catalogKey": "moreno-garcia-silvia-gods-of-jade-and-shadow",
@@ -13337,7 +13357,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 55
+    "sourceRow": 56
   },
   {
     "catalogKey": "moreno-garcia-silvia-mexican-gothic",
@@ -13357,7 +13377,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 56
+    "sourceRow": 57
   },
   {
     "catalogKey": "moreno-garcia-silvia-the-beautiful-ones",
@@ -13377,7 +13397,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 57
+    "sourceRow": 58
   },
   {
     "catalogKey": "moreno-garcia-silvia-the-daughter-of-doctor-moreau",
@@ -13397,7 +13417,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 58
+    "sourceRow": 59
   },
   {
     "catalogKey": "morgenstern-erin-el-circo-de-la-noche",
@@ -13417,7 +13437,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 59
+    "sourceRow": 60
   },
   {
     "catalogKey": "morgenstern-erin-the-night-circus",
@@ -13437,7 +13457,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 60
+    "sourceRow": 61
   },
   {
     "catalogKey": "morgenstern-erin-the-starless-sea",
@@ -13457,7 +13477,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 61
+    "sourceRow": 62
   },
   {
     "catalogKey": "morin-jack-anal-pleasure-health-a-guide-for-men-and-women",
@@ -13477,7 +13497,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 62
+    "sourceRow": 63
   },
   {
     "catalogKey": "morrison-chandler-dead-inside",
@@ -13497,7 +13517,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 63
+    "sourceRow": 64
   },
   {
     "catalogKey": "morrison-toni-song-of-solomon",
@@ -13517,7 +13537,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 64
+    "sourceRow": 65
   },
   {
     "catalogKey": "morrison-toni-sula",
@@ -13537,7 +13557,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 65
+    "sourceRow": 66
   },
   {
     "catalogKey": "morrison-toni-the-bluest-eye",
@@ -13557,7 +13577,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 66
+    "sourceRow": 67
   },
   {
     "catalogKey": "moshfegh-ottessa-my-year-of-rest-and-relaxation",
@@ -13577,7 +13597,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 67
+    "sourceRow": 68
   },
   {
     "catalogKey": "muir-tamsyn-gideon-the-ninth",
@@ -13597,7 +13617,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "M",
-    "sourceRow": 68
+    "sourceRow": 69
   },
   {
     "catalogKey": "murakami-haruki-blind-willow-sleeping-woman",
@@ -13617,7 +13637,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 69
+    "sourceRow": 70
   },
   {
     "catalogKey": "murakami-haruki-dance-dance-dance",
@@ -13637,7 +13657,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 70
+    "sourceRow": 75
   },
   {
     "catalogKey": "murakami-haruki-kafka-on-the-shore",
@@ -13737,7 +13757,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 75
+    "sourceRow": 76
   },
   {
     "catalogKey": "murata-sayaka-convenience-store-woman",
@@ -13757,7 +13777,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 76
+    "sourceRow": 77
   },
   {
     "catalogKey": "murbager-nell-ghosts-of-the-adobe-walls",
@@ -13777,7 +13797,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 77
+    "sourceRow": 78
   },
   {
     "catalogKey": "murphy-hiscock-arin-the-green-witch-your-complete-guide-to-the-natural-magic-of-herbs-flowers-essential-oils-and-more",
@@ -13797,7 +13817,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "M",
-    "sourceRow": 78
+    "sourceRow": 79
   },
   {
     "catalogKey": "nagamatsu-sequoia-how-high-we-go-in-the-dark",
@@ -14277,7 +14297,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 25
+    "sourceRow": 26
   },
   {
     "catalogKey": "o-donoghue-caroline-all-our-hidden-gifts",
@@ -14297,7 +14317,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 26
+    "sourceRow": 28
   },
   {
     "catalogKey": "o-guilin-peadar-the-call",
@@ -14317,7 +14337,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 27
+    "sourceRow": 29
   },
   {
     "catalogKey": "o-neill-tom-chaos-charles-manson-the-cia-and-the-secret-history-of-the-sixties",
@@ -14337,7 +14357,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 28
+    "sourceRow": 38
   },
   {
     "catalogKey": "oates-joyce-carol-american-gothic-tales",
@@ -14357,7 +14377,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 29
+    "sourceRow": 25
   },
   {
     "catalogKey": "odell-jenny-how-to-do-nothing-resisting-the-attention-economy",
@@ -14377,7 +14397,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 30
+    "sourceRow": 27
   },
   {
     "catalogKey": "okorafor-nnedi-akata-warrior",
@@ -14397,7 +14417,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 33
+    "sourceRow": 32
   },
   {
     "catalogKey": "okorafor-nnedi-akata-witch",
@@ -14417,7 +14437,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 32
+    "sourceRow": 31
   },
   {
     "catalogKey": "okorafor-nnedi-binti-the-complete-trilogy",
@@ -14437,7 +14457,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 31
+    "sourceRow": 30
   },
   {
     "catalogKey": "okosun-ehigbor-forged-by-blood",
@@ -14457,7 +14477,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 34
+    "sourceRow": 33
   },
   {
     "catalogKey": "okubo-min-citizen-13660",
@@ -14477,7 +14497,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 35
+    "sourceRow": 34
   },
   {
     "catalogKey": "olde-heuvelt-thomas-hex",
@@ -14497,7 +14517,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 36
+    "sourceRow": 35
   },
   {
     "catalogKey": "olsen-jenni-trouble-in-mind-stories-from-a-neuropsychologist-s-casebook",
@@ -14517,7 +14537,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 37
+    "sourceRow": 36
   },
   {
     "catalogKey": "one-one-punch-man-vol-1",
@@ -14537,7 +14557,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 38
+    "sourceRow": 37
   },
   {
     "catalogKey": "orange-tommy-there-there",
@@ -16300,6 +16320,26 @@
     "sourceRow": 31
   },
   {
+    "catalogKey": "rodda-emily-cavern-of-the-fear",
+    "title": "Cavern of the Fear",
+    "rawTitle": "Cavern of the Fear",
+    "coverImage": "/data/covers/rodda-emily-cavern-of-the-fear.webp",
+    "series": "Deltora Shadowlands",
+    "seriesTitle": "Deltora Shadowlands",
+    "seriesFormat": null,
+    "seriesNumber": 1,
+    "author": "Emily Rodda",
+    "authorSort": "Rodda, Emily",
+    "firstName": "Emily",
+    "lastName": "Rodda",
+    "format": "Paperback",
+    "jc": true,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "R",
+    "sourceRow": 38
+  },
+  {
     "catalogKey": "rodda-emily-city-of-the-rats",
     "title": "City of the Rats",
     "rawTitle": "City of the Rats",
@@ -16313,7 +16353,7 @@
     "firstName": "Emily",
     "lastName": "Rodda",
     "format": "Paperback",
-    "jc": false,
+    "jc": true,
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "R",
@@ -16337,7 +16377,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "R",
-    "sourceRow": 40
+    "sourceRow": 41
   },
   {
     "catalogKey": "rodda-emily-dread-mountain",
@@ -16353,7 +16393,7 @@
     "firstName": "Emily",
     "lastName": "Rodda",
     "format": "Paperback",
-    "jc": false,
+    "jc": true,
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "R",
@@ -16377,7 +16417,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "R",
-    "sourceRow": 42
+    "sourceRow": 43
   },
   {
     "catalogKey": "rodda-emily-return-to-del",
@@ -16393,7 +16433,7 @@
     "firstName": "Emily",
     "lastName": "Rodda",
     "format": "Paperback",
-    "jc": false,
+    "jc": true,
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "R",
@@ -16417,27 +16457,27 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "R",
-    "sourceRow": 41
+    "sourceRow": 42
   },
   {
-    "catalogKey": "rodda-emily-the-cavern-of-the-fear",
-    "title": "The Cavern of the Fear",
-    "rawTitle": "The Cavern of the Fear",
-    "coverImage": "/data/covers/rodda-emily-the-cavern-of-the-fear.webp",
+    "catalogKey": "rodda-emily-the-isle-of-illusion",
+    "title": "The Isle of Illusion",
+    "rawTitle": "The Isle of Illusion",
+    "coverImage": "/data/covers/rodda-emily-the-isle-of-illusion.webp",
     "series": "Deltora Shadowlands",
     "seriesTitle": "Deltora Shadowlands",
     "seriesFormat": null,
-    "seriesNumber": 1,
+    "seriesNumber": 2,
     "author": "Emily Rodda",
     "authorSort": "Rodda, Emily",
     "firstName": "Emily",
     "lastName": "Rodda",
     "format": "Paperback",
-    "jc": false,
+    "jc": true,
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "R",
-    "sourceRow": 38
+    "sourceRow": 39
   },
   {
     "catalogKey": "rodda-emily-the-maze-of-the-beast",
@@ -16453,7 +16493,7 @@
     "firstName": "Emily",
     "lastName": "Rodda",
     "format": "Paperback",
-    "jc": false,
+    "jc": true,
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "R",
@@ -16473,11 +16513,11 @@
     "firstName": "Emily",
     "lastName": "Rodda",
     "format": "Paperback",
-    "jc": false,
+    "jc": true,
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "R",
-    "sourceRow": 39
+    "sourceRow": 40
   },
   {
     "catalogKey": "rodda-emily-the-shifting-sands",
@@ -16493,7 +16533,7 @@
     "firstName": "Emily",
     "lastName": "Rodda",
     "format": "Paperback",
-    "jc": false,
+    "jc": true,
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "R",
@@ -16517,7 +16557,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "R",
-    "sourceRow": 43
+    "sourceRow": 44
   },
   {
     "catalogKey": "rodda-emily-the-valley-of-the-lost",
@@ -16533,7 +16573,7 @@
     "firstName": "Emily",
     "lastName": "Rodda",
     "format": "Paperback",
-    "jc": false,
+    "jc": true,
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "R",
@@ -16557,7 +16597,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "R",
-    "sourceRow": 44
+    "sourceRow": 45
   },
   {
     "catalogKey": "ruff-shawn-stewart-go-the-way-your-blood-beats-an-anthology-of-lesbian-and-gay-literary-fiction-by-african-american-writers",
@@ -16577,7 +16617,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "R",
-    "sourceRow": 45
+    "sourceRow": 46
   },
   {
     "catalogKey": "russell-kate-elizabeth-my-dark-vanessa",
@@ -16597,7 +16637,7 @@
     "cj": true,
     "lgbtq": false,
     "sourceSheet": "R",
-    "sourceRow": 46
+    "sourceRow": 47
   },
   {
     "catalogKey": "russon-anne-e-orangutans-wizards-of-the-rain-forest",
@@ -16617,7 +16657,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "R",
-    "sourceRow": 47
+    "sourceRow": 48
   },
   {
     "catalogKey": "s-vitale-alex-the-end-of-policing",
@@ -16740,54 +16780,14 @@
     "sourceRow": 7
   },
   {
-    "catalogKey": "sanchez-claudio-the-amory-wars-vol-1-the-second-stage-turbine-blade",
-    "title": "The Amory Wars, Vol. 1: The Second Stage Turbine Blade",
-    "rawTitle": "The Amory Wars, Vol. 1: The Second Stage Turbine Blade",
-    "coverImage": "/data/covers/sanchez-claudio-the-amory-wars-vol-1-the-second-stage-turbine-blade.webp",
-    "series": null,
-    "seriesTitle": null,
-    "seriesFormat": null,
-    "seriesNumber": null,
-    "author": "Claudio Sanchez",
-    "authorSort": "Sanchez, Claudio",
-    "firstName": "Claudio",
-    "lastName": "Sanchez",
-    "format": "Hardcover",
-    "jc": true,
-    "cj": false,
-    "lgbtq": false,
-    "sourceSheet": "S",
-    "sourceRow": 8
-  },
-  {
-    "catalogKey": "sanchez-claudio-the-amory-wars-vol-2-the-second-stage-turbine-blade",
-    "title": "The Amory Wars, Vol. 2: The Second Stage Turbine Blade",
-    "rawTitle": "The Amory Wars, Vol. 2: The Second Stage Turbine Blade",
-    "coverImage": "/data/covers/sanchez-claudio-the-amory-wars-vol-2-the-second-stage-turbine-blade.webp",
-    "series": null,
-    "seriesTitle": null,
-    "seriesFormat": null,
-    "seriesNumber": null,
-    "author": "Claudio Sanchez",
-    "authorSort": "Sanchez, Claudio",
-    "firstName": "Claudio",
-    "lastName": "Sanchez",
-    "format": "Hardcover",
-    "jc": true,
-    "cj": false,
-    "lgbtq": false,
-    "sourceSheet": "S",
-    "sourceRow": 9
-  },
-  {
     "catalogKey": "sanchez-claudio-the-amory-wars-good-apollo-i-m-burning-star-iv-vol-1",
     "title": "The Amory Wars: Good Apollo, I'm Burning Star IV, Vol. 1",
     "rawTitle": "The Amory Wars: Good Apollo, I'm Burning Star IV, Vol. 1",
     "coverImage": "/data/covers/sanchez-claudio-the-amory-wars-good-apollo-i-m-burning-star-iv-vol-1.webp",
-    "series": "The Amory Wars: Good Apollo, I'm Burning Star IV",
-    "seriesTitle": "The Amory Wars: Good Apollo, I'm Burning Star IV",
+    "series": "The Amory Wars",
+    "seriesTitle": "The Amory Wars",
     "seriesFormat": null,
-    "seriesNumber": 1,
+    "seriesNumber": 5.2,
     "author": "Claudio Sanchez",
     "authorSort": "Sanchez, Claudio",
     "firstName": "Claudio",
@@ -16804,10 +16804,10 @@
     "title": "The Amory Wars: Good Apollo, I'm Burning Star IV, Vol. 2",
     "rawTitle": "The Amory Wars: Good Apollo, I'm Burning Star IV, Vol. 2",
     "coverImage": "/data/covers/sanchez-claudio-the-amory-wars-good-apollo-i-m-burning-star-iv-vol-2.webp",
-    "series": "The Amory Wars: Good Apollo, I'm Burning Star IV",
-    "seriesTitle": "The Amory Wars: Good Apollo, I'm Burning Star IV",
+    "series": "The Amory Wars",
+    "seriesTitle": "The Amory Wars",
     "seriesFormat": null,
-    "seriesNumber": 2,
+    "seriesNumber": 5.3,
     "author": "Claudio Sanchez",
     "authorSort": "Sanchez, Claudio",
     "firstName": "Claudio",
@@ -16824,10 +16824,10 @@
     "title": "The Amory Wars: Good Apollo, I'm Burning Star IV, Vol. 3",
     "rawTitle": "The Amory Wars: Good Apollo, I'm Burning Star IV, Vol. 3",
     "coverImage": "/data/covers/sanchez-claudio-the-amory-wars-good-apollo-i-m-burning-star-iv-vol-3.webp",
-    "series": "The Amory Wars: Good Apollo, I'm Burning Star IV",
-    "seriesTitle": "The Amory Wars: Good Apollo, I'm Burning Star IV",
+    "series": "The Amory Wars",
+    "seriesTitle": "The Amory Wars",
     "seriesFormat": null,
-    "seriesNumber": 3,
+    "seriesNumber": 5.4,
     "author": "Claudio Sanchez",
     "authorSort": "Sanchez, Claudio",
     "firstName": "Claudio",
@@ -16838,6 +16838,46 @@
     "lgbtq": false,
     "sourceSheet": "S",
     "sourceRow": 12
+  },
+  {
+    "catalogKey": "sanchez-claudio-the-amory-wars-in-keeping-secrets-of-silent-earth-3",
+    "title": "The Amory Wars: In Keeping Secrets of Silent Earth: 3",
+    "rawTitle": "The Amory Wars: In Keeping Secrets of Silent Earth: 3",
+    "coverImage": "/data/covers/sanchez-claudio-the-amory-wars-in-keeping-secrets-of-silent-earth-3.webp",
+    "series": "The Amory Wars",
+    "seriesTitle": "The Amory Wars",
+    "seriesFormat": null,
+    "seriesNumber": 4,
+    "author": "Claudio Sanchez",
+    "authorSort": "Sanchez, Claudio",
+    "firstName": "Claudio",
+    "lastName": "Sanchez",
+    "format": "Hardcover",
+    "jc": true,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "S",
+    "sourceRow": 9
+  },
+  {
+    "catalogKey": "sanchez-claudio-the-amory-wars-the-second-stage-turbine-blade",
+    "title": "The Amory Wars: The Second Stage Turbine Blade",
+    "rawTitle": "The Amory Wars: The Second Stage Turbine Blade",
+    "coverImage": "/data/covers/sanchez-claudio-the-amory-wars-the-second-stage-turbine-blade.webp",
+    "series": "The Amory Wars",
+    "seriesTitle": "The Amory Wars",
+    "seriesFormat": null,
+    "seriesNumber": 3,
+    "author": "Claudio Sanchez",
+    "authorSort": "Sanchez, Claudio",
+    "firstName": "Claudio",
+    "lastName": "Sanchez",
+    "format": "Hardcover",
+    "jc": true,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "S",
+    "sourceRow": 8
   },
   {
     "catalogKey": "sapkowski-andrzej-baptism-of-fire",

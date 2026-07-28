@@ -477,13 +477,14 @@ const SEARCH_SCOPE_OPTIONS: Array<{
   scope: SearchScope;
   label: string;
 }> = [
-  { scope: "all", label: "All" },
-  { scope: "title", label: "Title" },
-  { scope: "author", label: "Author" },
-  { scope: "series", label: "Series" },
-  { scope: "genre", label: "Genre" },
-  { scope: "publisher", label: "Publisher" },
-  { scope: "bookcase", label: "Bookcase" },
+  { scope: "all", label: "All", },
+  { scope: "title", label: "Title", },
+  { scope: "author", label: "Author", },
+  { scope: "series", label: "Series", },
+  { scope: "isbn", label: "ISBN", },
+  { scope: "genre", label: "Genre", },
+  { scope: "publisher", label: "Publisher", },
+  { scope: "bookcase", label: "Bookcase", },
 ];
 
 function getSearchPlaceholder(
@@ -502,6 +503,9 @@ function getSearchPlaceholder(
     case "series":
       return "Search series...";
 
+    case "isbn":
+      return "Search ISBN...";
+
     case "genre":
       return "Search genres and subgenres...";
 
@@ -513,7 +517,7 @@ function getSearchPlaceholder(
 
     case "all":
     default:
-      return "Title, author, genre, publisher, location...";
+      return "Title, author, ISBN, genre, publisher, location...";
   }
 }
 
@@ -8516,6 +8520,7 @@ export default function App() {
                   {selectedBook.genre ? (
                     <div>
                       <dt>Genre</dt>
+
                       <dd>
                         {selectedBook.genre}
                       </dd>
@@ -8525,10 +8530,9 @@ export default function App() {
                   {selectedBook.publisher ? (
                     <div>
                       <dt>Publisher</dt>
+
                       <dd>
-                        {
-                          selectedBook.publisher
-                        }
+                        {selectedBook.publisher}
                       </dd>
                     </div>
                   ) : null}
@@ -8536,8 +8540,19 @@ export default function App() {
                   {selectedBook.origin ? (
                     <div>
                       <dt>Origin</dt>
+
                       <dd>
                         {selectedBook.origin}
+                      </dd>
+                    </div>
+                  ) : null}
+
+                  {selectedBook.isbn ? (
+                    <div>
+                      <dt>ISBN</dt>
+
+                      <dd>
+                        {selectedBook.isbn}
                       </dd>
                     </div>
                   ) : null}
@@ -8571,6 +8586,7 @@ export default function App() {
                   {selectedBook.format ? (
                     <div>
                       <dt>Format</dt>
+
                       <dd>
                         {selectedBook.format}
                       </dd>
@@ -8582,9 +8598,7 @@ export default function App() {
                       <dt>Series</dt>
 
                       <dd>
-                        {
-                          selectedBookSeriesName
-                        }
+                        {selectedBookSeriesName}
 
                         {selectedBook.seriesNumber !=
                         null

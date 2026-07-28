@@ -349,6 +349,7 @@ export type SearchScope =
   | "title"
   | "author"
   | "series"
+  | "isbn"
   | "genre"
   | "publisher"
   | "bookcase";
@@ -367,6 +368,14 @@ function normalizeSearchText(value: unknown): string {
     .replace(/[^a-z0-9]+/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+function normalizeIsbnSearchText(
+  value: unknown
+): string {
+  return String(value ?? "")
+    .toLowerCase()
+    .replace(/[^0-9x]+/g, "");
 }
 
 function normalizeSearchValueStart(value: string): string {
@@ -420,11 +429,16 @@ function getScopedSearchValues(
     case "title":
       return [
         normalizeSearchText(book.title),
-        normalizeTitleForAlphabeticalSearch(book.title),
+        normalizeTitleForAlphabeticalSearch(
+          book.title
+        ),
       ].filter(Boolean);
 
     case "author":
-      return getAuthorSearchValues(book, authorNameMode);
+      return getAuthorSearchValues(
+        book,
+        authorNameMode
+      );
 
     case "series":
       return [
@@ -432,22 +446,48 @@ function getScopedSearchValues(
         book.series,
         book.seriesNumber,
       ]
-        .map((value) => normalizeSearchText(value))
+        .map((value) =>
+          normalizeSearchText(value)
+        )
         .filter(Boolean);
 
+    case "isbn":
+      return [
+        normalizeSearchText(
+          book.isbn
+        ),
+        normalizeIsbnSearchText(
+          book.isbn
+        ),
+      ].filter(Boolean);
+
     case "genre":
-      return [book.genre, book.subgenre]
-        .map((value) => normalizeSearchText(value))
+      return [
+        book.genre,
+        book.subgenre,
+      ]
+        .map((value) =>
+          normalizeSearchText(value)
+        )
         .filter(Boolean);
 
     case "publisher":
-      return [book.publisher]
-        .map((value) => normalizeSearchText(value))
+      return [
+        book.publisher,
+      ]
+        .map((value) =>
+          normalizeSearchText(value)
+        )
         .filter(Boolean);
 
     case "bookcase":
-      return [book.bookcase, book.room]
-        .map((value) => normalizeSearchText(value))
+      return [
+        book.bookcase,
+        book.room,
+      ]
+        .map((value) =>
+          normalizeSearchText(value)
+        )
         .filter(Boolean);
   }
 }
@@ -722,6 +762,7 @@ function compareScopedBooks(
       return compareBooksInsideSeries(a, b);
     }
 
+    case "isbn":
     case "genre":
     case "publisher":
     case "bookcase":
@@ -764,7 +805,9 @@ function compareScopedBooks(
   );
 }
 
-export function getSearchableBookText(book: Book): string {
+export function getSearchableBookText(
+  book: Book
+): string {
   return normalizeSearchText([
     book.title,
     book.author,
@@ -772,6 +815,10 @@ export function getSearchableBookText(book: Book): string {
     book.series,
     book.seriesTitle,
     book.seriesNumber,
+    book.isbn,
+    normalizeIsbnSearchText(
+      book.isbn
+    ),
     book.genre,
     book.subgenre,
     book.publisher,

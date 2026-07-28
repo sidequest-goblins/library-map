@@ -15,6 +15,7 @@ export type Book = {
   subgenre?: string;
   publisher?: string;
   origin?: string;
+  isbn?: string;
   publicationYear?: number | null;
   totalPages?: number | null;
   format?: string;

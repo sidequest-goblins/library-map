@@ -1,11 +1,14 @@
 {
-  "generatedAt": "2026-07-24T17:49:19.051062+00:00",
+  "generatedAt": "2026-07-28T01:48:41.965630+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "sourceSheet": "List View",
-  "bookCount": 1031,
+  "bookCount": 1033,
   "skippedBlankRows": 0,
   "headers": [
     "LGBTQ+",
+    "ISBN",
+    "Year",
+    "Pages",
     "Title",
     "Series",
     "First",
@@ -14,8 +17,6 @@
     "Subgenre",
     "Publisher",
     "Origin",
-    "Year",
-    "Pages",
     "Bookcase",
     "Shelf",
     "Position",
@@ -51,8 +52,8 @@
   "catalogMatchFallbackRows": [],
   "catalogUnmatchedRows": [],
   "catalog": {
-    "catalogBookCount": 1031,
-    "catalogRowsWithTitles": 1031,
+    "catalogBookCount": 1033,
+    "catalogRowsWithTitles": 1033,
     "processedCatalogSheets": {
       "A": 36,
       "B": 70,
@@ -65,10 +66,10 @@
       "I-J": 68,
       "K": 65,
       "L": 26,
-      "M": 77,
+      "M": 78,
       "N-O": 54,
       "P-Q": 41,
-      "R": 46,
+      "R": 47,
       "S": 78,
       "T-V": 41,
       "W-Z": 81
@@ -16496,16 +16497,16 @@
     "imageExtension": "webp",
     "webpQuality": 76,
     "cachePath": "C:\\library_app\\library-map\\public\\data\\library-cover-cache.json",
-    "extractedCount": 1031,
-    "convertedCount": 15,
-    "cachedCount": 1016,
-    "deletedStaleCount": 0,
+    "extractedCount": 1033,
+    "convertedCount": 3,
+    "cachedCount": 1030,
+    "deletedStaleCount": 3,
     "missingAnchors": [],
     "missingMediaFiles": [],
     "conversionErrors": [],
     "anchorReport": {
-      "totalAnchoredImages": 1031,
-      "mappedAnchoredImages": 1031,
+      "totalAnchoredImages": 1033,
+      "mappedAnchoredImages": 1033,
       "duplicateAnchorRows": [],
       "missingMediaTargets": [],
       "sheetsWithoutDrawings": [
@@ -16528,8 +16529,8 @@
         "W-Z"
       ],
       "cellImageReport": {
-        "totalCellImages": 1030,
-        "mappedCellImages": 1030,
+        "totalCellImages": 1032,
+        "mappedCellImages": 1032,
         "duplicateCellRows": [],
         "missingRichDataFiles": [],
         "missingRichValueIndexes": [],
@@ -16537,8 +16538,8 @@
         "missingMediaTargets": []
       }
     },
-    "outputFileCount": 1031,
-    "outputTotalBytes": 78421326
+    "outputFileCount": 1033,
+    "outputTotalBytes": 78945064
   },
   "imageInspectionEnabled": false,
   "images": null,
