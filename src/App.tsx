@@ -67,6 +67,7 @@ type AppTab =
   | "update";
 
 type UpdateField =
+  | "isbn"
   | "totalPages"
   | "publicationYear"
   | "coverImage"
@@ -378,22 +379,32 @@ const UPDATE_FIELD_OPTIONS: Array<{
   description: string;
 }> = [
   {
+    field: "isbn",
+    label: "ISBN",
+    icon: "🔢",
+    description:
+      "Books without an ISBN.",
+  },
+  {
     field: "totalPages",
     label: "Page count",
     icon: "📄",
-    description: "Books without a total page count.",
+    description:
+      "Books without a total page count.",
   },
   {
     field: "publicationYear",
     label: "Publication year",
     icon: "🗓️",
-    description: "Books without a publication year.",
+    description:
+      "Books without a publication year.",
   },
   {
     field: "coverImage",
     label: "Cover image",
     icon: "🖼️",
-    description: "Books that do not have a cover yet.",
+    description:
+      "Books that do not have a cover yet.",
   },
   {
     field: "origin",
@@ -422,11 +433,14 @@ const UPDATE_FIELD_LABELS: Record<
   UpdateField,
   string
 > = {
+  isbn: "Missing ISBN",
   totalPages: "Missing page count",
-  publicationYear: "Missing publication year",
+  publicationYear:
+    "Missing publication year",
   origin: "Missing origin",
   coverImage: "Missing cover",
-  catalogMatch: "Missing catalog match",
+  catalogMatch:
+    "Missing catalog match",
   classificationReview:
     "Review Unknown / Other",
 };
@@ -1862,6 +1876,17 @@ type UpdateCoverageRow =
 const UPDATE_COVERAGE_DEFINITIONS:
   UpdateCoverageDefinition[] = [
   {
+    label: "ISBN",
+    updateField: "isbn",
+
+    isComplete: (book) =>
+      Boolean(
+        String(
+          book.isbn ?? ""
+        ).trim()
+      ),
+  },
+  {
     label: "Page count",
     updateField: "totalPages",
 
@@ -2030,6 +2055,16 @@ function getMissingUpdateFields(
   const publicationYear = Number(
     book.publicationYear
   );
+
+  if (
+    !String(
+      book.isbn ?? ""
+    ).trim()
+  ) {
+    missingFields.push(
+      "isbn"
+    );
+  }
 
   if (
     !Number.isFinite(totalPages) ||
@@ -2460,6 +2495,7 @@ export default function App() {
   ] = useState<
     Record<UpdateField, boolean>
   >({
+    isbn: true,
     totalPages: true,
     publicationYear: true,
     coverImage: true,
@@ -3451,6 +3487,7 @@ export default function App() {
         UpdateField,
         number
       > = {
+        isbn: 0,
         totalPages: 0,
         publicationYear: 0,
         coverImage: 0,
