@@ -735,8 +735,8 @@ def unique_books(
 
     for book in books:
         identity = str(
-            book.get("catalogKey")
-            or book.get("bookId")
+            book.get("bookId")
+            or book.get("catalogKey")
             or id(book)
         )
 
@@ -945,7 +945,84 @@ def load_books(
             f"{path}"
         )
 
-    return data
+    book_id_pattern = re.compile(
+        r"^book-"
+        r"[0-9a-f]{8}-"
+        r"[0-9a-f]{4}-"
+        r"[0-9a-f]{4}-"
+        r"[0-9a-f]{4}-"
+        r"[0-9a-f]{12}$"
+    )
+
+    books: list[
+        dict[str, Any]
+    ] = []
+
+    book_id_rows: dict[
+        str,
+        int,
+    ] = {}
+
+    for json_index, item in enumerate(
+        data,
+        start=1,
+    ):
+        if not isinstance(
+            item,
+            dict,
+        ):
+            raise BuildError(
+                f"Library books JSON item "
+                f"{json_index} is not an object."
+            )
+
+        book_id = display_text(
+            item.get("bookId")
+        )
+
+        title = display_text(
+            item.get("title")
+        )
+
+        if not book_id:
+            raise BuildError(
+                f"Library book {json_index} "
+                f"has no Book ID: "
+                f"{title or '[untitled]'}"
+            )
+
+        if not book_id_pattern.fullmatch(
+            book_id
+        ):
+            raise BuildError(
+                f"Library book {json_index} "
+                f"has a malformed Book ID: "
+                f"{book_id!r} "
+                f"({title or '[untitled]'})"
+            )
+
+        existing_index = (
+            book_id_rows.get(
+                book_id
+            )
+        )
+
+        if existing_index is not None:
+            raise BuildError(
+                f"Duplicate Book ID "
+                f"{book_id!r} in library "
+                f"books JSON items "
+                f"{existing_index} and "
+                f"{json_index}."
+            )
+
+        book_id_rows[
+            book_id
+        ] = json_index
+
+        books.append(item)
+
+    return books
 
 # ---------------------------------------------------------------------------
 # Challenge JSON generation

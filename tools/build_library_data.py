@@ -9,6 +9,7 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from uuid import UUID
 
 from openpyxl import load_workbook
 from PIL import Image, ImageFile, UnidentifiedImageError
@@ -1376,12 +1377,45 @@ def extract_catalog_cover_images(
 
     return report
 
-def make_book_id(index: int, title: str, author_sort: str) -> str:
-    slug_source = f"{author_sort}-{title}".lower()
-    slug = re.sub(r"[^a-z0-9]+", "-", slug_source).strip("-")
-    slug = slug[:60].strip("-")
+def normalize_book_id(
+    value: Any,
+    row_number: int,
+    title: str,
+) -> str:
+    book_id = clean(value).lower()
 
-    return f"book-{index:05d}-{slug or 'untitled'}"
+    if not book_id:
+        raise ValueError(
+            f"List View row {row_number} has a title but no Book ID: "
+            f"{title}"
+        )
+
+    if not book_id.startswith("book-"):
+        raise ValueError(
+            f"List View row {row_number} has a malformed Book ID: "
+            f"{book_id!r} ({title})"
+        )
+
+    guid_text = book_id.removeprefix("book-")
+
+    try:
+        parsed_guid = UUID(guid_text)
+    except ValueError as error:
+        raise ValueError(
+            f"List View row {row_number} has a malformed Book ID: "
+            f"{book_id!r} ({title})"
+        ) from error
+
+    if (
+        parsed_guid.version != 4
+        or str(parsed_guid) != guid_text
+    ):
+        raise ValueError(
+            f"List View row {row_number} does not contain a canonical "
+            f"version-4 Book ID: {book_id!r} ({title})"
+        )
+
+    return f"book-{parsed_guid}"
 
 def make_catalog_key(title: str, author_sort: str) -> str:
     slug_source = f"{author_sort}-{title}".lower()
@@ -1795,6 +1829,8 @@ def main() -> None:
             "bookcase",
             "shelf",
             "position",
+            "systemcolumns-automationonly",
+            "bookid",
         },
         label="List View",
     )
@@ -1824,10 +1860,14 @@ def main() -> None:
         "bookcase",
         "shelf",
         "position",
+        "systemcolumns-automationonly",
+        "bookid",
     ]
 
     missing_headers = [
-        header for header in required_headers if header not in header_indexes
+        header
+        for header in required_headers
+        if header not in header_indexes
     ]
 
     if missing_headers:
@@ -1837,6 +1877,34 @@ def main() -> None:
             + f"\nFound headers: {headers}"
         )
 
+    boundary_header_index = header_indexes[
+        "systemcolumns-automationonly"
+    ]
+
+    book_id_header_index = header_indexes[
+        "bookid"
+    ]
+
+    if (
+        headers[boundary_header_index]
+        != "SYSTEM COLUMNS - AUTOMATION ONLY"
+    ):
+        raise ValueError(
+            "The List View automation boundary header does not "
+            "exactly match: SYSTEM COLUMNS - AUTOMATION ONLY"
+        )
+
+    if headers[book_id_header_index] != "Book ID":
+        raise ValueError(
+            "The List View Book ID header does not exactly "
+            "match: Book ID"
+        )
+
+    if book_id_header_index != boundary_header_index + 1:
+        raise ValueError(
+            "Book ID must be immediately after "
+            "SYSTEM COLUMNS - AUTOMATION ONLY."
+        )
 
     books = []
     skipped_blank_rows = 0
@@ -1844,6 +1912,7 @@ def main() -> None:
     used_bookcases = set()
     catalog_match_fallback_rows = []
     catalog_unmatched_rows = []
+    book_id_rows: dict[str, int] = {}
 
     for row_number, row in enumerate(rows, start=2):
         row_values = list(row)
@@ -1859,6 +1928,25 @@ def main() -> None:
         if not raw_title:
             skipped_blank_rows += 1
             continue
+
+        book_id = normalize_book_id(
+            get("bookid"),
+            row_number,
+            raw_title,
+        )
+
+        existing_book_id_row = book_id_rows.get(
+            book_id
+        )
+
+        if existing_book_id_row is not None:
+            raise ValueError(
+                f"Duplicate Book ID {book_id!r} found in "
+                f"List View rows {existing_book_id_row} "
+                f"and {row_number}."
+            )
+
+        book_id_rows[book_id] = row_number
 
         parsed_title = parse_title(raw_title)
         title = clean(parsed_title["title"])
@@ -1932,11 +2020,7 @@ def main() -> None:
             catalog_match["lgbtq"] = lgbtq
 
         book = {
-            "bookId": make_book_id(
-                len(books) + 1,
-                title,
-                author_sort,
-            ),
+            "bookId": book_id,
             "title": title,
             "rawTitle": raw_title,
             "catalogTitle": (
@@ -2014,6 +2098,8 @@ def main() -> None:
         "sourceWorkbook": str(WORKBOOK_PATH),
         "sourceSheet": sheet.title,
         "bookCount": len(books),
+        "bookIdCount": len(book_id_rows),
+        "bookIdSource": "List View.Book ID",
         "skippedBlankRows": skipped_blank_rows,
         "headers": headers,
         "bookcaseRooms": bookcase_rooms,

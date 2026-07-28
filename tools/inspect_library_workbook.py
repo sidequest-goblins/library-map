@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 from typing import Any
 
@@ -8,22 +9,38 @@ WORKBOOK_PATH = Path(
     "C:/Users/cjade/OneDrive/Shared Workbooks/MyLibrary/LIBRARY.xlsx"
 )
 
-LIST_VIEW_REQUIRED_HEADERS = {
-    "isbn",
-    "year",
-    "pages",
-    "title",
-    "series",
-    "first",
-    "last",
-    "genre",
-    "subgenre",
-    "publisher",
-    "origin",
-    "bookcase",
-    "shelf",
-    "position",
-}
+LIST_VIEW_EXPECTED_HEADERS = (
+    "LGBTQ+",
+    "ISBN",
+    "Year",
+    "Pages",
+    "Title",
+    "Series",
+    "First",
+    "Last",
+    "Genre",
+    "Subgenre",
+    "Publisher",
+    "Origin",
+    "Bookcase",
+    "Shelf",
+    "Position",
+    "SYSTEM COLUMNS - AUTOMATION ONLY",
+    "Book ID",
+    "Series Sort",
+    "Volume Sort",
+    "Last Sort",
+    "First Sort",
+)
+
+BOOK_ID_PATTERN = re.compile(
+    r"book-[0-9a-f]{8}-"
+    r"[0-9a-f]{4}-"
+    r"[0-9a-f]{4}-"
+    r"[0-9a-f]{4}-"
+    r"[0-9a-f]{12}"
+)
+
 
 
 def clean(value: Any) -> str:
@@ -80,81 +97,98 @@ def get_value(
     return row_values[index]
 
 
+def validate_list_view_headers(
+    sheet,
+) -> None:
+    header_row = next(
+        sheet.iter_rows(
+            min_row=1,
+            max_row=1,
+            values_only=True,
+        ),
+        (),
+    )
+
+    actual_headers = [
+        clean(header)
+        for header in header_row
+    ]
+
+    while (
+        actual_headers
+        and not actual_headers[-1]
+    ):
+        actual_headers.pop()
+
+    expected_headers = list(
+        LIST_VIEW_EXPECTED_HEADERS
+    )
+
+    if len(actual_headers) != len(
+        expected_headers
+    ):
+        raise ValueError(
+            f"The List View header count does not match. "
+            f"Expected {len(expected_headers)} headers, "
+            f"but found {len(actual_headers)}."
+        )
+
+    for column_number, (
+        actual_header,
+        expected_header,
+    ) in enumerate(
+        zip(
+            actual_headers,
+            expected_headers,
+        ),
+        start=1,
+    ):
+        if (
+            normalize_header(actual_header)
+            != normalize_header(
+                expected_header
+            )
+        ):
+            raise ValueError(
+                "List View header mismatch at "
+                f"column {column_number}. "
+                f"Expected '{expected_header}', "
+                f"but found '{actual_header}'."
+            )
+
+
 def find_list_view_sheet(workbook):
     """
     Prefer the explicitly named List View sheet.
 
-    If the sheet is ever renamed, fall back to identifying it
-    by its complete expected header structure.
+    If the sheet is ever renamed or moved into another workbook,
+    fall back to identifying it by its complete expected header
+    structure.
     """
     if "List View" in workbook.sheetnames:
         sheet = workbook["List View"]
 
-        header_row = next(
-            sheet.iter_rows(
-                min_row=1,
-                max_row=1,
-                values_only=True,
-            ),
-            (),
+        validate_list_view_headers(
+            sheet
         )
-
-        normalized_headers = {
-            normalize_header(header)
-            for header in header_row
-        }
-
-        missing_headers = (
-            LIST_VIEW_REQUIRED_HEADERS
-            - normalized_headers
-        )
-
-        if missing_headers:
-            raise ValueError(
-                "The List View sheet was found, but it is "
-                "missing expected headers: "
-                + ", ".join(
-                    sorted(missing_headers)
-                )
-                + "\nFound headers: "
-                + ", ".join(
-                    clean(header)
-                    for header in header_row
-                    if clean(header)
-                )
-            )
 
         return sheet
 
     for sheet in workbook.worksheets:
-        header_row = next(
-            sheet.iter_rows(
-                min_row=1,
-                max_row=1,
-                values_only=True,
-            ),
-            (),
-        )
+        try:
+            validate_list_view_headers(
+                sheet
+            )
+        except ValueError:
+            continue
 
-        normalized_headers = {
-            normalize_header(header)
-            for header in header_row
-        }
-
-        if LIST_VIEW_REQUIRED_HEADERS.issubset(
-            normalized_headers
-        ):
-            return sheet
+        return sheet
 
     raise ValueError(
-        "Could not find the List View sheet. "
-        "Expected these normalized headers: "
-        + ", ".join(
-            sorted(
-                LIST_VIEW_REQUIRED_HEADERS
-            )
-        )
+        "Could not find a sheet with the complete "
+        "expected List View header structure."
     )
+
 
 def load_bookcase_rooms(
     workbook,
@@ -317,6 +351,21 @@ def main() -> None:
         )
     )
 
+    boundary_header_index = (
+        get_header_index(
+            header_indexes,
+            "SYSTEM COLUMNS - AUTOMATION ONLY",
+        )
+    )
+
+    book_id_header_index = (
+        get_header_index(
+            header_indexes,
+            "Book ID",
+            "bookid",
+        )
+    )
+
     if year_header_index is None:
         raise ValueError(
             "Could not find the Year column "
@@ -329,10 +378,43 @@ def main() -> None:
             "in List View."
         )
 
+    if position_header_index is None:
+        raise ValueError(
+            "Could not find the Position column "
+            "in List View."
+        )
+
+    if boundary_header_index is None:
+        raise ValueError(
+            "Could not find the exact system "
+            "boundary column in List View."
+        )
+
+    if book_id_header_index is None:
+        raise ValueError(
+            "Could not find the Book ID column "
+            "in List View."
+        )
+
+    if (
+        book_id_header_index
+        != boundary_header_index + 1
+    ):
+        raise ValueError(
+            "Book ID must appear immediately after "
+            "SYSTEM COLUMNS - AUTOMATION ONLY."
+        )
+
+
     total_books = 0
 
     missing_year = 0
     missing_isbn = 0
+
+    missing_book_id = 0
+    malformed_book_id = 0
+    duplicate_book_id = 0
+    orphan_book_id = 0
 
     missing_bookcase = 0
     missing_shelf = 0
@@ -348,6 +430,16 @@ def main() -> None:
         dict[str, Any]
     ] = []
 
+    book_id_issues: list[
+        dict[str, Any]
+    ] = []
+
+    book_id_first_rows: dict[
+        str,
+        int,
+    ] = {}
+
+
     for row_number, row in enumerate(
         rows,
         start=2,
@@ -362,7 +454,30 @@ def main() -> None:
             )
         )
 
+        book_id = clean(
+            get_value(
+                row_values,
+                header_indexes,
+                "Book ID",
+                "bookid",
+            )
+        )
+
         if not title:
+            if book_id:
+                orphan_book_id += 1
+
+                book_id_issues.append(
+                    {
+                        "row": row_number,
+                        "title": "(blank title)",
+                        "issue": (
+                            "Book ID exists on a "
+                            "blank Title row"
+                        ),
+                    }
+                )
+
             continue
 
         total_books += 1
@@ -423,6 +538,69 @@ def main() -> None:
         row_missing_isbn = (
             is_missing(isbn)
         )
+
+        row_missing_book_id = (
+            is_missing(book_id)
+        )
+
+        if row_missing_book_id:
+            missing_book_id += 1
+
+            book_id_issues.append(
+                {
+                    "row": row_number,
+                    "title": title,
+                    "issue": "Missing Book ID",
+                }
+            )
+        else:
+            if (
+                BOOK_ID_PATTERN.fullmatch(
+                    book_id
+                )
+                is None
+            ):
+                malformed_book_id += 1
+
+                book_id_issues.append(
+                    {
+                        "row": row_number,
+                        "title": title,
+                        "issue": (
+                            "Malformed Book ID: "
+                            f"{book_id}"
+                        ),
+                    }
+                )
+
+            normalized_book_id = (
+                book_id.lower()
+            )
+
+            first_row = (
+                book_id_first_rows.get(
+                    normalized_book_id
+                )
+            )
+
+            if first_row is None:
+                book_id_first_rows[
+                    normalized_book_id
+                ] = row_number
+            else:
+                duplicate_book_id += 1
+
+                book_id_issues.append(
+                    {
+                        "row": row_number,
+                        "title": title,
+                        "issue": (
+                            "Duplicate Book ID; "
+                            f"first used on row "
+                            f"{first_row}"
+                        ),
+                    }
+                )
 
         row_missing_bookcase = (
             is_missing(bookcase)
@@ -536,6 +714,46 @@ def main() -> None:
         f"{total_books}"
     )
 
+    book_id_integrity_passed = (
+        missing_book_id == 0
+        and malformed_book_id == 0
+        and duplicate_book_id == 0
+        and orphan_book_id == 0
+    )
+
+    print("\nSystem integrity:")
+    print(
+        "  Book ID assigned:  "
+        + format_count(
+            missing_book_id,
+            total_books,
+        )
+    )
+
+    print(
+        f"  Malformed IDs:     "
+        f"{malformed_book_id}"
+    )
+
+    print(
+        f"  Duplicate IDs:     "
+        f"{duplicate_book_id}"
+    )
+
+    print(
+        f"  IDs on blank rows: "
+        f"{orphan_book_id}"
+    )
+
+    print(
+        "  Integrity status:  "
+        + (
+            "PASS"
+            if book_id_integrity_passed
+            else "FAIL"
+        )
+    )
+
     print("\nCore book data:")
     print(
         "  Year:              "
@@ -613,6 +831,29 @@ def main() -> None:
             total_books,
         )
     )
+
+    if book_id_issues:
+        print(
+            "\nFirst 20 Book ID integrity problems:"
+        )
+
+        for item in book_id_issues[:20]:
+            print(
+                f"  Row {item['row']}: "
+                f"{item['title']} "
+                f"- {item['issue']}"
+            )
+
+        remaining_book_id_issues = (
+            len(book_id_issues)
+            - 20
+        )
+
+        if remaining_book_id_issues > 0:
+            print(
+                f"  ...and "
+                f"{remaining_book_id_issues} more"
+            )
 
     if incomplete_rows:
         print(
