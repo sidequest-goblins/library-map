@@ -2554,6 +2554,90 @@ select {
   font-weight: 750;
 }
 
+.statsJumpNav {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  min-width: 0;
+  padding: 0.45rem 0.55rem;
+  border:
+    1px solid
+    rgba(76, 48, 30, 0.16);
+  border-radius: 16px;
+  background:
+    rgba(255, 248, 233, 0.68);
+  box-shadow:
+    0 5px 14px
+    rgba(76, 48, 30, 0.06);
+}
+
+.statsJumpLabel {
+  flex: 0 0 auto;
+  color: var(--greenDark);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.statsJumpList {
+  display: flex;
+  gap: 0.4rem;
+  min-width: 0;
+  overflow-x: auto;
+  padding: 0.05rem;
+  overscroll-behavior-inline:
+    contain;
+  scrollbar-width: thin;
+}
+
+.statsJumpButton {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 0.38rem;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.35rem;
+  border:
+    1px solid
+    rgba(82, 111, 69, 0.24);
+  border-radius: 999px;
+  padding: 0.45rem 0.7rem;
+  color: var(--brownDark);
+  background:
+    rgba(255, 250, 240, 0.88);
+  box-shadow:
+    0 4px 10px
+    rgba(76, 48, 30, 0.06);
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease;
+}
+
+.statsJumpButton:hover {
+  transform: translateY(-1px);
+  border-color:
+    rgba(82, 111, 69, 0.48);
+  background: #fffaf0;
+}
+
+.statsJumpButton:focus-visible {
+  outline:
+    3px solid
+    rgba(201, 154, 69, 0.3);
+  outline-offset: 2px;
+}
+
+.statsSection {
+  scroll-margin-top: 1rem;
+}
+
 .statsOverviewGrid {
   display: grid;
   grid-template-columns:

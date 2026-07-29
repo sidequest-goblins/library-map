@@ -1724,6 +1724,48 @@ function getReadingAttemptDateLabel(
   )}`;
 }
 
+const LAST_CHALLENGE_READER_STORAGE_KEY =
+  "mylibrary:lastChallengeReader";
+
+function getStoredChallengeReaderId(): string {
+  try {
+    const storedReaderId =
+      window.localStorage.getItem(
+        LAST_CHALLENGE_READER_STORAGE_KEY
+      );
+
+    return storedReaderId &&
+      isLibraryReaderId(storedReaderId)
+      ? storedReaderId
+      : "";
+  } catch {
+    return "";
+  }
+}
+
+function scrollToStatsSection(
+  sectionId: string
+) {
+  const section =
+    document.getElementById(sectionId);
+
+  if (!section) {
+    return;
+  }
+
+  const prefersReducedMotion =
+    window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+  section.scrollIntoView({
+    behavior: prefersReducedMotion
+      ? "auto"
+      : "smooth",
+    block: "start",
+  });
+}
+
 async function clearAppCache() {
   if ("serviceWorker" in navigator) {
     const registrations =
@@ -2572,7 +2614,7 @@ export default function App() {
   const [
     selectedChallengeReaderId,
     setSelectedChallengeReaderId,
-  ] = useState("");
+  ] = useState(getStoredChallengeReaderId);
   const [selectedBookId, setSelectedBookId] =
     useState<string | null>(null);
   const [searchPage, setSearchPage] = useState(1);
@@ -2593,6 +2635,26 @@ export default function App() {
 
   const appMenuRef =
     useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (
+      !isLibraryReaderId(
+        selectedChallengeReaderId
+      )
+    ) {
+      return;
+    }
+
+    try {
+      window.localStorage.setItem(
+        LAST_CHALLENGE_READER_STORAGE_KEY,
+        selectedChallengeReaderId
+      );
+    } catch {
+      // The app still works if browser storage
+      // is unavailable.
+    }
+  }, [selectedChallengeReaderId]);
 
   useEffect(() => {
     setStatsPage(1);
@@ -9526,11 +9588,6 @@ export default function App() {
                                 challenge.challengeId
                               );
 
-                              setSelectedChallengeReaderId(
-                                challenge.readers[0]
-                                  ?.readerId ?? ""
-                              );
-
                               setSelectedBookId(null);
                             }}
                           >
@@ -9874,6 +9931,71 @@ export default function App() {
             </p>
           </section>
 
+          <nav
+            className="statsJumpNav"
+            aria-label="Jump to a statistics section"
+          >
+            <span className="statsJumpLabel">
+              Explore
+            </span>
+
+            <div className="statsJumpList">
+              <button
+                type="button"
+                className="statsJumpButton"
+                onClick={() => {
+                  scrollToStatsSection(
+                    "stats-reading"
+                  );
+                }}
+              >
+                <span aria-hidden="true">
+                  📖
+                </span>
+
+                <span>
+                  Reading
+                </span>
+              </button>
+
+              <button
+                type="button"
+                className="statsJumpButton"
+                onClick={() => {
+                  scrollToStatsSection(
+                    "stats-data-health"
+                  );
+                }}
+              >
+                <span aria-hidden="true">
+                  🧹
+                </span>
+
+                <span>
+                  Data health
+                </span>
+              </button>
+
+              <button
+                type="button"
+                className="statsJumpButton"
+                onClick={() => {
+                  scrollToStatsSection(
+                    "stats-charts"
+                  );
+                }}
+              >
+                <span aria-hidden="true">
+                  📊
+                </span>
+
+                <span>
+                  Charts
+                </span>
+              </button>
+            </div>
+          </nav>
+
           <div className="statsOverviewGrid">
             {statsOverviewCards.map(
               (card) => (
@@ -9899,81 +10021,10 @@ export default function App() {
             )}
           </div>
 
-          <section className="statsSection">
-            <div className="statsSectionHeader">
-              <div>
-                <p className="eyebrow">
-                  Data coverage
-                </p>
-
-                <h2>
-                  How complete is the
-                  workbook?
-                </h2>
-              </div>
-
-              <p>
-                {statsSummary.totalBooks.toLocaleString()}{" "}
-                total books
-              </p>
-            </div>
-
-            <div className="statsCoverageList">
-              {statsCoverageRows.map(
-                (row) => {
-                  const percentage =
-                    getStatsPercent(
-                      row.complete,
-                      statsSummary.totalBooks
-                    );
-
-                  return (
-                    <div
-                      key={row.label}
-                      className="statsCoverageRow"
-                    >
-                      <div className="statsCoverageCopy">
-                        <strong>
-                          {row.label}
-                        </strong>
-
-                        <span>
-                          {row.complete.toLocaleString()}{" "}
-                          of{" "}
-                          {statsSummary.totalBooks.toLocaleString()}{" "}
-                          books
-                        </span>
-                      </div>
-
-                      <div
-                        className="statsCoverageTrack"
-                        role="progressbar"
-                        aria-label={`${row.label} coverage`}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                        aria-valuenow={
-                          percentage
-                        }
-                      >
-                        <span
-                          className="statsCoverageFill"
-                          style={{
-                            width: `${percentage}%`,
-                          }}
-                        />
-                      </div>
-
-                      <strong className="statsCoveragePercent">
-                        {percentage}%
-                      </strong>
-                    </div>
-                  );
-                }
-              )}
-            </div>
-          </section>
-
-          <section className="statsSection">
+          <section
+            id="stats-reading"
+            className="statsSection"
+          >
             <div className="statsSectionHeader">
               <div>
                 <p className="eyebrow">
@@ -10068,7 +10119,87 @@ export default function App() {
             )}
           </section>
 
-          <section className="statsSection statsExplorer">
+          <section
+            id="stats-data-health"
+            className="statsSection"
+          >
+            <div className="statsSectionHeader">
+              <div>
+                <p className="eyebrow">
+                  Data coverage
+                </p>
+
+                <h2>
+                  How complete is the
+                  workbook?
+                </h2>
+              </div>
+
+              <p>
+                {statsSummary.totalBooks.toLocaleString()}{" "}
+                total books
+              </p>
+            </div>
+
+            <div className="statsCoverageList">
+              {statsCoverageRows.map(
+                (row) => {
+                  const percentage =
+                    getStatsPercent(
+                      row.complete,
+                      statsSummary.totalBooks
+                    );
+
+                  return (
+                    <div
+                      key={row.label}
+                      className="statsCoverageRow"
+                    >
+                      <div className="statsCoverageCopy">
+                        <strong>
+                          {row.label}
+                        </strong>
+
+                        <span>
+                          {row.complete.toLocaleString()}{" "}
+                          of{" "}
+                          {statsSummary.totalBooks.toLocaleString()}{" "}
+                          books
+                        </span>
+                      </div>
+
+                      <div
+                        className="statsCoverageTrack"
+                        role="progressbar"
+                        aria-label={`${row.label} coverage`}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-valuenow={
+                          percentage
+                        }
+                      >
+                        <span
+                          className="statsCoverageFill"
+                          style={{
+                            width: `${percentage}%`,
+                          }}
+                        />
+                      </div>
+
+                      <strong className="statsCoveragePercent">
+                        {percentage}%
+                      </strong>
+                    </div>
+                  );
+                }
+              )}
+            </div>
+          </section>
+
+          <section
+              id="stats-charts"
+              className="statsSection statsExplorer"
+            >
             <div className="statsSectionHeader">
               <div>
                 <p className="eyebrow">
