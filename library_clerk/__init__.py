@@ -6,4 +6,4 @@ records that may need clerical corrections.
 """
 
 APP_NAME = "Library Clerk"
-APP_VERSION = "0.4.0-dev"
+APP_VERSION = "0.5.0-dev"

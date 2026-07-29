@@ -26,9 +26,11 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QMainWindow,
     QMessageBox,
+    QPlainTextEdit,
     QProgressBar,
     QPushButton,
     QSizePolicy,
+    QSplitter,
     QTableWidget,
     QTableWidgetItem,
     QVBoxLayout,
@@ -125,6 +127,8 @@ class MainWindow(QMainWindow):
             IssueQueueEntry
         ] = []
 
+        self._queue_size_mode = ""
+        
         self.scan_thread: (
             QThread
             | None
@@ -169,14 +173,20 @@ class MainWindow(QMainWindow):
         )
 
         root_layout.setContentsMargins(
-            24,
-            22,
-            24,
-            20,
+            14,
+            10,
+            14,
+            9,
         )
 
         root_layout.setSpacing(
-            14
+            7
+        )
+
+        header_layout = QHBoxLayout()
+
+        header_layout.setSpacing(
+            10
         )
 
         title_label = QLabel(
@@ -184,15 +194,21 @@ class MainWindow(QMainWindow):
         )
 
         title_font = QFont()
+
         title_font.setPointSize(
-            22
+            15
         )
+
         title_font.setBold(
             True
         )
 
         title_label.setFont(
             title_font
+        )
+
+        header_layout.addWidget(
+            title_label
         )
 
         subtitle_label = QLabel(
@@ -204,73 +220,18 @@ class MainWindow(QMainWindow):
             "SubtitleLabel"
         )
 
-        root_layout.addWidget(
-            title_label
+        header_layout.addWidget(
+            subtitle_label
         )
 
-        root_layout.addWidget(
-            subtitle_label
+        header_layout.addStretch()
+
+        root_layout.addLayout(
+            header_layout
         )
 
         root_layout.addWidget(
             self._create_directory_card()
-        )
-
-        action_layout = QHBoxLayout()
-
-        self.scan_button = QPushButton(
-            "Scan workbooks"
-        )
-
-        self.scan_button.setObjectName(
-            "PrimaryButton"
-        )
-
-        self.scan_button.clicked.connect(
-            self.start_scan
-        )
-
-        action_layout.addWidget(
-            self.scan_button
-        )
-
-        self.scan_progress = QProgressBar()
-
-        self.scan_progress.setRange(
-            0,
-            0,
-        )
-
-        self.scan_progress.setTextVisible(
-            False
-        )
-
-        self.scan_progress.setMaximumWidth(
-            180
-        )
-
-        self.scan_progress.hide()
-
-        action_layout.addWidget(
-            self.scan_progress
-        )
-
-        action_layout.addStretch()
-
-        self.last_scan_label = QLabel(
-            "Not scanned yet"
-        )
-
-        self.last_scan_label.setObjectName(
-            "MutedLabel"
-        )
-
-        action_layout.addWidget(
-            self.last_scan_label
-        )
-
-        root_layout.addLayout(
-            action_layout
         )
 
         root_layout.addLayout(
@@ -278,6 +239,10 @@ class MainWindow(QMainWindow):
         )
 
         filter_layout = QHBoxLayout()
+
+        filter_layout.setSpacing(
+            8
+        )
 
         self.search_box = QLineEdit()
 
@@ -362,7 +327,7 @@ class MainWindow(QMainWindow):
         )
 
         self.issue_table.setMinimumHeight(
-            220
+            140
         )
 
         self.issue_table.itemSelectionChanged.connect(
@@ -440,13 +405,54 @@ class MainWindow(QMainWindow):
             175,
         )
 
-        root_layout.addWidget(
-            self.issue_table,
-            stretch=1,
+        self.issue_detail_panel = (
+            self._create_issue_detail_panel()
+        )
+
+        self.queue_splitter = QSplitter(
+            Qt.Orientation.Vertical
+        )
+
+        self.queue_splitter.setObjectName(
+            "QueueSplitter"
+        )
+
+        self.queue_splitter.setChildrenCollapsible(
+            False
+        )
+
+        self.queue_splitter.setHandleWidth(
+            7
+        )
+
+        self.queue_splitter.addWidget(
+            self.issue_table
+        )
+
+        self.queue_splitter.addWidget(
+            self.issue_detail_panel
+        )
+
+        self.queue_splitter.setStretchFactor(
+            0,
+            1,
+        )
+
+        self.queue_splitter.setStretchFactor(
+            1,
+            0,
+        )
+
+        self.queue_splitter.setSizes(
+            [
+                310,
+                280,
+            ]
         )
 
         root_layout.addWidget(
-            self._create_issue_detail_panel()
+            self.queue_splitter,
+            stretch=1,
         )
 
         self.status_label = QLabel()
@@ -504,7 +510,7 @@ class MainWindow(QMainWindow):
         self,
     ) -> QFrame:
         """
-        Create the shared-workbook folder card.
+        Create the compact shared-workbook folder card.
         """
 
         card = QFrame()
@@ -518,19 +524,28 @@ class MainWindow(QMainWindow):
         )
 
         card_layout.setContentsMargins(
-            16,
-            13,
-            16,
-            13,
+            12,
+            7,
+            12,
+            7,
+        )
+
+        card_layout.setSpacing(
+            3
         )
 
         heading_layout = QHBoxLayout()
+
+        heading_layout.setSpacing(
+            7
+        )
 
         heading_label = QLabel(
             "Shared workbook folder"
         )
 
         heading_font = QFont()
+
         heading_font.setBold(
             True
         )
@@ -544,6 +559,59 @@ class MainWindow(QMainWindow):
         )
 
         heading_layout.addStretch()
+
+        self.scan_progress = QProgressBar()
+
+        self.scan_progress.setRange(
+            0,
+            0,
+        )
+
+        self.scan_progress.setTextVisible(
+            False
+        )
+
+        self.scan_progress.setMaximumWidth(
+            115
+        )
+
+        self.scan_progress.setMaximumHeight(
+            18
+        )
+
+        self.scan_progress.hide()
+
+        heading_layout.addWidget(
+            self.scan_progress
+        )
+
+        self.last_scan_label = QLabel(
+            "Not scanned yet"
+        )
+
+        self.last_scan_label.setObjectName(
+            "MutedLabel"
+        )
+
+        heading_layout.addWidget(
+            self.last_scan_label
+        )
+
+        self.scan_button = QPushButton(
+            "Scan workbooks"
+        )
+
+        self.scan_button.setObjectName(
+            "PrimaryButton"
+        )
+
+        self.scan_button.clicked.connect(
+            self.start_scan
+        )
+
+        heading_layout.addWidget(
+            self.scan_button
+        )
 
         refresh_button = QPushButton(
             "Refresh files"
@@ -660,7 +728,7 @@ class MainWindow(QMainWindow):
         QLabel,
     ]:
         """
-        Create one dashboard count card.
+        Create one compact dashboard count card.
         """
 
         card = QFrame()
@@ -669,15 +737,19 @@ class MainWindow(QMainWindow):
             "SummaryCard"
         )
 
-        card_layout = QVBoxLayout(
+        card_layout = QHBoxLayout(
             card
         )
 
         card_layout.setContentsMargins(
-            14,
-            10,
-            14,
-            10,
+            11,
+            5,
+            11,
+            5,
+        )
+
+        card_layout.setSpacing(
+            8
         )
 
         caption = QLabel(
@@ -699,6 +771,8 @@ class MainWindow(QMainWindow):
         card_layout.addWidget(
             caption
         )
+
+        card_layout.addStretch()
 
         card_layout.addWidget(
             value_label
@@ -728,6 +802,13 @@ class MainWindow(QMainWindow):
             True
         )
 
+        label.setAlignment(
+            (
+                Qt.AlignmentFlag.AlignLeft
+                | Qt.AlignmentFlag.AlignVCenter
+            )
+        )
+
         label.setTextInteractionFlags(
             Qt.TextInteractionFlag.TextSelectableByMouse
         )
@@ -735,6 +816,10 @@ class MainWindow(QMainWindow):
         label.setSizePolicy(
             QSizePolicy.Policy.Expanding,
             QSizePolicy.Policy.Preferred,
+        )
+
+        label.setMinimumHeight(
+            21
         )
 
         return label
@@ -753,7 +838,12 @@ class MainWindow(QMainWindow):
         )
 
         panel.setMinimumHeight(
-            260
+            280
+        )
+
+        panel.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Preferred,
         )
 
         panel_layout = QVBoxLayout(
@@ -761,14 +851,14 @@ class MainWindow(QMainWindow):
         )
 
         panel_layout.setContentsMargins(
-            18,
-            15,
-            18,
-            15,
+            16,
+            12,
+            16,
+            12,
         )
 
         panel_layout.setSpacing(
-            9
+            6
         )
 
         heading_layout = QHBoxLayout()
@@ -834,7 +924,7 @@ class MainWindow(QMainWindow):
         )
 
         details_grid.setVerticalSpacing(
-            5
+            3
         )
 
         details_grid.setColumnStretch(
@@ -846,6 +936,14 @@ class MainWindow(QMainWindow):
             3,
             1,
         )
+
+        for row_number in range(
+            4
+        ):
+            details_grid.setRowMinimumHeight(
+                row_number,
+                21,
+            )
 
         self.detail_title_value = (
             self._create_detail_value_label()
@@ -888,7 +986,10 @@ class MainWindow(QMainWindow):
             )
 
             caption.setAlignment(
-                Qt.AlignmentFlag.AlignTop
+                (
+                    Qt.AlignmentFlag.AlignLeft
+                    | Qt.AlignmentFlag.AlignTop
+                )
             )
 
             details_grid.addWidget(
@@ -974,29 +1075,45 @@ class MainWindow(QMainWindow):
             additional_caption
         )
 
-        self.detail_additional_value = QLabel(
-            "No issue selected."
+        self.detail_additional_value = (
+            QPlainTextEdit()
         )
 
         self.detail_additional_value.setObjectName(
             "DetailAdditionalValue"
         )
 
-        self.detail_additional_value.setWordWrap(
+        self.detail_additional_value.setReadOnly(
             True
         )
 
-        self.detail_additional_value.setTextInteractionFlags(
-            Qt.TextInteractionFlag.TextSelectableByMouse
+        self.detail_additional_value.setFrameShape(
+            QFrame.Shape.NoFrame
+        )
+
+        self.detail_additional_value.setLineWrapMode(
+            QPlainTextEdit.LineWrapMode.WidgetWidth
+        )
+
+        self.detail_additional_value.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff
+        )
+
+        self.detail_additional_value.setVerticalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAsNeeded
+        )
+
+        self.detail_additional_value.setMinimumHeight(
+            58
+        )
+
+        self.detail_additional_value.setMaximumHeight(
+            82
         )
 
         self.detail_additional_value.setSizePolicy(
             QSizePolicy.Policy.Expanding,
-            QSizePolicy.Policy.MinimumExpanding,
-        )
-
-        self.detail_additional_value.setMinimumHeight(
-            48
+            QSizePolicy.Policy.Fixed,
         )
 
         panel_layout.addWidget(
@@ -1043,7 +1160,7 @@ class MainWindow(QMainWindow):
 
         self.detail_exception_button.setMinimumSize(
             220,
-            44,
+            42,
         )
 
         self.detail_exception_button.setEnabled(
@@ -1068,7 +1185,7 @@ class MainWindow(QMainWindow):
 
         self.detail_open_excel_button.setMinimumSize(
             220,
-            48,
+            42,
         )
 
         self.detail_open_excel_button.setEnabled(
@@ -1847,6 +1964,55 @@ class MainWindow(QMainWindow):
             visible_entries
         )
 
+    def _update_queue_splitter_sizes(
+        self,
+        visible_count: int,
+    ) -> None:
+        """
+        Adjust the queue/detail split for the number of visible rows.
+
+        The divider remains manually adjustable. Automatic sizing only
+        runs when the visible row-count category changes.
+        """
+
+        if visible_count <= 2:
+            size_mode = "small"
+
+            splitter_sizes = [
+                115,
+                335,
+            ]
+
+        elif visible_count <= 6:
+            size_mode = "medium"
+
+            splitter_sizes = [
+                210,
+                310,
+            ]
+
+        else:
+            size_mode = "busy"
+
+            splitter_sizes = [
+                350,
+                285,
+            ]
+
+        if (
+            size_mode
+            == self._queue_size_mode
+        ):
+            return
+
+        self._queue_size_mode = (
+            size_mode
+        )
+
+        self.queue_splitter.setSizes(
+            splitter_sizes
+        )
+
     def _populate_issue_table(
         self,
         entries: list[
@@ -2045,6 +2211,12 @@ class MainWindow(QMainWindow):
 
         self.issue_table.setSortingEnabled(
             True
+        )
+
+        self._update_queue_splitter_sizes(
+            len(
+                entries
+            )
         )
 
         self._update_issue_detail_panel()
@@ -2259,7 +2431,7 @@ class MainWindow(QMainWindow):
                 "—"
             )
 
-            self.detail_additional_value.setText(
+            self.detail_additional_value.setPlainText(
                 "No issue selected."
             )
 
@@ -2397,7 +2569,7 @@ class MainWindow(QMainWindow):
                     )
                 )
 
-            self.detail_additional_value.setText(
+            self.detail_additional_value.setPlainText(
                 "\n\n".join(
                     additional_parts
                 )
@@ -2496,7 +2668,7 @@ class MainWindow(QMainWindow):
             )
         )
 
-        self.detail_additional_value.setText(
+        self.detail_additional_value.setPlainText(
             issue.details.strip()
             if (
                 issue.details
@@ -2923,7 +3095,7 @@ class MainWindow(QMainWindow):
 
             QLabel#SubtitleLabel {
                 color: #665f57;
-                font-size: 11pt;
+                font-size: 9.5pt;
             }
 
             QLabel#MutedLabel {
@@ -2932,7 +3104,7 @@ class MainWindow(QMainWindow):
             }
 
             QLabel#SummaryValue {
-                font-size: 17pt;
+                font-size: 14pt;
                 font-weight: 700;
             }
 
@@ -2951,7 +3123,7 @@ class MainWindow(QMainWindow):
             QLabel#DirectoryPathLabel {
                 color: #514a43;
                 font-family: "Consolas";
-                font-size: 9.5pt;
+                font-size: 8.5pt;
             }
 
             QLabel#IssueDetailHeading {
@@ -2984,11 +3156,14 @@ class MainWindow(QMainWindow):
                 color: #302b26;
             }
 
-            QLabel#DetailAdditionalValue {
+            QPlainTextEdit#DetailAdditionalValue {
                 background: #f8f4ee;
+                border: none;
                 border-radius: 7px;
                 color: #4f4841;
-                padding: 7px 10px;
+                padding: 6px 9px;
+                selection-background-color: #dcd4f3;
+                selection-color: #27231f;
             }
 
             QLabel#DetailTargetHint {
@@ -3058,7 +3233,7 @@ class MainWindow(QMainWindow):
                 background: #eee8df;
                 border: 1px solid #cfc5b8;
                 border-radius: 7px;
-                padding: 7px 13px;
+                padding: 5px 10px;
                 font-weight: 600;
             }
 
@@ -3136,7 +3311,7 @@ class MainWindow(QMainWindow):
             }
 
             QLabel#StatusLabel {
-                padding: 10px 12px;
+                padding: 7px 10px;
                 border-radius: 7px;
             }
 
@@ -3158,6 +3333,17 @@ class MainWindow(QMainWindow):
             QLabel#SafetyLabel {
                 color: #655e56;
                 font-style: italic;
+            }
+
+            QSplitter#QueueSplitter::handle {
+                background: #e1d9cf;
+                border-radius: 3px;
+                margin-left: 4px;
+                margin-right: 4px;
+            }
+
+            QSplitter#QueueSplitter::handle:hover {
+                background: #c9bee9;
             }
 
             QProgressBar {
