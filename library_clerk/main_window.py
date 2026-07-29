@@ -3,6 +3,8 @@ Main desktop window for Library Clerk.
 """
 
 from __future__ import annotations
+from dataclasses import dataclass
+from datetime import datetime
 
 import os
 from pathlib import Path
@@ -42,17 +44,49 @@ from library_clerk.excel_navigation import (
     open_excel_cell,
 )
 from library_clerk.models import (
+    LibraryException,
     ScanIssue,
     ScanResult,
 )
 from library_clerk.paths import (
+    get_exceptions_path,
     get_workbook_directory,
     list_workbooks,
 )
 from library_clerk.scan_worker import (
     ScanWorker,
 )
+from library_clerk.exception_dialog import (
+    ExceptionDialog,
+)
+from library_clerk.exception_store import (
+    ExceptionStoreError,
+    create_exception_from_issue,
+    load_exceptions,
+    remove_exception,
+    upsert_exception,
+)
 
+ISSUE_CODE_LABELS = {
+    "missing-isbn": "Missing ISBN",
+    "missing-year": "Missing Year",
+    "missing-pages": "Missing Pages",
+    "missing-bookcase": "Missing Bookcase",
+    "missing-shelf": "Missing Shelf",
+    "missing-office-position": (
+        "Missing Office Position"
+    ),
+}
+
+
+@dataclass(frozen=True)
+class IssueQueueEntry:
+    """
+    One row displayed in the active or exception work queue.
+    """
+
+    issue: ScanIssue | None = None
+    exception: LibraryException | None = None
 
 class MainWindow(QMainWindow):
     """
@@ -68,8 +102,18 @@ class MainWindow(QMainWindow):
             get_workbook_directory()
         )
 
+        self.exceptions_path = (
+            get_exceptions_path(
+                self.workbook_directory
+            )
+        )
+
         self.workbook_paths: list[
             Path
+        ] = []
+
+        self.saved_exceptions: list[
+            LibraryException
         ] = []
 
         self.scan_result: (
@@ -77,8 +121,8 @@ class MainWindow(QMainWindow):
             | None
         ) = None
 
-        self.visible_issues: list[
-            ScanIssue
+        self.visible_queue_entries: list[
+            IssueQueueEntry
         ] = []
 
         self.scan_thread: (
@@ -259,9 +303,10 @@ class MainWindow(QMainWindow):
 
         self.area_filter.addItems(
             [
-                "All issues",
+                "All active issues",
                 "System integrity",
                 "Clerical",
+                "Exceptions",
             ]
         )
 
@@ -585,7 +630,7 @@ class MainWindow(QMainWindow):
             clerical_card,
             self.clerical_value_label,
         ) = self._create_summary_card(
-            "Clerical issues"
+            "Active clerical issues"
         )
 
         (
@@ -707,24 +752,22 @@ class MainWindow(QMainWindow):
             "IssueDetailCard"
         )
 
-        panel_layout = QHBoxLayout(
+        panel.setMinimumHeight(
+            260
+        )
+
+        panel_layout = QVBoxLayout(
             panel
         )
 
         panel_layout.setContentsMargins(
             18,
-            16,
+            15,
             18,
-            16,
+            15,
         )
 
         panel_layout.setSpacing(
-            22
-        )
-
-        content_layout = QVBoxLayout()
-
-        content_layout.setSpacing(
             9
         )
 
@@ -763,7 +806,7 @@ class MainWindow(QMainWindow):
             ),
         )
 
-        content_layout.addLayout(
+        panel_layout.addLayout(
             heading_layout
         )
 
@@ -780,18 +823,18 @@ class MainWindow(QMainWindow):
             True
         )
 
-        content_layout.addWidget(
+        panel_layout.addWidget(
             self.detail_message_label
         )
 
         details_grid = QGridLayout()
 
         details_grid.setHorizontalSpacing(
-            16
+            18
         )
 
         details_grid.setVerticalSpacing(
-            7
+            5
         )
 
         details_grid.setColumnStretch(
@@ -844,10 +887,17 @@ class MainWindow(QMainWindow):
                 "DetailCaption"
             )
 
+            caption.setAlignment(
+                Qt.AlignmentFlag.AlignTop
+            )
+
             details_grid.addWidget(
                 caption,
                 row,
                 caption_column,
+                alignment=(
+                    Qt.AlignmentFlag.AlignTop
+                ),
             )
 
             details_grid.addWidget(
@@ -908,7 +958,7 @@ class MainWindow(QMainWindow):
             3,
         )
 
-        content_layout.addLayout(
+        panel_layout.addLayout(
             details_grid
         )
 
@@ -920,7 +970,7 @@ class MainWindow(QMainWindow):
             "DetailCaption"
         )
 
-        content_layout.addWidget(
+        panel_layout.addWidget(
             additional_caption
         )
 
@@ -940,22 +990,73 @@ class MainWindow(QMainWindow):
             Qt.TextInteractionFlag.TextSelectableByMouse
         )
 
-        content_layout.addWidget(
+        self.detail_additional_value.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.MinimumExpanding,
+        )
+
+        self.detail_additional_value.setMinimumHeight(
+            48
+        )
+
+        panel_layout.addWidget(
             self.detail_additional_value
         )
 
-        panel_layout.addLayout(
-            content_layout,
+        action_layout = QHBoxLayout()
+
+        action_layout.setSpacing(
+            10
+        )
+
+        self.detail_target_hint_label = QLabel(
+            "Choose an issue with an exact workbook cell."
+        )
+
+        self.detail_target_hint_label.setObjectName(
+            "DetailTargetHint"
+        )
+
+        self.detail_target_hint_label.setWordWrap(
+            True
+        )
+
+        self.detail_target_hint_label.setAlignment(
+            (
+                Qt.AlignmentFlag.AlignLeft
+                | Qt.AlignmentFlag.AlignVCenter
+            )
+        )
+
+        action_layout.addWidget(
+            self.detail_target_hint_label,
             stretch=1,
         )
 
-        action_layout = QVBoxLayout()
-
-        action_layout.setSpacing(
-            9
+        self.detail_exception_button = QPushButton(
+            "Mark as intentional exception"
         )
 
-        action_layout.addStretch()
+        self.detail_exception_button.setObjectName(
+            "ExceptionActionButton"
+        )
+
+        self.detail_exception_button.setMinimumSize(
+            220,
+            44,
+        )
+
+        self.detail_exception_button.setEnabled(
+            False
+        )
+
+        self.detail_exception_button.clicked.connect(
+            self._handle_exception_action
+        )
+
+        action_layout.addWidget(
+            self.detail_exception_button
+        )
 
         self.detail_open_excel_button = QPushButton(
             "Open in Excel"
@@ -967,7 +1068,7 @@ class MainWindow(QMainWindow):
 
         self.detail_open_excel_button.setMinimumSize(
             220,
-            54,
+            48,
         )
 
         self.detail_open_excel_button.setEnabled(
@@ -987,43 +1088,234 @@ class MainWindow(QMainWindow):
             self.detail_open_excel_button
         )
 
-        self.detail_target_hint_label = QLabel(
-            "Choose an issue with an exact workbook cell."
-        )
-
-        self.detail_target_hint_label.setObjectName(
-            "DetailTargetHint"
-        )
-
-        self.detail_target_hint_label.setWordWrap(
-            True
-        )
-
-        self.detail_target_hint_label.setAlignment(
-            Qt.AlignmentFlag.AlignCenter
-        )
-
-        self.detail_target_hint_label.setMaximumWidth(
-            220
-        )
-
-        action_layout.addWidget(
-            self.detail_target_hint_label
-        )
-
-        action_layout.addStretch()
-
         panel_layout.addLayout(
             action_layout
         )
 
         return panel
+
+    def _reload_saved_exceptions(
+        self,
+    ) -> str:
+        """
+        Reload the shared exception file.
+
+        Return an error message when the file could not be read.
+        """
+
+        self.exceptions_path = (
+            get_exceptions_path(
+                self.workbook_directory
+            )
+        )
+
+        try:
+            self.saved_exceptions = (
+                load_exceptions(
+                    self.exceptions_path
+                )
+            )
+
+        except ExceptionStoreError as error:
+            self.saved_exceptions = []
+
+            return str(
+                error
+            )
+
+        return ""
+
+    def _exception_lookup(
+        self,
+    ) -> dict[
+        str,
+        LibraryException,
+    ]:
+        """
+        Return saved exceptions indexed by stable exception key.
+        """
+
+        return {
+            exception.exception_key: exception
+            for exception in self.saved_exceptions
+        }
+
+    def _current_issue_lookup(
+        self,
+    ) -> dict[
+        str,
+        ScanIssue,
+    ]:
+        """
+        Return currently scanned issues indexed by exception key.
+        """
+
+        if self.scan_result is None:
+            return {}
+
+        return {
+            issue.exception_key: issue
+            for issue in self.scan_result.issues
+            if issue.exception_key
+        }
+
+    def _active_issues(
+        self,
+    ) -> list[ScanIssue]:
+        """
+        Return scan findings that are not intentionally excepted.
+        """
+
+        if self.scan_result is None:
+            return []
+
+        exception_keys = set(
+            self._exception_lookup()
+        )
+
+        return [
+            issue
+            for issue in self.scan_result.issues
+            if not (
+                issue.is_exception_eligible
+                and issue.exception_key
+                in exception_keys
+            )
+        ]
+
+    def _active_clerical_issue_count(
+        self,
+    ) -> int:
+        """
+        Return the number of active clerical findings.
+        """
+
+        return sum(
+            1
+            for issue in self._active_issues()
+            if issue.area == "Clerical"
+        )
+
+    def _update_summary_counts(
+        self,
+    ) -> None:
+        """
+        Refresh scan-summary cards using active issue counts.
+        """
+
+        if self.scan_result is None:
+            return
+
+        self.books_value_label.setText(
+            str(
+                self.scan_result.books_scanned
+            )
+        )
+
+        self.system_value_label.setText(
+            str(
+                self.scan_result
+                .system_issue_count
+            )
+        )
+
+        self.clerical_value_label.setText(
+            str(
+                self._active_clerical_issue_count()
+            )
+        )
+
+        self.integrity_value_label.setText(
+            (
+                "PASS"
+                if self.scan_result.integrity_passed
+                else "CHECK"
+            )
+        )
+
+    def _friendly_issue_name(
+        self,
+        issue_code: str,
+    ) -> str:
+        """
+        Return a friendly label for one stable issue code.
+        """
+
+        cleaned_issue_code = (
+            issue_code
+            .strip()
+            .casefold()
+        )
+
+        known_label = ISSUE_CODE_LABELS.get(
+            cleaned_issue_code
+        )
+
+        if known_label:
+            return known_label
+
+        if not cleaned_issue_code:
+            return "Saved exception"
+
+        return (
+            cleaned_issue_code
+            .replace(
+                "-",
+                " ",
+            )
+            .title()
+        )
+
+    def _format_exception_created_at(
+        self,
+        created_at: str,
+    ) -> str:
+        """
+        Format an exception timestamp for friendly display.
+        """
+
+        cleaned_created_at = (
+            created_at.strip()
+        )
+
+        if not cleaned_created_at:
+            return ""
+
+        try:
+            created_datetime = (
+                datetime.fromisoformat(
+                    cleaned_created_at
+                )
+            )
+
+        except ValueError:
+            return cleaned_created_at
+
+        date_label = (
+            created_datetime.strftime(
+                "%b %d, %Y"
+            )
+        )
+
+        time_label = (
+            created_datetime.strftime(
+                "%I:%M %p"
+            )
+            .lstrip(
+                "0"
+            )
+        )
+
+        return (
+            f"{date_label} at "
+            f"{time_label}"
+        )
     
     def refresh_workbook_sources(
         self,
     ) -> None:
         """
-        Refresh the workbook files available in the shared folder.
+        Refresh workbook files and shared Library Clerk data.
         """
 
         self.workbook_directory = (
@@ -1040,10 +1332,18 @@ class MainWindow(QMainWindow):
             self.workbook_directory
         )
 
+        exception_error = (
+            self._reload_saved_exceptions()
+        )
+
         workbook_names = ", ".join(
             path.name
             for path in self.workbook_paths
         )
+
+        if self.scan_result is not None:
+            self._update_summary_counts()
+            self.apply_issue_filters()
 
         if self.workbook_paths:
             self.source_summary_label.setText(
@@ -1059,14 +1359,32 @@ class MainWindow(QMainWindow):
                 True
             )
 
-            self._set_status(
-                (
-                    "Workbook files are ready. "
-                    "Press Scan workbooks to build "
-                    "the clerical queue."
-                ),
-                "success",
-            )
+            if exception_error:
+                self._set_status(
+                    (
+                        "Workbook files are ready, but the "
+                        "shared exception list could not be "
+                        "loaded. No issues will be suppressed. "
+                        + exception_error.replace(
+                            "\n",
+                            " ",
+                        )
+                    ),
+                    "error",
+                )
+
+            else:
+                self._set_status(
+                    (
+                        "Workbook files are ready. "
+                        f"Loaded {len(self.saved_exceptions)} "
+                        "intentional exception"
+                        f"{'' if len(self.saved_exceptions) == 1 else 's'}. "
+                        "Press Scan workbooks to build "
+                        "the clerical queue."
+                    ),
+                    "success",
+                )
 
         else:
             self.source_summary_label.setText(
@@ -1211,31 +1529,11 @@ class MainWindow(QMainWindow):
 
         self.scan_result = result
 
-        self.books_value_label.setText(
-            str(
-                result.books_scanned
-            )
+        exception_error = (
+            self._reload_saved_exceptions()
         )
 
-        self.system_value_label.setText(
-            str(
-                result.system_issue_count
-            )
-        )
-
-        self.clerical_value_label.setText(
-            str(
-                result.clerical_issue_count
-            )
-        )
-
-        self.integrity_value_label.setText(
-            (
-                "PASS"
-                if result.integrity_passed
-                else "CHECK"
-            )
-        )
+        self._update_summary_counts()
 
         self.last_scan_label.setText(
             (
@@ -1250,12 +1548,17 @@ class MainWindow(QMainWindow):
             source_label = (
                 "List View could not be identified."
             )
+
         else:
             source_label = (
                 f"Using "
                 f"{result.list_view_workbook.name}"
                 f" → {result.list_view_sheet}."
             )
+
+        active_clerical_count = (
+            self._active_clerical_issue_count()
+        )
 
         status_parts = [
             source_label,
@@ -1265,9 +1568,15 @@ class MainWindow(QMainWindow):
                 f"system issue"
                 f"{'' if result.system_issue_count == 1 else 's'} "
                 f"and "
-                f"{result.clerical_issue_count} "
-                f"clerical issue"
-                f"{'' if result.clerical_issue_count == 1 else 's'}."
+                f"{active_clerical_count} "
+                f"active clerical issue"
+                f"{'' if active_clerical_count == 1 else 's'}."
+            ),
+            (
+                f"Loaded "
+                f"{len(self.saved_exceptions)} "
+                f"intentional exception"
+                f"{'' if len(self.saved_exceptions) == 1 else 's'}."
             ),
         ]
 
@@ -1293,14 +1602,32 @@ class MainWindow(QMainWindow):
                 )
             )
 
+        if exception_error:
+            status_parts.append(
+                (
+                    "The shared exception list could "
+                    "not be loaded, so no findings were "
+                    "suppressed. "
+                    + exception_error.replace(
+                        "\n",
+                        " ",
+                    )
+                )
+            )
+
         self._set_status(
             " ".join(
                 status_parts
             ),
             (
-                "success"
-                if result.integrity_passed
-                else "error"
+                "error"
+                if (
+                    not result.integrity_passed
+                    or bool(
+                        exception_error
+                    )
+                )
+                else "success"
             ),
         )
 
@@ -1358,15 +1685,8 @@ class MainWindow(QMainWindow):
         self,
     ) -> None:
         """
-        Apply the search box and issue-area filter.
+        Apply search and queue-area filters.
         """
-
-        if self.scan_result is None:
-            self.issue_table.setRowCount(
-                0
-            )
-
-            return
 
         search_text = (
             self.search_box.text()
@@ -1378,124 +1698,323 @@ class MainWindow(QMainWindow):
             self.area_filter.currentText()
         )
 
-        visible_issues: list[
-            ScanIssue
+        visible_entries: list[
+            IssueQueueEntry
         ] = []
 
-        for issue in self.scan_result.issues:
-            if (
-                selected_area != "All issues"
-                and issue.area
-                != selected_area
-            ):
-                continue
-
-            workbook_name = (
-                issue.workbook_path.name
-                if issue.workbook_path
-                is not None
-                else ""
+        if selected_area == "Exceptions":
+            current_issue_lookup = (
+                self._current_issue_lookup()
             )
 
-            searchable_text = " ".join(
-                [
-                    issue.area,
-                    issue.category,
-                    issue.message,
-                    issue.title,
-                    issue.author,
-                    issue.column_name,
-                    issue.book_id,
-                    workbook_name,
-                    issue.sheet_name,
-                    (
-                        str(
-                            issue.row_number
-                        )
-                        if issue.row_number
+            for exception in self.saved_exceptions:
+                current_issue = (
+                    current_issue_lookup.get(
+                        exception.exception_key
+                    )
+                )
+
+                workbook_name = (
+                    current_issue.workbook_path.name
+                    if (
+                        current_issue is not None
+                        and current_issue.workbook_path
                         is not None
-                        else ""
+                    )
+                    else ""
+                )
+
+                searchable_parts = [
+                    "exception",
+                    exception.issue_code,
+                    self._friendly_issue_name(
+                        exception.issue_code
                     ),
-                    issue.details,
+                    exception.reason,
+                    exception.note,
+                    exception.title,
+                    exception.author,
+                    exception.book_id,
+                    exception.created_at,
+                    workbook_name,
                 ]
-            ).casefold()
 
-            if (
-                search_text
-                and search_text
-                not in searchable_text
-            ):
-                continue
+                if current_issue is not None:
+                    searchable_parts.extend(
+                        [
+                            current_issue.area,
+                            current_issue.category,
+                            current_issue.message,
+                            current_issue.column_name,
+                            current_issue.sheet_name,
+                            (
+                                str(
+                                    current_issue.row_number
+                                )
+                                if current_issue.row_number
+                                is not None
+                                else ""
+                            ),
+                            current_issue.details,
+                        ]
+                    )
 
-            visible_issues.append(
-                issue
-            )
+                searchable_text = " ".join(
+                    searchable_parts
+                ).casefold()
 
-        self.visible_issues = (
-            visible_issues
+                if (
+                    search_text
+                    and search_text
+                    not in searchable_text
+                ):
+                    continue
+
+                visible_entries.append(
+                    IssueQueueEntry(
+                        issue=current_issue,
+                        exception=exception,
+                    )
+                )
+
+        else:
+            if self.scan_result is None:
+                self.visible_queue_entries = []
+                self._populate_issue_table(
+                    []
+                )
+
+                return
+
+            for issue in self._active_issues():
+                if (
+                    selected_area
+                    != "All active issues"
+                    and issue.area
+                    != selected_area
+                ):
+                    continue
+
+                workbook_name = (
+                    issue.workbook_path.name
+                    if issue.workbook_path
+                    is not None
+                    else ""
+                )
+
+                searchable_text = " ".join(
+                    [
+                        issue.area,
+                        issue.category,
+                        issue.issue_code,
+                        issue.message,
+                        issue.title,
+                        issue.author,
+                        issue.column_name,
+                        issue.book_id,
+                        workbook_name,
+                        issue.sheet_name,
+                        (
+                            str(
+                                issue.row_number
+                            )
+                            if issue.row_number
+                            is not None
+                            else ""
+                        ),
+                        issue.details,
+                    ]
+                ).casefold()
+
+                if (
+                    search_text
+                    and search_text
+                    not in searchable_text
+                ):
+                    continue
+
+                visible_entries.append(
+                    IssueQueueEntry(
+                        issue=issue
+                    )
+                )
+
+        self.visible_queue_entries = (
+            visible_entries
         )
 
         self._populate_issue_table(
-            visible_issues
+            visible_entries
         )
 
     def _populate_issue_table(
         self,
-        issues: list[ScanIssue],
+        entries: list[
+            IssueQueueEntry
+        ],
     ) -> None:
         """
-        Display issues in the main work queue.
+        Display active issues or saved exceptions in the work queue.
 
-        Each table row stores its complete ScanIssue object so sorting the
-        visible table does not disconnect the row from its workbook target.
+        Each visible row stores its complete IssueQueueEntry so sorting
+        cannot disconnect the row from its issue or exception record.
         """
 
         self.issue_table.setSortingEnabled(
             False
         )
 
+        self.issue_table.clearSelection()
+
         self.issue_table.setRowCount(
             len(
-                issues
+                entries
             )
         )
 
-        for row_index, issue in enumerate(
-            issues
+        for row_index, entry in enumerate(
+            entries
         ):
-            workbook_name = (
-                issue.workbook_path.name
-                if issue.workbook_path
-                is not None
-                else "—"
-            )
+            issue = entry.issue
+            exception = entry.exception
 
-            values = (
-                issue.area,
-                issue.category,
-                issue.title or "—",
-                issue.author or "—",
-                issue.column_name or "—",
-                (
+            if exception is not None:
+                workbook_name = (
+                    issue.workbook_path.name
+                    if (
+                        issue is not None
+                        and issue.workbook_path
+                        is not None
+                    )
+                    else "—"
+                )
+
+                problem_label = (
+                    issue.category
+                    if issue is not None
+                    else self._friendly_issue_name(
+                        exception.issue_code
+                    )
+                )
+
+                title_label = (
+                    exception.title
+                    or (
+                        issue.title
+                        if issue is not None
+                        else ""
+                    )
+                    or "—"
+                )
+
+                author_label = (
+                    exception.author
+                    or (
+                        issue.author
+                        if issue is not None
+                        else ""
+                    )
+                    or "—"
+                )
+
+                field_label = (
+                    issue.column_name
+                    if issue is not None
+                    and issue.column_name
+                    else self._friendly_issue_name(
+                        exception.issue_code
+                    )
+                )
+
+                row_label = (
                     str(
                         issue.row_number
                     )
-                    if issue.row_number
+                    if (
+                        issue is not None
+                        and issue.row_number
+                        is not None
+                    )
+                    else "Resolved"
+                )
+
+                values = (
+                    "Exception",
+                    problem_label,
+                    title_label,
+                    author_label,
+                    field_label,
+                    row_label,
+                    workbook_name,
+                    exception.book_id or "—",
+                )
+
+                tooltip_parts = [
+                    (
+                        "Intentional exception: "
+                        f"{exception.reason}"
+                    )
+                ]
+
+                if exception.note:
+                    tooltip_parts.append(
+                        exception.note
+                    )
+
+                if exception.created_at:
+                    tooltip_parts.append(
+                        (
+                            "Saved "
+                            + self._format_exception_created_at(
+                                exception.created_at
+                            )
+                        )
+                    )
+
+                if issue is None:
+                    tooltip_parts.append(
+                        (
+                            "The original issue is no longer "
+                            "active in the current workbook scan."
+                        )
+                    )
+
+            else:
+                assert issue is not None
+
+                workbook_name = (
+                    issue.workbook_path.name
+                    if issue.workbook_path
                     is not None
                     else "—"
-                ),
-                workbook_name,
-                issue.book_id or "—",
-            )
-
-            tooltip_parts = [
-                issue.message
-            ]
-
-            if issue.details:
-                tooltip_parts.append(
-                    issue.details
                 )
+
+                values = (
+                    issue.area,
+                    issue.category,
+                    issue.title or "—",
+                    issue.author or "—",
+                    issue.column_name or "—",
+                    (
+                        str(
+                            issue.row_number
+                        )
+                        if issue.row_number
+                        is not None
+                        else "—"
+                    ),
+                    workbook_name,
+                    issue.book_id or "—",
+                )
+
+                tooltip_parts = [
+                    issue.message
+                ]
+
+                if issue.details:
+                    tooltip_parts.append(
+                        issue.details
+                    )
 
             tooltip = "\n\n".join(
                 tooltip_parts
@@ -1515,7 +2034,7 @@ class MainWindow(QMainWindow):
                 if column_index == 0:
                     item.setData(
                         Qt.ItemDataRole.UserRole,
-                        issue,
+                        entry,
                     )
 
                 self.issue_table.setItem(
@@ -1530,11 +2049,11 @@ class MainWindow(QMainWindow):
 
         self._update_issue_detail_panel()
 
-    def _get_selected_issue(
+    def _get_selected_queue_entry(
         self,
-    ) -> ScanIssue | None:
+    ) -> IssueQueueEntry | None:
         """
-        Return the ScanIssue attached to the selected table row.
+        Return the complete queue entry attached to the selected row.
         """
 
         selected_rows = (
@@ -1550,25 +2069,57 @@ class MainWindow(QMainWindow):
             selected_rows[0].row()
         )
 
-        issue_item = self.issue_table.item(
+        entry_item = self.issue_table.item(
             selected_row,
             0,
         )
 
-        if issue_item is None:
+        if entry_item is None:
             return None
 
-        issue = issue_item.data(
+        entry = entry_item.data(
             Qt.ItemDataRole.UserRole
         )
 
         if not isinstance(
-            issue,
-            ScanIssue,
+            entry,
+            IssueQueueEntry,
         ):
             return None
 
-        return issue
+        return entry
+
+    def _get_selected_issue(
+        self,
+    ) -> ScanIssue | None:
+        """
+        Return the current issue attached to the selected queue row.
+        """
+
+        entry = (
+            self._get_selected_queue_entry()
+        )
+
+        if entry is None:
+            return None
+
+        return entry.issue
+
+    def _get_selected_exception(
+        self,
+    ) -> LibraryException | None:
+        """
+        Return the saved exception attached to the selected queue row.
+        """
+
+        entry = (
+            self._get_selected_queue_entry()
+        )
+
+        if entry is None:
+            return None
+
+        return entry.exception
 
     def _issue_has_excel_target(
         self,
@@ -1663,12 +2214,14 @@ class MainWindow(QMainWindow):
         self,
     ) -> None:
         """
-        Show the complete ScanIssue attached to the selected table row.
+        Show the complete issue or exception attached to the selected row.
         """
 
-        issue = self._get_selected_issue()
+        entry = (
+            self._get_selected_queue_entry()
+        )
 
-        if issue is None:
+        if entry is None:
             self.detail_problem_label.setText(
                 "Select an issue"
             )
@@ -1714,11 +2267,183 @@ class MainWindow(QMainWindow):
                 False
             )
 
+            self.detail_exception_button.setText(
+                "Mark as intentional exception"
+            )
+
+            self.detail_exception_button.setEnabled(
+                False
+            )
+
             self.detail_target_hint_label.setText(
                 "Choose an issue with an exact workbook cell."
             )
 
             return
+
+        issue = entry.issue
+        exception = entry.exception
+
+        if exception is not None:
+            self.detail_problem_label.setText(
+                (
+                    issue.category
+                    if issue is not None
+                    else self._friendly_issue_name(
+                        exception.issue_code
+                    )
+                )
+            )
+
+            self.detail_area_label.setText(
+                "Intentional exception"
+            )
+
+            self.detail_message_label.setText(
+                exception.reason
+            )
+
+            self.detail_title_value.setText(
+                (
+                    exception.title
+                    or (
+                        issue.title
+                        if issue is not None
+                        else ""
+                    )
+                    or "Not available"
+                )
+            )
+
+            self.detail_author_value.setText(
+                (
+                    exception.author
+                    or (
+                        issue.author
+                        if issue is not None
+                        else ""
+                    )
+                    or "Not available"
+                )
+            )
+
+            self.detail_book_id_value.setText(
+                exception.book_id
+                or "Not available"
+            )
+
+            if issue is not None:
+                workbook_name = (
+                    issue.workbook_path.name
+                    if issue.workbook_path
+                    is not None
+                    else "Not available"
+                )
+
+                self.detail_workbook_value.setText(
+                    workbook_name
+                )
+
+                self.detail_sheet_value.setText(
+                    issue.sheet_name
+                    or "Not available"
+                )
+
+                self.detail_location_value.setText(
+                    self._format_issue_location(
+                        issue
+                    )
+                )
+
+            else:
+                self.detail_workbook_value.setText(
+                    "No active workbook issue"
+                )
+
+                self.detail_sheet_value.setText(
+                    "—"
+                )
+
+                self.detail_location_value.setText(
+                    (
+                        "The original issue no longer "
+                        "appears in the current scan."
+                    )
+                )
+
+            additional_parts = []
+
+            if exception.note:
+                additional_parts.append(
+                    exception.note
+                )
+
+            else:
+                additional_parts.append(
+                    "No research note was recorded."
+                )
+
+            formatted_created_at = (
+                self._format_exception_created_at(
+                    exception.created_at
+                )
+            )
+
+            if formatted_created_at:
+                additional_parts.append(
+                    (
+                        "Exception saved "
+                        f"{formatted_created_at}."
+                    )
+                )
+
+            self.detail_additional_value.setText(
+                "\n\n".join(
+                    additional_parts
+                )
+            )
+
+            has_excel_target = (
+                self._issue_has_excel_target(
+                    issue
+                )
+            )
+
+            self.detail_open_excel_button.setEnabled(
+                has_excel_target
+            )
+
+            self.detail_exception_button.setText(
+                "Restore issue"
+            )
+
+            self.detail_exception_button.setEnabled(
+                True
+            )
+
+            if has_excel_target:
+                assert issue is not None
+
+                self.detail_target_hint_label.setText(
+                    (
+                        "This exception still matches an "
+                        "active workbook issue. You can open "
+                        "its current cell or restore it."
+                    )
+                )
+
+            else:
+                self.detail_target_hint_label.setText(
+                    (
+                        "This issue no longer appears in the "
+                        "current workbook scan, but the saved "
+                        "exception can still be removed."
+                    )
+                )
+
+            return
+
+        assert issue is not None
 
         workbook_name = (
             issue.workbook_path.name
@@ -1773,8 +2498,10 @@ class MainWindow(QMainWindow):
 
         self.detail_additional_value.setText(
             issue.details.strip()
-            if issue.details
-            and issue.details.strip()
+            if (
+                issue.details
+                and issue.details.strip()
+            )
             else "No additional details were recorded."
         )
 
@@ -1786,6 +2513,14 @@ class MainWindow(QMainWindow):
 
         self.detail_open_excel_button.setEnabled(
             has_excel_target
+        )
+
+        self.detail_exception_button.setText(
+            "Mark as intentional exception"
+        )
+
+        self.detail_exception_button.setEnabled(
+            issue.is_exception_eligible
         )
 
         if has_excel_target:
@@ -1800,6 +2535,209 @@ class MainWindow(QMainWindow):
             self.detail_target_hint_label.setText(
                 "This issue does not point to one exact cell."
             )
+
+    def _handle_exception_action(
+        self,
+    ) -> None:
+        """
+        Mark the selected issue or restore the selected exception.
+        """
+
+        selected_exception = (
+            self._get_selected_exception()
+        )
+
+        if selected_exception is not None:
+            self._restore_selected_exception()
+
+            return
+
+        self._mark_selected_issue_as_exception()
+
+    def _mark_selected_issue_as_exception(
+        self,
+    ) -> None:
+        """
+        Save the selected clerical issue as an intentional exception.
+        """
+
+        issue = self._get_selected_issue()
+
+        if (
+            issue is None
+            or not issue.is_exception_eligible
+        ):
+            QMessageBox.information(
+                self,
+                "Exception unavailable",
+                (
+                    "This finding cannot be saved as an "
+                    "intentional exception. Only clerical "
+                    "issues with a valid permanent Book ID "
+                    "and stable issue code are eligible."
+                ),
+            )
+
+            return
+
+        dialog = ExceptionDialog(
+            issue,
+            self,
+        )
+
+        if not dialog.exec():
+            return
+
+        try:
+            exception = (
+                create_exception_from_issue(
+                    issue=issue,
+                    reason=(
+                        dialog.selected_reason()
+                    ),
+                    note=(
+                        dialog.research_note()
+                    ),
+                )
+            )
+
+            self.saved_exceptions = (
+                upsert_exception(
+                    self.exceptions_path,
+                    exception,
+                )
+            )
+
+        except ExceptionStoreError as error:
+            QMessageBox.critical(
+                self,
+                "Could not save exception",
+                str(
+                    error
+                ),
+            )
+
+            self._set_status(
+                (
+                    "The intentional exception could "
+                    f"not be saved. {error}"
+                ),
+                "error",
+            )
+
+            return
+
+        self._update_summary_counts()
+        self.apply_issue_filters()
+
+        self._set_status(
+            (
+                f"Saved “{issue.category}” as an "
+                f"intentional exception for "
+                f"{issue.title or issue.book_id}."
+            ),
+            "success",
+        )
+
+    def _restore_selected_exception(
+        self,
+    ) -> None:
+        """
+        Remove the selected saved exception.
+        """
+
+        exception = (
+            self._get_selected_exception()
+        )
+
+        if exception is None:
+            return
+
+        title_label = (
+            exception.title
+            or exception.book_id
+        )
+
+        answer = QMessageBox.question(
+            self,
+            "Restore issue",
+            (
+                "Remove this intentional exception?\n\n"
+                f"{title_label}\n"
+                f"{self._friendly_issue_name(exception.issue_code)}\n\n"
+                "If the underlying workbook value is still "
+                "missing, the issue will return to the active "
+                "clerical queue."
+            ),
+            (
+                QMessageBox.StandardButton.Yes
+                | QMessageBox.StandardButton.No
+            ),
+            QMessageBox.StandardButton.No,
+        )
+
+        if (
+            answer
+            != QMessageBox.StandardButton.Yes
+        ):
+            return
+
+        try:
+            (
+                removed,
+                self.saved_exceptions,
+            ) = remove_exception(
+                exceptions_path=(
+                    self.exceptions_path
+                ),
+                book_id=(
+                    exception.book_id
+                ),
+                issue_code=(
+                    exception.issue_code
+                ),
+            )
+
+        except ExceptionStoreError as error:
+            QMessageBox.critical(
+                self,
+                "Could not restore issue",
+                str(
+                    error
+                ),
+            )
+
+            self._set_status(
+                (
+                    "The intentional exception could "
+                    f"not be removed. {error}"
+                ),
+                "error",
+            )
+
+            return
+
+        if not removed:
+            QMessageBox.information(
+                self,
+                "Exception already removed",
+                (
+                    "That exception is no longer present "
+                    "in the shared exception file."
+                ),
+            )
+
+        self._update_summary_counts()
+        self.apply_issue_filters()
+
+        self._set_status(
+            (
+                f"Restored "
+                f"{self._friendly_issue_name(exception.issue_code)} "
+                f"for {title_label}."
+            ),
+            "success",
+        )
 
     def _handle_issue_double_click(
         self,
@@ -2050,20 +2988,47 @@ class MainWindow(QMainWindow):
                 background: #f8f4ee;
                 border-radius: 7px;
                 color: #4f4841;
-                padding: 8px 10px;
+                padding: 7px 10px;
             }
 
             QLabel#DetailTargetHint {
                 color: #746d65;
                 font-size: 9pt;
+                padding-right: 8px;
+            }
+
+            QLabel#ExceptionDialogTitle {
+                font-size: 16pt;
+                font-weight: 700;
+            }
+
+            QLabel#ExceptionDialogBook {
+                color: #4e4567;
+                font-size: 11pt;
+                font-weight: 700;
+            }
+
+            QLabel#ExceptionDialogExplanation {
+                color: #665f57;
             }
 
             QLineEdit,
-            QComboBox {
+            QComboBox,
+            QPlainTextEdit {
                 background: #fffdf9;
                 border: 1px solid #d1c8bd;
                 border-radius: 7px;
+                color: #27231f;
                 padding: 7px 9px;
+                selection-background-color: #dcd4f3;
+                selection-color: #27231f;
+            }
+
+            QLineEdit:disabled,
+            QComboBox:disabled,
+            QPlainTextEdit:disabled {
+                background: #eeeae4;
+                color: #9a9289;
             }
 
             QTableWidget {
@@ -2143,6 +3108,31 @@ class MainWindow(QMainWindow):
                 background: #d9d2e5;
                 border-color: #ccc3da;
                 color: #8a8295;
+            }
+
+            QPushButton#ExceptionActionButton {
+                background: #f4efe7;
+                border-color: #cfc5b8;
+                color: #4f4841;
+                padding: 9px 14px;
+            }
+
+            QPushButton#ExceptionActionButton:hover {
+                background: #e9e1d6;
+            }
+
+            QPushButton#ExceptionActionButton:pressed {
+                background: #ddd3c6;
+            }
+
+            QPushButton#ExceptionActionButton:disabled {
+                background: #eeeae4;
+                border-color: #d9d2c9;
+                color: #9a9289;
+            }
+
+            QDialog#ExceptionDialog {
+                background: #f7f4ef;
             }
 
             QLabel#StatusLabel {

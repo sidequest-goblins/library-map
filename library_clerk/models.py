@@ -22,6 +22,8 @@ class ScanIssue:
     workbook_path: Path | None
     sheet_name: str
 
+    issue_code: str = ""
+
     row_number: int | None = None
     column_name: str = ""
     column_number: int | None = None
@@ -30,6 +32,109 @@ class ScanIssue:
     title: str = ""
     author: str = ""
     details: str = ""
+
+    @property
+    def exception_key(
+        self,
+    ) -> str:
+        """
+        Return the stable key used to match a saved exception.
+        """
+
+        normalized_book_id = (
+            self.book_id
+            .strip()
+            .casefold()
+        )
+
+        normalized_issue_code = (
+            self.issue_code
+            .strip()
+            .casefold()
+        )
+
+        if (
+            not normalized_book_id
+            or not normalized_issue_code
+        ):
+            return ""
+
+        return (
+            f"{normalized_book_id}::"
+            f"{normalized_issue_code}"
+        )
+
+    @property
+    def is_exception_eligible(
+        self,
+    ) -> bool:
+        """
+        Return True when this issue may be intentionally excepted.
+        """
+
+        return (
+            self.area == "Clerical"
+            and bool(
+                self.exception_key
+            )
+        )
+
+
+@dataclass(frozen=True)
+class LibraryException:
+    """
+    One intentional catalog exception saved outside the workbooks.
+    """
+
+    book_id: str
+    issue_code: str
+    reason: str
+
+    note: str = ""
+    title: str = ""
+    author: str = ""
+    created_at: str = ""
+
+    @property
+    def exception_key(
+        self,
+    ) -> str:
+        """
+        Return the stable Book ID and issue-code key.
+        """
+
+        normalized_book_id = (
+            self.book_id
+            .strip()
+            .casefold()
+        )
+
+        normalized_issue_code = (
+            self.issue_code
+            .strip()
+            .casefold()
+        )
+
+        return (
+            f"{normalized_book_id}::"
+            f"{normalized_issue_code}"
+        )
+
+    def matches_issue(
+        self,
+        issue: ScanIssue,
+    ) -> bool:
+        """
+        Return True when this exception applies to the issue.
+        """
+
+        return (
+            bool(
+                issue.exception_key
+            )
+            and self.exception_key
+            == issue.exception_key
+        )
 
 
 @dataclass

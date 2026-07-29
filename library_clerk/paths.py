@@ -16,12 +16,13 @@ from pathlib import Path
 
 
 WORKBOOK_DIRECTORY_ENV_VAR = "LIBRARY_CLERK_WORKBOOK_DIR"
+SHARED_DATA_DIRECTORY_NAME = "Library Clerk Data"
+EXCEPTIONS_FILE_NAME = "exceptions.json"
 
 SUPPORTED_WORKBOOK_SUFFIXES = {
     ".xlsx",
     ".xlsm",
 }
-
 
 def is_packaged_application() -> bool:
     """
@@ -35,7 +36,6 @@ def is_packaged_application() -> bool:
             False,
         )
     )
-
 
 def get_application_directory() -> Path:
     """
@@ -56,7 +56,6 @@ def get_application_directory() -> Path:
         __file__
     ).resolve().parent.parent
 
-
 def get_default_workbook_directory() -> Path:
     """
     Return the expected per-user OneDrive MyLibrary folder.
@@ -68,7 +67,6 @@ def get_default_workbook_directory() -> Path:
         / "Shared Workbooks"
         / "MyLibrary"
     )
-
 
 def get_workbook_directory() -> Path:
     """
@@ -96,7 +94,6 @@ def get_workbook_directory() -> Path:
 
     return get_default_workbook_directory().resolve()
 
-
 def is_temporary_excel_file(
     path: Path,
 ) -> bool:
@@ -106,6 +103,40 @@ def is_temporary_excel_file(
 
     return path.name.startswith("~$")
 
+def get_shared_data_directory(
+    workbook_directory: Path | None = None,
+) -> Path:
+    """
+    Return the shared Library Clerk data directory.
+
+    Shared catalog decisions belong beside the workbooks so CJ and Jade
+    receive the same exception records through OneDrive.
+    """
+
+    resolved_workbook_directory = (
+        workbook_directory
+        if workbook_directory is not None
+        else get_workbook_directory()
+    )
+
+    return (
+        resolved_workbook_directory
+        / SHARED_DATA_DIRECTORY_NAME
+    )
+
+def get_exceptions_path(
+    workbook_directory: Path | None = None,
+) -> Path:
+    """
+    Return the shared intentional-exceptions JSON path.
+    """
+
+    return (
+        get_shared_data_directory(
+            workbook_directory
+        )
+        / EXCEPTIONS_FILE_NAME
+    )
 
 def list_workbooks(
     workbook_directory: Path,
@@ -147,7 +178,6 @@ def list_workbooks(
         workbook_paths,
         key=lambda item: item.name.casefold(),
     )
-
 
 def format_file_size(
     size_bytes: int,

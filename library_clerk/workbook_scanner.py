@@ -1159,6 +1159,7 @@ def scan_workbooks(
                                 f"{identity}:"
                                 f"{issue_code}"
                             ),
+                            issue_code=issue_code,
                             area="Clerical",
                             category=(
                                 f"Missing {column_name}"
@@ -1208,6 +1209,9 @@ def scan_workbooks(
                         ScanIssue(
                             issue_id=(
                                 f"{identity}:"
+                                "missing-office-position"
+                            ),
+                            issue_code=(
                                 "missing-office-position"
                             ),
                             area="Clerical",
