@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+from openpyxl.utils.cell import get_column_letter
 
 from PySide6.QtCore import (
     Qt,
@@ -16,6 +17,7 @@ from PySide6.QtWidgets import (
     QAbstractItemView,
     QComboBox,
     QFrame,
+    QGridLayout,
     QHBoxLayout,
     QHeaderView,
     QLabel,
@@ -24,6 +26,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QProgressBar,
     QPushButton,
+    QSizePolicy,
     QTableWidget,
     QTableWidgetItem,
     QVBoxLayout,
@@ -95,13 +98,13 @@ class MainWindow(QMainWindow):
         )
 
         self.setMinimumSize(
-            900,
-            620,
+            960,
+            720,
         )
 
         self.resize(
-            1120,
-            760,
+            1180,
+            840,
         )
 
         self._build_interface()
@@ -270,29 +273,6 @@ class MainWindow(QMainWindow):
             self.area_filter
         )
 
-        self.open_excel_button = QPushButton(
-            "Open selected in Excel"
-        )
-
-        self.open_excel_button.setEnabled(
-            False
-        )
-
-        self.open_excel_button.setToolTip(
-            (
-                "Open the correct workbook and select "
-                "the exact cell for the chosen issue."
-            )
-        )
-
-        self.open_excel_button.clicked.connect(
-            self.open_selected_issue_in_excel
-        )
-
-        filter_layout.addWidget(
-            self.open_excel_button
-        )
-
         root_layout.addLayout(
             filter_layout
         )
@@ -336,8 +316,12 @@ class MainWindow(QMainWindow):
             True
         )
 
+        self.issue_table.setMinimumHeight(
+            220
+        )
+
         self.issue_table.itemSelectionChanged.connect(
-            self._update_excel_button
+            self._update_issue_detail_panel
         )
 
         self.issue_table.cellDoubleClicked.connect(
@@ -348,8 +332,22 @@ class MainWindow(QMainWindow):
             self.issue_table.horizontalHeader()
         )
 
+        header.setStretchLastSection(
+            False
+        )
+
         header.setSectionResizeMode(
-            QHeaderView.ResizeMode.ResizeToContents
+            QHeaderView.ResizeMode.Interactive
+        )
+
+        header.setSectionResizeMode(
+            0,
+            QHeaderView.ResizeMode.ResizeToContents,
+        )
+
+        header.setSectionResizeMode(
+            1,
+            QHeaderView.ResizeMode.ResizeToContents,
         )
 
         header.setSectionResizeMode(
@@ -357,9 +355,53 @@ class MainWindow(QMainWindow):
             QHeaderView.ResizeMode.Stretch,
         )
 
+        header.setSectionResizeMode(
+            3,
+            QHeaderView.ResizeMode.Interactive,
+        )
+
+        header.setSectionResizeMode(
+            4,
+            QHeaderView.ResizeMode.ResizeToContents,
+        )
+
+        header.setSectionResizeMode(
+            5,
+            QHeaderView.ResizeMode.ResizeToContents,
+        )
+
+        header.setSectionResizeMode(
+            6,
+            QHeaderView.ResizeMode.Interactive,
+        )
+
+        header.setSectionResizeMode(
+            7,
+            QHeaderView.ResizeMode.Interactive,
+        )
+
+        self.issue_table.setColumnWidth(
+            3,
+            165,
+        )
+
+        self.issue_table.setColumnWidth(
+            6,
+            140,
+        )
+
+        self.issue_table.setColumnWidth(
+            7,
+            175,
+        )
+
         root_layout.addWidget(
             self.issue_table,
             stretch=1,
+        )
+
+        root_layout.addWidget(
+            self._create_issue_detail_panel()
         )
 
         self.status_label = QLabel()
@@ -622,6 +664,361 @@ class MainWindow(QMainWindow):
             value_label,
         )
 
+    def _create_detail_value_label(
+        self,
+    ) -> QLabel:
+        """
+        Create a selectable, wrapping value label for the detail panel.
+        """
+
+        label = QLabel(
+            "—"
+        )
+
+        label.setObjectName(
+            "DetailValue"
+        )
+
+        label.setWordWrap(
+            True
+        )
+
+        label.setTextInteractionFlags(
+            Qt.TextInteractionFlag.TextSelectableByMouse
+        )
+
+        label.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Preferred,
+        )
+
+        return label
+
+    def _create_issue_detail_panel(
+        self,
+    ) -> QFrame:
+        """
+        Create the friendly detail card for the selected issue.
+        """
+
+        panel = QFrame()
+
+        panel.setObjectName(
+            "IssueDetailCard"
+        )
+
+        panel_layout = QHBoxLayout(
+            panel
+        )
+
+        panel_layout.setContentsMargins(
+            18,
+            16,
+            18,
+            16,
+        )
+
+        panel_layout.setSpacing(
+            22
+        )
+
+        content_layout = QVBoxLayout()
+
+        content_layout.setSpacing(
+            9
+        )
+
+        heading_layout = QHBoxLayout()
+
+        self.detail_problem_label = QLabel(
+            "Select an issue"
+        )
+
+        self.detail_problem_label.setObjectName(
+            "IssueDetailHeading"
+        )
+
+        self.detail_problem_label.setWordWrap(
+            True
+        )
+
+        heading_layout.addWidget(
+            self.detail_problem_label,
+            stretch=1,
+        )
+
+        self.detail_area_label = QLabel(
+            "No selection"
+        )
+
+        self.detail_area_label.setObjectName(
+            "IssueDetailBadge"
+        )
+
+        heading_layout.addWidget(
+            self.detail_area_label,
+            alignment=(
+                Qt.AlignmentFlag.AlignTop
+                | Qt.AlignmentFlag.AlignRight
+            ),
+        )
+
+        content_layout.addLayout(
+            heading_layout
+        )
+
+        self.detail_message_label = QLabel(
+            "Choose a row from the work queue to see "
+            "exactly what needs attention."
+        )
+
+        self.detail_message_label.setObjectName(
+            "IssueDetailMessage"
+        )
+
+        self.detail_message_label.setWordWrap(
+            True
+        )
+
+        content_layout.addWidget(
+            self.detail_message_label
+        )
+
+        details_grid = QGridLayout()
+
+        details_grid.setHorizontalSpacing(
+            16
+        )
+
+        details_grid.setVerticalSpacing(
+            7
+        )
+
+        details_grid.setColumnStretch(
+            1,
+            1,
+        )
+
+        details_grid.setColumnStretch(
+            3,
+            1,
+        )
+
+        self.detail_title_value = (
+            self._create_detail_value_label()
+        )
+
+        self.detail_author_value = (
+            self._create_detail_value_label()
+        )
+
+        self.detail_book_id_value = (
+            self._create_detail_value_label()
+        )
+
+        self.detail_workbook_value = (
+            self._create_detail_value_label()
+        )
+
+        self.detail_sheet_value = (
+            self._create_detail_value_label()
+        )
+
+        self.detail_location_value = (
+            self._create_detail_value_label()
+        )
+
+        def add_detail_field(
+            caption_text: str,
+            value_label: QLabel,
+            row: int,
+            caption_column: int,
+            value_column: int,
+            value_column_span: int = 1,
+        ) -> None:
+            caption = QLabel(
+                caption_text
+            )
+
+            caption.setObjectName(
+                "DetailCaption"
+            )
+
+            details_grid.addWidget(
+                caption,
+                row,
+                caption_column,
+            )
+
+            details_grid.addWidget(
+                value_label,
+                row,
+                value_column,
+                1,
+                value_column_span,
+            )
+
+        add_detail_field(
+            "Title",
+            self.detail_title_value,
+            0,
+            0,
+            1,
+        )
+
+        add_detail_field(
+            "Author",
+            self.detail_author_value,
+            0,
+            2,
+            3,
+        )
+
+        add_detail_field(
+            "Book ID",
+            self.detail_book_id_value,
+            1,
+            0,
+            1,
+            3,
+        )
+
+        add_detail_field(
+            "Workbook",
+            self.detail_workbook_value,
+            2,
+            0,
+            1,
+        )
+
+        add_detail_field(
+            "Sheet",
+            self.detail_sheet_value,
+            2,
+            2,
+            3,
+        )
+
+        add_detail_field(
+            "Exact location",
+            self.detail_location_value,
+            3,
+            0,
+            1,
+            3,
+        )
+
+        content_layout.addLayout(
+            details_grid
+        )
+
+        additional_caption = QLabel(
+            "Additional details"
+        )
+
+        additional_caption.setObjectName(
+            "DetailCaption"
+        )
+
+        content_layout.addWidget(
+            additional_caption
+        )
+
+        self.detail_additional_value = QLabel(
+            "No issue selected."
+        )
+
+        self.detail_additional_value.setObjectName(
+            "DetailAdditionalValue"
+        )
+
+        self.detail_additional_value.setWordWrap(
+            True
+        )
+
+        self.detail_additional_value.setTextInteractionFlags(
+            Qt.TextInteractionFlag.TextSelectableByMouse
+        )
+
+        content_layout.addWidget(
+            self.detail_additional_value
+        )
+
+        panel_layout.addLayout(
+            content_layout,
+            stretch=1,
+        )
+
+        action_layout = QVBoxLayout()
+
+        action_layout.setSpacing(
+            9
+        )
+
+        action_layout.addStretch()
+
+        self.detail_open_excel_button = QPushButton(
+            "Open in Excel"
+        )
+
+        self.detail_open_excel_button.setObjectName(
+            "DetailOpenButton"
+        )
+
+        self.detail_open_excel_button.setMinimumSize(
+            220,
+            54,
+        )
+
+        self.detail_open_excel_button.setEnabled(
+            False
+        )
+
+        self.detail_open_excel_button.setToolTip(
+            "Open the correct workbook and select "
+            "the exact cell for this issue."
+        )
+
+        self.detail_open_excel_button.clicked.connect(
+            self.open_selected_issue_in_excel
+        )
+
+        action_layout.addWidget(
+            self.detail_open_excel_button
+        )
+
+        self.detail_target_hint_label = QLabel(
+            "Choose an issue with an exact workbook cell."
+        )
+
+        self.detail_target_hint_label.setObjectName(
+            "DetailTargetHint"
+        )
+
+        self.detail_target_hint_label.setWordWrap(
+            True
+        )
+
+        self.detail_target_hint_label.setAlignment(
+            Qt.AlignmentFlag.AlignCenter
+        )
+
+        self.detail_target_hint_label.setMaximumWidth(
+            220
+        )
+
+        action_layout.addWidget(
+            self.detail_target_hint_label
+        )
+
+        action_layout.addStretch()
+
+        panel_layout.addLayout(
+            action_layout
+        )
+
+        return panel
+    
     def refresh_workbook_sources(
         self,
     ) -> None:
@@ -1131,7 +1528,7 @@ class MainWindow(QMainWindow):
             True
         )
 
-        self._update_excel_button()
+        self._update_issue_detail_panel()
 
     def _get_selected_issue(
         self,
@@ -1195,20 +1592,214 @@ class MainWindow(QMainWindow):
             and issue.column_number > 0
         )
 
-    def _update_excel_button(
+    def _format_issue_location(
+        self,
+        issue: ScanIssue,
+    ) -> str:
+        """
+        Build a friendly exact-cell description for one issue.
+        """
+
+        row_number = issue.row_number
+        column_number = issue.column_number
+
+        column_name = (
+            issue.column_name.strip()
+            if issue.column_name
+            else ""
+        )
+
+        if (
+            row_number is not None
+            and row_number > 0
+            and column_number is not None
+            and column_number > 0
+        ):
+            cell_reference = (
+                f"{get_column_letter(column_number)}"
+                f"{row_number}"
+            )
+
+            if column_name:
+                return (
+                    f"{cell_reference} — "
+                    f"{column_name} column, "
+                    f"row {row_number}"
+                )
+
+            return (
+                f"{cell_reference} — "
+                f"row {row_number}, "
+                f"column {column_number}"
+            )
+
+        if (
+            row_number is not None
+            and row_number > 0
+        ):
+            return (
+                f"Row {row_number}"
+            )
+
+        if (
+            column_number is not None
+            and column_number > 0
+        ):
+            if column_name:
+                return (
+                    f"{column_name} column "
+                    f"(column {column_number})"
+                )
+
+            return (
+                f"Column {column_number}"
+            )
+
+        return (
+            "No exact cell target was recorded."
+        )
+
+    def _update_issue_detail_panel(
         self,
     ) -> None:
         """
-        Enable Excel navigation only for issues with exact cell targets.
+        Show the complete ScanIssue attached to the selected table row.
         """
 
         issue = self._get_selected_issue()
 
-        self.open_excel_button.setEnabled(
+        if issue is None:
+            self.detail_problem_label.setText(
+                "Select an issue"
+            )
+
+            self.detail_area_label.setText(
+                "No selection"
+            )
+
+            self.detail_message_label.setText(
+                "Choose a row from the work queue to see "
+                "exactly what needs attention."
+            )
+
+            self.detail_title_value.setText(
+                "—"
+            )
+
+            self.detail_author_value.setText(
+                "—"
+            )
+
+            self.detail_book_id_value.setText(
+                "—"
+            )
+
+            self.detail_workbook_value.setText(
+                "—"
+            )
+
+            self.detail_sheet_value.setText(
+                "—"
+            )
+
+            self.detail_location_value.setText(
+                "—"
+            )
+
+            self.detail_additional_value.setText(
+                "No issue selected."
+            )
+
+            self.detail_open_excel_button.setEnabled(
+                False
+            )
+
+            self.detail_target_hint_label.setText(
+                "Choose an issue with an exact workbook cell."
+            )
+
+            return
+
+        workbook_name = (
+            issue.workbook_path.name
+            if issue.workbook_path is not None
+            else "Not available"
+        )
+
+        self.detail_problem_label.setText(
+            issue.category
+            or "Workbook issue"
+        )
+
+        self.detail_area_label.setText(
+            issue.area
+            or "Issue"
+        )
+
+        self.detail_message_label.setText(
+            issue.message
+            or "This record needs attention."
+        )
+
+        self.detail_title_value.setText(
+            issue.title
+            or "Not available"
+        )
+
+        self.detail_author_value.setText(
+            issue.author
+            or "Not available"
+        )
+
+        self.detail_book_id_value.setText(
+            issue.book_id
+            or "Not available"
+        )
+
+        self.detail_workbook_value.setText(
+            workbook_name
+        )
+
+        self.detail_sheet_value.setText(
+            issue.sheet_name
+            or "Not available"
+        )
+
+        self.detail_location_value.setText(
+            self._format_issue_location(
+                issue
+            )
+        )
+
+        self.detail_additional_value.setText(
+            issue.details.strip()
+            if issue.details
+            and issue.details.strip()
+            else "No additional details were recorded."
+        )
+
+        has_excel_target = (
             self._issue_has_excel_target(
                 issue
             )
         )
+
+        self.detail_open_excel_button.setEnabled(
+            has_excel_target
+        )
+
+        if has_excel_target:
+            self.detail_target_hint_label.setText(
+                (
+                    f"Open {workbook_name} at "
+                    f"{self._format_issue_location(issue)}."
+                )
+            )
+
+        else:
+            self.detail_target_hint_label.setText(
+                "This issue does not point to one exact cell."
+            )
 
     def _handle_issue_double_click(
         self,
@@ -1408,16 +1999,63 @@ class MainWindow(QMainWindow):
             }
 
             QFrame#DirectoryCard,
-            QFrame#SummaryCard {
+            QFrame#SummaryCard,
+            QFrame#IssueDetailCard {
                 background: #fffdf9;
                 border: 1px solid #ddd5ca;
                 border-radius: 10px;
+            }
+
+            QFrame#IssueDetailCard {
+                border-color: #cfc5e2;
             }
 
             QLabel#DirectoryPathLabel {
                 color: #514a43;
                 font-family: "Consolas";
                 font-size: 9.5pt;
+            }
+
+            QLabel#IssueDetailHeading {
+                font-size: 15pt;
+                font-weight: 700;
+            }
+
+            QLabel#IssueDetailBadge {
+                background: #eee8df;
+                border: 1px solid #d5cbbf;
+                border-radius: 9px;
+                color: #5d554d;
+                font-size: 9pt;
+                font-weight: 700;
+                padding: 3px 9px;
+            }
+
+            QLabel#IssueDetailMessage {
+                color: #4f4841;
+                font-size: 10.5pt;
+            }
+
+            QLabel#DetailCaption {
+                color: #746d65;
+                font-size: 9pt;
+                font-weight: 700;
+            }
+
+            QLabel#DetailValue {
+                color: #302b26;
+            }
+
+            QLabel#DetailAdditionalValue {
+                background: #f8f4ee;
+                border-radius: 7px;
+                color: #4f4841;
+                padding: 8px 10px;
+            }
+
+            QLabel#DetailTargetHint {
+                color: #746d65;
+                font-size: 9pt;
             }
 
             QLineEdit,
@@ -1435,6 +2073,11 @@ class MainWindow(QMainWindow):
                 border-radius: 8px;
                 gridline-color: #e5ded5;
                 outline: none;
+            }
+
+            QTableWidget::item:selected {
+                background: #dcd4f3;
+                color: #27231f;
             }
 
             QHeaderView::section {
@@ -1462,6 +2105,12 @@ class MainWindow(QMainWindow):
                 background: #d8cec1;
             }
 
+            QPushButton:disabled {
+                background: #eeeae4;
+                border-color: #d9d2c9;
+                color: #9a9289;
+            }
+
             QPushButton#PrimaryButton {
                 background: #dcd4f3;
                 border-color: #bdb2df;
@@ -1471,6 +2120,29 @@ class MainWindow(QMainWindow):
 
             QPushButton#PrimaryButton:hover {
                 background: #d0c6ef;
+            }
+
+            QPushButton#DetailOpenButton {
+                background: #7662b4;
+                border-color: #6552a4;
+                color: #ffffff;
+                font-size: 11pt;
+                font-weight: 700;
+                padding: 12px 20px;
+            }
+
+            QPushButton#DetailOpenButton:hover {
+                background: #6955aa;
+            }
+
+            QPushButton#DetailOpenButton:pressed {
+                background: #5c4998;
+            }
+
+            QPushButton#DetailOpenButton:disabled {
+                background: #d9d2e5;
+                border-color: #ccc3da;
+                color: #8a8295;
             }
 
             QLabel#StatusLabel {
