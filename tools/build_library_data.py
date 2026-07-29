@@ -22,7 +22,13 @@ BOOKS_OUTPUT_PATH = OUTPUT_DIR / "library-books.json"
 CATALOG_OUTPUT_PATH = OUTPUT_DIR / "library-catalog.json"
 WANTED_OUTPUT_PATH = OUTPUT_DIR / "library-wanted.json"
 META_OUTPUT_PATH = OUTPUT_DIR / "library-meta.json"
-CATALOG_REQUIRED_HEADERS = {"first", "last", "title", "jc", "cj"}
+CATALOG_REQUIRED_HEADERS = {
+    "cover",
+    "title",
+    "first",
+    "last",
+    "format",
+}
 DEBUG_IMAGE_INSPECTION = False
 COVER_OUTPUT_DIR = OUTPUT_DIR / "covers"
 COVER_PUBLIC_PATH = "/data/covers"
@@ -1770,6 +1776,14 @@ def main() -> None:
 
     bookcase_rooms = load_bookcase_rooms(workbook)
     catalog_books, catalog_report = load_catalog_books(workbook)
+
+    if not catalog_books:
+        raise ValueError(
+            "Catalog safety stop: no Catalog books were detected. "
+            "The build was aborted before generated covers or JSON files "
+            "could be deleted or replaced."
+        )
+
     wanted_lists, wanted_report = load_wanted_lists(workbook)
 
     cover_extraction_report = extract_catalog_cover_images(
