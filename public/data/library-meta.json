@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T23:53:34.816356+00:00",
+  "generatedAt": "2026-07-29T02:13:15.768151+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "sourceSheet": "List View",
   "bookCount": 1033,
@@ -22702,7 +22702,7 @@
     "extractedCount": 0,
     "convertedCount": 0,
     "cachedCount": 0,
-    "deletedStaleCount": 1033,
+    "deletedStaleCount": 0,
     "missingAnchors": [],
     "missingMediaFiles": [],
     "conversionErrors": [],
