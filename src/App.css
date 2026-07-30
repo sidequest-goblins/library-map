@@ -2555,9 +2555,8 @@ select {
 }
 
 .statsJumpNav {
-  display: flex;
-  gap: 0.6rem;
-  align-items: center;
+  display: grid;
+  gap: 0.35rem;
   min-width: 0;
   padding: 0.45rem 0.55rem;
   border:
@@ -2572,7 +2571,6 @@ select {
 }
 
 .statsJumpLabel {
-  flex: 0 0 auto;
   color: var(--greenDark);
   font-size: 0.68rem;
   font-weight: 900;
@@ -2837,7 +2835,9 @@ select {
 .statsCurrentBook {
   display: grid;
   gap: 0.18rem;
+  width: 100%;
   min-width: 0;
+  border: 0;
   border-left:
     3px solid
     rgba(82, 111, 69, 0.42);
@@ -2845,8 +2845,36 @@ select {
     0 12px 12px 0;
   padding:
     0.6rem 0.65rem;
+  color: inherit;
   background:
     rgba(169, 183, 141, 0.13);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  appearance: none;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease;
+}
+
+.statsCurrentBook:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-left-color:
+    var(--green);
+  background:
+    rgba(169, 183, 141, 0.23);
+}
+
+.statsCurrentBook:focus-visible {
+  outline:
+    3px solid
+    rgba(201, 154, 69, 0.3);
+  outline-offset: 2px;
+}
+
+.statsCurrentBook:disabled {
+  cursor: default;
 }
 
 .statsCurrentBook strong {

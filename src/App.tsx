@@ -545,6 +545,10 @@ type UpdateReturnPosition = {
   windowScrollY: number;
 };
 
+type StatsReturnPosition = {
+  windowScrollY: number;
+};
+
 type BookDetailDisclosureKey =
   | "readingActivity"
   | "challengeProgress"
@@ -598,7 +602,7 @@ const WANTED_MODE_OPTIONS: Array<{
   },
   {
     mode: "seriesToComplete",
-    label: "Series to Complete",
+    label: "Series",
     description: "Missing books from series we have already started collecting.",
     emptyText: "No missing-series books added yet.",
     emptySearchText: "No missing-series books match that search.",
@@ -2630,6 +2634,9 @@ export default function App() {
   const updateReturnPositionRef =
     useRef<UpdateReturnPosition | null>(null);
 
+  const statsReturnPositionRef =
+    useRef<StatsReturnPosition | null>(null);
+
   const searchAutocompleteRef =
     useRef<HTMLDivElement | null>(null);
 
@@ -2832,6 +2839,37 @@ export default function App() {
         });
 
         updateReturnPositionRef.current =
+          null;
+      }
+    );
+  }
+
+  function openStatsBookDetail(
+    bookId: string
+  ) {
+    statsReturnPositionRef.current = {
+      windowScrollY: window.scrollY,
+    };
+
+    setSelectedBookId(bookId);
+  }
+
+  function backToStatsFromDetail() {
+    const returnPosition =
+      statsReturnPositionRef.current;
+
+    setSelectedBookId(null);
+
+    window.requestAnimationFrame(
+      () => {
+        window.scrollTo({
+          top:
+            returnPosition
+              ?.windowScrollY ?? 0,
+          behavior: "auto",
+        });
+
+        statsReturnPositionRef.current =
           null;
       }
     );
@@ -9444,12 +9482,7 @@ export default function App() {
       ) : activeTab === "wanted" ? (
         <section className="wantedPanel">
           <section className="wantedIntro">
-            <p className="eyebrow">Bookstore lists</p>
             <h2>Wanted books</h2>
-            <p>
-              Books we definitely want, plus missing volumes from series we have
-              already started collecting.
-            </p>
           </section>
 
           <div
@@ -9536,14 +9569,6 @@ export default function App() {
                 {activeChallenge?.name ??
                   "No challenges yet"}
               </h2>
-
-              <p>
-                Challenge book lists come from the challenge
-                workbook. Live progress and completion come
-                from explicitly linked reading attempts.
-                Overall library Read status is tracked
-                separately.
-              </p>
             </section>
 
             {challengeData.challenges.length === 0 ? (
@@ -9905,31 +9930,25 @@ export default function App() {
           </section>
         )
       ) : activeTab === "stats" ? (
-        <section className="statsPanel">
-          <section className="statsIntro">
-            <p className="eyebrow">
-              Household library
-            </p>
+        selectedBook ? (
+          renderBookDetail(
+            "Back to household business",
+            backToStatsFromDetail
+          )
+        ) : (
+          <section className="statsPanel">
+            <section className="statsIntro">
+              <h2>
+                The collection by the
+                numbers
+              </h2>
 
-            <h2>
-              The collection by the
-              numbers
-            </h2>
-
-            <p>
-              Explore what you own,
-              what each of you has
-              read, and where the
-              collection’s metadata
-              still has gaps.
-            </p>
-
-            <p className="statsDataSource">
-              {sharedLibraryStateIsAuthoritative
-                ? "Read totals are live from the CJade household account."
-                : "Read totals are currently using the workbook CJ and JC checkboxes."}
-            </p>
-          </section>
+              <p className="statsDataSource">
+                {sharedLibraryStateIsAuthoritative
+                  ? "Live household read data."
+                  : "Sign in for live read data."}
+              </p>
+            </section>
 
           <nav
             className="statsJumpNav"
@@ -9972,7 +9991,7 @@ export default function App() {
                 </span>
 
                 <span>
-                  Data health
+                  Completion
                 </span>
               </button>
 
@@ -10026,20 +10045,9 @@ export default function App() {
             className="statsSection"
           >
             <div className="statsSectionHeader">
-              <div>
-                <p className="eyebrow">
-                  Currently reading
-                </p>
-
-                <h2>
-                  Household business
-                </h2>
-              </div>
-
-              <p>
-                Fully authorized
-                nosiness
-              </p>
+              <h2>
+                Currently reading
+              </h2>
             </div>
 
             {sharedReadingAttemptsAreAuthoritative ? (
@@ -10074,11 +10082,22 @@ export default function App() {
                               attempt,
                               book,
                             }) => (
-                              <article
+                              <button
                                 key={
                                   attempt.attempt_id
                                 }
+                                type="button"
                                 className="statsCurrentBook"
+                                disabled={!book}
+                                onClick={() => {
+                                  if (!book) {
+                                    return;
+                                  }
+
+                                  openStatsBookDetail(
+                                    book.bookId
+                                  );
+                                }}
                               >
                                 <strong>
                                   {book?.title ??
@@ -10096,7 +10115,7 @@ export default function App() {
                                     book
                                   )}
                                 </span>
-                              </article>
+                              </button>
                             )
                           )}
                         </div>
@@ -10124,16 +10143,9 @@ export default function App() {
             className="statsSection"
           >
             <div className="statsSectionHeader">
-              <div>
-                <p className="eyebrow">
-                  Data coverage
-                </p>
-
-                <h2>
-                  How complete is the
-                  workbook?
-                </h2>
-              </div>
+              <h2>
+                Completion
+              </h2>
 
               <p>
                 {statsSummary.totalBooks.toLocaleString()}{" "}
@@ -10201,15 +10213,9 @@ export default function App() {
               className="statsSection statsExplorer"
             >
             <div className="statsSectionHeader">
-              <div>
-                <p className="eyebrow">
-                  Chart explorer
-                </p>
-
-                <h2>
-                  Break it down
-                </h2>
-              </div>
+              <h2>
+                Chart explorer
+              </h2>
 
               <p>
                 {
@@ -10311,8 +10317,7 @@ export default function App() {
 
                 <span>
                   Exclude Manga /
-                  Graphic Novels from
-                  this chart.
+                  Graphic Novels.
                 </span>
               </span>
             </label>
@@ -11013,6 +11018,7 @@ export default function App() {
             )}
           </section>
         </section>
+        )
       ) : activeTab === "update" ? (
         selectedBook ? (
           renderBookDetail(
@@ -11023,34 +11029,16 @@ export default function App() {
         ) : (
           <section className="updatePanel">
             <section className="updateIntro">
-              <p className="eyebrow">
-                Workbook helper
-              </p>
-
               <h2>
-                Field research
+                Workbook helper
               </h2>
-
-              <p>
-                Choose one or more
-                research or review
-                queues, then work
-                through the books in
-                physical library order.
-              </p>
             </section>
 
             <section className="statsSection">
               <div className="statsSectionHeader">
-                <div>
-                  <p className="eyebrow">
-                    Workbook coverage
-                  </p>
-
-                  <h2>
-                    Required data health
-                  </h2>
-                </div>
+                <h2>
+                  Workbook coverage
+                </h2>
 
                 <p>
                   {books.length.toLocaleString()}{" "}
@@ -11253,16 +11241,9 @@ export default function App() {
               className="updateResults"
             >
               <div className="updateResultsHeader">
-                <div>
-                  <p className="eyebrow">
-                    Field research
-                    queue
-                  </p>
-
-                  <h2>
-                    Books to check
-                  </h2>
-                </div>
+                <h2>
+                  Field research queue
+                </h2>
 
                 <p>
                   {selectedUpdateFieldList
