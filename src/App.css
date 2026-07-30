@@ -903,6 +903,99 @@ select {
   font-size: 1rem;
 }
 
+.bookMetadataList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.bookMetadataToggle {
+  display: inline-flex;
+  gap: 0.48rem;
+  align-items: center;
+  width: fit-content;
+  border:
+    1px solid
+    rgba(82, 111, 69, 0.28);
+  border-radius: 999px;
+  padding: 0.42rem 0.7rem;
+  color: var(--muted);
+  background:
+    rgba(255, 250, 240, 0.76);
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.bookMetadataToggle:hover:not(
+  .bookMetadataToggleDisabled
+) {
+  transform: translateY(-1px);
+  border-color:
+    rgba(52, 72, 46, 0.48);
+  box-shadow:
+    0 6px 14px
+    rgba(52, 72, 46, 0.12);
+}
+
+.bookMetadataToggle:has(
+  input:checked
+) {
+  color: #fff8e9;
+  border-color:
+    rgba(52, 72, 46, 0.42);
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--greenDark)
+    );
+}
+
+.bookMetadataToggle input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: var(--gold);
+  cursor: inherit;
+}
+
+.bookMetadataToggle:focus-within {
+  outline:
+    3px solid
+    rgba(201, 154, 69, 0.28);
+  outline-offset: 2px;
+}
+
+.bookMetadataToggleDisabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+  transform: none;
+}
+
+.bookMetadataStatus {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.bookMetadataStatusSuccess {
+  color: var(--greenDark);
+  font-weight: 700;
+}
+
+.bookMetadataStatusError {
+  color: #8a3429;
+  font-weight: 700;
+}
+
 .detailChips,
 .readStatusList {
   display: flex;

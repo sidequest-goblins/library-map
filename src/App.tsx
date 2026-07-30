@@ -49,6 +49,9 @@ import type {
   WantedBook, 
   WantedLists, 
 } from "./data/libraryTypes";
+import type {
+  LibraryBookMetadata,
+} from "./data/libraryMetadata";
 
 /*
  * Master switch for temporary developer-only tools.
@@ -457,6 +460,12 @@ type ReadingAttemptFeedback = {
 
 type BookRatingFeedback = {
   stateKey: string;
+  kind: "success" | "error";
+  message: string;
+} | null;
+
+type BookMetadataFeedback = {
+  bookId: string;
   kind: "success" | "error";
   message: string;
 } | null;
@@ -2301,6 +2310,40 @@ async function fetchLibraryStateRows(
   return data ?? [];
 }
 
+async function fetchBookMetadataRows(
+  userId: string
+): Promise<LibraryBookMetadata[]> {
+  const { data, error } =
+    await supabase
+      .from("library_book_metadata")
+      .select(`
+        user_id,
+        book_id,
+        lgbtq,
+        created_at,
+        updated_at
+      `)
+      .eq(
+        "user_id",
+        userId
+      )
+      .order(
+        "book_id",
+        {
+          ascending: true,
+        }
+      )
+      .overrideTypes<
+        LibraryBookMetadata[]
+      >();
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}
+
 async function fetchReadingAttempts(
   userId: string
 ): Promise<LibraryReaderReadingAttempt[]> {
@@ -2387,7 +2430,10 @@ async function fetchChallengeAttemptLinks(
 }
 
 export default function App() {
-  const [books, setBooks] = useState<Book[]>([]);
+  const [
+    workbookBooks,
+    setWorkbookBooks,
+  ] = useState<Book[]>([]);
   const [wantedLists, setWantedLists] = useState<WantedLists>(EMPTY_WANTED_LISTS);
   const [challengeData, setChallengeData] =
     useState<ChallengeData>(EMPTY_CHALLENGE_DATA);
@@ -2396,6 +2442,39 @@ export default function App() {
     householdSession,
     setHouseholdSession,
   ] = useState<Session | null>(null);
+
+  const [
+    bookMetadataRows,
+    setBookMetadataRows,
+  ] = useState<
+    LibraryBookMetadata[]
+  >([]);
+
+  const [
+    bookMetadataLoadStatus,
+    setBookMetadataLoadStatus,
+  ] = useState<
+    LibraryStateLoadStatus
+  >("idle");
+
+  const [
+    bookMetadataLoadError,
+    setBookMetadataLoadError,
+  ] = useState("");
+
+  const [
+    bookMetadataSavingBookId,
+    setBookMetadataSavingBookId,
+  ] = useState<string | null>(
+    null
+  );
+
+  const [
+    bookMetadataFeedback,
+    setBookMetadataFeedback,
+  ] = useState<
+    BookMetadataFeedback
+  >(null);
 
   const [
     libraryStateRows,
@@ -2642,6 +2721,52 @@ export default function App() {
 
   const appMenuRef =
     useRef<HTMLDivElement | null>(null);
+
+  const bookMetadataByBookId =
+    useMemo(
+      () =>
+        new Map(
+          bookMetadataRows.map(
+            (metadataRow) => [
+              metadataRow.book_id,
+              metadataRow,
+            ]
+          )
+        ),
+      [bookMetadataRows]
+    );
+
+  const sharedBookMetadataIsAuthoritative =
+    householdSession !== null &&
+    bookMetadataLoadStatus ===
+      "ready";
+
+  const books = useMemo(
+    () =>
+      workbookBooks.map(
+        (book) => {
+          if (
+            !sharedBookMetadataIsAuthoritative
+          ) {
+            return book;
+          }
+
+          return {
+            ...book,
+
+            lgbtq:
+              bookMetadataByBookId.get(
+                book.bookId
+              )?.lgbtq ?? false,
+          };
+        }
+      ),
+    [
+      workbookBooks,
+      sharedBookMetadataIsAuthoritative,
+      bookMetadataByBookId,
+    ]
+  );
 
   useEffect(() => {
     if (
@@ -2896,7 +3021,7 @@ export default function App() {
 
         const loadedBooks = (await booksResponse.json()) as Book[];
 
-        setBooks(loadedBooks);
+        setWorkbookBooks(loadedBooks);
         setWantedLists(loadedWantedLists);
         setChallengeData(loadedChallengeData);
         setLoadStatus("ready");
@@ -2912,6 +3037,95 @@ export default function App() {
 
     loadBooks();
   }, []);
+
+  useEffect(() => {
+    let isActive = true;
+
+    async function loadBookMetadata() {
+      if (!householdSession) {
+        setBookMetadataRows([]);
+
+        setBookMetadataLoadStatus(
+          "idle"
+        );
+
+        setBookMetadataLoadError("");
+
+        setBookMetadataSavingBookId(
+          null
+        );
+
+        setBookMetadataFeedback(null);
+
+        return;
+      }
+
+      setBookMetadataLoadStatus(
+        "loading"
+      );
+
+      setBookMetadataLoadError("");
+
+      try {
+        const loadedRows =
+          await fetchBookMetadataRows(
+            householdSession.user.id
+          );
+
+        if (!isActive) {
+          return;
+        }
+
+        setBookMetadataRows(
+          loadedRows
+        );
+
+        setBookMetadataLoadStatus(
+          "ready"
+        );
+
+        if (
+          loadedRows.length !== 1033
+        ) {
+          console.warn(
+            "The number of Supabase book metadata rows differs from the initial migration count.",
+            {
+              expectedRows: 1033,
+              loadedRows:
+                loadedRows.length,
+            }
+          );
+        }
+      } catch (error) {
+        if (!isActive) {
+          return;
+        }
+
+        console.error(
+          "Could not load shared book metadata.",
+          error
+        );
+
+        setBookMetadataRows([]);
+
+        setBookMetadataLoadStatus(
+          "error"
+        );
+
+        setBookMetadataLoadError(
+          error instanceof Error
+            ? error.message
+            : "Unknown Supabase error"
+        );
+      }
+    }
+
+    void loadBookMetadata();
+
+    return () => {
+      isActive = false;
+    };
+  }, [householdSession]);
 
   useEffect(() => {
     let isActive = true;
@@ -5312,6 +5526,146 @@ export default function App() {
     setBookDetailSaveError("");
   }
 
+  async function saveBookLgbtq(
+    book: Book,
+    nextLgbtq: boolean
+  ) {
+    if (
+      !householdSession ||
+      bookMetadataLoadStatus !==
+        "ready"
+    ) {
+      setBookMetadataFeedback({
+        bookId: book.bookId,
+        kind: "error",
+        message:
+          "Shared book metadata must finish loading before saving.",
+      });
+
+      return;
+    }
+
+    if (bookMetadataSavingBookId) {
+      return;
+    }
+
+    const userId =
+      householdSession.user.id;
+
+    const previousRows =
+      bookMetadataRows;
+
+    const localTimestamp =
+      new Date().toISOString();
+
+    setBookMetadataSavingBookId(
+      book.bookId
+    );
+
+    setBookMetadataFeedback(null);
+
+    // Optimistically update the app so the checkbox,
+    // detail chip, and future Stats values change
+    // immediately.
+    setBookMetadataRows(
+      (currentRows) => {
+        const existingRow =
+          currentRows.find(
+            (metadataRow) =>
+              metadataRow.book_id ===
+              book.bookId
+          );
+
+        if (existingRow) {
+          return currentRows.map(
+            (metadataRow) =>
+              metadataRow.book_id ===
+              book.bookId
+                ? {
+                    ...metadataRow,
+                    lgbtq:
+                      nextLgbtq,
+                    updated_at:
+                      localTimestamp,
+                  }
+                : metadataRow
+          );
+        }
+
+        return [
+          ...currentRows,
+          {
+            user_id: userId,
+            book_id: book.bookId,
+            lgbtq: nextLgbtq,
+            created_at:
+              localTimestamp,
+            updated_at:
+              localTimestamp,
+          },
+        ].sort((a, b) =>
+          a.book_id.localeCompare(
+            b.book_id
+          )
+        );
+      }
+    );
+
+    try {
+      const { error } =
+        await supabase
+          .from(
+            "library_book_metadata"
+          )
+          .upsert(
+            {
+              user_id: userId,
+              book_id: book.bookId,
+              lgbtq: nextLgbtq,
+            },
+            {
+              onConflict:
+                "user_id,book_id",
+            }
+          );
+
+      if (error) {
+        throw error;
+      }
+
+      setBookMetadataFeedback({
+        bookId: book.bookId,
+        kind: "success",
+        message:
+          "LGBTQ+ metadata saved.",
+      });
+    } catch (error) {
+      // Put the previous authoritative values
+      // back if Supabase rejects the save.
+      setBookMetadataRows(
+        previousRows
+      );
+
+      console.error(
+        "Could not save LGBTQ+ metadata.",
+        error
+      );
+
+      setBookMetadataFeedback({
+        bookId: book.bookId,
+        kind: "error",
+        message:
+          error instanceof Error
+            ? `LGBTQ+ failed to save: ${error.message}`
+            : "LGBTQ+ failed to save because of an unknown Supabase error.",
+      });
+    } finally {
+      setBookMetadataSavingBookId(
+        null
+      );
+    }
+  }
+
   async function saveBookRating(
     book: Book,
     readerId: LibraryReaderId,
@@ -7206,6 +7560,19 @@ export default function App() {
         selectedBookCatalogKey
       );
 
+    const selectedBookMetadataCanEdit =
+      sharedBookMetadataIsAuthoritative;
+
+    const selectedBookMetadataIsSaving =
+      bookMetadataSavingBookId ===
+      selectedBook.bookId;
+
+    const selectedBookMetadataFeedback =
+      bookMetadataFeedback?.bookId ===
+      selectedBook.bookId
+        ? bookMetadataFeedback
+        : null;
+
     const readingActivityCanEdit =
       readStatusCanEdit;
 
@@ -7371,6 +7738,97 @@ export default function App() {
           </div>
 
           <div className="bookDetailSections">
+
+            <section className="detailSection">
+              <p className="detailLabel">
+                Tags
+              </p>
+
+              <div
+                className="bookMetadataList"
+                role="group"
+                aria-label="Book metadata"
+              >
+                <label
+                  className={[
+                    "bookMetadataToggle",
+
+                    !selectedBookMetadataCanEdit ||
+                    selectedBookMetadataIsSaving
+                      ? "bookMetadataToggleDisabled"
+                      : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
+                  <input
+                    type="checkbox"
+                    checked={Boolean(
+                      selectedBook.lgbtq
+                    )}
+                    disabled={
+                      !selectedBookMetadataCanEdit ||
+                      selectedBookMetadataIsSaving
+                    }
+                    onChange={(event) => {
+                      void saveBookLgbtq(
+                        selectedBook,
+                        event.currentTarget
+                          .checked
+                      );
+                    }}
+                  />
+
+                  <span>LGBTQ+</span>
+                </label>
+              </div>
+
+              {selectedBookMetadataIsSaving ? (
+                <p className="bookMetadataStatus">
+                  Saving…
+                </p>
+              ) : selectedBookMetadataFeedback ? (
+                <p
+                  className={[
+                    "bookMetadataStatus",
+
+                    selectedBookMetadataFeedback
+                      .kind === "error"
+                      ? "bookMetadataStatusError"
+                      : "bookMetadataStatusSuccess",
+                  ].join(" ")}
+                  role={
+                    selectedBookMetadataFeedback
+                      .kind === "error"
+                      ? "alert"
+                      : "status"
+                  }
+                >
+                  {
+                    selectedBookMetadataFeedback
+                      .message
+                  }
+                </p>
+              ) : bookMetadataLoadStatus ===
+                "loading" ? (
+                <p className="bookMetadataStatus">
+                  Loading shared metadata…
+                </p>
+              ) : bookMetadataLoadStatus ===
+                "error" ? (
+                <p className="bookMetadataStatus bookMetadataStatusError">
+                  Shared metadata could not
+                  load:{" "}
+                  {bookMetadataLoadError}
+                </p>
+              ) : !householdSession ? (
+                <p className="bookMetadataStatus">
+                  Sign in to edit shared
+                  metadata.
+                </p>
+              ) : null}
+            </section>
+
             <section className="detailSection">
               <p className="detailLabel">
                 Read status
