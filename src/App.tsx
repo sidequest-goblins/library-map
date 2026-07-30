@@ -7,16 +7,13 @@ import {
   useState,
 } from "react";
 import type { Session } from "@supabase/supabase-js";
-
 import {
   Pie,
   PieChart,
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-
 import "./App.css";
-
 import BookcaseView from "./components/BookcaseView";
 import HouseholdAccountPanel from "./HouseholdAccountPanel";
 import { supabase } from "./supabaseClient";
@@ -187,6 +184,13 @@ type StatsWorkAudit = {
   sourceBookCount: number;
   workCount: number;
   groups: StatsWorkAuditGroup[];
+};
+
+type StatsCompositionRow = {
+  key: string;
+  label: string;
+  count: number;
+  fill: string;
 };
 
 const STATS_DATASET_OPTIONS: Array<{
@@ -677,6 +681,163 @@ function getStatsPercent(
 
   return Math.round(
     (part / total) * 100
+  );
+}
+
+function StatsCompositionChart({
+  title,
+  description,
+  rows,
+  featuredKey,
+  unitLabel,
+}: {
+  title: string;
+  description: string;
+  rows: StatsCompositionRow[];
+  featuredKey: string;
+  unitLabel: string;
+}) {
+  const total = rows.reduce(
+    (
+      runningTotal,
+      row
+    ) =>
+      runningTotal +
+      row.count,
+    0
+  );
+
+  const featuredRow =
+    rows.find(
+      (row) =>
+        row.key ===
+        featuredKey
+    ) ??
+    rows[0];
+
+  const featuredCount =
+    featuredRow?.count ?? 0;
+
+  const featuredPercentage =
+    getStatsPercent(
+      featuredCount,
+      total
+    );
+
+  return (
+    <article className="statsRepresentationCard">
+      <div className="statsRepresentationCardHeader">
+        <div>
+          <h3>{title}</h3>
+
+          <p>{description}</p>
+        </div>
+
+        <strong>
+          {featuredCount.toLocaleString()}{" "}
+          of{" "}
+          {total.toLocaleString()}{" "}
+          {unitLabel}
+        </strong>
+      </div>
+
+      <div className="statsPieLayout statsRepresentationPieLayout">
+        <div
+          className="statsPieChart"
+          role="img"
+          aria-label={`${title}: ${featuredCount.toLocaleString()} of ${total.toLocaleString()} ${unitLabel}`}
+        >
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+          >
+            <PieChart
+              accessibilityLayer
+            >
+              <Pie
+                data={rows}
+                dataKey="count"
+                nameKey="label"
+                innerRadius="52%"
+                outerRadius="82%"
+                paddingAngle={2}
+                stroke="#fff8e9"
+                strokeWidth={2}
+                isAnimationActive={
+                  false
+                }
+              />
+
+              <Tooltip
+                formatter={(
+                  value,
+                  _name,
+                  item
+                ) => [
+                  Number(
+                    value ?? 0
+                  ).toLocaleString(),
+
+                  String(
+                    item.payload
+                      .label ??
+                      unitLabel
+                  ),
+                ]}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+
+          <div
+            className="statsPieCenter"
+            aria-hidden="true"
+          >
+            <strong>
+              {featuredPercentage}%
+            </strong>
+
+            <span>
+              {featuredRow?.label ??
+                title}
+            </span>
+          </div>
+        </div>
+
+        <div className="statsPieLegend">
+          {rows.map(
+            (row) => (
+              <div
+                key={row.key}
+                className="statsPieLegendItem"
+              >
+                <span
+                  className="statsPieSwatch"
+                  style={{
+                    backgroundColor:
+                      row.fill,
+                  }}
+                  aria-hidden="true"
+                />
+
+                <span className="statsPieLegendLabel">
+                  {row.label}
+                </span>
+
+                <span className="statsPieLegendValue">
+                  {row.count.toLocaleString()}{" "}
+                  ·{" "}
+                  {getStatsPercent(
+                    row.count,
+                    total
+                  )}
+                  %
+                </span>
+              </div>
+            )
+          )}
+        </div>
+      </div>
+    </article>
   );
 }
 
@@ -4983,6 +5144,44 @@ export default function App() {
         statsBreakdown
     ) ??
     STATS_BREAKDOWN_OPTIONS[0];
+
+  const lgbtqRepresentationRows =
+    useMemo<
+      StatsCompositionRow[]
+    >(
+      () => [
+        {
+          key: "lgbtq",
+          label: "LGBTQ+",
+          count:
+            statsSummary
+              .lgbtqBooks,
+          fill:
+            STATS_PIE_COLORS[0],
+        },
+        {
+          key: "rest",
+          label:
+            "Rest of library",
+          count:
+            Math.max(
+              statsSummary
+                .totalBooks -
+                statsSummary
+                  .lgbtqBooks,
+              0
+            ),
+          fill:
+            STATS_PIE_COLORS[5],
+        },
+      ],
+      [
+        statsSummary
+          .lgbtqBooks,
+        statsSummary
+          .totalBooks,
+      ]
+    );
 
   const statsOverviewCards = [
     {
@@ -10478,6 +10677,24 @@ export default function App() {
                 className="statsJumpButton"
                 onClick={() => {
                   scrollToStatsSection(
+                    "stats-representation"
+                  );
+                }}
+              >
+                <span aria-hidden="true">
+                  🌈
+                </span>
+
+                <span>
+                  Representation
+                </span>
+              </button>
+
+              <button
+                type="button"
+                className="statsJumpButton"
+                onClick={() => {
+                  scrollToStatsSection(
                     "stats-data-health"
                   );
                 }}
@@ -10535,6 +10752,31 @@ export default function App() {
               )
             )}
           </div>
+
+          <section
+            id="stats-representation"
+            className="statsSection"
+          >
+            <div className="statsSectionHeader">
+              <div>
+                <h2>
+                  Representation
+                </h2>
+              </div>
+            </div>
+
+            <div className="statsRepresentationGrid">
+              <StatsCompositionChart
+                title="LGBTQ+ books"
+                description="Books tagged LGBTQ+ compared with the rest of the library."
+                rows={
+                  lgbtqRepresentationRows
+                }
+                featuredKey="lgbtq"
+                unitLabel="books"
+              />
+            </div>
+          </section>
 
           <section
             id="stats-reading"
