@@ -1,0 +1,169 @@
+-- ============================================================
+-- MyLibrary: household-maintained metadata for individual books
+-- ============================================================
+--
+-- Permanent Book ID is the record identity.
+-- Titles, authors, ISBNs, locations, and sorting may change
+-- without changing book_id.
+--
+-- BIPOC does NOT belong here because it describes an author,
+-- not an individual book.
+-- ============================================================
+
+create table if not exists public.library_book_metadata (
+  user_id uuid not null
+    references auth.users(id)
+    on delete cascade,
+
+  book_id text not null,
+
+  lgbtq boolean not null default false,
+
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+
+  constraint library_book_metadata_book_id_check
+    check (
+      book_id ~
+        '^book-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+    ),
+
+  constraint library_book_metadata_primary_key
+    primary key (user_id, book_id)
+);
+
+-- Automatically refresh updated_at whenever metadata changes.
+
+create or replace function public.set_library_book_metadata_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists
+  set_library_book_metadata_updated_at
+  on public.library_book_metadata;
+
+create trigger set_library_book_metadata_updated_at
+before update on public.library_book_metadata
+for each row
+execute function public.set_library_book_metadata_updated_at();
+
+-- ============================================================
+-- Permissions and Row Level Security
+-- ============================================================
+
+alter table public.library_book_metadata
+enable row level security;
+
+-- Logged-out users receive no table privileges.
+
+revoke all
+on table public.library_book_metadata
+from anon;
+
+-- Signed-in users may read, create, and update metadata.
+-- DELETE is intentionally excluded.
+
+revoke all
+on table public.library_book_metadata
+from authenticated;
+
+grant select, insert, update
+on table public.library_book_metadata
+to authenticated;
+
+-- Only the designated MyLibrary household account may read rows.
+
+drop policy if exists
+  "Only designated household can read book metadata"
+  on public.library_book_metadata;
+
+create policy
+  "Only designated household can read book metadata"
+on public.library_book_metadata
+for select
+to authenticated
+using (
+  (select auth.uid()) =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+  and user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+-- Only the designated household account may create rows.
+
+drop policy if exists
+  "Only designated household can insert book metadata"
+  on public.library_book_metadata;
+
+create policy
+  "Only designated household can insert book metadata"
+on public.library_book_metadata
+for insert
+to authenticated
+with check (
+  (select auth.uid()) =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+  and user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+-- Only the designated household account may update rows.
+-- user_id cannot be reassigned during an update.
+
+drop policy if exists
+  "Only designated household can update book metadata"
+  on public.library_book_metadata;
+
+create policy
+  "Only designated household can update book metadata"
+on public.library_book_metadata
+for update
+to authenticated
+using (
+  (select auth.uid()) =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+  and user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+)
+with check (
+  (select auth.uid()) =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+  and user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+-- There is deliberately no DELETE policy or DELETE grant.
+-- Checkbox changes happen through UPDATE.
+
+-- ============================================================
+-- Verification
+-- ============================================================
+
+select
+  column_name,
+  data_type,
+  is_nullable,
+  column_default
+from information_schema.columns
+where
+  table_schema = 'public'
+  and table_name = 'library_book_metadata'
+order by ordinal_position;
+
+select
+  policyname,
+  cmd,
+  roles,
+  qual,
+  with_check
+from pg_policies
+where
+  schemaname = 'public'
+  and tablename = 'library_book_metadata'
+order by cmd, policyname;
