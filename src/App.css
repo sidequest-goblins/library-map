@@ -3019,6 +3019,13 @@ select {
   gap: 0.7rem;
 }
 
+.statsFilterToggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: stretch;
+}
+
 .statsFilterToggle {
   display: flex;
   gap: 0.7rem;

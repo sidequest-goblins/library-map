@@ -2670,6 +2670,11 @@ export default function App() {
   ] = useState(false);
 
   const [
+    statsLgbtqOnly,
+    setStatsLgbtqOnly,
+  ] = useState(false);
+
+  const [
     statsPage,
     setStatsPage,
   ] = useState(1);
@@ -2795,6 +2800,7 @@ export default function App() {
     statsBreakdown,
     statsCountMode,
     statsProseOnly,
+    statsLgbtqOnly,
   ]);
 
   useEffect(() => {
@@ -4064,6 +4070,7 @@ export default function App() {
       let publicationYearBooks = 0;
       let coverBooks = 0;
       let originBooks = 0;
+      let lgbtqBooks = 0;
       let cjReadBooks = 0;
       let jadeReadBooks = 0;
       let eitherReadBooks = 0;
@@ -4120,6 +4127,10 @@ export default function App() {
             originBooks += 1;
           }
 
+          if (book.lgbtq) {
+            lgbtqBooks += 1;
+          }
+
           if (cjRead) {
             cjReadBooks += 1;
           }
@@ -4148,6 +4159,7 @@ export default function App() {
         publicationYearBooks,
         coverBooks,
         originBooks,
+        lgbtqBooks,
         cjReadBooks,
         jadeReadBooks,
         eitherReadBooks,
@@ -4213,18 +4225,32 @@ export default function App() {
   const statsChartBookFacts =
     useMemo(
       () =>
-        statsProseOnly
-          ? statsDatasetBookFacts.filter(
-              ({ book }) =>
-                normalizeInlineSearchText(
-                  book.genre
-                ) !==
+        statsDatasetBookFacts.filter(
+          ({ book }) => {
+            if (
+              statsProseOnly &&
+              normalizeInlineSearchText(
+                book.genre
+              ) ===
                 "manga / graphic novels"
-            )
-          : statsDatasetBookFacts,
+            ) {
+              return false;
+            }
+
+            if (
+              statsLgbtqOnly &&
+              !book.lgbtq
+            ) {
+              return false;
+            }
+
+            return true;
+          }
+        ),
       [
         statsDatasetBookFacts,
         statsProseOnly,
+        statsLgbtqOnly,
       ]
     );
 
@@ -4967,6 +4993,18 @@ export default function App() {
           .toLocaleString(),
 
       meta: "Whole collection",
+    },
+    {
+      label: "LGBTQ+",
+
+      value:
+        statsSummary.lgbtqBooks
+          .toLocaleString(),
+
+      meta: `${getStatsPercent(
+        statsSummary.lgbtqBooks,
+        statsSummary.totalBooks
+      )}% of the library`,
     },
     {
       label: "Known pages",
@@ -10754,31 +10792,57 @@ export default function App() {
               </label>
             </div>
 
-            <label className="statsFilterToggle">
-              <input
-                type="checkbox"
-                checked={
-                  statsProseOnly
-                }
-                onChange={(event) => {
-                  setStatsProseOnly(
-                    event.target
-                      .checked
-                  );
-                }}
-              />
+            <div className="statsFilterToggles">
+              <label className="statsFilterToggle">
+                <input
+                  type="checkbox"
+                  checked={
+                    statsProseOnly
+                  }
+                  onChange={(event) => {
+                    setStatsProseOnly(
+                      event.target.checked
+                    );
+                  }}
+                />
 
-              <span className="statsFilterToggleCopy">
-                <strong>
-                  Prose only
-                </strong>
+                <span className="statsFilterToggleCopy">
+                  <strong>
+                    Prose only
+                  </strong>
 
-                <span>
-                  Exclude Manga /
-                  Graphic Novels.
+                  <span>
+                    Exclude Manga /
+                    Graphic Novels.
+                  </span>
                 </span>
-              </span>
-            </label>
+              </label>
+
+              <label className="statsFilterToggle">
+                <input
+                  type="checkbox"
+                  checked={
+                    statsLgbtqOnly
+                  }
+                  onChange={(event) => {
+                    setStatsLgbtqOnly(
+                      event.target.checked
+                    );
+                  }}
+                />
+
+                <span className="statsFilterToggleCopy">
+                  <strong>
+                    LGBTQ+
+                  </strong>
+
+                  <span>
+                    Include only tagged
+                    books.
+                  </span>
+                </span>
+              </label>
+            </div>
 
             {statsBreakdown ===
               "author" ? (
@@ -10908,6 +10972,12 @@ export default function App() {
                 <span>
                   Manga / Graphic
                   Novels excluded
+                </span>
+              ) : null}
+
+              {statsLgbtqOnly ? (
+                <span>
+                  LGBTQ+ books only
                 </span>
               ) : null}
             </div>
