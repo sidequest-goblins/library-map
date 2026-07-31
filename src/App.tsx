@@ -49,6 +49,12 @@ import type {
 import type {
   LibraryBookMetadata,
 } from "./data/libraryMetadata";
+import type {
+  LibraryAuthor,
+  LibraryAuthorMetadata,
+  LibraryBookAuthorLink,
+  ResolvedBookAuthor,
+} from "./data/libraryAuthors";
 
 /*
  * Master switch for temporary developer-only tools.
@@ -2505,6 +2511,44 @@ async function fetchBookMetadataRows(
   return data ?? [];
 }
 
+async function fetchAuthorMetadataRows(
+  userId: string
+): Promise<
+  LibraryAuthorMetadata[]
+> {
+  const { data, error } =
+    await supabase
+      .from(
+        "library_author_metadata"
+      )
+      .select(`
+        user_id,
+        author_id,
+        bipoc,
+        created_at,
+        updated_at
+      `)
+      .eq(
+        "user_id",
+        userId
+      )
+      .order(
+        "author_id",
+        {
+          ascending: true,
+        }
+      )
+      .overrideTypes<
+        LibraryAuthorMetadata[]
+      >();
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}
+
 async function fetchReadingAttempts(
   userId: string
 ): Promise<LibraryReaderReadingAttempt[]> {
@@ -2595,6 +2639,19 @@ export default function App() {
     workbookBooks,
     setWorkbookBooks,
   ] = useState<Book[]>([]);
+  const [
+    libraryAuthors,
+    setLibraryAuthors,
+  ] = useState<
+    LibraryAuthor[]
+  >([]);
+
+  const [
+    libraryBookAuthorLinks,
+    setLibraryBookAuthorLinks,
+  ] = useState<
+    LibraryBookAuthorLink[]
+  >([]);
   const [wantedLists, setWantedLists] = useState<WantedLists>(EMPTY_WANTED_LISTS);
   const [challengeData, setChallengeData] =
     useState<ChallengeData>(EMPTY_CHALLENGE_DATA);
@@ -2636,6 +2693,25 @@ export default function App() {
   ] = useState<
     BookMetadataFeedback
   >(null);
+
+  const [
+    authorMetadataRows,
+    setAuthorMetadataRows,
+  ] = useState<
+    LibraryAuthorMetadata[]
+  >([]);
+
+  const [
+    authorMetadataLoadStatus,
+    setAuthorMetadataLoadStatus,
+  ] = useState<
+    LibraryStateLoadStatus
+  >("idle");
+
+  const [
+    authorMetadataLoadError,
+    setAuthorMetadataLoadError,
+  ] = useState("");
 
   const [
     libraryStateRows,
@@ -2934,6 +3010,161 @@ export default function App() {
     ]
   );
 
+  const authorById = useMemo(
+    () =>
+      new Map(
+        libraryAuthors.map(
+          (author) => [
+            author.authorId,
+            author,
+          ]
+        )
+      ),
+    [libraryAuthors]
+  );
+
+  const authorMetadataByAuthorId =
+    useMemo(
+      () =>
+        new Map(
+          authorMetadataRows.map(
+            (metadataRow) => [
+              metadataRow.author_id,
+              metadataRow,
+            ]
+          )
+        ),
+      [authorMetadataRows]
+    );
+
+  const bookAuthorLinksByBookId =
+    useMemo(() => {
+      const linksByBookId =
+        new Map<
+          string,
+          LibraryBookAuthorLink[]
+        >();
+
+      libraryBookAuthorLinks.forEach(
+        (link) => {
+          const existingLinks =
+            linksByBookId.get(
+              link.bookId
+            ) ?? [];
+
+          existingLinks.push(
+            link
+          );
+
+          linksByBookId.set(
+            link.bookId,
+            existingLinks
+          );
+        }
+      );
+
+      linksByBookId.forEach(
+        (links) => {
+          links.sort(
+            (a, b) =>
+              a.creditOrder -
+              b.creditOrder
+          );
+        }
+      );
+
+      return linksByBookId;
+    }, [libraryBookAuthorLinks]);
+
+  const resolvedAuthorsByBookId =
+    useMemo(() => {
+      const resolvedByBookId =
+        new Map<
+          string,
+          ResolvedBookAuthor[]
+        >();
+
+      bookAuthorLinksByBookId.forEach(
+        (links, bookId) => {
+          const resolvedAuthors =
+            links.flatMap(
+              (link) => {
+                const author =
+                  authorById.get(
+                    link.authorId
+                  );
+
+                if (!author) {
+                  return [];
+                }
+
+                return [
+                  {
+                    author,
+                    link,
+
+                    metadata:
+                      authorMetadataByAuthorId.get(
+                        author.authorId
+                      ) ?? null,
+                  },
+                ];
+              }
+            );
+
+          resolvedByBookId.set(
+            bookId,
+            resolvedAuthors
+          );
+        }
+      );
+
+      return resolvedByBookId;
+    }, [
+      bookAuthorLinksByBookId,
+      authorById,
+      authorMetadataByAuthorId,
+    ]);
+
+  useEffect(() => {
+    if (
+      loadStatus !== "ready"
+    ) {
+      return;
+    }
+
+    console.info(
+      "Library author identities loaded.",
+      {
+        authors:
+          libraryAuthors.length,
+
+        bookAuthorLinks:
+          libraryBookAuthorLinks.length,
+
+        booksWithResolvedAuthors:
+          resolvedAuthorsByBookId.size,
+
+        authorMetadataRows:
+          authorMetadataRows.length,
+
+        authorMetadataStatus:
+          authorMetadataLoadStatus,
+
+        authorMetadataError:
+          authorMetadataLoadError,
+      }
+    );
+  }, [
+    loadStatus,
+    libraryAuthors.length,
+    libraryBookAuthorLinks.length,
+    resolvedAuthorsByBookId.size,
+    authorMetadataRows.length,
+    authorMetadataLoadStatus,
+    authorMetadataLoadError,
+  ]);
+
   useEffect(() => {
     if (
       !isLibraryReaderId(
@@ -3172,11 +3403,25 @@ export default function App() {
       try {
         const [
           booksResponse,
+          authorsResponse,
+          bookAuthorsResponse,
           loadedWantedLists,
           loadedChallengeData,
         ] = await Promise.all([
-          fetch(`${import.meta.env.BASE_URL}data/library-books.json`),
+          fetch(
+            `${import.meta.env.BASE_URL}data/library-books.json`
+          ),
+
+          fetch(
+            `${import.meta.env.BASE_URL}data/library-authors.json`
+          ),
+
+          fetch(
+            `${import.meta.env.BASE_URL}data/library-book-authors.json`
+          ),
+
           loadWantedLists(),
+
           loadChallengeData(),
         ]);
 
@@ -3186,9 +3431,86 @@ export default function App() {
           );
         }
 
-        const loadedBooks = (await booksResponse.json()) as Book[];
+        if (!authorsResponse.ok) {
+          throw new Error(
+            `Failed to load library authors: ${authorsResponse.status}`
+          );
+        }
+
+        if (!bookAuthorsResponse.ok) {
+          throw new Error(
+            `Failed to load book-author links: ${bookAuthorsResponse.status}`
+          );
+        }
+
+        const loadedBooks =
+          (await booksResponse.json()) as Book[];
+
+        const loadedAuthors =
+          (await authorsResponse.json()) as
+            LibraryAuthor[];
+
+        const loadedBookAuthorLinks =
+          (await bookAuthorsResponse.json()) as
+            LibraryBookAuthorLink[];
+
+        const loadedBookIds = new Set(
+          loadedBooks.map(
+            (book) => book.bookId
+          )
+        );
+
+        const loadedAuthorIds = new Set(
+          loadedAuthors.map(
+            (author) =>
+              author.authorId
+          )
+        );
+
+        const duplicateAuthorIds =
+          loadedAuthors.filter(
+            (
+              author,
+              index,
+              authors
+            ) =>
+              authors.findIndex(
+                (candidate) =>
+                  candidate.authorId ===
+                  author.authorId
+              ) !== index
+          );
+
+        if (
+          duplicateAuthorIds.length > 0
+        ) {
+          throw new Error(
+            `Author data contains ${duplicateAuthorIds.length} duplicate Author IDs.`
+          );
+        }
+
+        const invalidBookAuthorLinks =
+          loadedBookAuthorLinks.filter(
+            (link) =>
+              !loadedBookIds.has(
+                link.bookId
+              ) ||
+              !loadedAuthorIds.has(
+                link.authorId
+              )
+          );
+
+        if (
+          invalidBookAuthorLinks.length > 0
+        ) {
+          throw new Error(
+            `${invalidBookAuthorLinks.length} book-author links reference missing books or authors.`
+          );
+        }
 
         setWorkbookBooks(loadedBooks);
+        setLibraryAuthors(loadedAuthors);
+        setLibraryBookAuthorLinks(loadedBookAuthorLinks);
         setWantedLists(loadedWantedLists);
         setChallengeData(loadedChallengeData);
         setLoadStatus("ready");
@@ -3288,6 +3610,76 @@ export default function App() {
     }
 
     void loadBookMetadata();
+
+    return () => {
+      isActive = false;
+    };
+  }, [householdSession]);
+
+  useEffect(() => {
+    let isActive = true;
+
+    async function loadAuthorMetadata() {
+      if (!householdSession) {
+        setAuthorMetadataRows([]);
+
+        setAuthorMetadataLoadStatus(
+          "idle"
+        );
+
+        setAuthorMetadataLoadError("");
+
+        return;
+      }
+
+      setAuthorMetadataLoadStatus(
+        "loading"
+      );
+
+      setAuthorMetadataLoadError("");
+
+      try {
+        const loadedRows =
+          await fetchAuthorMetadataRows(
+            householdSession.user.id
+          );
+
+        if (!isActive) {
+          return;
+        }
+
+        setAuthorMetadataRows(
+          loadedRows
+        );
+
+        setAuthorMetadataLoadStatus(
+          "ready"
+        );
+      } catch (error) {
+        if (!isActive) {
+          return;
+        }
+
+        console.error(
+          "Could not load shared author metadata.",
+          error
+        );
+
+        setAuthorMetadataRows([]);
+
+        setAuthorMetadataLoadStatus(
+          "error"
+        );
+
+        setAuthorMetadataLoadError(
+          error instanceof Error
+            ? error.message
+            : "Unknown Supabase error"
+        );
+      }
+    }
+
+    void loadAuthorMetadata();
 
     return () => {
       isActive = false;

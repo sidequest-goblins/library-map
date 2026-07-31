@@ -1,0 +1,196 @@
+-- ============================================================
+-- MyLibrary: household-maintained metadata for authors
+-- ============================================================
+--
+-- Permanent Author ID is the record identity.
+-- Display names, credited names, spelling, aliases, and workbook
+-- row positions may change without changing author_id.
+--
+-- BIPOC is nullable on purpose:
+--
+--   true  = reviewed and tagged BIPOC
+--   false = reviewed and not tagged BIPOC
+--   null  = not reviewed yet
+--
+-- A missing row also means not reviewed yet.
+--
+-- Future private author-level analytics, such as CWM, can be
+-- added here later as additional nullable metadata fields.
+-- ============================================================
+
+create table if not exists public.library_author_metadata (
+  user_id uuid not null
+    references auth.users(id)
+    on delete cascade,
+
+  author_id text not null,
+
+  bipoc boolean,
+
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+
+  constraint library_author_metadata_author_id_check
+    check (
+      author_id ~
+        '^author-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+    ),
+
+  constraint library_author_metadata_primary_key
+    primary key (user_id, author_id)
+);
+
+-- Automatically refresh updated_at whenever metadata changes.
+
+create or replace function public.set_library_author_metadata_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists
+  set_library_author_metadata_updated_at
+  on public.library_author_metadata;
+
+create trigger set_library_author_metadata_updated_at
+before update on public.library_author_metadata
+for each row
+execute function public.set_library_author_metadata_updated_at();
+
+-- ============================================================
+-- Permissions and Row Level Security
+-- ============================================================
+
+alter table public.library_author_metadata
+enable row level security;
+
+-- Logged-out users receive no table privileges.
+
+revoke all
+on table public.library_author_metadata
+from anon;
+
+-- Signed-in users may read, create, and update metadata.
+-- DELETE is intentionally excluded. Clearing a review sets
+-- bipoc back to null instead of deleting the row.
+
+revoke all
+on table public.library_author_metadata
+from authenticated;
+
+grant select, insert, update
+on table public.library_author_metadata
+to authenticated;
+
+-- Only the designated MyLibrary household account may read rows.
+
+drop policy if exists
+  "Only designated household can read author metadata"
+  on public.library_author_metadata;
+
+create policy
+  "Only designated household can read author metadata"
+on public.library_author_metadata
+for select
+to authenticated
+using (
+  (select auth.uid()) =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+  and user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+-- Only the designated household account may create rows.
+
+drop policy if exists
+  "Only designated household can insert author metadata"
+  on public.library_author_metadata;
+
+create policy
+  "Only designated household can insert author metadata"
+on public.library_author_metadata
+for insert
+to authenticated
+with check (
+  (select auth.uid()) =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+  and user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+-- Only the designated household account may update rows.
+-- user_id cannot be reassigned during an update.
+
+drop policy if exists
+  "Only designated household can update author metadata"
+  on public.library_author_metadata;
+
+create policy
+  "Only designated household can update author metadata"
+on public.library_author_metadata
+for update
+to authenticated
+using (
+  (select auth.uid()) =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+  and user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+)
+with check (
+  (select auth.uid()) =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+  and user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+-- There is deliberately no DELETE policy or DELETE grant.
+
+-- ============================================================
+-- Verification
+-- ============================================================
+
+select
+  column_name,
+  data_type,
+  is_nullable,
+  column_default
+from information_schema.columns
+where
+  table_schema = 'public'
+  and table_name = 'library_author_metadata'
+order by ordinal_position;
+
+select
+  policyname,
+  cmd,
+  roles,
+  qual,
+  with_check
+from pg_policies
+where
+  schemaname = 'public'
+  and tablename = 'library_author_metadata'
+order by cmd, policyname;
+
+select
+  count(*) as total_metadata_rows,
+
+  count(*) filter (
+    where bipoc is true
+  ) as bipoc_rows,
+
+  count(*) filter (
+    where bipoc is false
+  ) as reviewed_non_bipoc_rows,
+
+  count(*) filter (
+    where bipoc is null
+  ) as unreviewed_rows
+
+from public.library_author_metadata
+where user_id =
+  '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid;
