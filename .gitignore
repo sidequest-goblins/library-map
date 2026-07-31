@@ -24,6 +24,7 @@ dist-ssr
 *.sw?
 
 tools/book-id-backups/
+tools/authors-workbook-backups/
 
 .venv/
 
