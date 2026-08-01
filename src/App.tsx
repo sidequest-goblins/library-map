@@ -2477,38 +2477,66 @@ async function fetchLibraryStateRows(
   return data ?? [];
 }
 
+const SUPABASE_PAGE_SIZE = 1000;
+
 async function fetchBookMetadataRows(
   userId: string
 ): Promise<LibraryBookMetadata[]> {
-  const { data, error } =
-    await supabase
-      .from("library_book_metadata")
-      .select(`
-        user_id,
-        book_id,
-        lgbtq,
-        created_at,
-        updated_at
-      `)
-      .eq(
-        "user_id",
-        userId
-      )
-      .order(
-        "book_id",
-        {
-          ascending: true,
-        }
-      )
-      .overrideTypes<
-        LibraryBookMetadata[]
-      >();
+  const rows: LibraryBookMetadata[] = [];
 
-  if (error) {
-    throw error;
+  for (
+    let from = 0;
+    ;
+    from += SUPABASE_PAGE_SIZE
+  ) {
+    const to =
+      from + SUPABASE_PAGE_SIZE - 1;
+
+    const { data, error } =
+      await supabase
+        .from("library_book_metadata")
+        .select(`
+          user_id,
+          book_id,
+          lgbtq,
+          created_at,
+          updated_at
+        `)
+        .eq(
+          "user_id",
+          userId
+        )
+        .order(
+          "book_id",
+          {
+            ascending: true,
+          }
+        )
+        .range(
+          from,
+          to
+        )
+        .overrideTypes<
+          LibraryBookMetadata[]
+        >();
+
+    if (error) {
+      throw error;
+    }
+
+    const page = data ?? [];
+
+    rows.push(...page);
+
+    if (
+      page.length <
+      SUPABASE_PAGE_SIZE
+    ) {
+      break;
+    }
   }
 
-  return data ?? [];
+  return rows;
 }
 
 async function fetchAuthorMetadataRows(

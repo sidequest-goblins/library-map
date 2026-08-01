@@ -2,20 +2,20 @@
   "name": "MyLibrary",
   "short_name": "MyLibrary",
   "description": "A cozy searchable map of our home library.",
-  "start_url": "/library-map/",
-  "scope": "/library-map/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#efe4cf",
   "theme_color": "#526f45",
   "icons": [
     {
-      "src": "/library-map/icons/icon-192.jpg",
+      "src": "icons/icon-192.jpg",
       "sizes": "192x192",
       "type": "image/jpeg",
       "purpose": "any"
     },
     {
-      "src": "/library-map/icons/icon-512.jpg",
+      "src": "icons/icon-512.jpg",
       "sizes": "512x512",
       "type": "image/jpeg",
       "purpose": "any"
