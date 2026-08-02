@@ -3642,6 +3642,12 @@ export default function App() {
       return;
     }
 
+    const previousBodyOverflow =
+      document.body.style.overflow;
+
+    document.body.style.overflow =
+      "hidden";
+
     function handleAppMenuPointerDown(
       event: PointerEvent
     ) {
@@ -3690,6 +3696,9 @@ export default function App() {
         "keydown",
         handleAppMenuKeyDown
       );
+
+      document.body.style.overflow =
+        previousBodyOverflow;
     };
   }, [appMenuOpen]);
 
@@ -11782,16 +11791,19 @@ export default function App() {
           : activeTab === "stats"
             ? `${statsSummary.totalBooks.toLocaleString()} books · ${statsSummary.totalPages.toLocaleString()} known pages`
             : activeTab === "update"
-              ? selectedUpdateFieldList
-                  .length > 0
+              ? selectedUpdateFieldList.length > 0
                 ? `${updateBooks.length} ${
-                    updateBooks.length ===
-                    1
+                    updateBooks.length === 1
                       ? "book"
                       : "books"
                   } in current queue`
                 : "Choose a research queue"
               : `${books.length} books loaded`;
+
+  const activeNavItem =
+    APP_NAV_ITEMS.find(
+      (item) => item.tab === activeTab
+    ) ?? APP_NAV_ITEMS[0];
 
   return (
     <main
@@ -11803,196 +11815,218 @@ export default function App() {
       }
     >
       <header className="appHeader">
-        <div className="appHeaderMainRow">
-          <div className="appHeaderTitleBlock">
-            <p className="eyebrow">
-              Library Map
-            </p>
+        <div className="appBrand">
+          <img
+            className="appBrandIcon"
+            src={publicAssetPath(
+              "icons/icon-192.jpg"
+            )}
+            alt=""
+            aria-hidden="true"
+          />
 
-            <h1>{headerTitle}</h1>
+          <div className="appBrandCopy">
+            <strong>MyLibrary</strong>
 
-            <p className="bookcaseMeta">
-              {headerMeta}
-            </p>
+            <span>{headerTitle}</span>
           </div>
+        </div>
 
-          <div
-            className="appMenu"
-            ref={appMenuRef}
-          >
+        <p className="appHeaderMeta">
+          {headerMeta}
+        </p>
+      </header>
+
+      <div className="appNavigation">
+        {appMenuOpen ? (
+          <button
+            type="button"
+            className="appMenuBackdrop"
+            aria-label="Close navigation"
+            onClick={() => {
+              setAppMenuOpen(false);
+            }}
+          />
+        ) : null}
+
+        <div
+          className="appNavigationDock"
+          ref={appMenuRef}
+        >
+          {!appMenuOpen &&
+          !selectedBookHasPendingChanges ? (
             <button
               type="button"
-              className={
-                appMenuOpen
-                  ? "appMenuButton appMenuButtonOpen"
-                  : "appMenuButton"
-              }
-              aria-expanded={appMenuOpen}
+              className="appNavPill"
+              aria-label={`Open navigation. Current page: ${activeNavItem.label}`}
               aria-controls="library-app-menu"
-              aria-haspopup="menu"
+              aria-expanded={false}
               onClick={() => {
-                setAppMenuOpen(
-                  (currentValue) =>
-                    !currentValue
-                );
+                setAppMenuOpen(true);
               }}
             >
               <span
-                className="appMenuButtonIcon"
+                className="appNavPillIcon"
                 aria-hidden="true"
               >
-                {appMenuOpen
-                  ? "✕"
-                  : "☰"}
+                {activeNavItem.icon}
               </span>
 
-              <span>
-                {appMenuOpen
-                  ? "Close"
-                  : "Menu"}
+              <span className="appNavPillLabel">
+                {activeNavItem.label}
+              </span>
+
+              <span
+                className="appNavPillChevron"
+                aria-hidden="true"
+              >
+                ⌃
               </span>
             </button>
+          ) : null}
 
-            {appMenuOpen ? (
-              <nav
-                id="library-app-menu"
-                className="appMenuPanel"
-                aria-label="Library views"
+          <section
+            id="library-app-menu"
+            className={
+              appMenuOpen
+                ? "appMenuSheet appMenuSheetOpen"
+                : "appMenuSheet"
+            }
+            aria-label="MyLibrary menu"
+            aria-hidden={!appMenuOpen}
+          >
+            <div className="appMenuSheetHeader">
+              <div>
+                <p className="appMenuSheetEyebrow">
+                  MyLibrary
+                </p>
+
+                <strong>Where to?</strong>
+              </div>
+
+              <button
+                type="button"
+                className="appMenuCloseButton"
+                aria-label="Close navigation"
+                onClick={() => {
+                  setAppMenuOpen(false);
+                }}
               >
-                {APP_NAV_ITEMS.map(
-                  (item) => {
-                    const isCurrent =
-                      item.tab ===
-                      activeTab;
+                ×
+              </button>
+            </div>
 
-                    return (
-                      <button
-                        key={item.tab}
-                        type="button"
-                        className={
-                          isCurrent
-                            ? "appMenuItem appMenuItemActive"
-                            : "appMenuItem"
-                        }
-                        aria-current={
-                          isCurrent
-                            ? "page"
-                            : undefined
-                        }
-                        onClick={() => {
-                          selectAppTab(
-                            item.tab
-                          );
-                        }}
-                      >
-                        <span
-                          className="appMenuItemIcon"
-                          aria-hidden="true"
-                        >
-                          {item.icon}
-                        </span>
+            <nav
+              className="appMenuGrid"
+              aria-label="Library views"
+            >
+              {APP_NAV_ITEMS.map((item) => {
+                const isCurrent =
+                  item.tab === activeTab;
 
-                        <span className="appMenuItemCopy">
-                          <strong>
-                            {item.label}
-                          </strong>
-
-                          <span>
-                            {
-                              item.description
-                            }
-                          </span>
-                        </span>
-
-                        {isCurrent ? (
-                          <span className="appMenuCurrent">
-                            Current
-                          </span>
-                        ) : (
-                          <span
-                            className="appMenuArrow"
-                            aria-hidden="true"
-                          >
-                            →
-                          </span>
-                        )}
-                      </button>
-                    );
-                  }
-                )}
-
-                <div className="appMenuUtility">
+                return (
                   <button
+                    key={item.tab}
                     type="button"
-                    className="appMenuItem appUpdateButton"
+                    className={
+                      isCurrent
+                        ? "appMenuItem appMenuItemActive"
+                        : "appMenuItem"
+                    }
+                    aria-current={
+                      isCurrent
+                        ? "page"
+                        : undefined
+                    }
                     onClick={() => {
-                      runAfterBookDetailDiscardCheck(
-                        () => {
-                          void updateApp();
-                        }
-                      );
+                      selectAppTab(item.tab);
                     }}
                   >
                     <span
-                      className="appMenuItemIcon appUpdateButtonIcon"
+                      className="appMenuItemIcon"
                       aria-hidden="true"
                     >
-                      ↻
+                      {item.icon}
                     </span>
 
-                    <span className="appMenuItemCopy">
-                      <strong>
-                        Update app
-                      </strong>
+                    <strong>{item.label}</strong>
 
-                      <span>
-                        Reload the latest app and
-                        library data.
+                    {isCurrent ? (
+                      <span className="appMenuCurrent">
+                        Here
                       </span>
-                    </span>
-
-                    <span
-                      className="appMenuArrow"
-                      aria-hidden="true"
-                    >
-                      →
-                    </span>
+                    ) : null}
                   </button>
-                </div>
-              </nav>
-            ) : null}
-          </div>
-        </div>
+                );
+              })}
+            </nav>
 
-        <div className="headerUtilityRow">
-          <HouseholdAccountPanel
-            onSessionChange={
-              setHouseholdSession
-            }
-            libraryStateLoadStatus={
-              libraryStateLoadStatus
-            }
-            libraryStateRecordCount={
-              libraryStateByKey.size
-            }
-            libraryStateLoadError={
-              libraryStateLoadError
-            }
-            libraryStateSeedPreview={
-              libraryStateSeedPreview
-            }
-            onSeedLibraryState={
-              seedLibraryStateFromPreview
-            }
-            isSeedingLibraryState={
-              isSeedingLibraryState
-            }
-            libraryStateSeedFeedback={
-              libraryStateSeedFeedback
-            }
-          />
+            <div className="appMenuUtility">
+              <HouseholdAccountPanel
+                onSessionChange={
+                  setHouseholdSession
+                }
+                libraryStateLoadStatus={
+                  libraryStateLoadStatus
+                }
+                libraryStateRecordCount={
+                  libraryStateByKey.size
+                }
+                libraryStateLoadError={
+                  libraryStateLoadError
+                }
+                libraryStateSeedPreview={
+                  libraryStateSeedPreview
+                }
+                onSeedLibraryState={
+                  seedLibraryStateFromPreview
+                }
+                isSeedingLibraryState={
+                  isSeedingLibraryState
+                }
+                libraryStateSeedFeedback={
+                  libraryStateSeedFeedback
+                }
+              />
+
+              <button
+                type="button"
+                className="appUpdateButton"
+                onClick={() => {
+                  runAfterBookDetailDiscardCheck(
+                    () => {
+                      void updateApp();
+                    }
+                  );
+                }}
+              >
+                <span
+                  className="appUpdateButtonIcon"
+                  aria-hidden="true"
+                >
+                  ↻
+                </span>
+
+                <span className="appUpdateButtonCopy">
+                  <strong>Update app</strong>
+
+                  <span>
+                    Reload the latest app and
+                    library data.
+                  </span>
+                </span>
+
+                <span
+                  className="appUpdateButtonArrow"
+                  aria-hidden="true"
+                >
+                  →
+                </span>
+              </button>
+            </div>
+          </section>
         </div>
-      </header>
+      </div>
 
       {loadStatus === "loading" ? (
         <p className="emptySearch">Loading library data...</p>
