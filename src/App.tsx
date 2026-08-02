@@ -8324,10 +8324,53 @@ export default function App() {
     openSearchWithFilters();
   }
 
+  function hideAllLibraryBooks() {
+    setSearchQuery("");
+
+    setBrowseAllBooks(
+      false
+    );
+
+    setSearchFiltersOpen(
+      false
+    );
+
+    setSingleLetterMatchMode(
+      "startsWith"
+    );
+
+    setSearchPage(1);
+    setSelectedBookId(null);
+    setSearchSuggestionsOpen(false);
+    setActiveSearchSuggestionIndex(-1);
+
+    window.requestAnimationFrame(
+      () => {
+        window.requestAnimationFrame(
+          () => {
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          }
+        );
+      }
+    );
+  }
+
   function renderSearchPaginationControls() {
+    const hasMultipleSearchPages =
+      searchResultBooks.length >
+      SEARCH_PAGE_SIZE;
+
+    const showHideAllBooksButton =
+      browseAllBooks &&
+      !hasSearchQuery &&
+      !hasActiveSearchFilters;
+
     if (
-      searchResultBooks.length <=
-      SEARCH_PAGE_SIZE
+      !hasMultipleSearchPages &&
+      !showHideAllBooksButton
     ) {
       return null;
     }
@@ -8342,39 +8385,54 @@ export default function App() {
             : "Library pagination"
         }
       >
-        <button
-          type="button"
-          onClick={() =>
-            changeSearchPage(
-              safeSearchPage - 1
-            )
-          }
-          disabled={
-            safeSearchPage === 1
-          }
-        >
-          Previous
-        </button>
+        {hasMultipleSearchPages ? (
+          <>
+            <button
+              type="button"
+              onClick={() =>
+                changeSearchPage(
+                  safeSearchPage - 1
+                )
+              }
+              disabled={
+                safeSearchPage === 1
+              }
+            >
+              Previous
+            </button>
 
-        <span aria-live="polite">
-          Page {safeSearchPage} of{" "}
-          {totalSearchPages}
-        </span>
+            <span aria-live="polite">
+              Page {safeSearchPage} of{" "}
+              {totalSearchPages}
+            </span>
 
-        <button
-          type="button"
-          onClick={() =>
-            changeSearchPage(
-              safeSearchPage + 1
-            )
-          }
-          disabled={
-            safeSearchPage ===
-            totalSearchPages
-          }
-        >
-          Next
-        </button>
+            <button
+              type="button"
+              onClick={() =>
+                changeSearchPage(
+                  safeSearchPage + 1
+                )
+              }
+              disabled={
+                safeSearchPage ===
+                totalSearchPages
+              }
+            >
+              Next
+            </button>
+          </>
+        ) : null}
+
+        {showHideAllBooksButton ? (
+          <button
+            type="button"
+            onClick={
+              hideAllLibraryBooks
+            }
+          >
+            Hide all books
+          </button>
+        ) : null}
       </div>
     );
   }
