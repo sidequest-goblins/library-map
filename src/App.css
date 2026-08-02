@@ -1284,6 +1284,51 @@ select {
   justify-content: center;
 }
 
+.paginationControls button,
+.backButton {
+  -webkit-appearance: none;
+  appearance: none;
+  border:
+    1px solid
+    rgba(76, 48, 30, 0.2);
+  border-radius: 999px;
+  padding: 0.58rem 0.9rem;
+  color: var(--brownDark);
+  background:
+    rgba(255, 248, 233, 0.82);
+  box-shadow:
+    0 6px 16px
+    rgba(76, 48, 30, 0.08);
+  font: inherit;
+  font-weight: 750;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.paginationControls button:hover:not(:disabled),
+.backButton:hover {
+  transform: translateY(-1px);
+  border-color:
+    rgba(82, 111, 69, 0.42);
+  background: #fffaf0;
+  box-shadow:
+    0 9px 20px
+    rgba(76, 48, 30, 0.12);
+}
+
+.paginationControls button:focus-visible,
+.backButton:focus-visible {
+  outline:
+    3px solid
+    rgba(201, 154, 69, 0.3);
+  outline-offset: 2px;
+}
+
 .paginationControls button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
