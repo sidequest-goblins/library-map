@@ -6304,6 +6304,50 @@ export default function App() {
       ]
     );
 
+  function openStatsOverviewDrilldown({
+    label,
+    matchesBook,
+    filters = {},
+  }: {
+    label: string;
+
+    matchesBook: (item: {
+      book: Book;
+      cjRead: boolean;
+      jadeRead: boolean;
+    }) => boolean;
+
+    filters?: Partial<SearchFilters>;
+  }) {
+    const matchingBookIds =
+      statsBookFacts
+        .filter(
+          matchesBook
+        )
+        .map(
+          ({ book }) =>
+            book.bookId
+        );
+
+    const bookCountLabel =
+      matchingBookIds.length ===
+      1
+        ? "1 book"
+        : `${matchingBookIds.length.toLocaleString()} books`;
+
+    openSearchWithFilters({
+      filters,
+
+      drilldown: {
+        label:
+          `Overview · ${label} · ${bookCountLabel}`,
+
+        bookIds:
+          matchingBookIds,
+      },
+    });
+  }
+
   const statsOverviewCards: Array<{
     label: string;
     value: string;
@@ -6319,6 +6363,18 @@ export default function App() {
           .toLocaleString(),
 
       meta: "Whole collection",
+
+      ariaLabel:
+        "View every owned book in Search",
+
+      onClick: () => {
+        openStatsOverviewDrilldown({
+          label: "Books owned",
+
+          matchesBook: () =>
+            true,
+        });
+      },
     },
     {
       label: "LGBTQ+",
@@ -6336,18 +6392,20 @@ export default function App() {
         "View LGBTQ+ books in Search",
 
       onClick: () => {
-        const lgbtqRow =
-          lgbtqRepresentationRows.find(
-            (row) =>
-              row.key ===
-              "lgbtq"
-          );
+        openStatsOverviewDrilldown({
+          label: "LGBTQ+",
 
-        if (lgbtqRow) {
-          openLgbtqRepresentationDrilldown(
-            lgbtqRow
-          );
-        }
+          matchesBook: ({
+            book,
+          }) =>
+            Boolean(
+              book.lgbtq
+            ),
+
+          filters: {
+            lgbtqOnly: true,
+          },
+        });
       },
     },
     {
@@ -6381,6 +6439,23 @@ export default function App() {
         statsSummary.eitherReadBooks,
         statsSummary.totalBooks
       )}% read by at least one`,
+
+      ariaLabel:
+        "View books read by CJ or Jade in Search",
+
+      onClick: () => {
+        openStatsOverviewDrilldown({
+          label:
+            "Read by at least one",
+
+          matchesBook: ({
+            cjRead,
+            jadeRead,
+          }) =>
+            cjRead ||
+            jadeRead,
+        });
+      },
     },
     {
       label: "CJ has read",
@@ -6393,6 +6468,20 @@ export default function App() {
         statsSummary.cjReadBooks,
         statsSummary.totalBooks
       )}% of the library`,
+
+      ariaLabel:
+        "View books CJ has read in Search",
+
+      onClick: () => {
+        openStatsOverviewDrilldown({
+          label: "Read by CJ",
+
+          matchesBook: ({
+            cjRead,
+          }) =>
+            cjRead,
+        });
+      },
     },
     {
       label: "Jade has read",
@@ -6405,6 +6494,20 @@ export default function App() {
         statsSummary.jadeReadBooks,
         statsSummary.totalBooks
       )}% of the library`,
+
+      ariaLabel:
+        "View books Jade has read in Search",
+
+      onClick: () => {
+        openStatsOverviewDrilldown({
+          label: "Read by Jade",
+
+          matchesBook: ({
+            jadeRead,
+          }) =>
+            jadeRead,
+        });
+      },
     },
     {
       label: "Both have read",
@@ -6413,7 +6516,25 @@ export default function App() {
         statsSummary.bothReadBooks
           .toLocaleString(),
 
-      meta: "Shared reading overlap",
+      meta:
+        "Shared reading overlap",
+
+      ariaLabel:
+        "View books both CJ and Jade have read in Search",
+
+      onClick: () => {
+        openStatsOverviewDrilldown({
+          label:
+            "Read by both",
+
+          matchesBook: ({
+            cjRead,
+            jadeRead,
+          }) =>
+            cjRead &&
+            jadeRead,
+        });
+      },
     },
     {
       label: "Neither has read",
@@ -6422,7 +6543,25 @@ export default function App() {
         statsSummary.neitherReadBooks
           .toLocaleString(),
 
-      meta: "Fresh household territory",
+      meta:
+        "Fresh household territory",
+
+      ariaLabel:
+        "View books neither CJ nor Jade has read in Search",
+
+      onClick: () => {
+        openStatsOverviewDrilldown({
+          label:
+            "Read by neither",
+
+          matchesBook: ({
+            cjRead,
+            jadeRead,
+          }) =>
+            !cjRead &&
+            !jadeRead,
+        });
+      },
     },
   ];
 
@@ -14270,86 +14409,38 @@ export default function App() {
 
                     <div className="statsPieLegend">
                       {statsPieRows.map(
-                        (row) => {
-                          const canDrillDown =
-                            row.pieKey !==
-                            "grouped-other";
+                        (row) => (
+                          <div
+                            key={
+                              row.pieKey
+                            }
+                            className="statsPieLegendItem"
+                          >
+                            <span
+                              className="statsPieSwatch"
+                              style={{
+                                backgroundColor:
+                                  row.fill,
+                              }}
+                              aria-hidden="true"
+                            />
 
-                          return (
-                            <div
-                              key={
-                                row.pieKey
+                            <span className="statsPieLegendLabel">
+                              {
+                                row.legendLabel
                               }
-                              className={
-                                canDrillDown
-                                  ? "statsPieLegendItem statsDrilldownTarget"
-                                  : "statsPieLegendItem"
-                              }
-                              role={
-                                canDrillDown
-                                  ? "button"
-                                  : undefined
-                              }
-                              tabIndex={
-                                canDrillDown
-                                  ? 0
-                                  : undefined
-                              }
-                              aria-label={
-                                canDrillDown
-                                  ? `View ${row.label} books in Search`
-                                  : undefined
-                              }
-                              onClick={
-                                canDrillDown
-                                  ? () => {
-                                      openStatsBreakdownDrilldown(
-                                        row
-                                      );
-                                    }
-                                  : undefined
-                              }
-                              onKeyDown={
-                                canDrillDown
-                                  ? (event) => {
-                                      handleStatsDrilldownKeyDown(
-                                        event,
-                                        () => {
-                                          openStatsBreakdownDrilldown(
-                                            row
-                                          );
-                                        }
-                                      );
-                                    }
-                                  : undefined
-                              }
-                            >
-                              <span
-                                className="statsPieSwatch"
-                                style={{
-                                  backgroundColor:
-                                    row.fill,
-                                }}
-                                aria-hidden="true"
-                              />
+                            </span>
 
-                              <span className="statsPieLegendLabel">
-                                {
-                                  row.legendLabel
-                                }
-                              </span>
-
-                              <span className="statsPieLegendValue">
-                                {row.count.toLocaleString()}{" "}
-                                ·{" "}
-                                {
-                                  row.percentage
-                                }
-                                %
-                              </span>
-                            </div>
-                          );
-                        }
+                            <span className="statsPieLegendValue">
+                              {row.count.toLocaleString()}{" "}
+                              ·{" "}
+                              {
+                                row.percentage
+                              }
+                              %
+                            </span>
+                          </div>
+                        )
                       )}
                     </div>
                   </div>
