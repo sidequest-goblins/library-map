@@ -358,6 +358,11 @@ export type AuthorNameMode =
   | "last"
   | "first";
 
+export type SearchSortField =
+  | "title"
+  | "authorLast"
+  | "authorFirst";
+
 export type SearchSortDirection =
   | "asc"
   | "desc";
@@ -851,27 +856,136 @@ function compareScopedBooks(
   );
 }
 
-export function sortBooksByTitle(
+function getPrimaryAuthorSortValue(
+  book: Book,
+  authorNameMode:
+    AuthorNameMode
+): string {
+  const directValues =
+    authorNameMode === "last"
+      ? splitAuthorField(
+          book.lastName
+        )
+      : splitAuthorField(
+          book.firstName
+        );
+
+  if (
+    directValues.length > 0
+  ) {
+    return directValues[0];
+  }
+
+  const fallbackValues =
+    authorNameMode === "last"
+      ? splitAuthorField(
+          book.authorSort
+        )
+      : splitAuthorField(
+          book.author
+        );
+
+  return (
+    fallbackValues[0] ??
+    normalizeSearchText(
+      book.author
+    )
+  );
+}
+
+function compareBooksByTitle(
+  a: Book,
+  b: Book
+): number {
+  const seriesComparison =
+    compareBooksWithinSameSeries(
+      a,
+      b
+    );
+
+  if (
+    seriesComparison !== null
+  ) {
+    return seriesComparison;
+  }
+
+  return compareSearchText(
+    normalizeTitleForAlphabeticalSearch(
+      a.title
+    ),
+    normalizeTitleForAlphabeticalSearch(
+      b.title
+    )
+  );
+}
+
+export function sortBooksForSearchDisplay(
   books: Book[],
+  sortField:
+    SearchSortField = "title",
   sortDirection:
     SearchSortDirection = "asc"
 ): Book[] {
   return [...books].sort(
     (a, b) => {
-      const comparison =
-        compareScopedBooks(
-          a,
-          b,
-          "",
-          "title",
-          "last"
-        );
+      let comparison = 0;
+
+      if (
+        sortField === "title"
+      ) {
+        comparison =
+          compareBooksByTitle(
+            a,
+            b
+          );
+      } else {
+        const authorNameMode:
+          AuthorNameMode =
+            sortField ===
+            "authorLast"
+              ? "last"
+              : "first";
+
+        comparison =
+          compareSearchText(
+            getPrimaryAuthorSortValue(
+              a,
+              authorNameMode
+            ),
+            getPrimaryAuthorSortValue(
+              b,
+              authorNameMode
+            )
+          );
+
+        if (
+          comparison === 0
+        ) {
+          comparison =
+            compareBooksByTitle(
+              a,
+              b
+            );
+        }
+      }
 
       return sortDirection ===
         "asc"
         ? comparison
         : -comparison;
     }
+  );
+}
+
+export function sortBooksByTitle(
+  books: Book[],
+  sortDirection:
+    SearchSortDirection = "asc"
+): Book[] {
+  return sortBooksForSearchDisplay(
+    books,
+    "title",
+    sortDirection
   );
 }
 

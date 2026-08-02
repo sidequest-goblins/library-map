@@ -33,12 +33,13 @@ import {
   getBookcasesFromBooks,
   getShelvesForBookcase,
   searchBooks,
-  sortBooksByTitle,
+  sortBooksForSearchDisplay,
 } from "./data/librarySelectors";
 import type {
   AuthorNameMode,
   SearchScope,
   SearchSortDirection,
+  SearchSortField,
   SingleLetterMatchMode,
 } from "./data/librarySelectors";
 import type { 
@@ -542,6 +543,9 @@ type OpenSearchWithFiltersOptions = {
 
   authorNameMode?:
     AuthorNameMode;
+
+  sortField?:
+    SearchSortField;
 
   sortDirection?:
     SearchSortDirection;
@@ -3133,6 +3137,14 @@ export default function App() {
   ] =
     useState<AuthorNameMode>(
       "last"
+    );
+
+  const [
+    searchSortField,
+    setSearchSortField,
+  ] =
+    useState<SearchSortField>(
+      "title"
     );
 
   const [
@@ -8690,15 +8702,19 @@ export default function App() {
         : [];
 
   const searchResultBooks =
-    hasSearchDrilldown &&
-    (
-      !hasSearchQuery ||
-      searchScope === "all"
-    )
-      ? sortBooksByTitle(
-          unsortedSearchResultBooks
-        )
-      : unsortedSearchResultBooks;
+    useMemo(
+      () =>
+        sortBooksForSearchDisplay(
+          unsortedSearchResultBooks,
+          searchSortField,
+          searchSortDirection
+        ),
+      [
+        unsortedSearchResultBooks,
+        searchSortField,
+        searchSortDirection,
+      ]
+    );
 
   const totalSearchPages = Math.max(
     1,
@@ -8795,6 +8811,14 @@ export default function App() {
 
     setSingleLetterMatchMode(
       "startsWith"
+    );
+
+    setSearchSortField(
+      "title"
+    );
+
+    setSearchSortDirection(
+      "asc"
     );
 
     setSearchPage(1);
@@ -9188,6 +9212,9 @@ export default function App() {
     authorNameMode:
       nextAuthorNameMode =
         "last",
+    sortField:
+      nextSortField =
+        "title",
     sortDirection =
       "asc",
     singleLetterMatchMode:
@@ -9235,6 +9262,10 @@ export default function App() {
 
         setAuthorNameMode(
           nextAuthorNameMode
+        );
+
+        setSearchSortField(
+          nextSortField
         );
 
         setSearchSortDirection(
@@ -12719,77 +12750,152 @@ export default function App() {
                 </div>
               ) : null}
 
-              {searchScope !==
-              "all" ? (
-                <div className="searchControlGroup sortDirectionGroup">
-                  <p className="searchControlLabel">
-                    Sort results
-                  </p>
+              {showSearchResults ? (
+                <>
+                  <div className="searchControlGroup sortDirectionGroup">
+                    <p className="searchControlLabel">
+                      Sort by
+                    </p>
 
-                  <div
-                    className="searchSortOptions"
-                    role="group"
-                    aria-label="Choose search result order"
-                  >
-                    <button
-                      type="button"
-                      className={
-                        searchSortDirection ===
-                        "asc"
-                          ? "searchSortButton searchSortButtonActive"
-                          : "searchSortButton"
-                      }
-                      aria-pressed={
-                        searchSortDirection ===
-                        "asc"
-                      }
-                      onClick={() => {
-                        setSearchSortDirection(
-                          "asc"
-                        );
-
-                        setSearchPage(
-                          1
-                        );
-
-                        setSelectedBookId(
-                          null
-                        );
-                      }}
+                    <div
+                      className="searchSortOptions"
+                      role="group"
+                      aria-label="Choose how books are alphabetized"
                     >
-                      A–Z
-                    </button>
+                      <button
+                        type="button"
+                        className={
+                          searchSortField ===
+                          "title"
+                            ? "searchSortButton searchSortButtonActive"
+                            : "searchSortButton"
+                        }
+                        aria-pressed={
+                          searchSortField ===
+                          "title"
+                        }
+                        onClick={() => {
+                          setSearchSortField(
+                            "title"
+                          );
 
-                    <button
-                      type="button"
-                      className={
-                        searchSortDirection ===
-                        "desc"
-                          ? "searchSortButton searchSortButtonActive"
-                          : "searchSortButton"
-                      }
-                      aria-pressed={
-                        searchSortDirection ===
-                        "desc"
-                      }
-                      onClick={() => {
-                        setSearchSortDirection(
-                          "desc"
-                        );
+                          setSearchPage(1);
+                          setSelectedBookId(null);
+                        }}
+                      >
+                        Title
+                      </button>
 
-                        setSearchPage(
-                          1
-                        );
+                      <button
+                        type="button"
+                        className={
+                          searchSortField ===
+                          "authorLast"
+                            ? "searchSortButton searchSortButtonActive"
+                            : "searchSortButton"
+                        }
+                        aria-pressed={
+                          searchSortField ===
+                          "authorLast"
+                        }
+                        onClick={() => {
+                          setSearchSortField(
+                            "authorLast"
+                          );
 
-                        setSelectedBookId(
-                          null
-                        );
-                      }}
-                    >
-                      Z–A
-                    </button>
+                          setSearchPage(1);
+                          setSelectedBookId(null);
+                        }}
+                      >
+                        Author last
+                      </button>
+
+                      <button
+                        type="button"
+                        className={
+                          searchSortField ===
+                          "authorFirst"
+                            ? "searchSortButton searchSortButtonActive"
+                            : "searchSortButton"
+                        }
+                        aria-pressed={
+                          searchSortField ===
+                          "authorFirst"
+                        }
+                        onClick={() => {
+                          setSearchSortField(
+                            "authorFirst"
+                          );
+
+                          setSearchPage(1);
+                          setSelectedBookId(null);
+                        }}
+                      >
+                        Author first
+                      </button>
+                    </div>
                   </div>
-                </div>
+
+                  <div className="searchControlGroup sortDirectionGroup">
+                    <p className="searchControlLabel">
+                      Order
+                    </p>
+
+                    <div
+                      className="searchSortOptions"
+                      role="group"
+                      aria-label="Choose alphabetical direction"
+                    >
+                      <button
+                        type="button"
+                        className={
+                          searchSortDirection ===
+                          "asc"
+                            ? "searchSortButton searchSortButtonActive"
+                            : "searchSortButton"
+                        }
+                        aria-pressed={
+                          searchSortDirection ===
+                          "asc"
+                        }
+                        onClick={() => {
+                          setSearchSortDirection(
+                            "asc"
+                          );
+
+                          setSearchPage(1);
+                          setSelectedBookId(null);
+                        }}
+                      >
+                        A–Z
+                      </button>
+
+                      <button
+                        type="button"
+                        className={
+                          searchSortDirection ===
+                          "desc"
+                            ? "searchSortButton searchSortButtonActive"
+                            : "searchSortButton"
+                        }
+                        aria-pressed={
+                          searchSortDirection ===
+                          "desc"
+                        }
+                        onClick={() => {
+                          setSearchSortDirection(
+                            "desc"
+                          );
+
+                          setSearchPage(1);
+                          setSelectedBookId(null);
+                        }}
+                      >
+                        Z–A
+                      </button>
+                    </div>
+                  </div>
+                </>
               ) : null}
             </section>
 
