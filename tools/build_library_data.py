@@ -16,7 +16,13 @@ from PIL import Image, ImageFile, UnidentifiedImageError
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-WORKBOOK_PATH = Path("C:/Users/cjade/OneDrive/Shared Workbooks/MyLibrary/LIBRARY.xlsx")
+CATALOG_WORKBOOK_PATH = Path(
+    "C:/Users/cjade/OneDrive/Shared Workbooks/MyLibrary/LIBRARY.xlsx"
+)
+
+LIST_VIEW_WORKBOOK_PATH = Path(
+    "C:/Users/cjade/OneDrive/Shared Workbooks/MyLibrary/LIBRARY LIST VIEW.xlsx"
+)
 OUTPUT_DIR = Path("C:/library_app/library-map/public/data")
 BOOKS_OUTPUT_PATH = OUTPUT_DIR / "library-books.json"
 CATALOG_OUTPUT_PATH = OUTPUT_DIR / "library-catalog.json"
@@ -1766,16 +1772,50 @@ def find_catalog_match(
     return None, "missing"
 
 def main() -> None:
-    if not WORKBOOK_PATH.exists():
-        raise FileNotFoundError(f"Could not find workbook: {WORKBOOK_PATH}")
+    for workbook_path in (
+        CATALOG_WORKBOOK_PATH,
+        LIST_VIEW_WORKBOOK_PATH,
+    ):
+        if not workbook_path.exists():
+            raise FileNotFoundError(
+                f"Could not find workbook: "
+                f"{workbook_path}"
+            )
 
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    OUTPUT_DIR.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
 
-    print(f"Loading workbook: {WORKBOOK_PATH}")
-    workbook = load_workbook(WORKBOOK_PATH, data_only=True)
+    print(
+        f"Loading Catalog workbook: "
+        f"{CATALOG_WORKBOOK_PATH}"
+    )
 
-    bookcase_rooms = load_bookcase_rooms(workbook)
-    catalog_books, catalog_report = load_catalog_books(workbook)
+    catalog_workbook = load_workbook(
+        CATALOG_WORKBOOK_PATH,
+        data_only=True,
+    )
+
+    print(
+        f"Loading List View workbook: "
+        f"{LIST_VIEW_WORKBOOK_PATH}"
+    )
+
+    list_view_workbook = load_workbook(
+        LIST_VIEW_WORKBOOK_PATH,
+        data_only=True,
+    )
+
+    bookcase_rooms = load_bookcase_rooms(
+        catalog_workbook
+    )
+
+    catalog_books, catalog_report = (
+        load_catalog_books(
+            catalog_workbook
+        )
+    )
 
     if not catalog_books:
         raise ValueError(
@@ -1784,25 +1824,31 @@ def main() -> None:
             "could be deleted or replaced."
         )
 
-    wanted_lists, wanted_report = load_wanted_lists(workbook)
+    wanted_lists, wanted_report = (
+        load_wanted_lists(
+            catalog_workbook
+        )
+    )
 
-    cover_extraction_report = extract_catalog_cover_images(
-        WORKBOOK_PATH,
-        catalog_books,
+    cover_extraction_report = (
+        extract_catalog_cover_images(
+            CATALOG_WORKBOOK_PATH,
+            catalog_books,
+        )
     )
 
     if DEBUG_IMAGE_INSPECTION:
-        image_report = inspect_catalog_images(workbook)
-        image_package_report = inspect_workbook_image_package(WORKBOOK_PATH)
+        image_report = inspect_catalog_images(catalog_workbook)
+        image_package_report = inspect_workbook_image_package(CATALOG_WORKBOOK_PATH)
 
         catalog_sheet_names = {
             sheet.title
-            for sheet in workbook.worksheets
+            for sheet in catalog_workbook.worksheets
             if is_catalog_sheet(sheet)
         }
 
         drawing_anchor_report = inspect_drawing_image_anchors(
-            WORKBOOK_PATH,
+            CATALOG_WORKBOOK_PATH,
             catalog_sheet_names,
             catalog_books,
         )
@@ -1827,8 +1873,11 @@ def main() -> None:
             print(f"  - {catalog_key}: {len(duplicates)} rows")
 
     sheet = find_sheet_with_headers(
-        workbook,
+        list_view_workbook,
         required_headers={
+            "cj",
+            "jc",
+            "lgbtq+",
             "isbn",
             "year",
             "pages",
@@ -1860,6 +1909,9 @@ def main() -> None:
     header_indexes = {normalize_header(header): index for index, header in enumerate(headers)}
 
     required_headers = [
+        "cj",
+        "jc",
+        "lgbtq+",
         "isbn",
         "year",
         "pages",
@@ -2024,14 +2076,24 @@ def main() -> None:
         raw_shelf = get("shelf")
         shelf, row_name = parse_shelf(raw_shelf)
 
-        lgbtq = (
-            checkbox_to_bool(get("lgbtq+"))
-            if "lgbtq+" in header_indexes
-            else catalog_match["lgbtq"] if catalog_match else False
+        cj = checkbox_to_bool(
+            get("cj")
         )
 
-        if catalog_match and "lgbtq+" in header_indexes:
-            catalog_match["lgbtq"] = lgbtq
+        jc = checkbox_to_bool(
+            get("jc")
+        )
+
+        lgbtq = checkbox_to_bool(
+            get("lgbtq+")
+        )
+
+        if catalog_match:
+            catalog_match["cj"] = cj
+            catalog_match["jc"] = jc
+            catalog_match["lgbtq"] = (
+                lgbtq
+            )
 
         book = {
             "bookId": book_id,
@@ -2076,16 +2138,8 @@ def main() -> None:
                 if catalog_match
                 else ""
             ),
-            "jc": (
-                catalog_match["jc"]
-                if catalog_match
-                else False
-            ),
-            "cj": (
-                catalog_match["cj"]
-                if catalog_match
-                else False
-            ),
+            "jc": jc,
+            "cj": cj,
             "lgbtq": lgbtq,
             "coverImage": (
                 catalog_match.get("coverImage")
@@ -2109,7 +2163,13 @@ def main() -> None:
 
     meta = {
         "generatedAt": datetime.now(timezone.utc).isoformat(),
-        "sourceWorkbook": str(WORKBOOK_PATH),
+        "sourceWorkbook": str(
+            LIST_VIEW_WORKBOOK_PATH
+        ),
+
+        "catalogWorkbook": str(
+            CATALOG_WORKBOOK_PATH
+        ),
         "sourceSheet": sheet.title,
         "bookCount": len(books),
         "bookIdCount": len(book_id_rows),
@@ -2194,6 +2254,9 @@ def main() -> None:
         print("\nUnmapped bookcases:")
         for bookcase in sorted(unmapped_bookcases):
             print(f"  - {bookcase}")
+
+    catalog_workbook.close()
+    list_view_workbook.close()
 
 
 if __name__ == "__main__":

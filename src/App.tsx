@@ -3041,13 +3041,18 @@ export default function App() {
             return book;
           }
 
+          const sharedLgbtq = Boolean(
+            bookMetadataByBookId.get(
+              book.bookId
+            )?.lgbtq
+          );
+
           return {
             ...book,
 
             lgbtq:
-              bookMetadataByBookId.get(
-                book.bookId
-              )?.lgbtq ?? false,
+              Boolean(book.lgbtq) ||
+              sharedLgbtq,
           };
         }
       ),
@@ -3621,18 +3626,6 @@ export default function App() {
           "ready"
         );
 
-        if (
-          loadedRows.length !== 1033
-        ) {
-          console.warn(
-            "The number of Supabase book metadata rows differs from the initial migration count.",
-            {
-              expectedRows: 1033,
-              loadedRows:
-                loadedRows.length,
-            }
-          );
-        }
       } catch (error) {
         if (!isActive) {
           return;
@@ -4629,13 +4622,18 @@ export default function App() {
       return staticFallback;
     }
 
-    return (
+    const sharedIsRead = Boolean(
       libraryStateByKey.get(
         makeLibraryStateKey(
           readerId,
           catalogKey
         )
-      )?.is_read ?? false
+      )?.is_read
+    );
+
+    return (
+      staticFallback ||
+      sharedIsRead
     );
   }
 

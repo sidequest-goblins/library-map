@@ -431,14 +431,14 @@
               "sourceRow": 21
             },
             {
-              "entryId": "abc-cj-u-novak-naomi-uprooted",
+              "entryId": "abc-cj-u-novik-naomi-uprooted",
               "letter": "U",
               "title": "Uprooted",
               "author": "Naomi Novik",
               "authorFirst": "Naomi",
               "authorLast": "Novik",
               "bookId": "book-8eff364b-e68e-4c1a-b77f-009497ac8a5e",
-              "catalogKey": "novak-naomi-uprooted",
+              "catalogKey": "novik-naomi-uprooted",
               "read": false,
               "currentPage": null,
               "totalPages": 435,
@@ -604,20 +604,19 @@
               "sourceRow": 3
             },
             {
-              "entryId": "abc-jc-c-black-holly-the-cruel-prince",
+              "entryId": "abc-jc-c-brom-the-child-thief",
               "letter": "C",
-              "title": "The Cruel Prince",
-              "author": "Holly Black",
-              "authorFirst": "Holly",
-              "authorLast": "Black",
-              "bookId": "book-d8b88b6a-5da3-45be-a568-22c029d871a1",
-              "catalogKey": "black-holly-the-cruel-prince",
+              "title": "The Child Thief",
+              "author": "Brom",
+              "authorFirst": "",
+              "authorLast": "Brom",
+              "bookId": "book-1bc17409-172b-4beb-b4d1-adfeb9b69aa2",
+              "catalogKey": "brom-the-child-thief",
               "read": false,
               "currentPage": null,
-              "totalPages": 320,
+              "totalPages": 476,
               "naturalTitleLetter": "C",
               "naturalAuthorLetters": [
-                "H",
                 "B"
               ],
               "wildcard": false,
@@ -625,21 +624,21 @@
               "sourceRow": 4
             },
             {
-              "entryId": "abc-jc-d-das-indra-the-devourers",
+              "entryId": "abc-jc-d-larson-erik-dead-wake-the-last-crossing-of-the-lusitania",
               "letter": "D",
-              "title": "The Devourers",
-              "author": "Indra Das",
-              "authorFirst": "Indra",
-              "authorLast": "Das",
-              "bookId": "book-6fa1797d-e4a6-44ed-bae4-255d80a7ea59",
-              "catalogKey": "das-indra-the-devourers",
+              "title": "Dead Wake: The Last Crossing of the Lusitania",
+              "author": "Erik Larson",
+              "authorFirst": "Erik",
+              "authorLast": "Larson",
+              "bookId": "book-70e3ffe6-bb32-4996-8148-1aca66072a6a",
+              "catalogKey": "larson-erik-dead-wake-the-last-crossing-of-the-lusitania",
               "read": false,
               "currentPage": null,
-              "totalPages": 303,
+              "totalPages": 353,
               "naturalTitleLetter": "D",
               "naturalAuthorLetters": [
-                "I",
-                "D"
+                "E",
+                "L"
               ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
@@ -751,48 +750,6 @@
               "sourceRow": 10
             },
             {
-              "entryId": "abc-jc-h-jemisin-n-k-the-hundred-thousand-kingdoms",
-              "letter": "H",
-              "title": "The Hundred Thousand Kingdoms",
-              "author": "N. K. Jemisin",
-              "authorFirst": "N. K.",
-              "authorLast": "Jemisin",
-              "bookId": "book-903b3ed4-4d60-48f3-9c67-78e2c82733dd",
-              "catalogKey": "jemisin-n-k-the-hundred-thousand-kingdoms",
-              "read": false,
-              "currentPage": null,
-              "totalPages": 398,
-              "naturalTitleLetter": "H",
-              "naturalAuthorLetters": [
-                "N",
-                "J"
-              ],
-              "wildcard": false,
-              "sourceSheet": "ABC - JC",
-              "sourceRow": 11
-            },
-            {
-              "entryId": "abc-jc-i-zhao-xiran-jay-iron-widow",
-              "letter": "I",
-              "title": "Iron Widow",
-              "author": "Xiran Jay Zhao",
-              "authorFirst": "Xiran Jay",
-              "authorLast": "Zhao",
-              "bookId": "book-9c37da8f-086d-46a7-9da9-7292eb5996cf",
-              "catalogKey": "zhao-xiran-jay-iron-widow",
-              "read": false,
-              "currentPage": null,
-              "totalPages": 391,
-              "naturalTitleLetter": "I",
-              "naturalAuthorLetters": [
-                "X",
-                "Z"
-              ],
-              "wildcard": false,
-              "sourceSheet": "ABC - JC",
-              "sourceRow": 12
-            },
-            {
               "entryId": "abc-jc-i-lim-louisa-indelible-city-dispossession-and-defiance-in-hong-kong",
               "letter": "I",
               "title": "Indelible City",
@@ -810,7 +767,7 @@
               ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
-              "sourceRow": 13
+              "sourceRow": 11
             },
             {
               "entryId": "abc-jc-j-reid-ava-juniper-thorn",
@@ -831,7 +788,7 @@
               ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
-              "sourceRow": 14
+              "sourceRow": 12
             },
             {
               "entryId": "abc-jc-k-patel-vaishnavi-kaikeyi",
@@ -852,7 +809,7 @@
               ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
-              "sourceRow": 15
+              "sourceRow": 13
             },
             {
               "entryId": "abc-jc-l-lavalle-victor-lone-women",
@@ -873,7 +830,7 @@
               ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
-              "sourceRow": 16
+              "sourceRow": 14
             },
             {
               "entryId": "abc-jc-m-dahvana-headley-maria-the-mere-wife",
@@ -894,7 +851,7 @@
               ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
-              "sourceRow": 17
+              "sourceRow": 15
             },
             {
               "entryId": "abc-jc-n-bardugo-leigh-ninth-house",
@@ -915,28 +872,7 @@
               ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
-              "sourceRow": 18
-            },
-            {
-              "entryId": "abc-jc-n-robert-katee-neon-gods",
-              "letter": "N",
-              "title": "Neon Gods",
-              "author": "Katee Robert",
-              "authorFirst": "Katee",
-              "authorLast": "Robert",
-              "bookId": "book-65247600-12fe-4cca-84cd-b2403e53f535",
-              "catalogKey": "robert-katee-neon-gods",
-              "read": false,
-              "currentPage": null,
-              "totalPages": 367,
-              "naturalTitleLetter": "N",
-              "naturalAuthorLetters": [
-                "K",
-                "R"
-              ],
-              "wildcard": false,
-              "sourceSheet": "ABC - JC",
-              "sourceRow": 19
+              "sourceRow": 16
             },
             {
               "entryId": "abc-jc-o-evans-danielle-the-office-of-historical-corrections",
@@ -957,7 +893,7 @@
               ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
-              "sourceRow": 20
+              "sourceRow": 17
             },
             {
               "entryId": "abc-jc-p-tao-shen-the-poet-empress",
@@ -978,7 +914,7 @@
               ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
-              "sourceRow": 21
+              "sourceRow": 18
             },
             {
               "entryId": "abc-jc-q-dawson-juno-queen-b",
@@ -999,32 +935,11 @@
               ],
               "wildcard": false,
               "sourceSheet": "ABC - JC",
-              "sourceRow": 22
+              "sourceRow": 19
             },
             {
-              "entryId": "abc-jc-r-quinn-julia-romancing-mister-bridgerton",
+              "entryId": "abc-jc-r-mcquiston-casey-red-white-royal-blue",
               "letter": "R",
-              "title": "Romancing Mister Bridgerton",
-              "author": "Julia Quinn",
-              "authorFirst": "Julia",
-              "authorLast": "Quinn",
-              "bookId": "book-03dbee7e-75b3-40a0-9f53-0ef238faf1c0",
-              "catalogKey": "quinn-julia-romancing-mister-bridgerton",
-              "read": false,
-              "currentPage": null,
-              "totalPages": 393,
-              "naturalTitleLetter": "R",
-              "naturalAuthorLetters": [
-                "J",
-                "Q"
-              ],
-              "wildcard": false,
-              "sourceSheet": "ABC - JC",
-              "sourceRow": 23
-            },
-            {
-              "entryId": "abc-jc-s-mcquiston-casey-red-white-royal-blue",
-              "letter": "S",
               "title": "Red, White, & Royal Blue",
               "author": "Casey McQuiston",
               "authorFirst": "Casey",
@@ -1039,13 +954,13 @@
                 "C",
                 "M"
               ],
-              "wildcard": true,
+              "wildcard": false,
               "sourceSheet": "ABC - JC",
-              "sourceRow": 24
+              "sourceRow": 20
             },
             {
-              "entryId": "abc-jc-t-chupeco-rin-silver-under-nightfall",
-              "letter": "T",
+              "entryId": "abc-jc-s-chupeco-rin-silver-under-nightfall",
+              "letter": "S",
               "title": "Silver Under Nightfall",
               "author": "Rin Chupeco",
               "authorFirst": "Rin",
@@ -1060,13 +975,13 @@
                 "R",
                 "C"
               ],
-              "wildcard": true,
+              "wildcard": false,
               "sourceSheet": "ABC - JC",
-              "sourceRow": 25
+              "sourceRow": 21
             },
             {
-              "entryId": "abc-jc-u-orange-tommy-there-there",
-              "letter": "U",
+              "entryId": "abc-jc-t-orange-tommy-there-there",
+              "letter": "T",
               "title": "There There",
               "author": "Tommy Orange",
               "authorFirst": "Tommy",
@@ -1081,19 +996,19 @@
                 "T",
                 "O"
               ],
-              "wildcard": true,
+              "wildcard": false,
               "sourceSheet": "ABC - JC",
-              "sourceRow": 26
+              "sourceRow": 22
             },
             {
-              "entryId": "abc-jc-v-novak-naomi-uprooted",
-              "letter": "V",
+              "entryId": "abc-jc-u-novik-naomi-uprooted",
+              "letter": "U",
               "title": "Uprooted",
               "author": "Naomi Novik",
               "authorFirst": "Naomi",
               "authorLast": "Novik",
               "bookId": "book-8eff364b-e68e-4c1a-b77f-009497ac8a5e",
-              "catalogKey": "novak-naomi-uprooted",
+              "catalogKey": "novik-naomi-uprooted",
               "read": false,
               "currentPage": null,
               "totalPages": 435,
@@ -1101,34 +1016,13 @@
               "naturalAuthorLetters": [
                 "N"
               ],
-              "wildcard": true,
+              "wildcard": false,
               "sourceSheet": "ABC - JC",
-              "sourceRow": 27
+              "sourceRow": 23
             },
             {
-              "entryId": "abc-jc-w-asakura-takuya-the-vanishing-cherry-blossom-bookshop",
-              "letter": "W",
-              "title": "The Vanishing Cherry Blossom Bookshop",
-              "author": "Takuya Asakura",
-              "authorFirst": "Takuya",
-              "authorLast": "Asakura",
-              "bookId": "book-4cb1930d-1fac-45a8-9582-4e781faf90d9",
-              "catalogKey": "asakura-takuya-the-vanishing-cherry-blossom-bookshop",
-              "read": false,
-              "currentPage": null,
-              "totalPages": 207,
-              "naturalTitleLetter": "V",
-              "naturalAuthorLetters": [
-                "T",
-                "A"
-              ],
-              "wildcard": true,
-              "sourceSheet": "ABC - JC",
-              "sourceRow": 28
-            },
-            {
-              "entryId": "abc-jc-x-chen-mike-vampire-weekend",
-              "letter": "X",
+              "entryId": "abc-jc-v-chen-mike-vampire-weekend",
+              "letter": "V",
               "title": "Vampire Weekend",
               "author": "Mike Chen",
               "authorFirst": "Mike",
@@ -1143,13 +1037,13 @@
                 "M",
                 "C"
               ],
-              "wildcard": true,
+              "wildcard": false,
               "sourceSheet": "ABC - JC",
-              "sourceRow": 29
+              "sourceRow": 24
             },
             {
-              "entryId": "abc-jc-y-gordon-aubrey-what-we-don-t-talk-about-when-we-talk-about-fat",
-              "letter": "Y",
+              "entryId": "abc-jc-w-gordon-aubrey-what-we-don-t-talk-about-when-we-talk-about-fat",
+              "letter": "W",
               "title": "What We Don't Talk About When We Talk About Fat",
               "author": "Aubrey Gordon",
               "authorFirst": "Aubrey",
@@ -1164,13 +1058,34 @@
                 "A",
                 "G"
               ],
-              "wildcard": true,
+              "wildcard": false,
               "sourceSheet": "ABC - JC",
-              "sourceRow": 30
+              "sourceRow": 25
             },
             {
-              "entryId": "abc-jc-z-choi-mary-h-k-yolk",
-              "letter": "Z",
+              "entryId": "abc-jc-x-kurniawan-eka-beauty-is-a-wound",
+              "letter": "X",
+              "title": "Beauty is a Wound",
+              "author": "Eka Kurniawan",
+              "authorFirst": "Eka",
+              "authorLast": "Kurniawan",
+              "bookId": "book-1c0ec9f5-3df8-4f0e-934f-c0adb0938e76",
+              "catalogKey": "kurniawan-eka-beauty-is-a-wound",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 470,
+              "naturalTitleLetter": "B",
+              "naturalAuthorLetters": [
+                "E",
+                "K"
+              ],
+              "wildcard": true,
+              "sourceSheet": "ABC - JC",
+              "sourceRow": 26
+            },
+            {
+              "entryId": "abc-jc-y-choi-mary-h-k-yolk",
+              "letter": "Y",
               "title": "Yolk",
               "author": "Mary H. K. Choi",
               "authorFirst": "Mary H. K.",
@@ -1185,9 +1100,9 @@
                 "M",
                 "C"
               ],
-              "wildcard": true,
+              "wildcard": false,
               "sourceSheet": "ABC - JC",
-              "sourceRow": 31
+              "sourceRow": 27
             }
           ]
         }
@@ -1265,14 +1180,14 @@
               "sourceRow": 4
             },
             {
-              "entryId": "abc-author-cj-d-dev-somali-pride-prejudice-and-other-flavors",
+              "entryId": "abc-author-cj-d-dev-sonali-pride-prejudice-and-other-flavors",
               "letter": "D",
               "title": "Pride, Prejudice, and Other Flavors",
               "author": "Somali Dev",
               "authorFirst": "Somali",
               "authorLast": "Dev",
               "bookId": "book-267dc8fe-5af5-4f1d-8cf1-b6fb81472abc",
-              "catalogKey": "dev-somali-pride-prejudice-and-other-flavors",
+              "catalogKey": "dev-sonali-pride-prejudice-and-other-flavors",
               "read": false,
               "currentPage": null,
               "totalPages": 481,
@@ -1747,6 +1662,557 @@
               ],
               "wildcard": false,
               "sourceSheet": "ABC Author - CJ",
+              "sourceRow": 27
+            }
+          ]
+        },
+        {
+          "readerId": "jc",
+          "readerName": "JC",
+          "entries": [
+            {
+              "entryId": "abc-author-jc-a-asakura-takuya-the-vanishing-cherry-blossom-bookshop",
+              "letter": "A",
+              "title": "The Vanishing Cherry Blossom Bookshop",
+              "author": "Takuya Asakura",
+              "authorFirst": "Takuya",
+              "authorLast": "Asakura",
+              "bookId": "book-4cb1930d-1fac-45a8-9582-4e781faf90d9",
+              "catalogKey": "asakura-takuya-the-vanishing-cherry-blossom-bookshop",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 207,
+              "naturalTitleLetter": "V",
+              "naturalAuthorLetters": [
+                "T",
+                "A"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 2
+            },
+            {
+              "entryId": "abc-author-jc-b-beukes-lauren-afterland",
+              "letter": "B",
+              "title": "Afterland",
+              "author": "Lauren Beukes",
+              "authorFirst": "Lauren",
+              "authorLast": "Beukes",
+              "bookId": "book-979b3926-c8da-4236-9283-fe5864945fae",
+              "catalogKey": "beukes-lauren-afterland",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 404,
+              "naturalTitleLetter": "A",
+              "naturalAuthorLetters": [
+                "L",
+                "B"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 3
+            },
+            {
+              "entryId": "abc-author-jc-c-chopin-kate-the-awakening",
+              "letter": "C",
+              "title": "The Awakening",
+              "author": "Kate Chopin",
+              "authorFirst": "Kate",
+              "authorLast": "Chopin",
+              "bookId": "book-dc1c6202-e52c-4b17-a59f-344f16cc2802",
+              "catalogKey": "chopin-kate-the-awakening",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 190,
+              "naturalTitleLetter": "A",
+              "naturalAuthorLetters": [
+                "K",
+                "C"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 4
+            },
+            {
+              "entryId": "abc-author-jc-d-dalby-liza-the-tale-of-murasaki",
+              "letter": "D",
+              "title": "The Tale of Murasaki",
+              "author": "Liza Dalby",
+              "authorFirst": "Liza",
+              "authorLast": "Dalby",
+              "bookId": "book-fea4c59b-de26-4424-9d3b-3b0522296d24",
+              "catalogKey": "dalby-liza-the-tale-of-murasaki",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 420,
+              "naturalTitleLetter": "T",
+              "naturalAuthorLetters": [
+                "L",
+                "D"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 5
+            },
+            {
+              "entryId": "abc-author-jc-e-ernshaw-shea-the-wicked-deep",
+              "letter": "E",
+              "title": "The Wicked Deep",
+              "author": "Shea Ernshaw",
+              "authorFirst": "Shea",
+              "authorLast": "Ernshaw",
+              "bookId": "book-8b0d0287-bbb9-4da9-a0e6-35992cf54d0d",
+              "catalogKey": "ernshaw-shea-the-wicked-deep",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 308,
+              "naturalTitleLetter": "W",
+              "naturalAuthorLetters": [
+                "S",
+                "E"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 6
+            },
+            {
+              "entryId": "abc-author-jc-f-fracassi-philip-boys-in-the-valley",
+              "letter": "F",
+              "title": "Boys in the Valley",
+              "author": "Philip Fracassi",
+              "authorFirst": "Philip",
+              "authorLast": "Fracassi",
+              "bookId": "book-eee62825-4d12-4c7f-ba21-301dba13f8d9",
+              "catalogKey": "fracassi-philip-boys-in-the-valley",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 335,
+              "naturalTitleLetter": "B",
+              "naturalAuthorLetters": [
+                "P",
+                "F"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 7
+            },
+            {
+              "entryId": "abc-author-jc-g-gryphon-talia-key-to-conflict",
+              "letter": "G",
+              "title": "Key to Conflict",
+              "author": "Talia Gryphon",
+              "authorFirst": "Talia",
+              "authorLast": "Gryphon",
+              "bookId": "book-3828303e-3aeb-405d-b23e-b83e076ca2ed",
+              "catalogKey": "gryphon-talia-key-to-conflict",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 325,
+              "naturalTitleLetter": "K",
+              "naturalAuthorLetters": [
+                "T",
+                "G"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 8
+            },
+            {
+              "entryId": "abc-author-jc-h-hunter-cara-murder-in-the-family",
+              "letter": "H",
+              "title": "Murder in the Family",
+              "author": "Cara Hunter",
+              "authorFirst": "Cara",
+              "authorLast": "Hunter",
+              "bookId": "book-e3482511-ae53-4701-a6fc-0d7edfcf9deb",
+              "catalogKey": "hunter-cara-murder-in-the-family",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 464,
+              "naturalTitleLetter": "M",
+              "naturalAuthorLetters": [
+                "C",
+                "H"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 9
+            },
+            {
+              "entryId": "abc-author-jc-i-ivey-eowyn-the-snow-child",
+              "letter": "I",
+              "title": "The Snow Child",
+              "author": "Eowyn Ivey",
+              "authorFirst": "Eowyn",
+              "authorLast": "Ivey",
+              "bookId": "book-cc8dea13-e119-4f49-87dc-8d5c42dbf49d",
+              "catalogKey": "ivey-eowyn-the-snow-child",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 386,
+              "naturalTitleLetter": "S",
+              "naturalAuthorLetters": [
+                "E",
+                "I"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 10
+            },
+            {
+              "entryId": "abc-author-jc-j-james-marlon-black-leopard-red-wolf",
+              "letter": "J",
+              "title": "Black Leopard, Red Wolf",
+              "author": "Marlon James",
+              "authorFirst": "Marlon",
+              "authorLast": "James",
+              "bookId": "book-e04570dc-ce15-445c-a67b-001e08f98784",
+              "catalogKey": "james-marlon-black-leopard-red-wolf",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 620,
+              "naturalTitleLetter": "B",
+              "naturalAuthorLetters": [
+                "M",
+                "J"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 11
+            },
+            {
+              "entryId": "abc-author-jc-k-kohda-claire-woman-eating",
+              "letter": "K",
+              "title": "Woman, Eating",
+              "author": "Claire Kohda",
+              "authorFirst": "Claire",
+              "authorLast": "Kohda",
+              "bookId": "book-6523b9d7-3114-4af1-958c-45171dcf0a2a",
+              "catalogKey": "kohda-claire-woman-eating",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 230,
+              "naturalTitleLetter": "W",
+              "naturalAuthorLetters": [
+                "C",
+                "K"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 12
+            },
+            {
+              "entryId": "abc-author-jc-l-liang-ann-a-song-to-drown-rivers",
+              "letter": "L",
+              "title": "A Song to Drown Rivers",
+              "author": "Ann Liang",
+              "authorFirst": "Ann",
+              "authorLast": "Liang",
+              "bookId": "book-915aaa53-900c-4d38-93ec-45784ea8e7f5",
+              "catalogKey": "liang-ann-a-song-to-drown-rivers",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 321,
+              "naturalTitleLetter": "S",
+              "naturalAuthorLetters": [
+                "A",
+                "L"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 13
+            },
+            {
+              "entryId": "abc-author-jc-m-murakami-haruki-kafka-on-the-shore",
+              "letter": "M",
+              "title": "Kafka on the Shore",
+              "author": "Haruki Murakami",
+              "authorFirst": "Haruki",
+              "authorLast": "Murakami",
+              "bookId": "book-96738467-afc4-4bc2-a7e9-8c2bccdc046d",
+              "catalogKey": "murakami-haruki-kafka-on-the-shore",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 467,
+              "naturalTitleLetter": "K",
+              "naturalAuthorLetters": [
+                "H",
+                "M"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 14
+            },
+            {
+              "entryId": "abc-author-jc-n-nguyen-viet-thanh-the-refugees",
+              "letter": "N",
+              "title": "The Refugees",
+              "author": "Viet Thanh Nguyen",
+              "authorFirst": "Viet Thanh",
+              "authorLast": "Nguyen",
+              "bookId": "book-ebfc37b5-3a16-4b91-93df-8e078ec17333",
+              "catalogKey": "nguyen-viet-thanh-the-refugees",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 207,
+              "naturalTitleLetter": "R",
+              "naturalAuthorLetters": [
+                "V",
+                "N"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 15
+            },
+            {
+              "entryId": "abc-author-jc-o-oshetsky-claire-poor-deer",
+              "letter": "O",
+              "title": "Poor Deer",
+              "author": "Claire Oshetsky",
+              "authorFirst": "Claire",
+              "authorLast": "Oshetsky",
+              "bookId": "book-01e682ee-c80b-4585-8b4c-aa0995664a98",
+              "catalogKey": "oshetsky-claire-poor-deer",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 226,
+              "naturalTitleLetter": "P",
+              "naturalAuthorLetters": [
+                "C",
+                "O"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 16
+            },
+            {
+              "entryId": "abc-author-jc-p-palahniuk-chuck-fight-club",
+              "letter": "P",
+              "title": "Fight Club",
+              "author": "Chuck Palahniuk",
+              "authorFirst": "Chuck",
+              "authorLast": "Palahniuk",
+              "bookId": "book-860a490b-2fd8-4e7c-adba-be8c0fa5d8ab",
+              "catalogKey": "palahniuk-chuck-fight-club",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 208,
+              "naturalTitleLetter": "F",
+              "naturalAuthorLetters": [
+                "C",
+                "P"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 17
+            },
+            {
+              "entryId": "abc-author-jc-q-quinn-julia-romancing-mister-bridgerton",
+              "letter": "Q",
+              "title": "Romancing Mister Bridgerton",
+              "author": "Julia Quinn",
+              "authorFirst": "Julia",
+              "authorLast": "Quinn",
+              "bookId": "book-03dbee7e-75b3-40a0-9f53-0ef238faf1c0",
+              "catalogKey": "quinn-julia-romancing-mister-bridgerton",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 393,
+              "naturalTitleLetter": "R",
+              "naturalAuthorLetters": [
+                "J",
+                "Q"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 18
+            },
+            {
+              "entryId": "abc-author-jc-r-rice-anne-interview-with-the-vampire",
+              "letter": "R",
+              "title": "Interview with the Vampire",
+              "author": "Anne Rice",
+              "authorFirst": "Anne",
+              "authorLast": "Rice",
+              "bookId": "book-8eaf509f-c6ab-4d4b-8bf7-dcdc4ec56b91",
+              "catalogKey": "rice-anne-interview-with-the-vampire",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 340,
+              "naturalTitleLetter": "I",
+              "naturalAuthorLetters": [
+                "A",
+                "R"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 19
+            },
+            {
+              "entryId": "abc-author-jc-s-straube-lindsay-kiss-of-the-basilisk",
+              "letter": "S",
+              "title": "Kiss of the Basilisk",
+              "author": "Lindsay Straube",
+              "authorFirst": "Lindsay",
+              "authorLast": "Straube",
+              "bookId": "book-3c789a4b-80d1-4a7f-89bd-46296cf7d642",
+              "catalogKey": "straube-lindsay-kiss-of-the-basilisk",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 515,
+              "naturalTitleLetter": "K",
+              "naturalAuthorLetters": [
+                "L",
+                "S"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 20
+            },
+            {
+              "entryId": "abc-author-jc-t-thorne-rebecca-can-t-spell-treason-without-tea",
+              "letter": "T",
+              "title": "Can't Spell Treason Without Tea",
+              "author": "Rebecca Thorne",
+              "authorFirst": "Rebecca",
+              "authorLast": "Thorne",
+              "bookId": "book-d977e166-5a36-42e2-bfd4-bbaf9232e6e0",
+              "catalogKey": "thorne-rebecca-can-t-spell-treason-without-tea",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 336,
+              "naturalTitleLetter": "C",
+              "naturalAuthorLetters": [
+                "R",
+                "T"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 21
+            },
+            {
+              "entryId": "abc-author-jc-u-uketsu-strange-pictures",
+              "letter": "U",
+              "title": "Strange Pictures",
+              "author": "Uketsu",
+              "authorFirst": "",
+              "authorLast": "Uketsu",
+              "bookId": "book-e31ee2a8-1604-4b5e-b330-85ddbfa6b787",
+              "catalogKey": "uketsu-strange-pictures",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 236,
+              "naturalTitleLetter": "S",
+              "naturalAuthorLetters": [
+                "U"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 22
+            },
+            {
+              "entryId": "abc-author-jc-v-vuong-ocean-on-earth-we-re-briefly-gorgeous",
+              "letter": "V",
+              "title": "On Earth We're Briefly Gorgeous",
+              "author": "Ocean Vuong",
+              "authorFirst": "Ocean",
+              "authorLast": "Vuong",
+              "bookId": "book-98ff6a3e-adbc-49cd-80d4-3d2675708abf",
+              "catalogKey": "vuong-ocean-on-earth-we-re-briefly-gorgeous",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 242,
+              "naturalTitleLetter": "O",
+              "naturalAuthorLetters": [
+                "O",
+                "V"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 23
+            },
+            {
+              "entryId": "abc-author-jc-w-wilkerson-isabel-caste-the-origins-of-our-discontents",
+              "letter": "W",
+              "title": "Caste: The Origins of Our Discontents",
+              "author": "Isabel Wilkerson",
+              "authorFirst": "Isabel",
+              "authorLast": "Wilkerson",
+              "bookId": "book-5cb0df05-b7dc-4ebb-bbf3-a9d76a47d557",
+              "catalogKey": "wilkerson-isabel-caste-the-origins-of-our-discontents",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 388,
+              "naturalTitleLetter": "C",
+              "naturalAuthorLetters": [
+                "I",
+                "W"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 24
+            },
+            {
+              "entryId": "abc-author-jc-x-gonz-lez-x-chitl-olga-dies-dreaming",
+              "letter": "X",
+              "title": "Olga Dies Dreaming",
+              "author": "Xochitl Gonzalez",
+              "authorFirst": "Xochitl",
+              "authorLast": "Gonzalez",
+              "bookId": "book-80993e87-3fc4-4dc0-8987-9cddc430d330",
+              "catalogKey": "gonz-lez-x-chitl-olga-dies-dreaming",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 369,
+              "naturalTitleLetter": "O",
+              "naturalAuthorLetters": [
+                "X",
+                "G"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 25
+            },
+            {
+              "entryId": "abc-author-jc-y-yuzuki-asako-butter",
+              "letter": "Y",
+              "title": "Butter",
+              "author": "Asako Yuzuki",
+              "authorFirst": "Asako",
+              "authorLast": "Yuzuki",
+              "bookId": "book-672e6e63-3477-4719-80bb-e30ab8b86b82",
+              "catalogKey": "yuzuki-asako-butter",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 452,
+              "naturalTitleLetter": "B",
+              "naturalAuthorLetters": [
+                "A",
+                "Y"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
+              "sourceRow": 26
+            },
+            {
+              "entryId": "abc-author-jc-z-zevin-gabrielle-young-jane-young",
+              "letter": "Z",
+              "title": "Young Jane Young",
+              "author": "Gabrielle Zevin",
+              "authorFirst": "Gabrielle",
+              "authorLast": "Zevin",
+              "bookId": "book-6eb267f0-5474-448b-a66f-70c5c6b5a873",
+              "catalogKey": "zevin-gabrielle-young-jane-young",
+              "read": false,
+              "currentPage": null,
+              "totalPages": 294,
+              "naturalTitleLetter": "Y",
+              "naturalAuthorLetters": [
+                "G",
+                "Z"
+              ],
+              "wildcard": false,
+              "sourceSheet": "ABC Author - JC",
               "sourceRow": 27
             }
           ]

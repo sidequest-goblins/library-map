@@ -12,7 +12,7 @@ $ErrorActionPreference = "Stop"
 # -----------------------------------------------------------------------------
 
 $WorkbookPath = (
-    "C:\Users\cjade\OneDrive\Shared Workbooks\MyLibrary\LIBRARY.xlsx"
+    "C:\Users\cjade\OneDrive\Shared Workbooks\MyLibrary\LIBRARY LIST VIEW.xlsx"
 )
 
 $ListViewSheetName = "List View"
@@ -24,6 +24,8 @@ $BoundaryHeader = (
 $BookIdHeader = "Book ID"
 
 $ExpectedHeaders = @(
+    "CJ",
+    "JC",
     "LGBTQ+",
     "ISBN",
     "Year",
@@ -330,7 +332,7 @@ function Assert-WorkbookIsAvailable {
         Test-Path -LiteralPath $lockPath
     ) {
         throw (
-            "Excel appears to have LIBRARY.xlsx open.`n`n" +
+            "Excel appears to have '$workbookFilename' open.`n`n" +
             "Close the workbook completely before running " +
             "the Book ID tool.`n`n" +
             "Detected lock file:`n" +
