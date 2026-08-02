@@ -3437,6 +3437,9 @@ export default function App() {
   const statsReturnPositionRef =
     useRef<StatsReturnPosition | null>(null);
 
+  const statsDrilldownReturnPositionRef =
+    useRef<StatsReturnPosition | null>(null);
+
   const searchAutocompleteRef =
     useRef<HTMLDivElement | null>(null);
 
@@ -3889,6 +3892,30 @@ export default function App() {
         });
 
         statsReturnPositionRef.current =
+          null;
+      }
+    );
+  }
+
+  function returnToStatsFromDrilldown() {
+    const returnPosition =
+      statsDrilldownReturnPositionRef.current;
+
+    setActiveTab("stats");
+    setSelectedBookId(null);
+    setSearchSuggestionsOpen(false);
+    setActiveSearchSuggestionIndex(-1);
+
+    window.requestAnimationFrame(
+      () => {
+        window.scrollTo({
+          top:
+            returnPosition
+              ?.windowScrollY ?? 0,
+          behavior: "auto",
+        });
+
+        statsDrilldownReturnPositionRef.current =
           null;
       }
     );
@@ -9098,9 +9125,16 @@ export default function App() {
       !hasActiveSearchFilters &&
       !hasSearchDrilldown;
 
+    const showStatsReturnButton =
+      Boolean(
+        searchDrilldown &&
+        statsDrilldownReturnPositionRef.current
+      );
+
     if (
       !hasMultipleSearchPages &&
-      !showHideAllBooksButton
+      !showHideAllBooksButton &&
+      !showStatsReturnButton
     ) {
       return null;
     }
@@ -9110,11 +9144,25 @@ export default function App() {
         className="paginationControls"
         role="navigation"
         aria-label={
-          hasSearchQuery
-            ? "Search result pagination"
-            : "Library pagination"
+          showStatsReturnButton
+            ? "Stats drilldown result controls"
+            : hasSearchQuery
+              ? "Search result pagination"
+              : "Library pagination"
         }
       >
+        {showStatsReturnButton ? (
+          <button
+            type="button"
+            aria-label="Return to Stats"
+            onClick={
+              returnToStatsFromDrilldown
+            }
+          >
+            ← Return
+          </button>
+        ) : null}
+
         {hasMultipleSearchPages ? (
           <>
             <button
@@ -9472,6 +9520,15 @@ export default function App() {
   }: OpenSearchWithFiltersOptions = {}) {
     runAfterBookDetailDiscardCheck(
       () => {
+        if (
+          activeTab === "stats" &&
+          drilldown
+        ) {
+          statsDrilldownReturnPositionRef.current = {
+            windowScrollY: window.scrollY,
+          };
+        }
+
         const nextFilters =
           filterMode === "merge"
             ? {
@@ -13229,11 +13286,10 @@ export default function App() {
                   </p>
                 </div>
 
-                {searchResultBooks.length >
-                0 ? (
-                  <>
-                    {renderSearchPaginationControls()}
+                {renderSearchPaginationControls()}
 
+                {searchResultBooks.length > 0 ? (
+                  <>
                     <div className="searchResultList">
                       {pagedSearchResults.map(
                         (book) => {
