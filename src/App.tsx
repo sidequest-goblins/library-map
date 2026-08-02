@@ -2990,7 +2990,15 @@ export default function App() {
   ] = useState(getStoredChallengeReaderId);
   const [selectedBookId, setSelectedBookId] =
     useState<string | null>(null);
-  const [searchPage, setSearchPage] = useState(1);
+
+  const [searchPage, setSearchPage] =
+    useState(1);
+
+  const [
+    browseAllBooks,
+    setBrowseAllBooks,
+  ] = useState(false);
+
   const [searchSuggestionsOpen, setSearchSuggestionsOpen] =
     useState(false);
   const [
@@ -4298,7 +4306,14 @@ export default function App() {
   function selectSearchSuggestion(
     suggestion: SearchSuggestion
   ) {
-    setSearchQuery(suggestion.value);
+    setSearchQuery(
+      suggestion.value
+    );
+
+    setBrowseAllBooks(
+      false
+    );
+
     setSearchPage(1);
     setSelectedBookId(null);
     setSearchSuggestionsOpen(false);
@@ -7832,10 +7847,15 @@ export default function App() {
         )
       : 0;
 
+  const searchResultBooks =
+    browseAllBooks
+      ? books
+      : searchResults;
+
   const totalSearchPages = Math.max(
     1,
     Math.ceil(
-      searchResults.length /
+      searchResultBooks.length /
         SEARCH_PAGE_SIZE
     )
   );
@@ -7846,13 +7866,26 @@ export default function App() {
   );
 
   const pagedSearchResults =
-    searchResults.slice(
+    searchResultBooks.slice(
       (safeSearchPage - 1) *
         SEARCH_PAGE_SIZE,
 
       safeSearchPage *
         SEARCH_PAGE_SIZE
     );
+
+  function scrollToSearchResultsTop() {
+    window.requestAnimationFrame(
+      () => {
+        searchResultsTopRef
+          .current
+          ?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+      }
+    );
+  }
 
   function changeSearchPage(
     nextPage: number
@@ -7876,21 +7909,27 @@ export default function App() {
       boundedPage
     );
 
-    window.requestAnimationFrame(
-      () => {
-        searchResultsTopRef
-          .current
-          ?.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
-      }
+    scrollToSearchResultsTop();
+  }
+
+  function showAllLibraryBooks() {
+    setSearchQuery("");
+
+    setBrowseAllBooks(
+      true
     );
+
+    setSearchPage(1);
+    setSelectedBookId(null);
+    setSearchSuggestionsOpen(false);
+    setActiveSearchSuggestionIndex(-1);
+
+    scrollToSearchResultsTop();
   }
 
   function renderSearchPaginationControls() {
     if (
-      searchResults.length <=
+      searchResultBooks.length <=
       SEARCH_PAGE_SIZE
     ) {
       return null;
@@ -7900,7 +7939,11 @@ export default function App() {
       <div
         className="paginationControls"
         role="navigation"
-        aria-label="Search result pagination"
+        aria-label={
+          browseAllBooks
+            ? "Library pagination"
+            : "Search result pagination"
+        }
       >
         <button
           type="button"
@@ -10815,16 +10858,35 @@ export default function App() {
                     );
                   }}
                   onChange={(event) => {
-                    setSearchQuery(event.target.value);
+                    setSearchQuery(
+                      event.target.value
+                    );
+
+                    setBrowseAllBooks(
+                      false
+                    );
+
                     setSearchPage(1);
                     setSelectedBookId(null);
 
-                    if (autocompleteEnabled) {
-                      setSearchSuggestionsOpen(true);
-                      setActiveSearchSuggestionIndex(0);
+                    if (
+                      autocompleteEnabled
+                    ) {
+                      setSearchSuggestionsOpen(
+                        true
+                      );
+
+                      setActiveSearchSuggestionIndex(
+                        0
+                      );
                     } else {
-                      setSearchSuggestionsOpen(false);
-                      setActiveSearchSuggestionIndex(-1);
+                      setSearchSuggestionsOpen(
+                        false
+                      );
+
+                      setActiveSearchSuggestionIndex(
+                        -1
+                      );
                     }
                   }}
                   onKeyDown={handleSearchInputKeyDown}
@@ -11042,7 +11104,9 @@ export default function App() {
               ) : null}
             </section>
 
-            {searchQuery.trim().length > 0 ? (
+            {browseAllBooks ||
+            searchQuery.trim().length >
+              0 ? (
               <div className="searchResults">
                 <div
                   ref={
@@ -11051,23 +11115,30 @@ export default function App() {
                   className="searchResultsHeader"
                 >
                   <h2>
-                    Search results
+                    {browseAllBooks
+                      ? "All books"
+                      : "Search results"}
                   </h2>
 
                   <p>
-                    {searchResults.length ===
-                    1
-                      ? "1 book found"
-                      : `${searchResults.length} books found`}
+                    {browseAllBooks
+                      ? searchResultBooks.length ===
+                        1
+                        ? "1 book in library"
+                        : `${searchResultBooks.length} books in library`
+                      : searchResultBooks.length ===
+                          1
+                        ? "1 book found"
+                        : `${searchResultBooks.length} books found`}
 
-                    {searchResults.length >
+                    {searchResultBooks.length >
                     SEARCH_PAGE_SIZE
                       ? ` · Page ${safeSearchPage} of ${totalSearchPages}`
                       : ""}
                   </p>
                 </div>
 
-                {searchResults.length >
+                {searchResultBooks.length >
                 0 ? (
                   <>
                     {renderSearchPaginationControls()}
@@ -11126,12 +11197,25 @@ export default function App() {
                 )}
               </div>
             ) : (
-              <p className="emptySearch">
-                Search by title,
-                author, genre,
-                publisher, or
-                location.
-              </p>
+              <div className="emptySearch">
+                <p>
+                  Search by title,
+                  author, genre,
+                  publisher, or
+                  location.
+                </p>
+
+                <div className="paginationControls">
+                  <button
+                    type="button"
+                    onClick={
+                      showAllLibraryBooks
+                    }
+                  >
+                    Show all books
+                  </button>
+                </div>
+              </div>
             )}
           </section>
         )
