@@ -33,10 +33,13 @@ import {
   getBookcasesFromBooks,
   getShelvesForBookcase,
   searchBooks,
+  sortLibraryItemsForDisplay,
   sortBooksForSearchDisplay,
 } from "./data/librarySelectors";
 import type {
   AuthorNameMode,
+  LibrarySortDirection,
+  LibrarySortField,
   SearchScope,
   SearchSortDirection,
   SearchSortField,
@@ -691,6 +694,53 @@ const WANTED_MODE_OPTIONS: Array<{
     emptySearchText: "No missing-series books match that search.",
   },
 ];
+
+const WANTED_SORT_FIELD_OPTIONS:
+  Record<
+    WantedMode,
+    Array<{
+      field: LibrarySortField;
+      label: string;
+    }>
+  > = {
+    toBuy: [
+      {
+        field: "title",
+        label: "Title",
+      },
+      {
+        field: "authorLast",
+        label: "Author last",
+      },
+      {
+        field: "authorFirst",
+        label: "Author first",
+      },
+      {
+        field: "series",
+        label: "Series",
+      },
+    ],
+
+    seriesToComplete: [
+      {
+        field: "series",
+        label: "Series",
+      },
+      {
+        field: "title",
+        label: "Title",
+      },
+      {
+        field: "authorLast",
+        label: "Author last",
+      },
+      {
+        field: "authorFirst",
+        label: "Author first",
+      },
+    ],
+  };
 
 function normalizeInlineSearchText(value: unknown): string {
   return String(value ?? "")
@@ -3309,6 +3359,32 @@ export default function App() {
   const [wantedQueries, setWantedQueries] = useState<Record<WantedMode, string>>({
     toBuy: "",
     seriesToComplete: "",
+  });
+
+  const [
+    wantedSortFields,
+    setWantedSortFields,
+  ] = useState<
+    Record<
+      WantedMode,
+      LibrarySortField
+    >
+  >({
+    toBuy: "title",
+    seriesToComplete: "series",
+  });
+
+  const [
+    wantedSortDirections,
+    setWantedSortDirections,
+  ] = useState<
+    Record<
+      WantedMode,
+      LibrarySortDirection
+    >
+  >({
+    toBuy: "asc",
+    seriesToComplete: "asc",
   });
   const [selectedChallengeId, setSelectedChallengeId] =
     useState("");
@@ -8743,6 +8819,12 @@ export default function App() {
 
   const activeWantedQuery = wantedQueries[wantedMode];
 
+  const activeWantedSortField =
+    wantedSortFields[wantedMode];
+
+  const activeWantedSortDirection =
+    wantedSortDirections[wantedMode];
+
   const activeWantedModeOption =
     WANTED_MODE_OPTIONS.find((option) => option.mode === wantedMode) ??
     WANTED_MODE_OPTIONS[0];
@@ -8751,6 +8833,21 @@ export default function App() {
     () => filterWantedItems(activeWantedItems, activeWantedQuery),
     [activeWantedItems, activeWantedQuery]
   );
+
+  const sortedWantedItems =
+    useMemo(
+      () =>
+        sortLibraryItemsForDisplay(
+          filteredWantedItems,
+          activeWantedSortField,
+          activeWantedSortDirection
+        ),
+      [
+        filteredWantedItems,
+        activeWantedSortField,
+        activeWantedSortDirection,
+      ]
+    );
 
   const wantedTotal = wantedLists.toBuy.length + wantedLists.seriesToComplete.length;
   const activeWantedTotal = activeWantedItems.length;
@@ -13273,6 +13370,125 @@ export default function App() {
             />
           </label>
 
+          <div className="searchControlGroup sortDirectionGroup">
+            <p className="searchControlLabel">
+              Sort by
+            </p>
+
+            <div
+              className="searchSortOptions"
+              role="group"
+              aria-label={`Choose how ${activeWantedModeOption.label} books are sorted`}
+            >
+              {WANTED_SORT_FIELD_OPTIONS[
+                wantedMode
+              ].map(
+                (option) => (
+                  <button
+                    key={
+                      option.field
+                    }
+                    type="button"
+                    className={
+                      activeWantedSortField ===
+                      option.field
+                        ? "searchSortButton searchSortButtonActive"
+                        : "searchSortButton"
+                    }
+                    aria-pressed={
+                      activeWantedSortField ===
+                      option.field
+                    }
+                    onClick={() => {
+                      setWantedSortFields(
+                        (
+                          currentFields
+                        ) => ({
+                          ...currentFields,
+
+                          [wantedMode]:
+                            option.field,
+                        })
+                      );
+                    }}
+                  >
+                    {
+                      option.label
+                    }
+                  </button>
+                )
+              )}
+            </div>
+          </div>
+
+          <div className="searchControlGroup sortDirectionGroup">
+            <p className="searchControlLabel">
+              Order
+            </p>
+
+            <div
+              className="searchSortOptions"
+              role="group"
+              aria-label={`Choose alphabetical direction for ${activeWantedModeOption.label}`}
+            >
+              <button
+                type="button"
+                className={
+                  activeWantedSortDirection ===
+                  "asc"
+                    ? "searchSortButton searchSortButtonActive"
+                    : "searchSortButton"
+                }
+                aria-pressed={
+                  activeWantedSortDirection ===
+                  "asc"
+                }
+                onClick={() => {
+                  setWantedSortDirections(
+                    (
+                      currentDirections
+                    ) => ({
+                      ...currentDirections,
+
+                      [wantedMode]:
+                        "asc",
+                    })
+                  );
+                }}
+              >
+                A–Z
+              </button>
+
+              <button
+                type="button"
+                className={
+                  activeWantedSortDirection ===
+                  "desc"
+                    ? "searchSortButton searchSortButtonActive"
+                    : "searchSortButton"
+                }
+                aria-pressed={
+                  activeWantedSortDirection ===
+                  "desc"
+                }
+                onClick={() => {
+                  setWantedSortDirections(
+                    (
+                      currentDirections
+                    ) => ({
+                      ...currentDirections,
+
+                      [wantedMode]:
+                        "desc",
+                    })
+                  );
+                }}
+              >
+                Z–A
+              </button>
+            </div>
+          </div>
+
           <div className="wantedSummary">
             <span>
               {activeWantedTotal} {activeWantedModeOption.label}
@@ -13288,7 +13504,7 @@ export default function App() {
 
           {renderWantedSection(
             activeWantedModeOption.label,
-            filteredWantedItems,
+            sortedWantedItems,
             activeWantedQuery.trim()
               ? activeWantedModeOption.emptySearchText
               : activeWantedModeOption.emptyText

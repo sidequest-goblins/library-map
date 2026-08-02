@@ -344,6 +344,18 @@ export function getBookcasesFromBooks(books: Book[]): Bookcase[] {
   );
 }
 
+export type LibrarySortItem = {
+  title: string;
+  author: string;
+  authorSort: string;
+  firstName?: string;
+  lastName?: string;
+  series?: string | null;
+  seriesTitle?: string | null;
+  seriesFormat?: string | null;
+  seriesNumber?: number | string | null;
+};
+
 export type SearchScope =
   | "all"
   | "title"
@@ -366,6 +378,13 @@ export type SearchSortField =
 export type SearchSortDirection =
   | "asc"
   | "desc";
+
+export type LibrarySortField =
+  | SearchSortField
+  | "series";
+
+export type LibrarySortDirection =
+  SearchSortDirection;
 
 export type SingleLetterMatchMode =
   | "startsWith"
@@ -412,7 +431,7 @@ function splitAuthorField(value: unknown): string[] {
 }
 
 function getAuthorSearchValues(
-  book: Book,
+  book: LibrarySortItem,
   authorNameMode: AuthorNameMode
 ): string[] {
   const authorField =
@@ -612,7 +631,9 @@ function getMatchingSortValue(
   return [...valuesToSort].sort(compareSearchText)[0] ?? "";
 }
 
-function getSeriesSortTitle(book: Book): string {
+function getSeriesSortTitle(
+  book: LibrarySortItem
+): string {
   return normalizeSearchText(
     book.seriesTitle ??
       book.series?.split("|")[0] ??
@@ -627,7 +648,9 @@ function normalizeSeriesMediaValue(value: unknown): string {
   );
 }
 
-function getSeriesMediaSortValue(book: Book): string {
+function getSeriesMediaSortValue(
+  book: LibrarySortItem
+): string {
   const explicitSeriesFormat = normalizeSeriesMediaValue(
     book.seriesFormat
   );
@@ -658,7 +681,10 @@ function getSeriesMediaSortValue(book: Book): string {
   );
 }
 
-function compareSeriesNumbers(a: Book, b: Book): number {
+function compareSeriesNumbers(
+  a: LibrarySortItem,
+  b: LibrarySortItem
+): number {
   const aSeriesNumber = normalizeSearchText(a.seriesNumber);
   const bSeriesNumber = normalizeSearchText(b.seriesNumber);
 
@@ -673,8 +699,8 @@ function compareSeriesNumbers(a: Book, b: Book): number {
 }
 
 function compareBooksInsideSeries(
-  a: Book,
-  b: Book
+  a: LibrarySortItem,
+  b: LibrarySortItem
 ): number {
   const mediaComparison = compareSearchText(
     getSeriesMediaSortValue(a),
@@ -698,8 +724,8 @@ function compareBooksInsideSeries(
 }
 
 function compareBooksWithinSameSeries(
-  a: Book,
-  b: Book
+  a: LibrarySortItem,
+  b: LibrarySortItem
 ): number | null {
   const aSeries = getSeriesSortTitle(a);
   const bSeries = getSeriesSortTitle(b);
@@ -857,7 +883,7 @@ function compareScopedBooks(
 }
 
 function getPrimaryAuthorSortValue(
-  book: Book,
+  book: LibrarySortItem,
   authorNameMode:
     AuthorNameMode
 ): string {
@@ -894,8 +920,8 @@ function getPrimaryAuthorSortValue(
 }
 
 function compareBooksByTitle(
-  a: Book,
-  b: Book
+  a: LibrarySortItem,
+  b: LibrarySortItem
 ): number {
   const seriesComparison =
     compareBooksWithinSameSeries(
@@ -919,14 +945,52 @@ function compareBooksByTitle(
   );
 }
 
-export function sortBooksForSearchDisplay(
-  books: Book[],
+function compareLibraryItemsBySeries(
+  a: LibrarySortItem,
+  b: LibrarySortItem
+): number {
+  const aSeries =
+    getSeriesSortTitle(a);
+
+  const bSeries =
+    getSeriesSortTitle(b);
+
+  if (!aSeries && !bSeries) {
+    return compareBooksByTitle(
+      a,
+      b
+    );
+  }
+
+  if (!aSeries) return 1;
+  if (!bSeries) return -1;
+
+  const seriesComparison =
+    compareSearchText(
+      aSeries,
+      bSeries
+    );
+
+  if (seriesComparison !== 0) {
+    return seriesComparison;
+  }
+
+  return compareBooksInsideSeries(
+    a,
+    b
+  );
+}
+
+export function sortLibraryItemsForDisplay<
+  Item extends LibrarySortItem
+>(
+  items: Item[],
   sortField:
-    SearchSortField = "title",
+    LibrarySortField = "title",
   sortDirection:
-    SearchSortDirection = "asc"
-): Book[] {
-  return [...books].sort(
+    LibrarySortDirection = "asc"
+): Item[] {
+  return [...items].sort(
     (a, b) => {
       let comparison = 0;
 
@@ -935,6 +999,14 @@ export function sortBooksForSearchDisplay(
       ) {
         comparison =
           compareBooksByTitle(
+            a,
+            b
+          );
+      } else if (
+        sortField === "series"
+      ) {
+        comparison =
+          compareLibraryItemsBySeries(
             a,
             b
           );
@@ -974,6 +1046,20 @@ export function sortBooksForSearchDisplay(
         ? comparison
         : -comparison;
     }
+  );
+}
+
+export function sortBooksForSearchDisplay(
+  books: Book[],
+  sortField:
+    SearchSortField = "title",
+  sortDirection:
+    SearchSortDirection = "asc"
+): Book[] {
+  return sortLibraryItemsForDisplay(
+    books,
+    sortField,
+    sortDirection
   );
 }
 
