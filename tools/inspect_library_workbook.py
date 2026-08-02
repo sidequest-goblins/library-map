@@ -5,11 +5,21 @@ from typing import Any
 from openpyxl import load_workbook
 
 
-WORKBOOK_PATH = Path(
-    "C:/Users/cjade/OneDrive/Shared Workbooks/MyLibrary/LIBRARY.xlsx"
+LIST_VIEW_WORKBOOK_PATH = Path(
+    "C:/Users/cjade/OneDrive/"
+    "Shared Workbooks/MyLibrary/"
+    "LIBRARY LIST VIEW.xlsx"
+)
+
+REFERENCE_WORKBOOK_PATH = Path(
+    "C:/Users/cjade/OneDrive/"
+    "Shared Workbooks/MyLibrary/"
+    "LIBRARY.xlsx"
 )
 
 LIST_VIEW_EXPECTED_HEADERS = (
+    "CJ",
+    "JC",
     "LGBTQ+",
     "ISBN",
     "Year",
@@ -272,38 +282,58 @@ def format_count(
 
 
 def main() -> None:
-    if not WORKBOOK_PATH.exists():
-        raise FileNotFoundError(
-            f"Could not find workbook: "
-            f"{WORKBOOK_PATH}"
-        )
+    for workbook_path in (
+        LIST_VIEW_WORKBOOK_PATH,
+        REFERENCE_WORKBOOK_PATH,
+    ):
+        if not workbook_path.exists():
+            raise FileNotFoundError(
+                f"Could not find workbook: "
+                f"{workbook_path}"
+            )
 
     print(
-        f"Loading workbook: "
-        f"{WORKBOOK_PATH}"
+        "Loading List View workbook: "
+        f"{LIST_VIEW_WORKBOOK_PATH}"
     )
 
-    workbook = load_workbook(
-        WORKBOOK_PATH,
+    list_view_workbook = load_workbook(
+        LIST_VIEW_WORKBOOK_PATH,
+        read_only=True,
+        data_only=True,
+    )
+
+    print(
+        "Loading reference workbook: "
+        f"{REFERENCE_WORKBOOK_PATH}"
+    )
+
+    reference_workbook = load_workbook(
+        REFERENCE_WORKBOOK_PATH,
         read_only=True,
         data_only=True,
     )
 
     list_view_sheet = (
         find_list_view_sheet(
-            workbook
+            list_view_workbook
         )
     )
 
     bookcase_rooms = (
         load_bookcase_rooms(
-            workbook
+            reference_workbook
         )
     )
 
     print(
         f"Using List View sheet: "
         f"{list_view_sheet.title}"
+    )
+
+    print(
+        "Using Bookcases sheet from: "
+        f"{REFERENCE_WORKBOOK_PATH.name}"
     )
 
     rows = list_view_sheet.iter_rows(
@@ -888,6 +918,9 @@ def main() -> None:
 
     print()
     print("=" * 68)
+
+    list_view_workbook.close()
+    reference_workbook.close()
 
 
 if __name__ == "__main__":

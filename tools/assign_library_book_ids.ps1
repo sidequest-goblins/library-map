@@ -326,6 +326,10 @@ function Assert-WorkbookIsAvailable {
         )
     }
 
+    $workbookFilename = Split-Path `
+        -Leaf `
+        $WorkbookPath
+
     $lockPath = Get-WorkbookLockPath
 
     if (
