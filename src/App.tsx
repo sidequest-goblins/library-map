@@ -38,6 +38,7 @@ import type {
   AuthorNameMode,
   SearchScope,
   SearchSortDirection,
+  SingleLetterMatchMode,
 } from "./data/librarySelectors";
 import type { 
   Book,
@@ -1712,36 +1713,67 @@ function buildSearchSuggestions(
 }
 
 function filterSearchSuggestions(
-  suggestions: SearchSuggestion[],
-  query: string
+  suggestions:
+    SearchSuggestion[],
+  query: string,
+  singleLetterMatchMode:
+    SingleLetterMatchMode
 ): SearchSuggestion[] {
-  const normalizedQuery = normalizeInlineSearchText(query);
+  const normalizedQuery =
+    normalizeInlineSearchText(
+      query
+    );
 
   if (!normalizedQuery) {
     return suggestions;
   }
 
-  const queryWords = normalizedQuery
-    .split(/\s+/)
-    .filter(Boolean);
+  const queryWords =
+    normalizedQuery
+      .split(/\s+/)
+      .filter(Boolean);
 
-  return suggestions.filter((suggestion) => {
-    const searchableText = normalizeInlineSearchText([
-      suggestion.label,
-      suggestion.value,
-      suggestion.detail,
-    ].join(" "));
+  return suggestions.filter(
+    (suggestion) => {
+      const searchableText =
+        normalizeInlineSearchText(
+          [
+            suggestion.label,
+            suggestion.value,
+            suggestion.detail,
+          ].join(" ")
+        );
 
-    if (normalizedQuery.length === 1) {
-      return searchableText
-        .split(/\s+/)
-        .some((word) => word.startsWith(normalizedQuery));
+      if (
+        normalizedQuery.length ===
+        1
+      ) {
+        if (
+          singleLetterMatchMode ===
+          "contains"
+        ) {
+          return searchableText.includes(
+            normalizedQuery
+          );
+        }
+
+        return searchableText
+          .split(/\s+/)
+          .some((word) =>
+            word.startsWith(
+              normalizedQuery
+            )
+          );
+      }
+
+      return queryWords.every(
+        (word) =>
+          searchableText.includes(
+            word
+          )
+      );
     }
-
-    return queryWords.every((word) =>
-      searchableText.includes(word)
-    );
-  });
+  );
 }
 
 function getWantedSearchText(item: WantedBook): string {
@@ -2993,10 +3025,30 @@ export default function App() {
   const [searchQuery, setSearchQuery] =
     useState("");
   const [searchScope, setSearchScope] = useState<SearchScope>("all");
-  const [authorNameMode, setAuthorNameMode] =
-    useState<AuthorNameMode>("last");
-  const [searchSortDirection, setSearchSortDirection] =
-    useState<SearchSortDirection>("asc");
+  const [
+    authorNameMode,
+    setAuthorNameMode,
+  ] =
+    useState<AuthorNameMode>(
+      "last"
+    );
+
+  const [
+    searchSortDirection,
+    setSearchSortDirection,
+  ] =
+    useState<SearchSortDirection>(
+      "asc"
+    );
+
+  const [
+    singleLetterMatchMode,
+    setSingleLetterMatchMode,
+  ] =
+    useState<SingleLetterMatchMode>(
+      "startsWith"
+    );
+
   const [wantedMode, setWantedMode] =
     useState<WantedMode>("seriesToComplete");
   const [wantedQueries, setWantedQueries] = useState<Record<WantedMode, string>>({
@@ -4428,6 +4480,40 @@ export default function App() {
       searchScope
     );
 
+  const singleLetterShortcutMatch =
+    searchQuery.match(
+      /^\s*([a-z0-9])\*\s*$/i
+    );
+
+  const plainSingleLetterMatch =
+    searchQuery.match(
+      /^\s*([a-z0-9])\s*$/i
+    );
+
+  const singleLetterSearchValue =
+    singleLetterShortcutMatch
+      ?.[1] ??
+    plainSingleLetterMatch
+      ?.[1] ??
+    "";
+
+  const singleLetterSearchActive =
+    searchScope !== "all" &&
+    Boolean(
+      singleLetterSearchValue
+    );
+
+  const effectiveSingleLetterMatchMode:
+    SingleLetterMatchMode =
+      singleLetterShortcutMatch
+        ? "contains"
+        : singleLetterMatchMode;
+
+  const effectiveSearchQuery =
+    singleLetterShortcutMatch
+      ? singleLetterSearchValue
+      : searchQuery;
+
   const searchSuggestions = useMemo(
     () =>
       buildSearchSuggestions(
@@ -4440,14 +4526,20 @@ export default function App() {
     ]
   );
 
-  const filteredSearchSuggestions = useMemo(
-    () =>
-      filterSearchSuggestions(
+  const filteredSearchSuggestions =
+    useMemo(
+      () =>
+        filterSearchSuggestions(
+          searchSuggestions,
+          effectiveSearchQuery,
+          effectiveSingleLetterMatchMode
+        ),
+      [
         searchSuggestions,
-        searchQuery
-      ),
-    [searchSuggestions, searchQuery]
-  );
+        effectiveSearchQuery,
+        effectiveSingleLetterMatchMode,
+      ]
+    );
 
   const groupedSearchSuggestions = useMemo(() => {
     const groups = new Map<
@@ -4560,6 +4652,10 @@ export default function App() {
       suggestion.value
     );
 
+    setSingleLetterMatchMode(
+      "startsWith"
+    );
+
     setBrowseAllBooks(
       false
     );
@@ -4650,17 +4746,19 @@ export default function App() {
     () =>
       searchBooks(
         searchFilteredBooks,
-        searchQuery,
+        effectiveSearchQuery,
         searchScope,
         authorNameMode,
-        searchSortDirection
+        searchSortDirection,
+        effectiveSingleLetterMatchMode
       ),
     [
       searchFilteredBooks,
-      searchQuery,
+      effectiveSearchQuery,
       searchScope,
       authorNameMode,
       searchSortDirection,
+      effectiveSingleLetterMatchMode,
     ]
   );
 
@@ -11118,8 +11216,22 @@ export default function App() {
                     );
                   }}
                   onChange={(event) => {
+                    const nextQuery =
+                      event.target.value;
+
+                    const usesAnywhereShortcut =
+                      /^\s*[a-z0-9]\*\s*$/i.test(
+                        nextQuery
+                      );
+
                     setSearchQuery(
-                      event.target.value
+                      nextQuery
+                    );
+
+                    setSingleLetterMatchMode(
+                      usesAnywhereShortcut
+                        ? "contains"
+                        : "startsWith"
                     );
 
                     setBrowseAllBooks(
@@ -11875,6 +11987,77 @@ export default function App() {
                       }}
                     >
                       First name
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+
+              {singleLetterSearchActive ? (
+                <div className="searchControlGroup sortDirectionGroup">
+                  <p className="searchControlLabel">
+                    Letter match
+                  </p>
+
+                  <div
+                    className="searchSortOptions"
+                    role="group"
+                    aria-label="Choose how the single letter should match"
+                  >
+                    <button
+                      type="button"
+                      className={
+                        effectiveSingleLetterMatchMode ===
+                        "startsWith"
+                          ? "searchSortButton searchSortButtonActive"
+                          : "searchSortButton"
+                      }
+                      aria-pressed={
+                        effectiveSingleLetterMatchMode ===
+                        "startsWith"
+                      }
+                      onClick={() => {
+                        setSingleLetterMatchMode(
+                          "startsWith"
+                        );
+
+                        if (
+                          singleLetterShortcutMatch
+                        ) {
+                          setSearchQuery(
+                            singleLetterSearchValue
+                          );
+                        }
+
+                        setSearchPage(1);
+                        setSelectedBookId(null);
+                      }}
+                    >
+                      Starts with
+                    </button>
+
+                    <button
+                      type="button"
+                      className={
+                        effectiveSingleLetterMatchMode ===
+                        "contains"
+                          ? "searchSortButton searchSortButtonActive"
+                          : "searchSortButton"
+                      }
+                      aria-pressed={
+                        effectiveSingleLetterMatchMode ===
+                        "contains"
+                      }
+                      title="Shortcut: type one letter followed by *"
+                      onClick={() => {
+                        setSingleLetterMatchMode(
+                          "contains"
+                        );
+
+                        setSearchPage(1);
+                        setSelectedBookId(null);
+                      }}
+                    >
+                      Anywhere
                     </button>
                   </div>
                 </div>

@@ -354,8 +354,17 @@ export type SearchScope =
   | "publisher"
   | "bookcase";
 
-export type AuthorNameMode = "last" | "first";
-export type SearchSortDirection = "asc" | "desc";
+export type AuthorNameMode =
+  | "last"
+  | "first";
+
+export type SearchSortDirection =
+  | "asc"
+  | "desc";
+
+export type SingleLetterMatchMode =
+  | "startsWith"
+  | "contains";
 
 const LEADING_TITLE_ARTICLE_PATTERN = /^(?:a|an|the)\s+/;
 
@@ -495,31 +504,68 @@ function getScopedSearchValues(
 function matchesScopedSearch(
   book: Book,
   normalizedQuery: string,
-  scope: Exclude<SearchScope, "all">,
-  authorNameMode: AuthorNameMode
+  scope: Exclude<
+    SearchScope,
+    "all"
+  >,
+  authorNameMode: AuthorNameMode,
+  singleLetterMatchMode:
+    SingleLetterMatchMode
 ): boolean {
-  const searchableValues = getScopedSearchValues(
-    book,
-    scope,
-    authorNameMode
-  );
+  const searchableValues =
+    getScopedSearchValues(
+      book,
+      scope,
+      authorNameMode
+    );
 
-  if (normalizedQuery.length === 1) {
-    if (scope === "title") {
-      return normalizeTitleForAlphabeticalSearch(book.title).startsWith(
+  if (
+    normalizedQuery.length ===
+    1
+  ) {
+    if (
+      singleLetterMatchMode ===
+      "contains"
+    ) {
+      return searchableValues.some(
+        (value) =>
+          value.includes(
+            normalizedQuery
+          )
+      );
+    }
+
+    if (
+      scope === "title"
+    ) {
+      return normalizeTitleForAlphabeticalSearch(
+        book.title
+      ).startsWith(
         normalizedQuery
       );
     }
 
-    return searchableValues.some((value) =>
-      normalizeSearchValueStart(value).startsWith(normalizedQuery)
+    return searchableValues.some(
+      (value) =>
+        normalizeSearchValueStart(
+          value
+        ).startsWith(
+          normalizedQuery
+        )
     );
   }
 
-  const queryWords = normalizedQuery.split(/\s+/).filter(Boolean);
+  const queryWords =
+    normalizedQuery
+      .split(/\s+/)
+      .filter(Boolean);
 
-  return queryWords.every((word) =>
-    searchableValues.some((value) => value.includes(word))
+  return queryWords.every(
+    (word) =>
+      searchableValues.some(
+        (value) =>
+          value.includes(word)
+      )
   );
 }
 
@@ -835,53 +881,75 @@ export function searchBooks(
   books: Book[],
   query: string,
   scope: SearchScope = "all",
-  authorNameMode: AuthorNameMode = "last",
-  sortDirection: SearchSortDirection = "asc"
+  authorNameMode:
+    AuthorNameMode = "last",
+  sortDirection:
+    SearchSortDirection = "asc",
+  singleLetterMatchMode:
+    SingleLetterMatchMode =
+      "startsWith"
 ): Book[] {
-  const normalizedQuery = normalizeSearchText(query);
+  const normalizedQuery =
+    normalizeSearchText(
+      query
+    );
 
   if (!normalizedQuery) {
     return [];
   }
 
   if (scope === "all") {
-    const queryWords = normalizedQuery
-      .split(/\s+/)
-      .filter(Boolean);
+    const queryWords =
+      normalizedQuery
+        .split(/\s+/)
+        .filter(Boolean);
 
-    const matchingBooks = books.filter((book) => {
-      const searchableText = getSearchableBookText(book);
+    const matchingBooks =
+      books.filter((book) => {
+        const searchableText =
+          getSearchableBookText(
+            book
+          );
 
-      return queryWords.every((word) =>
-        searchableText.includes(word)
-      );
-    });
+        return queryWords.every(
+          (word) =>
+            searchableText.includes(
+              word
+            )
+        );
+      });
 
     return groupSeriesResultsPreservingOrder(
       matchingBooks
     );
   }
 
-  const matchingBooks = books.filter((book) =>
-    matchesScopedSearch(
-      book,
-      normalizedQuery,
-      scope,
-      authorNameMode
-    )
-  );
-
-  return matchingBooks.sort((a, b) => {
-    const comparison = compareScopedBooks(
-      a,
-      b,
-      normalizedQuery,
-      scope,
-      authorNameMode
+  const matchingBooks =
+    books.filter((book) =>
+      matchesScopedSearch(
+        book,
+        normalizedQuery,
+        scope,
+        authorNameMode,
+        singleLetterMatchMode
+      )
     );
 
-    return sortDirection === "asc"
-      ? comparison
-      : -comparison;
-  });
+  return matchingBooks.sort(
+    (a, b) => {
+      const comparison =
+        compareScopedBooks(
+          a,
+          b,
+          normalizedQuery,
+          scope,
+          authorNameMode
+        );
+
+      return sortDirection ===
+        "asc"
+        ? comparison
+        : -comparison;
+    }
+  );
 }
