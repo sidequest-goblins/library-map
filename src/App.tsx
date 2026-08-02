@@ -480,6 +480,12 @@ type BookMetadataFeedback = {
   message: string;
 } | null;
 
+type AuthorMetadataFeedback = {
+  authorId: string;
+  kind: "success" | "error";
+  message: string;
+} | null;
+
 type ChallengeAttemptAction =
   | "link"
   | "start"
@@ -2742,6 +2748,20 @@ export default function App() {
   ] = useState("");
 
   const [
+    authorMetadataSavingAuthorId,
+    setAuthorMetadataSavingAuthorId,
+  ] = useState<string | null>(
+    null
+  );
+
+  const [
+    authorMetadataFeedback,
+    setAuthorMetadataFeedback,
+  ] = useState<AuthorMetadataFeedback>(
+    null
+  );
+
+  const [
     libraryStateRows,
     setLibraryStateRows,
   ] = useState<LibraryReaderBookState[]>([]);
@@ -3656,6 +3676,12 @@ export default function App() {
         );
 
         setAuthorMetadataLoadError("");
+
+        setAuthorMetadataSavingAuthorId(
+          null
+        );
+
+        setAuthorMetadataFeedback(null);
 
         return;
       }
@@ -6516,6 +6542,164 @@ export default function App() {
     }
   }
 
+  async function saveAuthorBipoc(
+    author: LibraryAuthor,
+    nextBipoc: boolean | null
+  ) {
+    if (
+      !householdSession ||
+      authorMetadataLoadStatus !==
+        "ready"
+    ) {
+      setAuthorMetadataFeedback({
+        authorId: author.authorId,
+        kind: "error",
+        message:
+          "Shared author metadata must finish loading before saving.",
+      });
+
+      return;
+    }
+
+    if (
+      authorMetadataSavingAuthorId
+    ) {
+      return;
+    }
+
+    const existingRow =
+      authorMetadataByAuthorId.get(
+        author.authorId
+      );
+
+    const previousBipoc =
+      existingRow?.bipoc ?? null;
+
+    if (
+      previousBipoc === nextBipoc
+    ) {
+      return;
+    }
+
+    const userId =
+      householdSession.user.id;
+
+    const previousRows =
+      authorMetadataRows;
+
+    const localTimestamp =
+      new Date().toISOString();
+
+    setAuthorMetadataSavingAuthorId(
+      author.authorId
+    );
+
+    setAuthorMetadataFeedback(null);
+
+    // Optimistically update every book connected
+    // to this permanent Author ID.
+    setAuthorMetadataRows(
+      (currentRows) => {
+        const currentRow =
+          currentRows.find(
+            (metadataRow) =>
+              metadataRow.author_id ===
+              author.authorId
+          );
+
+        if (currentRow) {
+          return currentRows.map(
+            (metadataRow) =>
+              metadataRow.author_id ===
+              author.authorId
+                ? {
+                    ...metadataRow,
+                    bipoc: nextBipoc,
+                    updated_at:
+                      localTimestamp,
+                  }
+                : metadataRow
+          );
+        }
+
+        return [
+          ...currentRows,
+          {
+            user_id: userId,
+            author_id:
+              author.authorId,
+            bipoc: nextBipoc,
+            created_at:
+              localTimestamp,
+            updated_at:
+              localTimestamp,
+          },
+        ].sort((a, b) =>
+          a.author_id.localeCompare(
+            b.author_id
+          )
+        );
+      }
+    );
+
+    try {
+      const { error } =
+        await supabase
+          .from(
+            "library_author_metadata"
+          )
+          .upsert(
+            {
+              user_id: userId,
+              author_id:
+                author.authorId,
+              bipoc: nextBipoc,
+            },
+            {
+              onConflict:
+                "user_id,author_id",
+            }
+          );
+
+      if (error) {
+        throw error;
+      }
+
+      setAuthorMetadataFeedback({
+        authorId: author.authorId,
+        kind: "success",
+        message:
+          nextBipoc === true
+            ? `${author.displayName} marked BIPOC.`
+            : nextBipoc === false
+              ? `${author.displayName} marked reviewed, not BIPOC.`
+              : `${author.displayName} returned to Unreviewed.`,
+      });
+    } catch (error) {
+      setAuthorMetadataRows(
+        previousRows
+      );
+
+      console.error(
+        "Could not save BIPOC author metadata.",
+        error
+      );
+
+      setAuthorMetadataFeedback({
+        authorId: author.authorId,
+        kind: "error",
+        message:
+          error instanceof Error
+            ? `BIPOC status failed to save: ${error.message}`
+            : "BIPOC status failed to save because of an unknown Supabase error.",
+      });
+    } finally {
+      setAuthorMetadataSavingAuthorId(
+        null
+      );
+    }
+  }
+
   function bookHasPendingDetailChanges(
     book: Book
   ): boolean {
@@ -7916,6 +8100,7 @@ export default function App() {
     setChallengeAttemptFeedback(null);
     setReadStatusDrafts({});
     setReadingAttemptPageDrafts({});
+    setAuthorMetadataFeedback(null);
   }, [selectedBookId]);
 
   function runAfterBookDetailDiscardCheck(
@@ -8230,6 +8415,59 @@ export default function App() {
         ? bookMetadataFeedback
         : null;
 
+    const selectedBookAuthors =
+      resolvedAuthorsByBookId.get(
+        selectedBook.bookId
+      ) ?? [];
+
+    const selectedBookHasBipocAuthor =
+      selectedBookAuthors.some(
+        ({ metadata }) =>
+          metadata?.bipoc === true
+      );
+
+    const selectedBookBipocAuthorCount =
+      selectedBookAuthors.filter(
+        ({ metadata }) =>
+          metadata?.bipoc === true
+      ).length;
+
+    const selectedBookUnreviewedAuthorCount =
+      selectedBookAuthors.filter(
+        ({ metadata }) =>
+          metadata?.bipoc == null
+      ).length;
+
+    const selectedBookAuthorSummary =
+      selectedBookAuthors.length === 0
+        ? "No resolved authors"
+        : [
+            `${selectedBookAuthors.length} ${
+              selectedBookAuthors.length === 1
+                ? "author"
+                : "authors"
+            }`,
+
+            selectedBookBipocAuthorCount > 0
+              ? `${selectedBookBipocAuthorCount} BIPOC`
+              : "",
+
+            selectedBookUnreviewedAuthorCount > 0
+              ? `${selectedBookUnreviewedAuthorCount} unreviewed`
+              : "",
+          ]
+            .filter(Boolean)
+            .join(" · ");
+
+    const selectedBookAuthorMetadataCanEdit =
+      householdSession !== null &&
+      authorMetadataLoadStatus ===
+        "ready";
+
+    const selectedBookAuthorMetadataIsSaving =
+      authorMetadataSavingAuthorId !==
+      null;
+
     const readingActivityCanEdit =
       readStatusCanEdit;
 
@@ -8380,6 +8618,12 @@ export default function App() {
                   </span>
                 ) : null}
 
+                {selectedBookHasBipocAuthor ? (
+                  <span className="detailChip">
+                    BIPOC
+                  </span>
+                ) : null}
+
                 {selectedBookChallengeMemberships.map(
                   ({ challenge, reader, entry }) => (
                     <span
@@ -8485,6 +8729,193 @@ export default function App() {
                 </p>
               ) : null}
             </section>
+
+            <details
+              key={`author-metadata-${selectedBook.bookId}`}
+              className="detailSection authorMetadataDisclosure"
+            >
+              <summary className="authorMetadataDisclosureSummary">
+                <span className="authorMetadataDisclosureHeading">
+                  <span className="detailLabel">
+                    Authors
+                  </span>
+
+                  <span className="authorMetadataDisclosureMeta">
+                    {selectedBookAuthorSummary}
+                  </span>
+                </span>
+              </summary>
+
+              <div className="authorMetadataDisclosureContent">
+                {authorMetadataLoadStatus ===
+              "loading" ? (
+                <p className="authorMetadataStatus">
+                  Loading shared author
+                  metadata…
+                </p>
+              ) : authorMetadataLoadStatus ===
+                "error" ? (
+                <p
+                  className="authorMetadataStatus authorMetadataStatusError"
+                  role="alert"
+                >
+                  Shared author metadata could
+                  not load:{" "}
+                  {authorMetadataLoadError}
+                </p>
+              ) : !householdSession ? (
+                <p className="authorMetadataStatus">
+                  Sign in to load and edit
+                  BIPOC author metadata.
+                </p>
+              ) : selectedBookAuthors.length ===
+                0 ? (
+                <p className="authorMetadataStatus authorMetadataStatusError">
+                  No permanent author identity
+                  was resolved for this book.
+                </p>
+              ) : (
+                <div className="authorMetadataList">
+                  {selectedBookAuthors.map(
+                    ({
+                      author,
+                      link,
+                      metadata,
+                    }) => {
+                      const bipocValue =
+                        metadata?.bipoc ?? null;
+
+                      const displayName =
+                        link.creditedName ||
+                        author.displayName;
+
+                      const isSaving =
+                        authorMetadataSavingAuthorId ===
+                        author.authorId;
+
+                      const feedback =
+                        authorMetadataFeedback
+                          ?.authorId ===
+                        author.authorId
+                          ? authorMetadataFeedback
+                          : null;
+
+                      const choices: Array<{
+                        label: string;
+                        value: boolean | null;
+                      }> = [
+                        {
+                          label: "Unreviewed",
+                          value: null,
+                        },
+                        {
+                          label: "BIPOC",
+                          value: true,
+                        },
+                        {
+                          label: "Not BIPOC",
+                          value: false,
+                        },
+                      ];
+
+                      return (
+                        <article
+                          key={author.authorId}
+                          className="authorMetadataCard"
+                        >
+                          <div className="authorMetadataHeading">
+                            <strong>
+                              {displayName}
+                            </strong>
+
+                            {displayName !==
+                            author.displayName ? (
+                              <span>
+                                Author record:{" "}
+                                {author.displayName}
+                              </span>
+                            ) : null}
+                          </div>
+
+                          <div
+                            className="authorMetadataChoices"
+                            role="group"
+                            aria-label={`BIPOC status for ${displayName}`}
+                          >
+                            {choices.map(
+                              (choice) => {
+                                const isActive =
+                                  bipocValue ===
+                                  choice.value;
+
+                                return (
+                                  <button
+                                    key={
+                                      choice.label
+                                    }
+                                    type="button"
+                                    className={[
+                                      "authorMetadataChoice",
+
+                                      isActive
+                                        ? "authorMetadataChoiceActive"
+                                        : "",
+                                    ]
+                                      .filter(Boolean)
+                                      .join(" ")}
+                                    aria-pressed={
+                                      isActive
+                                    }
+                                    disabled={
+                                      !selectedBookAuthorMetadataCanEdit ||
+                                      selectedBookAuthorMetadataIsSaving
+                                    }
+                                    onClick={() => {
+                                      void saveAuthorBipoc(
+                                        author,
+                                        choice.value
+                                      );
+                                    }}
+                                  >
+                                    {choice.label}
+                                  </button>
+                                );
+                              }
+                            )}
+                          </div>
+
+                          {isSaving ? (
+                            <p className="authorMetadataStatus">
+                              Saving…
+                            </p>
+                          ) : feedback ? (
+                            <p
+                              className={[
+                                "authorMetadataStatus",
+
+                                feedback.kind ===
+                                "error"
+                                  ? "authorMetadataStatusError"
+                                  : "authorMetadataStatusSuccess",
+                              ].join(" ")}
+                              role={
+                                feedback.kind ===
+                                "error"
+                                  ? "alert"
+                                  : "status"
+                              }
+                            >
+                              {feedback.message}
+                            </p>
+                          ) : null}
+                        </article>
+                      );
+                    }
+                  )}
+                </div>
+              )}
+            </div>
+          </details>
 
             <section className="detailSection">
               <p className="detailLabel">
