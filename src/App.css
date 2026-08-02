@@ -518,7 +518,7 @@ select {
   width: 100%;
 }
 
-.appUpdateButton {
+.appUpdateCard {
   display: grid;
   grid-template-columns:
     auto
@@ -539,56 +539,31 @@ select {
       rgba(201, 154, 69, 0.2),
       rgba(255, 248, 233, 0.88)
     );
-  text-align: left;
-  cursor: pointer;
-  transition:
-    transform 140ms ease,
-    border-color 140ms ease,
-    background 140ms ease;
 }
 
-.appUpdateButton:hover {
-  transform: translateY(-1px);
-  border-color:
-    rgba(201, 154, 69, 0.7);
-  background:
-    linear-gradient(
-      135deg,
-      rgba(201, 154, 69, 0.3),
-      rgba(255, 250, 240, 0.96)
-    );
-}
-
-.appUpdateButton:focus-visible {
-  outline:
-    3px solid
-    rgba(201, 154, 69, 0.34);
-  outline-offset: 2px;
-}
-
-.appUpdateButtonIcon {
+.appUpdateCardIcon {
   display: grid;
   place-items: center;
   width: 2.35rem;
   height: 2.35rem;
   border:
     1px solid
-    rgba(201, 154, 69, 0.42);
-  border-radius: 13px;
-  background:
-    rgba(201, 154, 69, 0.16);
+    rgba(201, 154, 69, 0.44);
+  border-radius: 12px;
   color: var(--brownDark);
+  background:
+    rgba(255, 248, 233, 0.58);
   font-size: 1.15rem;
   font-weight: 900;
 }
 
-.appUpdateButtonCopy {
+.appUpdateCardCopy {
   display: grid;
   gap: 0.12rem;
   min-width: 0;
 }
 
-.appUpdateButtonCopy strong {
+.appUpdateCardCopy strong {
   color: var(--brownDark);
   font-family:
     Georgia,
@@ -596,16 +571,41 @@ select {
     serif;
 }
 
-.appUpdateButtonCopy span {
+.appUpdateCardCopy span {
   color: var(--muted);
   font-size: 0.74rem;
   line-height: 1.35;
 }
 
-.appUpdateButtonArrow {
-  color: var(--green);
-  font-size: 1.05rem;
-  font-weight: 900;
+.appUpdateAction {
+  min-height: 2.4rem;
+  border:
+    1px solid
+    rgba(76, 48, 30, 0.2);
+  border-radius: 999px;
+  padding: 0.5rem 0.78rem;
+  color: var(--paper);
+  background: var(--brown);
+  font-weight: 850;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease;
+}
+
+.appUpdateAction:hover {
+  transform: translateY(-1px);
+  border-color:
+    rgba(76, 48, 30, 0.42);
+  background: var(--brownDark);
+}
+
+.appUpdateAction:focus-visible {
+  outline:
+    3px solid
+    rgba(201, 154, 69, 0.38);
+  outline-offset: 2px;
 }
 
 @media (min-width: 720px) {

@@ -385,9 +385,9 @@ const APP_NAV_ITEMS: Array<{
   },
   {
     tab: "update",
-    label: "Update",
-    icon: "🛠️",
-    description: "Find books missing workbook details.",
+    label: "Review",
+    icon: "🔎",
+    description: "Find books with missing or questionable details.",
   },
 ];
 
@@ -12070,40 +12070,37 @@ export default function App() {
                 }
               />
 
-              <button
-                type="button"
-                className="appUpdateButton"
-                onClick={() => {
-                  runAfterBookDetailDiscardCheck(
-                    () => {
-                      void updateApp();
-                    }
-                  );
-                }}
-              >
+              <div className="appUpdateCard">
                 <span
-                  className="appUpdateButtonIcon"
+                  className="appUpdateCardIcon"
                   aria-hidden="true"
                 >
                   ↻
                 </span>
 
-                <span className="appUpdateButtonCopy">
+                <span className="appUpdateCardCopy">
                   <strong>Update app</strong>
 
                   <span>
-                    Reload the latest app and
-                    library data.
+                    Reload the latest app and library data.
                   </span>
                 </span>
 
-                <span
-                  className="appUpdateButtonArrow"
-                  aria-hidden="true"
+                <button
+                  type="button"
+                  className="appUpdateAction"
+                  aria-label="Update app and library data"
+                  onClick={() => {
+                    runAfterBookDetailDiscardCheck(
+                      () => {
+                        void updateApp();
+                      }
+                    );
+                  }}
                 >
-                  →
-                </span>
-              </button>
+                  Update
+                </button>
+              </div>
             </div>
           </section>
         </div>
@@ -15122,7 +15119,7 @@ export default function App() {
       ) : activeTab === "update" ? (
         selectedBook ? (
           renderBookDetail(
-            "Back to update list",
+            "Back to review list",
             backToUpdateFromDetail,
             updateBooks
           )
@@ -15230,7 +15227,7 @@ export default function App() {
               id="update-reasearch-queues"
               className="updateFieldGrid"
               role="group"
-              aria-label="Choose update queues"
+              aria-label="Choose review queues"
             >
               {UPDATE_FIELD_OPTIONS.map(
                 (option) => {
