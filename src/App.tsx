@@ -518,6 +518,144 @@ type ChallengeAttemptFeedback =
     }
   | null;
 
+  type PageLengthBucket =
+  | "under200"
+  | "200to399"
+  | "400to599"
+  | "600to799"
+  | "800plus"
+  | "unknown";
+
+type SearchPageLength =
+  | ""
+  | "known"
+  | PageLengthBucket;
+
+const PAGE_LENGTH_LABELS: Record<
+  PageLengthBucket,
+  string
+> = {
+  under200: "Under 200 pages",
+  "200to399": "200–399 pages",
+  "400to599": "400–599 pages",
+  "600to799": "600–799 pages",
+  "800plus": "800+ pages",
+  unknown: "Unknown page count",
+};
+
+const SEARCH_PAGE_LENGTH_OPTIONS: Array<{
+  value: SearchPageLength;
+  label: string;
+}> = [
+  {
+    value: "",
+    label: "Any length",
+  },
+  {
+    value: "known",
+    label: "Known page count",
+  },
+  {
+    value: "under200",
+    label:
+      PAGE_LENGTH_LABELS.under200,
+  },
+  {
+    value: "200to399",
+    label:
+      PAGE_LENGTH_LABELS[
+        "200to399"
+      ],
+  },
+  {
+    value: "400to599",
+    label:
+      PAGE_LENGTH_LABELS[
+        "400to599"
+      ],
+  },
+  {
+    value: "600to799",
+    label:
+      PAGE_LENGTH_LABELS[
+        "600to799"
+      ],
+  },
+  {
+    value: "800plus",
+    label:
+      PAGE_LENGTH_LABELS[
+        "800plus"
+      ],
+  },
+  {
+    value: "unknown",
+    label:
+      PAGE_LENGTH_LABELS.unknown,
+  },
+];
+
+function getBookPageLengthBucket(
+  book: Book
+): PageLengthBucket {
+  const totalPages =
+    Number(book.totalPages);
+
+  if (
+    !Number.isFinite(totalPages) ||
+    totalPages <= 0
+  ) {
+    return "unknown";
+  }
+
+  if (totalPages < 200) {
+    return "under200";
+  }
+
+  if (totalPages < 400) {
+    return "200to399";
+  }
+
+  if (totalPages < 600) {
+    return "400to599";
+  }
+
+  if (totalPages < 800) {
+    return "600to799";
+  }
+
+  return "800plus";
+}
+
+function bookMatchesPageLength(
+  book: Book,
+  pageLength: SearchPageLength
+): boolean {
+  if (!pageLength) {
+    return true;
+  }
+
+  const bucket =
+    getBookPageLengthBucket(book);
+
+  if (pageLength === "known") {
+    return bucket !== "unknown";
+  }
+
+  return bucket === pageLength;
+}
+
+function getPageLengthFilterLabel(
+  pageLength: SearchPageLength
+): string {
+  return (
+    SEARCH_PAGE_LENGTH_OPTIONS.find(
+      (option) =>
+        option.value === pageLength
+    )?.label ?? "Any length"
+  );
+}
+
 type SearchFilters = {
   proseOnly: boolean;
   lgbtqOnly: boolean;
@@ -526,6 +664,7 @@ type SearchFilters = {
   subgenre: string;
   format: string;
   origin: string;
+  pageLength: SearchPageLength;
 };
 
 type SearchDrilldown = {
@@ -571,6 +710,7 @@ const EMPTY_SEARCH_FILTERS:
     subgenre: "",
     format: "",
     origin: "",
+    pageLength: "",
   };
 
 const SEARCH_SCOPE_OPTIONS: Array<{
@@ -4743,6 +4883,7 @@ export default function App() {
       searchFilters.subgenre,
       searchFilters.format,
       searchFilters.origin,
+      searchFilters.pageLength,
     ].filter(Boolean).length;
 
   const hasActiveSearchFilters =
@@ -4854,6 +4995,16 @@ export default function App() {
                 book.origin ?? ""
               ).trim() !==
                 searchFilters.origin
+            ) {
+              return false;
+            }
+
+            if (
+              searchFilters.pageLength &&
+              !bookMatchesPageLength(
+                book,
+                searchFilters.pageLength
+              )
             ) {
               return false;
             }
@@ -5019,6 +5170,7 @@ export default function App() {
         nextFilters.subgenre,
         nextFilters.format,
         nextFilters.origin,
+        nextFilters.pageLength,
       ].some(Boolean);
 
     setSearchFilters(
@@ -12591,6 +12743,31 @@ export default function App() {
                         </span>
                       </button>
                     ) : null}
+
+                    {searchFilters.pageLength ? (
+                      <button
+                        type="button"
+                        className="searchFilterChip"
+                        aria-label={`Remove length filter ${getPageLengthFilterLabel(
+                          searchFilters.pageLength
+                        )}`}
+                        onClick={() => {
+                          updateSearchFilter(
+                            "pageLength",
+                            ""
+                          );
+                        }}
+                      >
+                        Length:{" "}
+                        {getPageLengthFilterLabel(
+                          searchFilters.pageLength
+                        )}
+
+                        <span aria-hidden="true">
+                          ×
+                        </span>
+                      </button>
+                    ) : null}
                   </div>
                 ) : null}
 
@@ -12869,6 +13046,43 @@ export default function App() {
                               >
                                 {
                                   origin
+                                }
+                              </option>
+                            )
+                          )}
+                        </select>
+                      </label>
+
+                      <label className="searchFilterField">
+                        <span>
+                          Length
+                        </span>
+
+                        <select
+                          value={
+                            searchFilters.pageLength
+                          }
+                          onChange={(event) => {
+                            updateSearchFilter(
+                              "pageLength",
+                              event.target
+                                .value as SearchPageLength
+                            );
+                          }}
+                        >
+                          {SEARCH_PAGE_LENGTH_OPTIONS.map(
+                            (option) => (
+                              <option
+                                key={
+                                  option.value ||
+                                  "any"
+                                }
+                                value={
+                                  option.value
+                                }
+                              >
+                                {
+                                  option.label
                                 }
                               </option>
                             )
