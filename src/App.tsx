@@ -11736,22 +11736,6 @@ export default function App() {
     );
   }
 
-  const headerTitle =
-    activeTab === "map"
-      ? selectedBookcase?.bookcase ??
-        "Map"
-      : activeTab === "wanted"
-        ? "Wanted"
-        : activeTab ===
-            "challenges"
-          ? activeChallenge?.name ??
-            "Challenges"
-          : activeTab === "stats"
-            ? "Stats"
-            : activeTab === "update"
-              ? "Update"
-              : "Search";
-
   const headerMeta =
     activeTab === "map"
       ? selectedBookcase
@@ -11815,26 +11799,26 @@ export default function App() {
       }
     >
       <header className="appHeader">
-        <div className="appBrand">
+        <div
+          className="appBrandIconPill"
+          aria-hidden="true"
+        >
           <img
             className="appBrandIcon"
             src={publicAssetPath(
               "icons/icon-192.jpg"
             )}
             alt=""
-            aria-hidden="true"
           />
+        </div>
 
+        <div className="appBrandInfoPill">
           <div className="appBrandCopy">
             <strong>MyLibrary</strong>
 
-            <span>{headerTitle}</span>
+            <span>{headerMeta}</span>
           </div>
         </div>
-
-        <p className="appHeaderMeta">
-          {headerMeta}
-        </p>
       </header>
 
       <div className="appNavigation">
