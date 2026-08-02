@@ -33,6 +33,7 @@ import {
   getBookcasesFromBooks,
   getShelvesForBookcase,
   searchBooks,
+  sortBooksByTitle,
 } from "./data/librarySelectors";
 import type {
   AuthorNameMode,
@@ -8681,12 +8682,23 @@ export default function App() {
     hasActiveSearchFilters ||
     hasSearchDrilldown;
 
-  const searchResultBooks =
+  const unsortedSearchResultBooks =
     hasSearchQuery
       ? searchResults
       : showSearchResults
         ? searchFilteredBooks
         : [];
+
+  const searchResultBooks =
+    hasSearchDrilldown &&
+    (
+      !hasSearchQuery ||
+      searchScope === "all"
+    )
+      ? sortBooksByTitle(
+          unsortedSearchResultBooks
+        )
+      : unsortedSearchResultBooks;
 
   const totalSearchPages = Math.max(
     1,

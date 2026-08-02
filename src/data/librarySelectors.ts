@@ -851,6 +851,30 @@ function compareScopedBooks(
   );
 }
 
+export function sortBooksByTitle(
+  books: Book[],
+  sortDirection:
+    SearchSortDirection = "asc"
+): Book[] {
+  return [...books].sort(
+    (a, b) => {
+      const comparison =
+        compareScopedBooks(
+          a,
+          b,
+          "",
+          "title",
+          "last"
+        );
+
+      return sortDirection ===
+        "asc"
+        ? comparison
+        : -comparison;
+    }
+  );
+}
+
 export function getSearchableBookText(
   book: Book
 ): string {
