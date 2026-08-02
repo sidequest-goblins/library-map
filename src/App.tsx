@@ -1921,29 +1921,113 @@ function formatWantedSeriesLabel(item: WantedBook): string {
   return `${series} #${seriesNumber}`;
 }
 
+const APP_UPDATE_QUERY_KEY =
+  "_appUpdate";
+
+const APP_UPDATE_TOKEN = (() => {
+  const currentUrl =
+    new URL(
+      window.location.href
+    );
+
+  const updateToken =
+    currentUrl.searchParams.get(
+      APP_UPDATE_QUERY_KEY
+    ) ?? "";
+
+  /*
+   * Keep the update token available to this
+   * running app session, but remove it from
+   * the visible URL after the fresh page loads.
+   */
+  if (updateToken) {
+    currentUrl.searchParams.delete(
+      APP_UPDATE_QUERY_KEY
+    );
+
+    window.history.replaceState(
+      window.history.state,
+      "",
+      currentUrl.toString()
+    );
+  }
+
+  return updateToken;
+})();
+
+function appAssetPath(
+  path: string
+): string {
+  const base =
+    import.meta.env.BASE_URL;
+
+  const cleanBase =
+    base.endsWith("/")
+      ? base
+      : `${base}/`;
+
+  const cleanPath =
+    path.replace(/^\/+/, "");
+
+  return `${cleanBase}${cleanPath}`;
+}
+
+async function fetchAppData(
+  path: string
+): Promise<Response> {
+  return fetch(
+    appAssetPath(path),
+    {
+      /*
+       * A normal app opening can use the
+       * browser cache normally.
+       *
+       * After Update app is pressed, reload
+       * retrieves the network version and
+       * refreshes the browser's stored copy
+       * for the original JSON URL.
+       */
+      cache: APP_UPDATE_TOKEN
+        ? "reload"
+        : "default",
+    }
+  );
+}
+
 async function loadWantedLists(): Promise<WantedLists> {
-  const response = await fetch(`${import.meta.env.BASE_URL}data/library-wanted.json`);
+  const response =
+    await fetchAppData(
+      "data/library-wanted.json"
+    );
 
   if (!response.ok) {
     if (response.status === 404) {
       return EMPTY_WANTED_LISTS;
     }
 
-    throw new Error(`Failed to load wanted lists: ${response.status}`);
+    throw new Error(
+      `Failed to load wanted lists: ${response.status}`
+    );
   }
 
-  const parsed = (await response.json()) as Partial<WantedLists>;
+  const parsed =
+    (await response.json()) as
+      Partial<WantedLists>;
 
   return {
-    toBuy: parsed.toBuy ?? [],
-    seriesToComplete: parsed.seriesToComplete ?? [],
+    toBuy:
+      parsed.toBuy ?? [],
+
+    seriesToComplete:
+      parsed.seriesToComplete ?? [],
   };
 }
 
 async function loadChallengeData(): Promise<ChallengeData> {
-  const response = await fetch(
-    `${import.meta.env.BASE_URL}data/library-challenges.json`
-  );
+  const response =
+    await fetchAppData(
+      "data/library-challenges.json"
+    );
 
   if (!response.ok) {
     if (response.status === 404) {
@@ -1955,12 +2039,19 @@ async function loadChallengeData(): Promise<ChallengeData> {
     );
   }
 
-  const parsed = (await response.json()) as Partial<ChallengeData>;
+  const parsed =
+    (await response.json()) as
+      Partial<ChallengeData>;
 
   return {
-    schemaVersion: parsed.schemaVersion ?? 1,
-    sourceWorkbook: parsed.sourceWorkbook ?? "",
-    challenges: parsed.challenges ?? [],
+    schemaVersion:
+      parsed.schemaVersion ?? 1,
+
+    sourceWorkbook:
+      parsed.sourceWorkbook ?? "",
+
+    challenges:
+      parsed.challenges ?? [],
   };
 }
 
@@ -2111,46 +2202,96 @@ function scrollToStatsSection(
   });
 }
 
-async function clearAppCache() {
-  if ("serviceWorker" in navigator) {
+async function updateApp() {
+  /*
+   * Service workers are scoped by URL.
+   * Only unregister workers belonging to
+   * this MyLibrary app.
+   */
+  if (
+    "serviceWorker" in
+    navigator
+  ) {
+    const appScopeUrl =
+      new URL(
+        import.meta.env.BASE_URL,
+        window.location.origin
+      ).href;
+
     const registrations =
-      await navigator.serviceWorker.getRegistrations();
+      await navigator
+        .serviceWorker
+        .getRegistrations();
+
+    const appRegistrations =
+      registrations.filter(
+        (registration) =>
+          registration.scope.startsWith(
+            appScopeUrl
+          )
+      );
 
     await Promise.all(
-      registrations.map((registration) =>
-        registration.unregister()
+      appRegistrations.map(
+        (registration) =>
+          registration.unregister()
       )
     );
   }
 
-  if ("caches" in window) {
-    const cacheNames = await caches.keys();
-
-    await Promise.all(
-      cacheNames.map((cacheName) =>
-        caches.delete(cacheName)
-      )
+  /*
+   * A unique page URL bypasses a stale
+   * app-shell response. The new app session
+   * sees this token and reloads its generated
+   * JSON files directly from the network.
+   */
+  const refreshedUrl =
+    new URL(
+      window.location.href
     );
-  }
-
-  const refreshedUrl = new URL(window.location.href);
 
   refreshedUrl.searchParams.set(
-    "_cacheRefresh",
+    APP_UPDATE_QUERY_KEY,
     Date.now().toString()
   );
 
-  window.location.replace(refreshedUrl.toString());
+  window.location.replace(
+    refreshedUrl.toString()
+  );
 }
 
-function publicAssetPath(path: string | null | undefined): string | undefined {
-  if (!path) return undefined;
+function publicAssetPath(
+  path: string | null | undefined
+): string | undefined {
+  if (!path) {
+    return undefined;
+  }
 
-  const base = import.meta.env.BASE_URL;
-  const cleanBase = base.endsWith("/") ? base : `${base}/`;
-  const cleanPath = path.replace(/^\/+/, "");
+  const resolvedPath =
+    appAssetPath(path);
 
-  return `${cleanBase}${cleanPath}`;
+  /*
+   * During an Update app session, give
+   * cover images a unique URL too. This
+   * refreshes changed covers without
+   * permanently disabling image caching.
+   */
+  if (!APP_UPDATE_TOKEN) {
+    return resolvedPath;
+  }
+
+  const refreshedAssetUrl =
+    new URL(
+      resolvedPath,
+      window.location.origin
+    );
+
+  refreshedAssetUrl.searchParams.set(
+    APP_UPDATE_QUERY_KEY,
+    APP_UPDATE_TOKEN
+  );
+
+  return refreshedAssetUrl.toString();
 }
 
 const preloadedCoverUrls = new Set<string>();
@@ -3678,16 +3819,16 @@ export default function App() {
           loadedWantedLists,
           loadedChallengeData,
         ] = await Promise.all([
-          fetch(
-            `${import.meta.env.BASE_URL}data/library-books.json`
+          fetchAppData(
+            "data/library-books.json"
           ),
 
-          fetch(
-            `${import.meta.env.BASE_URL}data/library-authors.json`
+          fetchAppData(
+            "data/library-authors.json"
           ),
 
-          fetch(
-            `${import.meta.env.BASE_URL}data/library-book-authors.json`
+          fetchAppData(
+            "data/library-book-authors.json"
           ),
 
           loadWantedLists(),
@@ -11779,6 +11920,45 @@ export default function App() {
                     );
                   }
                 )}
+
+                <div className="appMenuUtility">
+                  <button
+                    type="button"
+                    className="appMenuItem appUpdateButton"
+                    onClick={() => {
+                      runAfterBookDetailDiscardCheck(
+                        () => {
+                          void updateApp();
+                        }
+                      );
+                    }}
+                  >
+                    <span
+                      className="appMenuItemIcon appUpdateButtonIcon"
+                      aria-hidden="true"
+                    >
+                      ↻
+                    </span>
+
+                    <span className="appMenuItemCopy">
+                      <strong>
+                        Update app
+                      </strong>
+
+                      <span>
+                        Reload the latest app and
+                        library data.
+                      </span>
+                    </span>
+
+                    <span
+                      className="appMenuArrow"
+                      aria-hidden="true"
+                    >
+                      →
+                    </span>
+                  </button>
+                </div>
               </nav>
             ) : null}
           </div>
@@ -11811,14 +11991,6 @@ export default function App() {
               libraryStateSeedFeedback
             }
           />
-
-          <button
-            type="button"
-            className="cacheButton"
-            onClick={clearAppCache}
-          >
-            Clear cache
-          </button>
         </div>
       </header>
 

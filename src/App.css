@@ -355,6 +355,43 @@ select {
   font-weight: 900;
 }
 
+.appMenuUtility {
+  margin-top: 0.2rem;
+  padding-top: 0.55rem;
+  border-top:
+    1px solid
+    rgba(76, 48, 30, 0.16);
+}
+
+.appUpdateButton {
+  border-color:
+    rgba(201, 154, 69, 0.42);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(201, 154, 69, 0.2),
+      rgba(255, 248, 233, 0.88)
+    );
+}
+
+.appUpdateButton:hover {
+  border-color:
+    rgba(201, 154, 69, 0.7);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(201, 154, 69, 0.3),
+      rgba(255, 250, 240, 0.96)
+    );
+}
+
+.appUpdateButtonIcon {
+  border-color:
+    rgba(201, 154, 69, 0.42);
+  background:
+    rgba(201, 154, 69, 0.16);
+}
+
 /* ========================================================================== */
 /* HOUSEHOLD ACCOUNT */
 /* ========================================================================== */
