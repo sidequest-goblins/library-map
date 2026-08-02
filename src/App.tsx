@@ -3009,6 +3009,9 @@ export default function App() {
   const searchAutocompleteRef =
     useRef<HTMLDivElement | null>(null);
 
+  const searchResultsTopRef =
+    useRef<HTMLDivElement | null>(null);
+
   const appMenuRef =
     useRef<HTMLDivElement | null>(null);
 
@@ -7831,15 +7834,110 @@ export default function App() {
 
   const totalSearchPages = Math.max(
     1,
-    Math.ceil(searchResults.length / SEARCH_PAGE_SIZE)
+    Math.ceil(
+      searchResults.length /
+        SEARCH_PAGE_SIZE
+    )
   );
 
-  const safeSearchPage = Math.min(searchPage, totalSearchPages);
-
-  const pagedSearchResults = searchResults.slice(
-    (safeSearchPage - 1) * SEARCH_PAGE_SIZE,
-    safeSearchPage * SEARCH_PAGE_SIZE
+  const safeSearchPage = Math.min(
+    searchPage,
+    totalSearchPages
   );
+
+  const pagedSearchResults =
+    searchResults.slice(
+      (safeSearchPage - 1) *
+        SEARCH_PAGE_SIZE,
+
+      safeSearchPage *
+        SEARCH_PAGE_SIZE
+    );
+
+  function changeSearchPage(
+    nextPage: number
+  ) {
+    const boundedPage = Math.min(
+      totalSearchPages,
+      Math.max(
+        1,
+        nextPage
+      )
+    );
+
+    if (
+      boundedPage ===
+      safeSearchPage
+    ) {
+      return;
+    }
+
+    setSearchPage(
+      boundedPage
+    );
+
+    window.requestAnimationFrame(
+      () => {
+        searchResultsTopRef
+          .current
+          ?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+      }
+    );
+  }
+
+  function renderSearchPaginationControls() {
+    if (
+      searchResults.length <=
+      SEARCH_PAGE_SIZE
+    ) {
+      return null;
+    }
+
+    return (
+      <div
+        className="paginationControls"
+        role="navigation"
+        aria-label="Search result pagination"
+      >
+        <button
+          type="button"
+          onClick={() =>
+            changeSearchPage(
+              safeSearchPage - 1
+            )
+          }
+          disabled={
+            safeSearchPage === 1
+          }
+        >
+          Previous
+        </button>
+
+        <span aria-live="polite">
+          Page {safeSearchPage} of{" "}
+          {totalSearchPages}
+        </span>
+
+        <button
+          type="button"
+          onClick={() =>
+            changeSearchPage(
+              safeSearchPage + 1
+            )
+          }
+          disabled={
+            safeSearchPage ===
+            totalSearchPages
+          }
+        >
+          Next
+        </button>
+      </div>
+    );
+  }
 
   const selectedBook = useMemo(
     () => books.find((book) => book.bookId === selectedBookId) ?? null,
@@ -10946,79 +11044,93 @@ export default function App() {
 
             {searchQuery.trim().length > 0 ? (
               <div className="searchResults">
-                <div className="searchResultsHeader">
-                  <h2>Search results</h2>
+                <div
+                  ref={
+                    searchResultsTopRef
+                  }
+                  className="searchResultsHeader"
+                >
+                  <h2>
+                    Search results
+                  </h2>
+
                   <p>
-                    {searchResults.length === 1
+                    {searchResults.length ===
+                    1
                       ? "1 book found"
                       : `${searchResults.length} books found`}
-                    {searchResults.length > SEARCH_PAGE_SIZE
+
+                    {searchResults.length >
+                    SEARCH_PAGE_SIZE
                       ? ` · Page ${safeSearchPage} of ${totalSearchPages}`
                       : ""}
                   </p>
                 </div>
 
-                {searchResults.length > 0 ? (
+                {searchResults.length >
+                0 ? (
                   <>
+                    {renderSearchPaginationControls()}
+
                     <div className="searchResultList">
-                      {pagedSearchResults.map((book) => {
-                        const searchSeriesLabel = formatSearchSeriesLabel(book);
+                      {pagedSearchResults.map(
+                        (book) => {
+                          const searchSeriesLabel =
+                            formatSearchSeriesLabel(
+                              book
+                            );
 
-                        return (
-                          <button
-                            key={book.bookId}
-                            type="button"
-                            className="searchResultCard searchResultButton"
-                            onClick={() => setSelectedBookId(book.bookId)}
-                          >
-                            <h3>{book.title}</h3>
-                            <p className="searchResultAuthor">{book.author}</p>
+                          return (
+                            <button
+                              key={
+                                book.bookId
+                              }
+                              type="button"
+                              className="searchResultCard searchResultButton"
+                              onClick={() =>
+                                setSelectedBookId(
+                                  book.bookId
+                                )
+                              }
+                            >
+                              <h3>
+                                {book.title}
+                              </h3>
 
-                            {searchSeriesLabel ? (
-                              <p className="searchResultSeries">{searchSeriesLabel}</p>
-                            ) : null}
-                          </button>
-                        );
-                      })}
+                              <p className="searchResultAuthor">
+                                {
+                                  book.author
+                                }
+                              </p>
+
+                              {searchSeriesLabel ? (
+                                <p className="searchResultSeries">
+                                  {
+                                    searchSeriesLabel
+                                  }
+                                </p>
+                              ) : null}
+                            </button>
+                          );
+                        }
+                      )}
                     </div>
 
-                    {searchResults.length > SEARCH_PAGE_SIZE ? (
-                      <div className="paginationControls">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setSearchPage((page) => Math.max(1, page - 1))
-                          }
-                          disabled={safeSearchPage === 1}
-                        >
-                          Previous
-                        </button>
-
-                        <span>
-                          Page {safeSearchPage} of {totalSearchPages}
-                        </span>
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setSearchPage((page) =>
-                              Math.min(totalSearchPages, page + 1)
-                            )
-                          }
-                          disabled={safeSearchPage === totalSearchPages}
-                        >
-                          Next
-                        </button>
-                      </div>
-                    ) : null}
+                    {renderSearchPaginationControls()}
                   </>
                 ) : (
-                  <p className="emptySearch">No books match that search.</p>
+                  <p className="emptySearch">
+                    No books match
+                    that search.
+                  </p>
                 )}
               </div>
             ) : (
               <p className="emptySearch">
-                Search by title, author, genre, publisher, or location.
+                Search by title,
+                author, genre,
+                publisher, or
+                location.
               </p>
             )}
           </section>
