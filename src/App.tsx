@@ -523,6 +523,11 @@ type SearchFilters = {
   origin: string;
 };
 
+type SearchDrilldown = {
+  label: string;
+  bookIds: string[];
+};
+
 type OpenSearchWithFiltersOptions = {
   filters?: Partial<SearchFilters>;
 
@@ -544,6 +549,9 @@ type OpenSearchWithFiltersOptions = {
     SingleLetterMatchMode;
 
   filtersOpen?: boolean;
+
+  drilldown?:
+    SearchDrilldown | null;
 };
 
 const EMPTY_SEARCH_FILTERS:
@@ -741,18 +749,39 @@ function getStatsPercent(
   );
 }
 
+function handleStatsDrilldownKeyDown(
+  event: KeyboardEvent<HTMLElement>,
+  onActivate: () => void
+) {
+  if (
+    event.key !== "Enter" &&
+    event.key !== " "
+  ) {
+    return;
+  }
+
+  event.preventDefault();
+
+  onActivate();
+}
+
 function StatsCompositionChart({
   title,
   description,
   rows,
   featuredKey,
   unitLabel,
+  onRowSelect,
 }: {
   title: string;
   description: string;
   rows: StatsCompositionRow[];
   featuredKey: string;
   unitLabel: string;
+
+  onRowSelect?: (
+    row: StatsCompositionRow
+  ) => void;
 }) {
   const total = rows.reduce(
     (
@@ -862,35 +891,84 @@ function StatsCompositionChart({
 
         <div className="statsPieLegend">
           {rows.map(
-            (row) => (
-              <div
-                key={row.key}
-                className="statsPieLegendItem"
-              >
-                <span
-                  className="statsPieSwatch"
-                  style={{
-                    backgroundColor:
-                      row.fill,
-                  }}
-                  aria-hidden="true"
-                />
+            (row) => {
+              const canDrillDown =
+                Boolean(
+                  onRowSelect
+                );
 
-                <span className="statsPieLegendLabel">
-                  {row.label}
-                </span>
+              return (
+                <div
+                  key={row.key}
+                  className={
+                    canDrillDown
+                      ? "statsPieLegendItem statsDrilldownTarget"
+                      : "statsPieLegendItem"
+                  }
+                  role={
+                    canDrillDown
+                      ? "button"
+                      : undefined
+                  }
+                  tabIndex={
+                    canDrillDown
+                      ? 0
+                      : undefined
+                  }
+                  aria-label={
+                    canDrillDown
+                      ? `View ${row.label} books in Search`
+                      : undefined
+                  }
+                  onClick={
+                    canDrillDown
+                      ? () => {
+                          onRowSelect?.(
+                            row
+                          );
+                        }
+                      : undefined
+                  }
+                  onKeyDown={
+                    canDrillDown
+                      ? (event) => {
+                          handleStatsDrilldownKeyDown(
+                            event,
+                            () => {
+                              onRowSelect?.(
+                                row
+                              );
+                            }
+                          );
+                        }
+                      : undefined
+                  }
+                >
+                  <span
+                    className="statsPieSwatch"
+                    style={{
+                      backgroundColor:
+                        row.fill,
+                    }}
+                    aria-hidden="true"
+                  />
 
-                <span className="statsPieLegendValue">
-                  {row.count.toLocaleString()}{" "}
-                  ·{" "}
-                  {getStatsPercent(
-                    row.count,
-                    total
-                  )}
-                  %
-                </span>
-              </div>
-            )
+                  <span className="statsPieLegendLabel">
+                    {row.label}
+                  </span>
+
+                  <span className="statsPieLegendValue">
+                    {row.count.toLocaleString()}{" "}
+                    ·{" "}
+                    {getStatsPercent(
+                      row.count,
+                      total
+                    )}
+                    %
+                  </span>
+                </div>
+              );
+            }
           )}
         </div>
       </div>
@@ -3107,6 +3185,13 @@ export default function App() {
     EMPTY_SEARCH_FILTERS
   );
 
+  const [
+    searchDrilldown,
+    setSearchDrilldown,
+  ] = useState<
+    SearchDrilldown | null
+  >(null);
+
   const [searchSuggestionsOpen, setSearchSuggestionsOpen] =
     useState(false);
   const [
@@ -4397,11 +4482,30 @@ export default function App() {
   const hasActiveSearchFilters =
     activeSearchFilterCount > 0;
 
+  const searchDrilldownBookIds =
+    useMemo(
+      () =>
+        searchDrilldown
+          ? new Set(
+              searchDrilldown.bookIds
+            )
+          : null,
+      [searchDrilldown]
+    );
+
   const searchFilteredBooks =
     useMemo(
       () =>
         books.filter(
           (book) => {
+            if (
+              searchDrilldownBookIds &&
+              !searchDrilldownBookIds.has(
+                book.bookId
+              )
+            ) {
+              return false;
+            }
             if (
               searchFilters
                 .proseOnly &&
@@ -4494,6 +4598,7 @@ export default function App() {
       [
         books,
         resolvedAuthorsByBookId,
+        searchDrilldownBookIds,
         searchFilters,
       ]
     );
@@ -4657,7 +4762,10 @@ export default function App() {
     setBrowseAllBooks(
       searchQuery.trim().length ===
         0 &&
-      nextHasActiveFilters
+      (
+        nextHasActiveFilters ||
+        searchDrilldown !== null
+      )
     );
 
     setSearchPage(1);
@@ -4672,7 +4780,26 @@ export default function App() {
     });
 
     setBrowseAllBooks(
-      false
+      searchQuery.trim().length ===
+        0 &&
+      searchDrilldown !== null
+    );
+
+    setSearchPage(1);
+    setSelectedBookId(null);
+    setSearchSuggestionsOpen(false);
+    setActiveSearchSuggestionIndex(-1);
+  }
+
+  function clearSearchDrilldown() {
+    setSearchDrilldown(
+      null
+    );
+
+    setBrowseAllBooks(
+      searchQuery.trim().length ===
+        0 &&
+      hasActiveSearchFilters
     );
 
     setSearchPage(1);
@@ -5991,6 +6118,154 @@ export default function App() {
     ) ??
     STATS_BREAKDOWN_OPTIONS[0];
 
+  function openStatsBreakdownDrilldown(
+    row: {
+      label: string;
+      count: number;
+    }
+  ) {
+    const normalizedRowLabel =
+      normalizeInlineSearchText(
+        row.label
+      );
+
+    const matchingBookIds =
+      statsChartBookFacts.flatMap(
+        ({ book }) => {
+          const bookLabels =
+            statsBreakdown ===
+            "author"
+              ? getStatsAuthorNames(
+                  book
+                )
+              : [
+                  getStatsBreakdownValue(
+                    book,
+                    statsBreakdown
+                  ),
+                ];
+
+          const isMatch =
+            bookLabels.some(
+              (label) =>
+                normalizeInlineSearchText(
+                  label
+                ) ===
+                normalizedRowLabel
+            );
+
+          return isMatch
+            ? [book.bookId]
+            : [];
+        }
+      );
+
+    if (
+      matchingBookIds.length ===
+      0
+    ) {
+      return;
+    }
+
+    const filters:
+      Partial<SearchFilters> = {};
+
+    if (statsProseOnly) {
+      filters.proseOnly =
+        true;
+    }
+
+    if (statsLgbtqOnly) {
+      filters.lgbtqOnly =
+        true;
+    }
+
+    if (
+      row.label !==
+      "Unknown"
+    ) {
+      switch (
+        statsBreakdown
+      ) {
+        case "genre":
+          filters.genre =
+            row.label;
+          break;
+
+        case "subgenre":
+          filters.subgenre =
+            row.label;
+          break;
+
+        case "format":
+          filters.format =
+            row.label;
+          break;
+
+        case "origin":
+          filters.origin =
+            row.label;
+          break;
+      }
+    }
+
+    openSearchWithFilters({
+      filters,
+
+      drilldown: {
+        label: [
+          activeStatsDataset.label,
+
+          `${activeStatsBreakdown.label}: ${row.label}`,
+
+          formatStatsBreakdownCount(
+            row.count
+          ),
+        ].join(" · "),
+
+        bookIds:
+          matchingBookIds,
+      },
+    });
+  }
+
+  function openLgbtqRepresentationDrilldown(
+    row: StatsCompositionRow
+  ) {
+    const lgbtqOnly =
+      row.key === "lgbtq";
+
+    const matchingBookIds =
+      books
+        .filter(
+          (book) =>
+            Boolean(book.lgbtq) ===
+            lgbtqOnly
+        )
+        .map(
+          (book) =>
+            book.bookId
+        );
+
+    openSearchWithFilters({
+      filters:
+        lgbtqOnly
+          ? {
+              lgbtqOnly:
+                true,
+            }
+          : {},
+
+      drilldown: {
+        label:
+          `Representation · ${row.label}`,
+
+        bookIds:
+          matchingBookIds,
+      },
+    });
+  }
+
   const lgbtqRepresentationRows =
     useMemo<
       StatsCompositionRow[]
@@ -6029,7 +6304,13 @@ export default function App() {
       ]
     );
 
-  const statsOverviewCards = [
+  const statsOverviewCards: Array<{
+    label: string;
+    value: string;
+    meta: string;
+    onClick?: () => void;
+    ariaLabel?: string;
+  }> = [
     {
       label: "Books owned",
 
@@ -6050,6 +6331,24 @@ export default function App() {
         statsSummary.lgbtqBooks,
         statsSummary.totalBooks
       )}% of the library`,
+
+      ariaLabel:
+        "View LGBTQ+ books in Search",
+
+      onClick: () => {
+        const lgbtqRow =
+          lgbtqRepresentationRows.find(
+            (row) =>
+              row.key ===
+              "lgbtq"
+          );
+
+        if (lgbtqRow) {
+          openLgbtqRepresentationDrilldown(
+            lgbtqRow
+          );
+        }
+      },
     },
     {
       label: "Known pages",
@@ -8234,10 +8533,14 @@ export default function App() {
   const hasSearchQuery =
     searchQuery.trim().length > 0;
 
+  const hasSearchDrilldown =
+    searchDrilldown !== null;
+
   const showSearchResults =
     browseAllBooks ||
     hasSearchQuery ||
-    hasActiveSearchFilters;
+    hasActiveSearchFilters ||
+    hasSearchDrilldown;
 
   const searchResultBooks =
     hasSearchQuery
@@ -8327,6 +8630,10 @@ export default function App() {
   function hideAllLibraryBooks() {
     setSearchQuery("");
 
+    setSearchDrilldown(
+      null
+    );
+
     setBrowseAllBooks(
       false
     );
@@ -8366,7 +8673,8 @@ export default function App() {
     const showHideAllBooksButton =
       browseAllBooks &&
       !hasSearchQuery &&
-      !hasActiveSearchFilters;
+      !hasActiveSearchFilters &&
+      !hasSearchDrilldown;
 
     if (
       !hasMultipleSearchPages &&
@@ -8735,6 +9043,7 @@ export default function App() {
       nextSingleLetterMatchMode =
         "startsWith",
     filtersOpen = false,
+    drilldown = null,
   }: OpenSearchWithFiltersOptions = {}) {
     runAfterBookDetailDiscardCheck(
       () => {
@@ -8755,6 +9064,10 @@ export default function App() {
 
         setSearchFilters(
           nextFilters
+        );
+
+        setSearchDrilldown(
+          drilldown
         );
 
         setSearchFiltersOpen(
@@ -11585,11 +11898,32 @@ export default function App() {
                   ) : null}
                 </div>
 
-                {hasActiveSearchFilters ? (
+                {searchDrilldown ||
+                hasActiveSearchFilters ? (
                   <div
                     className="searchFilterChips"
-                    aria-label="Active filters"
+                    aria-label="Active search constraints"
                   >
+                    {searchDrilldown ? (
+                      <button
+                        type="button"
+                        className="searchFilterChip searchDrilldownChip"
+                        aria-label={`Remove Stats drilldown ${searchDrilldown.label}`}
+                        onClick={
+                          clearSearchDrilldown
+                        }
+                      >
+                        Stats:{" "}
+                        {
+                          searchDrilldown.label
+                        }
+
+                        <span aria-hidden="true">
+                          ×
+                        </span>
+                      </button>
+                    ) : null}
+
                     {searchFilters.proseOnly ? (
                       <button
                         type="button"
@@ -12024,11 +12358,9 @@ export default function App() {
                       className="searchFilterMatchCount"
                       aria-live="polite"
                     >
-                      {searchFilteredBooks.length.toLocaleString()}{" "}
-                      of{" "}
-                      {books.length.toLocaleString()}{" "}
-                      books match these
-                      filters.
+                      {searchDrilldown
+                        ? `${searchFilteredBooks.length.toLocaleString()} books remain in this Stats drilldown after filters.`
+                        : `${searchFilteredBooks.length.toLocaleString()} of ${books.length.toLocaleString()} books match these filters.`}
                     </p>
                   </div>
                 ) : null}
@@ -12321,9 +12653,11 @@ export default function App() {
                   <h2>
                     {hasSearchQuery
                       ? "Search results"
-                      : hasActiveSearchFilters
-                        ? "Filtered books"
-                        : "All books"}
+                      : hasSearchDrilldown
+                        ? "Stats drilldown"
+                        : hasActiveSearchFilters
+                          ? "Filtered books"
+                          : "All books"}
                   </h2>
 
                   <p>
@@ -12332,12 +12666,17 @@ export default function App() {
                         1
                         ? "1 book found"
                         : `${searchResultBooks.length} books found`
-                      : hasActiveSearchFilters
+                      : hasSearchDrilldown
                         ? searchResultBooks.length ===
                           1
-                          ? "1 matching book"
-                          : `${searchResultBooks.length} matching books`
-                        : searchResultBooks.length ===
+                          ? "1 source book from Stats"
+                          : `${searchResultBooks.length} source books from Stats`
+                        : hasActiveSearchFilters
+                          ? searchResultBooks.length ===
+                            1
+                            ? "1 matching book"
+                            : `${searchResultBooks.length} matching books`
+                          : searchResultBooks.length ===
                             1
                           ? "1 book in library"
                           : `${searchResultBooks.length} books in library`}
@@ -12992,7 +13331,37 @@ export default function App() {
               (card) => (
                 <article
                   key={card.label}
-                  className="statsMetricCard"
+                  className={
+                    card.onClick
+                      ? "statsMetricCard statsDrilldownTarget"
+                      : "statsMetricCard"
+                  }
+                  role={
+                    card.onClick
+                      ? "button"
+                      : undefined
+                  }
+                  tabIndex={
+                    card.onClick
+                      ? 0
+                      : undefined
+                  }
+                  aria-label={
+                    card.ariaLabel
+                  }
+                  onClick={
+                    card.onClick
+                  }
+                  onKeyDown={
+                    card.onClick
+                      ? (event) => {
+                          handleStatsDrilldownKeyDown(
+                            event,
+                            card.onClick!
+                          );
+                        }
+                      : undefined
+                  }
                 >
                   <span className="statsMetricLabel">
                     {card.label}
@@ -13033,6 +13402,9 @@ export default function App() {
                 }
                 featuredKey="lgbtq"
                 unitLabel="books"
+                onRowSelect={
+                  openLgbtqRepresentationDrilldown
+                }
               />
             </div>
           </section>
@@ -13777,7 +14149,25 @@ export default function App() {
                             key={
                               row.label
                             }
-                            className="statsBreakdownRow"
+                            className="statsBreakdownRow statsDrilldownTarget"
+                            role="button"
+                            tabIndex={0}
+                            aria-label={`View ${row.label} books in Search`}
+                            onClick={() => {
+                              openStatsBreakdownDrilldown(
+                                row
+                              );
+                            }}
+                            onKeyDown={(event) => {
+                              handleStatsDrilldownKeyDown(
+                                event,
+                                () => {
+                                  openStatsBreakdownDrilldown(
+                                    row
+                                  );
+                                }
+                              );
+                            }}
                           >
                             <div className="statsBreakdownHeading">
                               <strong>
@@ -13880,38 +14270,86 @@ export default function App() {
 
                     <div className="statsPieLegend">
                       {statsPieRows.map(
-                        (row) => (
-                          <div
-                            key={
-                              row.pieKey
-                            }
-                            className="statsPieLegendItem"
-                          >
-                            <span
-                              className="statsPieSwatch"
-                              style={{
-                                backgroundColor:
-                                  row.fill,
-                              }}
-                              aria-hidden="true"
-                            />
+                        (row) => {
+                          const canDrillDown =
+                            row.pieKey !==
+                            "grouped-other";
 
-                            <span className="statsPieLegendLabel">
-                              {
-                                row.legendLabel
+                          return (
+                            <div
+                              key={
+                                row.pieKey
                               }
-                            </span>
+                              className={
+                                canDrillDown
+                                  ? "statsPieLegendItem statsDrilldownTarget"
+                                  : "statsPieLegendItem"
+                              }
+                              role={
+                                canDrillDown
+                                  ? "button"
+                                  : undefined
+                              }
+                              tabIndex={
+                                canDrillDown
+                                  ? 0
+                                  : undefined
+                              }
+                              aria-label={
+                                canDrillDown
+                                  ? `View ${row.label} books in Search`
+                                  : undefined
+                              }
+                              onClick={
+                                canDrillDown
+                                  ? () => {
+                                      openStatsBreakdownDrilldown(
+                                        row
+                                      );
+                                    }
+                                  : undefined
+                              }
+                              onKeyDown={
+                                canDrillDown
+                                  ? (event) => {
+                                      handleStatsDrilldownKeyDown(
+                                        event,
+                                        () => {
+                                          openStatsBreakdownDrilldown(
+                                            row
+                                          );
+                                        }
+                                      );
+                                    }
+                                  : undefined
+                              }
+                            >
+                              <span
+                                className="statsPieSwatch"
+                                style={{
+                                  backgroundColor:
+                                    row.fill,
+                                }}
+                                aria-hidden="true"
+                              />
 
-                            <span className="statsPieLegendValue">
-                              {row.count.toLocaleString()}{" "}
-                              ·{" "}
-                              {
-                                row.percentage
-                              }
-                              %
-                            </span>
-                          </div>
-                        )
+                              <span className="statsPieLegendLabel">
+                                {
+                                  row.legendLabel
+                                }
+                              </span>
+
+                              <span className="statsPieLegendValue">
+                                {row.count.toLocaleString()}{" "}
+                                ·{" "}
+                                {
+                                  row.percentage
+                                }
+                                %
+                              </span>
+                            </div>
+                          );
+                        }
                       )}
                     </div>
                   </div>
@@ -13926,7 +14364,25 @@ export default function App() {
                             key={
                               row.label
                             }
-                            className="statsPlainRow"
+                            className="statsPlainRow statsDrilldownTarget"
+                            role="button"
+                            tabIndex={0}
+                            aria-label={`View ${row.label} books in Search`}
+                            onClick={() => {
+                              openStatsBreakdownDrilldown(
+                                row
+                              );
+                            }}
+                            onKeyDown={(event) => {
+                              handleStatsDrilldownKeyDown(
+                                event,
+                                () => {
+                                  openStatsBreakdownDrilldown(
+                                    row
+                                  );
+                                }
+                              );
+                            }}
                           >
                             <span className="statsPlainRank">
                               {(
