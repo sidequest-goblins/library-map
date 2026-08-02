@@ -512,6 +512,27 @@ type ChallengeAttemptFeedback =
     }
   | null;
 
+type SearchFilters = {
+  proseOnly: boolean;
+  lgbtqOnly: boolean;
+  bipocOnly: boolean;
+  genre: string;
+  subgenre: string;
+  format: string;
+  origin: string;
+};
+
+const EMPTY_SEARCH_FILTERS:
+  SearchFilters = {
+    proseOnly: false,
+    lgbtqOnly: false,
+    bipocOnly: false,
+    genre: "",
+    subgenre: "",
+    format: "",
+    origin: "",
+  };
+
 const SEARCH_SCOPE_OPTIONS: Array<{
   scope: SearchScope;
   label: string;
@@ -2999,6 +3020,18 @@ export default function App() {
     setBrowseAllBooks,
   ] = useState(false);
 
+  const [
+    searchFiltersOpen,
+    setSearchFiltersOpen,
+  ] = useState(false);
+
+  const [
+    searchFilters,
+    setSearchFilters,
+  ] = useState<SearchFilters>(
+    EMPTY_SEARCH_FILTERS
+  );
+
   const [searchSuggestionsOpen, setSearchSuggestionsOpen] =
     useState(false);
   const [
@@ -4219,15 +4252,192 @@ export default function App() {
     ) ?? null;
 
   const shelves = selectedBookcase
-    ? getShelvesForBookcase(books, selectedBookcase)
+    ? getShelvesForBookcase(
+        books,
+        selectedBookcase
+      )
     : [];
 
+  const searchFilterOptions =
+    useMemo(() => {
+      function collectValues(
+        getValue: (
+          book: Book
+        ) => unknown
+      ): string[] {
+        return Array.from(
+          new Set(
+            books
+              .map((book) =>
+                String(
+                  getValue(book) ??
+                    ""
+                ).trim()
+              )
+              .filter(Boolean)
+          )
+        ).sort(
+          compareSuggestionText
+        );
+      }
+
+      return {
+        genres:
+          collectValues(
+            (book) =>
+              book.genre
+          ),
+
+        subgenres:
+          collectValues(
+            (book) =>
+              book.subgenre
+          ),
+
+        formats:
+          collectValues(
+            (book) =>
+              book.format
+          ),
+
+        origins:
+          collectValues(
+            (book) =>
+              book.origin
+          ),
+      };
+    }, [books]);
+
+  const activeSearchFilterCount =
+    [
+      searchFilters.proseOnly,
+      searchFilters.lgbtqOnly,
+      searchFilters.bipocOnly,
+      searchFilters.genre,
+      searchFilters.subgenre,
+      searchFilters.format,
+      searchFilters.origin,
+    ].filter(Boolean).length;
+
+  const hasActiveSearchFilters =
+    activeSearchFilterCount > 0;
+
+  const searchFilteredBooks =
+    useMemo(
+      () =>
+        books.filter(
+          (book) => {
+            if (
+              searchFilters
+                .proseOnly &&
+              normalizeInlineSearchText(
+                book.genre
+              ) ===
+                "manga / graphic novels"
+            ) {
+              return false;
+            }
+
+            if (
+              searchFilters
+                .lgbtqOnly &&
+              !book.lgbtq
+            ) {
+              return false;
+            }
+
+            if (
+              searchFilters
+                .bipocOnly
+            ) {
+              const bookAuthors =
+                resolvedAuthorsByBookId.get(
+                  book.bookId
+                ) ?? [];
+
+              const hasBipocAuthor =
+                bookAuthors.some(
+                  ({
+                    metadata,
+                  }) =>
+                    metadata?.bipoc ===
+                    true
+                );
+
+              if (
+                !hasBipocAuthor
+              ) {
+                return false;
+              }
+            }
+
+            if (
+              searchFilters.genre &&
+              String(
+                book.genre ?? ""
+              ).trim() !==
+                searchFilters.genre
+            ) {
+              return false;
+            }
+
+            if (
+              searchFilters
+                .subgenre &&
+              String(
+                book.subgenre ?? ""
+              ).trim() !==
+                searchFilters
+                  .subgenre
+            ) {
+              return false;
+            }
+
+            if (
+              searchFilters.format &&
+              String(
+                book.format ?? ""
+              ).trim() !==
+                searchFilters.format
+            ) {
+              return false;
+            }
+
+            if (
+              searchFilters.origin &&
+              String(
+                book.origin ?? ""
+              ).trim() !==
+                searchFilters.origin
+            ) {
+              return false;
+            }
+
+            return true;
+          }
+        ),
+      [
+        books,
+        resolvedAuthorsByBookId,
+        searchFilters,
+      ]
+    );
+
   const autocompleteEnabled =
-    supportsSearchAutocomplete(searchScope);
+    supportsSearchAutocomplete(
+      searchScope
+    );
 
   const searchSuggestions = useMemo(
-    () => buildSearchSuggestions(books, searchScope),
-    [books, searchScope]
+    () =>
+      buildSearchSuggestions(
+        searchFilteredBooks,
+        searchScope
+      ),
+    [
+      searchFilteredBooks,
+      searchScope,
+    ]
   );
 
   const filteredSearchSuggestions = useMemo(
@@ -4302,6 +4512,46 @@ export default function App() {
     activeSearchSuggestionIndex,
     searchSuggestionsOpen,
   ]);
+
+  function updateSearchFilter<
+    Key extends keyof SearchFilters
+  >(
+    key: Key,
+    value: SearchFilters[Key]
+  ) {
+    setSearchFilters(
+      (currentFilters) => ({
+        ...currentFilters,
+        [key]: value,
+      })
+    );
+
+    setBrowseAllBooks(
+      searchQuery.trim().length ===
+        0
+    );
+
+    setSearchPage(1);
+    setSelectedBookId(null);
+    setSearchSuggestionsOpen(false);
+    setActiveSearchSuggestionIndex(-1);
+  }
+
+  function clearSearchFilters() {
+    setSearchFilters({
+      ...EMPTY_SEARCH_FILTERS,
+    });
+
+    setBrowseAllBooks(
+      searchQuery.trim().length ===
+        0
+    );
+
+    setSearchPage(1);
+    setSelectedBookId(null);
+    setSearchSuggestionsOpen(false);
+    setActiveSearchSuggestionIndex(-1);
+  }
 
   function selectSearchSuggestion(
     suggestion: SearchSuggestion
@@ -4399,14 +4649,14 @@ export default function App() {
   const searchResults = useMemo(
     () =>
       searchBooks(
-        books,
+        searchFilteredBooks,
         searchQuery,
         searchScope,
         authorNameMode,
         searchSortDirection
       ),
     [
-      books,
+      searchFilteredBooks,
       searchQuery,
       searchScope,
       authorNameMode,
@@ -7847,10 +8097,20 @@ export default function App() {
         )
       : 0;
 
+  const hasSearchQuery =
+    searchQuery.trim().length > 0;
+
+  const showSearchResults =
+    browseAllBooks ||
+    hasSearchQuery ||
+    hasActiveSearchFilters;
+
   const searchResultBooks =
-    browseAllBooks
-      ? books
-      : searchResults;
+    hasSearchQuery
+      ? searchResults
+      : showSearchResults
+        ? searchFilteredBooks
+        : [];
 
   const totalSearchPages = Math.max(
     1,
@@ -7940,9 +8200,9 @@ export default function App() {
         className="paginationControls"
         role="navigation"
         aria-label={
-          browseAllBooks
-            ? "Library pagination"
-            : "Search result pagination"
+          hasSearchQuery
+            ? "Search result pagination"
+            : "Library pagination"
         }
       >
         <button
@@ -10979,41 +11239,580 @@ export default function App() {
               className="searchScopePanel"
               aria-label="Search settings"
             >
+              <section
+                className="searchFilterSection"
+                aria-label="Book filters"
+              >
+                <div className="searchFilterToolbar">
+                  <button
+                    type="button"
+                    className={
+                      searchFiltersOpen
+                        ? "searchFilterToggleButton searchFilterToggleButtonActive"
+                        : "searchFilterToggleButton"
+                    }
+                    aria-expanded={
+                      searchFiltersOpen
+                    }
+                    aria-controls="library-search-filters"
+                    onClick={() => {
+                      setSearchFiltersOpen(
+                        (
+                          currentValue
+                        ) =>
+                          !currentValue
+                      );
+                    }}
+                  >
+                    <span>
+                      Filters
+                    </span>
+
+                    {activeSearchFilterCount >
+                    0 ? (
+                      <span className="searchFilterCount">
+                        {
+                          activeSearchFilterCount
+                        }
+                      </span>
+                    ) : null}
+
+                    <span
+                      className="searchFilterChevron"
+                      aria-hidden="true"
+                    >
+                      {searchFiltersOpen
+                        ? "⌃"
+                        : "⌄"}
+                    </span>
+                  </button>
+
+                  {hasActiveSearchFilters ? (
+                    <button
+                      type="button"
+                      className="searchFilterClearButton"
+                      onClick={
+                        clearSearchFilters
+                      }
+                    >
+                      Clear filters
+                    </button>
+                  ) : null}
+                </div>
+
+                {hasActiveSearchFilters ? (
+                  <div
+                    className="searchFilterChips"
+                    aria-label="Active filters"
+                  >
+                    {searchFilters.proseOnly ? (
+                      <button
+                        type="button"
+                        className="searchFilterChip"
+                        aria-label="Remove Prose only filter"
+                        onClick={() => {
+                          updateSearchFilter(
+                            "proseOnly",
+                            false
+                          );
+                        }}
+                      >
+                        Prose only
+                        <span aria-hidden="true">
+                          ×
+                        </span>
+                      </button>
+                    ) : null}
+
+                    {searchFilters.lgbtqOnly ? (
+                      <button
+                        type="button"
+                        className="searchFilterChip"
+                        aria-label="Remove LGBTQ+ filter"
+                        onClick={() => {
+                          updateSearchFilter(
+                            "lgbtqOnly",
+                            false
+                          );
+                        }}
+                      >
+                        LGBTQ+
+                        <span aria-hidden="true">
+                          ×
+                        </span>
+                      </button>
+                    ) : null}
+
+                    {searchFilters.bipocOnly ? (
+                      <button
+                        type="button"
+                        className="searchFilterChip"
+                        aria-label="Remove BIPOC author filter"
+                        onClick={() => {
+                          updateSearchFilter(
+                            "bipocOnly",
+                            false
+                          );
+                        }}
+                      >
+                        BIPOC authors
+                        <span aria-hidden="true">
+                          ×
+                        </span>
+                      </button>
+                    ) : null}
+
+                    {searchFilters.genre ? (
+                      <button
+                        type="button"
+                        className="searchFilterChip"
+                        aria-label={`Remove genre filter ${searchFilters.genre}`}
+                        onClick={() => {
+                          updateSearchFilter(
+                            "genre",
+                            ""
+                          );
+                        }}
+                      >
+                        Genre:{" "}
+                        {
+                          searchFilters.genre
+                        }
+                        <span aria-hidden="true">
+                          ×
+                        </span>
+                      </button>
+                    ) : null}
+
+                    {searchFilters.subgenre ? (
+                      <button
+                        type="button"
+                        className="searchFilterChip"
+                        aria-label={`Remove subgenre filter ${searchFilters.subgenre}`}
+                        onClick={() => {
+                          updateSearchFilter(
+                            "subgenre",
+                            ""
+                          );
+                        }}
+                      >
+                        Subgenre:{" "}
+                        {
+                          searchFilters.subgenre
+                        }
+                        <span aria-hidden="true">
+                          ×
+                        </span>
+                      </button>
+                    ) : null}
+
+                    {searchFilters.format ? (
+                      <button
+                        type="button"
+                        className="searchFilterChip"
+                        aria-label={`Remove format filter ${searchFilters.format}`}
+                        onClick={() => {
+                          updateSearchFilter(
+                            "format",
+                            ""
+                          );
+                        }}
+                      >
+                        Format:{" "}
+                        {
+                          searchFilters.format
+                        }
+                        <span aria-hidden="true">
+                          ×
+                        </span>
+                      </button>
+                    ) : null}
+
+                    {searchFilters.origin ? (
+                      <button
+                        type="button"
+                        className="searchFilterChip"
+                        aria-label={`Remove origin filter ${searchFilters.origin}`}
+                        onClick={() => {
+                          updateSearchFilter(
+                            "origin",
+                            ""
+                          );
+                        }}
+                      >
+                        Origin:{" "}
+                        {
+                          searchFilters.origin
+                        }
+                        <span aria-hidden="true">
+                          ×
+                        </span>
+                      </button>
+                    ) : null}
+                  </div>
+                ) : null}
+
+                {searchFiltersOpen ? (
+                  <div
+                    id="library-search-filters"
+                    className="searchFilterPanel"
+                  >
+                    <div className="searchFilterToggleGrid">
+                      <label className="searchFilterBoolean">
+                        <input
+                          type="checkbox"
+                          checked={
+                            searchFilters
+                              .proseOnly
+                          }
+                          onChange={(
+                            event
+                          ) => {
+                            updateSearchFilter(
+                              "proseOnly",
+                              event.target
+                                .checked
+                            );
+                          }}
+                        />
+
+                        <span className="searchFilterBooleanCopy">
+                          <strong>
+                            Prose only
+                          </strong>
+
+                          <span>
+                            Exclude Manga /
+                            Graphic Novels.
+                          </span>
+                        </span>
+                      </label>
+
+                      <label className="searchFilterBoolean">
+                        <input
+                          type="checkbox"
+                          checked={
+                            searchFilters
+                              .lgbtqOnly
+                          }
+                          onChange={(
+                            event
+                          ) => {
+                            updateSearchFilter(
+                              "lgbtqOnly",
+                              event.target
+                                .checked
+                            );
+                          }}
+                        />
+
+                        <span className="searchFilterBooleanCopy">
+                          <strong>
+                            LGBTQ+
+                          </strong>
+
+                          <span>
+                            Include only
+                            tagged books.
+                          </span>
+                        </span>
+                      </label>
+
+                      <label
+                        className={
+                          authorMetadataLoadStatus ===
+                          "ready"
+                            ? "searchFilterBoolean"
+                            : "searchFilterBoolean searchFilterBooleanDisabled"
+                        }
+                      >
+                        <input
+                          type="checkbox"
+                          checked={
+                            searchFilters
+                              .bipocOnly
+                          }
+                          disabled={
+                            authorMetadataLoadStatus !==
+                            "ready"
+                          }
+                          onChange={(
+                            event
+                          ) => {
+                            updateSearchFilter(
+                              "bipocOnly",
+                              event.target
+                                .checked
+                            );
+                          }}
+                        />
+
+                        <span className="searchFilterBooleanCopy">
+                          <strong>
+                            BIPOC authors
+                          </strong>
+
+                          <span>
+                            {authorMetadataLoadStatus ===
+                            "ready"
+                              ? "At least one credited author is marked BIPOC."
+                              : "Available after shared author metadata loads."}
+                          </span>
+                        </span>
+                      </label>
+                    </div>
+
+                    <div className="searchFilterSelectGrid">
+                      <label className="searchFilterField">
+                        <span>
+                          Genre
+                        </span>
+
+                        <select
+                          value={
+                            searchFilters.genre
+                          }
+                          onChange={(
+                            event
+                          ) => {
+                            updateSearchFilter(
+                              "genre",
+                              event.target
+                                .value
+                            );
+                          }}
+                        >
+                          <option value="">
+                            Any genre
+                          </option>
+
+                          {searchFilterOptions.genres.map(
+                            (genre) => (
+                              <option
+                                key={
+                                  genre
+                                }
+                                value={
+                                  genre
+                                }
+                              >
+                                {
+                                  genre
+                                }
+                              </option>
+                            )
+                          )}
+                        </select>
+                      </label>
+
+                      <label className="searchFilterField">
+                        <span>
+                          Subgenre
+                        </span>
+
+                        <select
+                          value={
+                            searchFilters
+                              .subgenre
+                          }
+                          onChange={(
+                            event
+                          ) => {
+                            updateSearchFilter(
+                              "subgenre",
+                              event.target
+                                .value
+                            );
+                          }}
+                        >
+                          <option value="">
+                            Any subgenre
+                          </option>
+
+                          {searchFilterOptions.subgenres.map(
+                            (
+                              subgenre
+                            ) => (
+                              <option
+                                key={
+                                  subgenre
+                                }
+                                value={
+                                  subgenre
+                                }
+                              >
+                                {
+                                  subgenre
+                                }
+                              </option>
+                            )
+                          )}
+                        </select>
+                      </label>
+
+                      <label className="searchFilterField">
+                        <span>
+                          Format
+                        </span>
+
+                        <select
+                          value={
+                            searchFilters.format
+                          }
+                          onChange={(
+                            event
+                          ) => {
+                            updateSearchFilter(
+                              "format",
+                              event.target
+                                .value
+                            );
+                          }}
+                        >
+                          <option value="">
+                            Any format
+                          </option>
+
+                          {searchFilterOptions.formats.map(
+                            (format) => (
+                              <option
+                                key={
+                                  format
+                                }
+                                value={
+                                  format
+                                }
+                              >
+                                {
+                                  format
+                                }
+                              </option>
+                            )
+                          )}
+                        </select>
+                      </label>
+
+                      <label className="searchFilterField">
+                        <span>
+                          Origin
+                        </span>
+
+                        <select
+                          value={
+                            searchFilters.origin
+                          }
+                          onChange={(
+                            event
+                          ) => {
+                            updateSearchFilter(
+                              "origin",
+                              event.target
+                                .value
+                            );
+                          }}
+                        >
+                          <option value="">
+                            Any origin
+                          </option>
+
+                          {searchFilterOptions.origins.map(
+                            (origin) => (
+                              <option
+                                key={
+                                  origin
+                                }
+                                value={
+                                  origin
+                                }
+                              >
+                                {
+                                  origin
+                                }
+                              </option>
+                            )
+                          )}
+                        </select>
+                      </label>
+                    </div>
+
+                    <p
+                      className="searchFilterMatchCount"
+                      aria-live="polite"
+                    >
+                      {searchFilteredBooks.length.toLocaleString()}{" "}
+                      of{" "}
+                      {books.length.toLocaleString()}{" "}
+                      books match these
+                      filters.
+                    </p>
+                  </div>
+                ) : null}
+              </section>
+
               <div className="searchControlGroup">
-                <p className="searchControlLabel">Search in</p>
+                <p className="searchControlLabel">
+                  Search in
+                </p>
 
                 <div
                   className="searchScopeOptions"
                   role="group"
                   aria-label="Choose where to search"
                 >
-                  {SEARCH_SCOPE_OPTIONS.map((option) => (
-                    <button
-                      key={option.scope}
-                      type="button"
-                      className={
-                        searchScope === option.scope
-                          ? "searchScopeButton searchScopeButtonActive"
-                          : "searchScopeButton"
-                      }
-                      aria-pressed={searchScope === option.scope}
-                      onClick={() => {
-                        setSearchScope(option.scope);
-                        setSearchSuggestionsOpen(false);
-                        setActiveSearchSuggestionIndex(-1);
-                        setSearchPage(1);
-                        setSelectedBookId(null);
-                      }}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
+                  {SEARCH_SCOPE_OPTIONS.map(
+                    (option) => (
+                      <button
+                        key={
+                          option.scope
+                        }
+                        type="button"
+                        className={
+                          searchScope ===
+                          option.scope
+                            ? "searchScopeButton searchScopeButtonActive"
+                            : "searchScopeButton"
+                        }
+                        aria-pressed={
+                          searchScope ===
+                          option.scope
+                        }
+                        onClick={() => {
+                          setSearchScope(
+                            option.scope
+                          );
+
+                          setSearchSuggestionsOpen(
+                            false
+                          );
+
+                          setActiveSearchSuggestionIndex(
+                            -1
+                          );
+
+                          setSearchPage(
+                            1
+                          );
+
+                          setSelectedBookId(
+                            null
+                          );
+                        }}
+                      >
+                        {
+                          option.label
+                        }
+                      </button>
+                    )
+                  )}
                 </div>
               </div>
 
-              {searchScope === "author" ? (
+              {searchScope ===
+              "author" ? (
                 <div className="searchControlGroup authorNameGroup">
-                  <p className="searchControlLabel">Author name</p>
+                  <p className="searchControlLabel">
+                    Author name
+                  </p>
 
                   <div
                     className="authorNameOptions"
@@ -11023,15 +11822,27 @@ export default function App() {
                     <button
                       type="button"
                       className={
-                        authorNameMode === "last"
+                        authorNameMode ===
+                        "last"
                           ? "authorNameButton authorNameButtonActive"
                           : "authorNameButton"
                       }
-                      aria-pressed={authorNameMode === "last"}
+                      aria-pressed={
+                        authorNameMode ===
+                        "last"
+                      }
                       onClick={() => {
-                        setAuthorNameMode("last");
-                        setSearchPage(1);
-                        setSelectedBookId(null);
+                        setAuthorNameMode(
+                          "last"
+                        );
+
+                        setSearchPage(
+                          1
+                        );
+
+                        setSelectedBookId(
+                          null
+                        );
                       }}
                     >
                       Last name
@@ -11040,15 +11851,27 @@ export default function App() {
                     <button
                       type="button"
                       className={
-                        authorNameMode === "first"
+                        authorNameMode ===
+                        "first"
                           ? "authorNameButton authorNameButtonActive"
                           : "authorNameButton"
                       }
-                      aria-pressed={authorNameMode === "first"}
+                      aria-pressed={
+                        authorNameMode ===
+                        "first"
+                      }
                       onClick={() => {
-                        setAuthorNameMode("first");
-                        setSearchPage(1);
-                        setSelectedBookId(null);
+                        setAuthorNameMode(
+                          "first"
+                        );
+
+                        setSearchPage(
+                          1
+                        );
+
+                        setSelectedBookId(
+                          null
+                        );
                       }}
                     >
                       First name
@@ -11057,9 +11880,12 @@ export default function App() {
                 </div>
               ) : null}
 
-              {searchScope !== "all" ? (
+              {searchScope !==
+              "all" ? (
                 <div className="searchControlGroup sortDirectionGroup">
-                  <p className="searchControlLabel">Sort results</p>
+                  <p className="searchControlLabel">
+                    Sort results
+                  </p>
 
                   <div
                     className="searchSortOptions"
@@ -11069,15 +11895,27 @@ export default function App() {
                     <button
                       type="button"
                       className={
-                        searchSortDirection === "asc"
+                        searchSortDirection ===
+                        "asc"
                           ? "searchSortButton searchSortButtonActive"
                           : "searchSortButton"
                       }
-                      aria-pressed={searchSortDirection === "asc"}
+                      aria-pressed={
+                        searchSortDirection ===
+                        "asc"
+                      }
                       onClick={() => {
-                        setSearchSortDirection("asc");
-                        setSearchPage(1);
-                        setSelectedBookId(null);
+                        setSearchSortDirection(
+                          "asc"
+                        );
+
+                        setSearchPage(
+                          1
+                        );
+
+                        setSelectedBookId(
+                          null
+                        );
                       }}
                     >
                       A–Z
@@ -11086,15 +11924,27 @@ export default function App() {
                     <button
                       type="button"
                       className={
-                        searchSortDirection === "desc"
+                        searchSortDirection ===
+                        "desc"
                           ? "searchSortButton searchSortButtonActive"
                           : "searchSortButton"
                       }
-                      aria-pressed={searchSortDirection === "desc"}
+                      aria-pressed={
+                        searchSortDirection ===
+                        "desc"
+                      }
                       onClick={() => {
-                        setSearchSortDirection("desc");
-                        setSearchPage(1);
-                        setSelectedBookId(null);
+                        setSearchSortDirection(
+                          "desc"
+                        );
+
+                        setSearchPage(
+                          1
+                        );
+
+                        setSelectedBookId(
+                          null
+                        );
                       }}
                     >
                       Z–A
@@ -11104,9 +11954,7 @@ export default function App() {
               ) : null}
             </section>
 
-            {browseAllBooks ||
-            searchQuery.trim().length >
-              0 ? (
+            {showSearchResults ? (
               <div className="searchResults">
                 <div
                   ref={
@@ -11115,21 +11963,28 @@ export default function App() {
                   className="searchResultsHeader"
                 >
                   <h2>
-                    {browseAllBooks
-                      ? "All books"
-                      : "Search results"}
+                    {hasSearchQuery
+                      ? "Search results"
+                      : hasActiveSearchFilters
+                        ? "Filtered books"
+                        : "All books"}
                   </h2>
 
                   <p>
-                    {browseAllBooks
+                    {hasSearchQuery
                       ? searchResultBooks.length ===
                         1
-                        ? "1 book in library"
-                        : `${searchResultBooks.length} books in library`
-                      : searchResultBooks.length ===
-                          1
                         ? "1 book found"
-                        : `${searchResultBooks.length} books found`}
+                        : `${searchResultBooks.length} books found`
+                      : hasActiveSearchFilters
+                        ? searchResultBooks.length ===
+                          1
+                          ? "1 matching book"
+                          : `${searchResultBooks.length} matching books`
+                        : searchResultBooks.length ===
+                            1
+                          ? "1 book in library"
+                          : `${searchResultBooks.length} books in library`}
 
                     {searchResultBooks.length >
                     SEARCH_PAGE_SIZE
@@ -11191,8 +12046,11 @@ export default function App() {
                   </>
                 ) : (
                   <p className="emptySearch">
-                    No books match
-                    that search.
+                    {hasSearchQuery
+                      ? hasActiveSearchFilters
+                        ? "No books match that search and filter combination."
+                        : "No books match that search."
+                      : "No books match those filters."}
                   </p>
                 )}
               </div>

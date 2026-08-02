@@ -598,6 +598,238 @@ select {
   width: min(100%, 760px);
 }
 
+.searchFilterSection {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.searchFilterToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.searchFilterToggleButton,
+.searchFilterClearButton,
+.searchFilterChip {
+  border: 1px solid rgba(76, 48, 30, 0.2);
+  border-radius: 999px;
+  color: var(--brownDark);
+  background: rgba(255, 248, 233, 0.78);
+  box-shadow: 0 5px 14px rgba(76, 48, 30, 0.07);
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.searchFilterToggleButton:hover,
+.searchFilterClearButton:hover,
+.searchFilterChip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(82, 111, 69, 0.42);
+  background: #fffaf0;
+  box-shadow: 0 8px 18px rgba(76, 48, 30, 0.1);
+}
+
+.searchFilterToggleButton:focus-visible,
+.searchFilterClearButton:focus-visible,
+.searchFilterChip:focus-visible {
+  outline: 3px solid rgba(201, 154, 69, 0.28);
+  outline-offset: 2px;
+}
+
+.searchFilterToggleButton {
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+  padding: 0.55rem 0.82rem;
+  font-weight: 800;
+}
+
+.searchFilterToggleButtonActive {
+  color: #fff8e9;
+  border-color: rgba(52, 72, 46, 0.35);
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--greenDark)
+    );
+}
+
+.searchFilterToggleButtonActive:hover {
+  color: #fff8e9;
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--greenDark)
+    );
+}
+
+.searchFilterCount {
+  display: grid;
+  place-items: center;
+  min-width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 999px;
+  padding: 0 0.35rem;
+  color: var(--greenDark);
+  background: #fff8e9;
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.searchFilterChevron {
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.searchFilterClearButton {
+  padding: 0.5rem 0.76rem;
+  color: var(--rose);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.searchFilterChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.searchFilterChip {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  padding: 0.42rem 0.68rem;
+  color: var(--greenDark);
+  border-color: rgba(82, 111, 69, 0.28);
+  background: rgba(169, 183, 141, 0.23);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.searchFilterChip span {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.searchFilterPanel {
+  display: grid;
+  gap: 1rem;
+  border: 1px solid rgba(76, 48, 30, 0.17);
+  border-radius: 18px;
+  padding: 0.85rem;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 250, 240, 0.86),
+      rgba(247, 236, 215, 0.72)
+    ),
+    var(--paper);
+  box-shadow: 0 8px 20px rgba(76, 48, 30, 0.07);
+}
+
+.searchFilterToggleGrid {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(190px, 1fr)
+    );
+  gap: 0.65rem;
+}
+
+.searchFilterBoolean {
+  display: grid;
+  grid-template-columns:
+    auto
+    minmax(0, 1fr);
+  gap: 0.65rem;
+  align-items: flex-start;
+  border: 1px solid rgba(76, 48, 30, 0.14);
+  border-radius: 14px;
+  padding: 0.7rem;
+  background: rgba(255, 248, 233, 0.72);
+  cursor: pointer;
+}
+
+.searchFilterBoolean input {
+  margin-top: 0.18rem;
+  accent-color: var(--green);
+}
+
+.searchFilterBooleanCopy {
+  display: grid;
+  gap: 0.18rem;
+}
+
+.searchFilterBooleanCopy strong {
+  color: var(--greenDark);
+}
+
+.searchFilterBooleanCopy span {
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.searchFilterBooleanDisabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.searchFilterSelectGrid {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(165px, 1fr)
+    );
+  gap: 0.7rem;
+}
+
+.searchFilterField {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.searchFilterField > span {
+  color: var(--greenDark);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.searchFilterField select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(76, 48, 30, 0.22);
+  border-radius: 12px;
+  padding: 0.65rem 0.72rem;
+  color: var(--ink);
+  background: #fffaf0;
+}
+
+.searchFilterField select:focus {
+  outline: 3px solid rgba(201, 154, 69, 0.28);
+  border-color: rgba(82, 111, 69, 0.55);
+}
+
+.searchFilterMatchCount {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
 .searchControlGroup {
   display: grid;
   gap: 0.4rem;
