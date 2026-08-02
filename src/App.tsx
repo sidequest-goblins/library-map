@@ -523,6 +523,29 @@ type SearchFilters = {
   origin: string;
 };
 
+type OpenSearchWithFiltersOptions = {
+  filters?: Partial<SearchFilters>;
+
+  filterMode?:
+    | "replace"
+    | "merge";
+
+  query?: string;
+
+  scope?: SearchScope;
+
+  authorNameMode?:
+    AuthorNameMode;
+
+  sortDirection?:
+    SearchSortDirection;
+
+  singleLetterMatchMode?:
+    SingleLetterMatchMode;
+
+  filtersOpen?: boolean;
+};
+
 const EMPTY_SEARCH_FILTERS:
   SearchFilters = {
     proseOnly: false,
@@ -4611,16 +4634,30 @@ export default function App() {
     key: Key,
     value: SearchFilters[Key]
   ) {
+    const nextFilters = {
+      ...searchFilters,
+      [key]: value,
+    };
+
+    const nextHasActiveFilters =
+      [
+        nextFilters.proseOnly,
+        nextFilters.lgbtqOnly,
+        nextFilters.bipocOnly,
+        nextFilters.genre,
+        nextFilters.subgenre,
+        nextFilters.format,
+        nextFilters.origin,
+      ].some(Boolean);
+
     setSearchFilters(
-      (currentFilters) => ({
-        ...currentFilters,
-        [key]: value,
-      })
+      nextFilters
     );
 
     setBrowseAllBooks(
       searchQuery.trim().length ===
-        0
+        0 &&
+      nextHasActiveFilters
     );
 
     setSearchPage(1);
@@ -4635,8 +4672,7 @@ export default function App() {
     });
 
     setBrowseAllBooks(
-      searchQuery.trim().length ===
-        0
+      false
     );
 
     setSearchPage(1);
@@ -8235,12 +8271,26 @@ export default function App() {
   function scrollToSearchResultsTop() {
     window.requestAnimationFrame(
       () => {
-        searchResultsTopRef
-          .current
-          ?.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
+        window.requestAnimationFrame(
+          () => {
+            const resultsTop =
+              searchResultsTopRef.current;
+
+            if (resultsTop) {
+              resultsTop.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+
+              return;
+            }
+
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          }
+        );
       }
     );
   }
@@ -8271,18 +8321,7 @@ export default function App() {
   }
 
   function showAllLibraryBooks() {
-    setSearchQuery("");
-
-    setBrowseAllBooks(
-      true
-    );
-
-    setSearchPage(1);
-    setSelectedBookId(null);
-    setSearchSuggestionsOpen(false);
-    setActiveSearchSuggestionIndex(-1);
-
-    scrollToSearchResultsTop();
+    openSearchWithFilters();
   }
 
   function renderSearchPaginationControls() {
@@ -8622,6 +8661,82 @@ export default function App() {
     }
 
     action();
+  }
+
+  function openSearchWithFilters({
+    filters = {},
+    filterMode = "replace",
+    query = "",
+    scope = "all",
+    authorNameMode:
+      nextAuthorNameMode =
+        "last",
+    sortDirection =
+      "asc",
+    singleLetterMatchMode:
+      nextSingleLetterMatchMode =
+        "startsWith",
+    filtersOpen = false,
+  }: OpenSearchWithFiltersOptions = {}) {
+    runAfterBookDetailDiscardCheck(
+      () => {
+        const nextFilters =
+          filterMode === "merge"
+            ? {
+                ...searchFilters,
+                ...filters,
+              }
+            : {
+                ...EMPTY_SEARCH_FILTERS,
+                ...filters,
+              };
+
+        setActiveTab(
+          "search"
+        );
+
+        setSearchFilters(
+          nextFilters
+        );
+
+        setSearchFiltersOpen(
+          filtersOpen
+        );
+
+        setSearchQuery(
+          query
+        );
+
+        setSearchScope(
+          scope
+        );
+
+        setAuthorNameMode(
+          nextAuthorNameMode
+        );
+
+        setSearchSortDirection(
+          sortDirection
+        );
+
+        setSingleLetterMatchMode(
+          nextSingleLetterMatchMode
+        );
+
+        setBrowseAllBooks(
+          query.trim().length ===
+            0
+        );
+
+        setSearchPage(1);
+        setSelectedBookId(null);
+        setSearchSuggestionsOpen(false);
+        setActiveSearchSuggestionIndex(-1);
+        setAppMenuOpen(false);
+
+        scrollToSearchResultsTop();
+      }
+    );
   }
 
   function selectAppTab(
