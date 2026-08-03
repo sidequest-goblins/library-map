@@ -14407,34 +14407,6 @@ export default function App() {
           </div>
 
           <section
-            id="stats-representation"
-            className="statsSection"
-          >
-            <div className="statsSectionHeader">
-              <div>
-                <h2>
-                  Representation
-                </h2>
-              </div>
-            </div>
-
-            <div className="statsRepresentationGrid">
-              <StatsCompositionChart
-                title="LGBTQ+ books"
-                description="Books tagged LGBTQ+ compared with the rest of the library."
-                rows={
-                  lgbtqRepresentationRows
-                }
-                featuredKey="lgbtq"
-                unitLabel="books"
-                onRowSelect={
-                  openLgbtqRepresentationDrilldown
-                }
-              />
-            </div>
-          </section>
-
-          <section
             id="stats-reading"
             className="statsSection"
           >
@@ -14599,6 +14571,34 @@ export default function App() {
                   );
                 }
               )}
+            </div>
+          </section>
+
+          <section
+            id="stats-representation"
+            className="statsSection"
+          >
+            <div className="statsSectionHeader">
+              <div>
+                <h2>
+                  Representation
+                </h2>
+              </div>
+            </div>
+
+            <div className="statsRepresentationGrid">
+              <StatsCompositionChart
+                title="LGBTQ+ books"
+                description="Books tagged LGBTQ+ compared with the rest of the library."
+                rows={
+                  lgbtqRepresentationRows
+                }
+                featuredKey="lgbtq"
+                unitLabel="books"
+                onRowSelect={
+                  openLgbtqRepresentationDrilldown
+                }
+              />
             </div>
           </section>
 
