@@ -923,16 +923,51 @@ function compareBooksByTitle(
   a: LibrarySortItem,
   b: LibrarySortItem
 ): number {
-  const seriesComparison =
-    compareBooksWithinSameSeries(
+  const aSeries =
+    getSeriesSortTitle(a);
+
+  const bSeries =
+    getSeriesSortTitle(b);
+
+  const aSortTitle =
+    aSeries ||
+    normalizeTitleForAlphabeticalSearch(
+      a.title
+    );
+
+  const bSortTitle =
+    bSeries ||
+    normalizeTitleForAlphabeticalSearch(
+      b.title
+    );
+
+  const titleComparison =
+    compareSearchText(
+      aSortTitle,
+      bSortTitle
+    );
+
+  if (titleComparison !== 0) {
+    return titleComparison;
+  }
+
+  if (
+    aSeries &&
+    bSeries &&
+    aSeries === bSeries
+  ) {
+    return compareBooksInsideSeries(
       a,
       b
     );
+  }
 
-  if (
-    seriesComparison !== null
-  ) {
-    return seriesComparison;
+  if (aSeries && !bSeries) {
+    return -1;
+  }
+
+  if (!aSeries && bSeries) {
+    return 1;
   }
 
   return compareSearchText(
