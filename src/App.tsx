@@ -1381,35 +1381,10 @@ function getStatsBreakdownValue(
       return `${decade}s`;
     }
 
-    case "pageRange": {
-      const totalPages =
-        Number(book.totalPages);
-
-      if (
-        !Number.isFinite(totalPages) ||
-        totalPages <= 0
-      ) {
-        return "Unknown";
-      }
-
-      if (totalPages < 200) {
-        return "Under 200 pages";
-      }
-
-      if (totalPages < 400) {
-        return "200–399 pages";
-      }
-
-      if (totalPages < 600) {
-        return "400–599 pages";
-      }
-
-      if (totalPages < 800) {
-        return "600–799 pages";
-      }
-
-      return "800+ pages";
-    }
+    case "pageRange":
+      return PAGE_LENGTH_LABELS[
+        getBookPageLengthBucket(book)
+      ];
   }
 }
 
@@ -6766,6 +6741,31 @@ export default function App() {
     });
   }
 
+  function openStatsBookLengthBreakdown() {
+    setStatsBreakdown(
+      "pageRange"
+    );
+
+    setStatsPage(1);
+
+    window.requestAnimationFrame(
+      () => {
+        window.requestAnimationFrame(
+          () => {
+            document
+              .getElementById(
+                "stats-charts"
+              )
+              ?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+          }
+        );
+      }
+    );
+  }
+
   const statsOverviewCards: Array<{
     label: string;
     value: string;
@@ -6834,6 +6834,27 @@ export default function App() {
           .toLocaleString(),
 
       meta: `${statsSummary.pageCountBooks.toLocaleString()} books counted`,
+
+      ariaLabel:
+        "View books with known page counts in Search",
+
+      onClick: () => {
+        openStatsOverviewDrilldown({
+          label:
+            "Known page count",
+
+          matchesBook: ({
+            book,
+          }) =>
+            getBookPageLengthBucket(
+              book
+            ) !== "unknown",
+
+          filters: {
+            pageLength: "known",
+          },
+        });
+      },
     },
     {
       label: "Average length",
@@ -6844,7 +6865,20 @@ export default function App() {
           ? `${statsSummary.averageBookPages.toLocaleString()} pages`
           : "—",
 
-      meta: "Books with page data",
+      meta:
+        "Explore the length distribution",
+
+      ariaLabel:
+        statsSummary.pageCountBooks >
+        0
+          ? "Show the book length breakdown"
+          : undefined,
+
+      onClick:
+        statsSummary.pageCountBooks >
+        0
+          ? openStatsBookLengthBreakdown
+          : undefined,
     },
     {
       label: "Household reach",
