@@ -1047,6 +1047,30 @@ function StatsCompositionChart({
                 isAnimationActive={
                   false
                 }
+
+                style={
+                  onRowSelect
+                    ? {
+                        cursor: "pointer",
+                      }
+                    : undefined
+                }
+                onClick={(_, index) => {
+                  const clickedRow =
+                    rows[index];
+
+                  if (
+                    !clickedRow ||
+                    clickedRow.count <= 0 ||
+                    !onRowSelect
+                  ) {
+                    return;
+                  }
+
+                  onRowSelect(
+                    clickedRow
+                  );
+                }}
               />
 
               <Tooltip
@@ -1089,7 +1113,8 @@ function StatsCompositionChart({
             (row) => {
               const canDrillDown =
                 Boolean(
-                  onRowSelect
+                  onRowSelect &&
+                  row.count > 0
                 );
 
               return (
@@ -6425,6 +6450,9 @@ export default function App() {
                 legendLabel:
                   groupedOtherLegendLabel,
 
+                labels:
+                  groupedCategoryLabels,
+
                 count:
                   groupedOtherCount,
 
@@ -6515,11 +6543,20 @@ export default function App() {
     row: {
       label: string;
       count: number;
+      labels?: string[];
     }
   ) {
-    const normalizedRowLabel =
-      normalizeInlineSearchText(
-        row.label
+    const normalizedRowLabels =
+      new Set(
+        (
+          row.labels ??
+          [row.label]
+        ).map(
+          (label) =>
+            normalizeInlineSearchText(
+              label
+            )
+        )
       );
 
     const matchingBookIds =
@@ -6541,10 +6578,11 @@ export default function App() {
           const isMatch =
             bookLabels.some(
               (label) =>
-                normalizeInlineSearchText(
-                  label
-                ) ===
-                normalizedRowLabel
+                normalizedRowLabels.has(
+                  normalizeInlineSearchText(
+                    label
+                  )
+                )
             );
 
           return isMatch
@@ -6574,8 +6612,12 @@ export default function App() {
     }
 
     if (
+      (
+        !row.labels ||
+        row.labels.length === 1
+      ) &&
       row.label !==
-      "Unknown"
+        "Unknown"
     ) {
       switch (
         statsBreakdown
@@ -15213,6 +15255,21 @@ export default function App() {
                             isAnimationActive={
                               false
                             }
+                            style={{
+                              cursor: "pointer",
+                            }}
+                            onClick={(_, index) => {
+                              const clickedRow =
+                                statsPieRows[index];
+
+                              if (!clickedRow) {
+                                return;
+                              }
+
+                              openStatsBreakdownDrilldown(
+                                clickedRow
+                              );
+                            }}
                           />
 
                           <Tooltip
@@ -15258,7 +15315,25 @@ export default function App() {
                             key={
                               row.pieKey
                             }
-                            className="statsPieLegendItem"
+                            className="statsPieLegendItem statsDrilldownTarget"
+                            role="button"
+                            tabIndex={0}
+                            aria-label={`View ${row.legendLabel} in Search`}
+                            onClick={() => {
+                              openStatsBreakdownDrilldown(
+                                row
+                              );
+                            }}
+                            onKeyDown={(event) => {
+                              handleStatsDrilldownKeyDown(
+                                event,
+                                () => {
+                                  openStatsBreakdownDrilldown(
+                                    row
+                                  );
+                                }
+                              );
+                            }}
                           >
                             <span
                               className="statsPieSwatch"
