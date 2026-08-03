@@ -667,11 +667,19 @@ type SearchFilters = {
   pageLength: SearchPageLength;
 };
 
+type SearchDrilldownIncludedGroup = {
+  label: string;
+  bookIds: string[];
+};
+
 type SearchDrilldown = {
   label: string;
   bookIds: string[];
 
-  includedLabels?: string[];
+  includedGroups?:
+    SearchDrilldownIncludedGroup[];
+
+  excludedIncludedLabels?: string[];
 };
 
 type OpenSearchWithFiltersOptions = {
@@ -4892,15 +4900,59 @@ export default function App() {
     activeSearchFilterCount > 0;
 
   const searchDrilldownBookIds =
-    useMemo(
-      () =>
+    useMemo(() => {
+      if (!searchDrilldown) {
+        return null;
+      }
+
+      if (
+        !searchDrilldown
+          .includedGroups?.length
+      ) {
+        return new Set(
+          searchDrilldown.bookIds
+        );
+      }
+
+      const excludedLabels =
+        new Set(
+          searchDrilldown
+            .excludedIncludedLabels ??
+            []
+        );
+
+      return new Set(
         searchDrilldown
-          ? new Set(
-              searchDrilldown.bookIds
+          .includedGroups
+          .flatMap((group) =>
+            excludedLabels.has(
+              group.label
             )
-          : null,
-      [searchDrilldown]
+              ? []
+              : group.bookIds
+          )
+      );
+    }, [searchDrilldown]);
+
+  const searchDrilldownIncludedGroups =
+    searchDrilldown
+      ?.includedGroups ??
+    [];
+
+  const searchDrilldownExcludedLabels =
+    new Set(
+      searchDrilldown
+        ?.excludedIncludedLabels ??
+        []
     );
+
+  const searchDrilldownIncludedGroupCount =
+    searchDrilldownIncludedGroups.filter(
+      (group) =>
+        !searchDrilldownExcludedLabels.has(
+          group.label
+        )
+    ).length;
 
   const searchFilteredBooks =
     useMemo(
@@ -5209,6 +5261,80 @@ export default function App() {
     setSelectedBookId(null);
     setSearchSuggestionsOpen(false);
     setActiveSearchSuggestionIndex(-1);
+  }
+
+  function toggleSearchDrilldownIncludedGroup(
+    label: string
+  ) {
+    setSearchDrilldown(
+      (currentDrilldown) => {
+        if (
+          !currentDrilldown
+            ?.includedGroups?.length
+        ) {
+          return currentDrilldown;
+        }
+
+        const excludedLabels =
+          new Set(
+            currentDrilldown
+              .excludedIncludedLabels ??
+              []
+          );
+
+        if (
+          excludedLabels.has(label)
+        ) {
+          excludedLabels.delete(label);
+        } else {
+          excludedLabels.add(label);
+        }
+
+        return {
+          ...currentDrilldown,
+
+          excludedIncludedLabels:
+            Array.from(
+              excludedLabels
+            ),
+        };
+      }
+    );
+
+    setSearchPage(1);
+    setSelectedBookId(null);
+  }
+
+  function setAllSearchDrilldownGroupsIncluded(
+    shouldIncludeAll: boolean
+  ) {
+    setSearchDrilldown(
+      (currentDrilldown) => {
+        if (
+          !currentDrilldown
+            ?.includedGroups?.length
+        ) {
+          return currentDrilldown;
+        }
+
+        return {
+          ...currentDrilldown,
+
+          excludedIncludedLabels:
+            shouldIncludeAll
+              ? []
+              : currentDrilldown
+                  .includedGroups
+                  .map(
+                    (group) =>
+                      group.label
+                  ),
+        };
+      }
+    );
+
+    setSearchPage(1);
+    setSelectedBookId(null);
   }
 
   function clearSearchDrilldown() {
@@ -6548,50 +6674,75 @@ export default function App() {
       labels?: string[];
     }
   ) {
-    const normalizedRowLabels =
-      new Set(
-        (
-          row.labels ??
-          [row.label]
-        ).map(
-          (label) =>
-            normalizeInlineSearchText(
-              label
-            )
+    function getMatchingBookIdsForLabels(
+      labels: string[]
+    ): string[] {
+      const normalizedLabels =
+        new Set(
+          labels.map(
+            (label) =>
+              normalizeInlineSearchText(
+                label
+              )
+          )
+        );
+
+      return Array.from(
+        new Set(
+          statsChartBookFacts.flatMap(
+            ({ book }) => {
+              const bookLabels =
+                statsBreakdown ===
+                "author"
+                  ? getStatsAuthorNames(
+                      book
+                    )
+                  : [
+                      getStatsBreakdownValue(
+                        book,
+                        statsBreakdown
+                      ),
+                    ];
+
+              const isMatch =
+                bookLabels.some(
+                  (label) =>
+                    normalizedLabels.has(
+                      normalizeInlineSearchText(
+                        label
+                      )
+                    )
+                );
+
+              return isMatch
+                ? [book.bookId]
+                : [];
+            }
+          )
         )
       );
+    }
 
     const matchingBookIds =
-      statsChartBookFacts.flatMap(
-        ({ book }) => {
-          const bookLabels =
-            statsBreakdown ===
-            "author"
-              ? getStatsAuthorNames(
-                  book
-                )
-              : [
-                  getStatsBreakdownValue(
-                    book,
-                    statsBreakdown
-                  ),
-                ];
-
-          const isMatch =
-            bookLabels.some(
-              (label) =>
-                normalizedRowLabels.has(
-                  normalizeInlineSearchText(
-                    label
-                  )
-                )
-            );
-
-          return isMatch
-            ? [book.bookId]
-            : [];
-        }
+      getMatchingBookIdsForLabels(
+        row.labels ??
+          [row.label]
       );
+
+    const includedGroups =
+      row.labels &&
+      row.labels.length > 1
+        ? row.labels.map(
+            (label) => ({
+              label,
+
+              bookIds:
+                getMatchingBookIdsForLabels(
+                  [label]
+                ),
+            })
+          )
+        : undefined;
 
     if (
       matchingBookIds.length ===
@@ -6680,11 +6831,9 @@ export default function App() {
         bookIds:
           matchingBookIds,
 
-        includedLabels:
-          row.labels &&
-          row.labels.length > 1
-            ? row.labels
-            : undefined,
+        includedGroups,
+
+        excludedIncludedLabels: [],
       },
     });
   }
@@ -12877,35 +13026,97 @@ export default function App() {
                     id="library-search-filters"
                     className="searchFilterPanel"
                   >
-                    {searchDrilldown?.includedLabels &&
-                    searchDrilldown.includedLabels.length >
-                      0 ? (
+                    {searchDrilldownIncludedGroups.length >
+                    0 ? (
                       <details className="searchDrilldownDetails">
                         <summary>
                           Included in “Other” (
                           {
-                            searchDrilldown
-                              .includedLabels
-                              .length
+                            searchDrilldownIncludedGroupCount
+                          }{" "}
+                          of{" "}
+                          {
+                            searchDrilldownIncludedGroups.length
                           }
                           )
                         </summary>
 
                         <p>
-                          These categories were combined
-                          into the grouped Stats slice.
+                          Tap a category to include or
+                          exclude it from these results.
                         </p>
 
+                        <div className="searchDrilldownDetailsActions">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setAllSearchDrilldownGroupsIncluded(
+                                true
+                              );
+                            }}
+                            disabled={
+                              searchDrilldownIncludedGroupCount ===
+                              searchDrilldownIncludedGroups.length
+                            }
+                          >
+                            Include all
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setAllSearchDrilldownGroupsIncluded(
+                                false
+                              );
+                            }}
+                            disabled={
+                              searchDrilldownIncludedGroupCount ===
+                              0
+                            }
+                          >
+                            Exclude all
+                          </button>
+                        </div>
+
                         <div className="searchDrilldownIncludedLabels">
-                          {searchDrilldown.includedLabels.map(
-                            (label) => (
-                              <span
-                                key={label}
-                                className="searchDrilldownIncludedLabel"
-                              >
-                                {label}
-                              </span>
-                            )
+                          {searchDrilldownIncludedGroups.map(
+                            (group) => {
+                              const isIncluded =
+                                !searchDrilldownExcludedLabels.has(
+                                  group.label
+                                );
+
+                              return (
+                                <button
+                                  key={group.label}
+                                  type="button"
+                                  className="searchDrilldownIncludedLabel"
+                                  aria-pressed={
+                                    isIncluded
+                                  }
+                                  aria-label={`${
+                                    isIncluded
+                                      ? "Exclude"
+                                      : "Include"
+                                  } ${group.label}`}
+                                  onClick={() => {
+                                    toggleSearchDrilldownIncludedGroup(
+                                      group.label
+                                    );
+                                  }}
+                                >
+                                  <span aria-hidden="true">
+                                    {isIncluded
+                                      ? "✓"
+                                      : "+"}
+                                  </span>
+
+                                  <span>
+                                    {group.label}
+                                  </span>
+                                </button>
+                              );
+                            }
                           )}
                         </div>
                       </details>
