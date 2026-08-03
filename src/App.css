@@ -3402,6 +3402,51 @@ select {
     rgba(201, 154, 69, 0.18);
 }
 
+.searchDrilldownDetails {
+  border:
+    1px solid
+    rgba(201, 154, 69, 0.38);
+  border-radius: 14px;
+  padding: 0.7rem 0.8rem;
+  background:
+    rgba(201, 154, 69, 0.1);
+}
+
+.searchDrilldownDetails summary {
+  color: var(--brownDark);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.searchDrilldownDetails p {
+  margin:
+    0.55rem 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.searchDrilldownIncludedLabels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  max-height: 13rem;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+}
+
+.searchDrilldownIncludedLabel {
+  border:
+    1px solid
+    rgba(76, 48, 30, 0.16);
+  border-radius: 999px;
+  padding: 0.3rem 0.55rem;
+  background:
+    rgba(255, 248, 233, 0.82);
+  color: var(--brownDark);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
 .statsSectionHeader {
   display: flex;
   flex-wrap: wrap;

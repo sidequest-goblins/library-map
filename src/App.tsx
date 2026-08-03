@@ -670,6 +670,8 @@ type SearchFilters = {
 type SearchDrilldown = {
   label: string;
   bookIds: string[];
+
+  includedLabels?: string[];
 };
 
 type OpenSearchWithFiltersOptions = {
@@ -6669,9 +6671,7 @@ export default function App() {
       drilldown: {
         label: [
           activeStatsDataset.label,
-
           `${activeStatsBreakdown.label}: ${row.label}`,
-
           formatStatsBreakdownCount(
             row.count
           ),
@@ -6679,6 +6679,12 @@ export default function App() {
 
         bookIds:
           matchingBookIds,
+
+        includedLabels:
+          row.labels &&
+          row.labels.length > 1
+            ? row.labels
+            : undefined,
       },
     });
   }
@@ -12871,6 +12877,39 @@ export default function App() {
                     id="library-search-filters"
                     className="searchFilterPanel"
                   >
+                    {searchDrilldown?.includedLabels &&
+                    searchDrilldown.includedLabels.length >
+                      0 ? (
+                      <details className="searchDrilldownDetails">
+                        <summary>
+                          Included in “Other” (
+                          {
+                            searchDrilldown
+                              .includedLabels
+                              .length
+                          }
+                          )
+                        </summary>
+
+                        <p>
+                          These categories were combined
+                          into the grouped Stats slice.
+                        </p>
+
+                        <div className="searchDrilldownIncludedLabels">
+                          {searchDrilldown.includedLabels.map(
+                            (label) => (
+                              <span
+                                key={label}
+                                className="searchDrilldownIncludedLabel"
+                              >
+                                {label}
+                              </span>
+                            )
+                          )}
+                        </div>
+                      </details>
+                    ) : null}
                     <div className="searchFilterToggleGrid">
                       <label className="searchFilterBoolean">
                         <input
@@ -14300,24 +14339,6 @@ export default function App() {
                 className="statsJumpButton"
                 onClick={() => {
                   scrollToStatsSection(
-                    "stats-representation"
-                  );
-                }}
-              >
-                <span aria-hidden="true">
-                  🌈
-                </span>
-
-                <span>
-                  Representation
-                </span>
-              </button>
-
-              <button
-                type="button"
-                className="statsJumpButton"
-                onClick={() => {
-                  scrollToStatsSection(
                     "stats-data-health"
                   );
                 }}
@@ -14328,6 +14349,24 @@ export default function App() {
 
                 <span>
                   Completion
+                </span>
+              </button>
+
+              <button
+                type="button"
+                className="statsJumpButton"
+                onClick={() => {
+                  scrollToStatsSection(
+                    "stats-representation"
+                  );
+                }}
+              >
+                <span aria-hidden="true">
+                  🌈
+                </span>
+
+                <span>
+                  Representation
                 </span>
               </button>
 
