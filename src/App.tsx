@@ -6599,6 +6599,25 @@ export default function App() {
           filters.origin =
             row.label;
           break;
+
+        case "pageRange": {
+          const pageLengthOption =
+            SEARCH_PAGE_LENGTH_OPTIONS.find(
+              (option) =>
+                option.value !== "" &&
+                option.value !==
+                  "known" &&
+                option.label ===
+                  row.label
+            );
+
+          if (pageLengthOption) {
+            filters.pageLength =
+              pageLengthOption.value;
+          }
+
+          break;
+        }
       }
     }
 
