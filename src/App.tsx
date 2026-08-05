@@ -205,6 +205,10 @@ type StatsCompositionRow = {
   fill: string;
 };
 
+type StatsRatingReader =
+  | "cj"
+  | "jc";
+
 const STATS_DATASET_OPTIONS: Array<{
   value: StatsDataset;
   label: string;
@@ -1385,6 +1389,27 @@ function BookRatingControl({
       ) : null}
     </article>
   );
+}
+
+const STATS_RATING_VALUES = [
+  5,
+  4.5,
+  4,
+  3.5,
+  3,
+  2.5,
+  2,
+  1.5,
+  1,
+  0.5,
+] as const;
+
+function formatRatingLabel(
+  rating: number
+): string {
+  return Number.isInteger(rating)
+    ? `${rating}`
+    : rating.toFixed(1);
 }
 
 function getStatsBreakdownValue(
@@ -3556,6 +3581,38 @@ export default function App() {
     statsDebugAuthorKey,
     setStatsDebugAuthorKey,
   ] = useState("");
+
+  const [
+    statsRatingReader,
+    setStatsRatingReader,
+  ] = useState<StatsRatingReader>(
+    () => {
+      try {
+        const saved =
+          window.localStorage.getItem(
+            "statsRatingReader"
+          );
+
+        return saved === "jc"
+          ? "jc"
+          : "cj";
+      } catch {
+        return "cj";
+      }
+    }
+  );
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(
+        "statsRatingReader",
+        statsRatingReader
+      );
+    } catch {
+      // The ratings view still works if
+      // browser storage is unavailable.
+    }
+  }, [statsRatingReader]);
 
   const [searchQuery, setSearchQuery] =
     useState("");
@@ -5825,6 +5882,206 @@ export default function App() {
       ]
     );
 
+  const statsRatingRows =
+    useMemo(() => {
+      const readerId =
+        statsRatingReader;
+
+      const readerName =
+        readerId === "cj"
+          ? "CJ"
+          : "Jade";
+
+      const ratedRows =
+        STATS_RATING_VALUES.map(
+          (rating) => {
+            const matchingBookIds =
+              statsBookFacts
+                .filter(
+                  ({
+                    book,
+                    cjRead,
+                    jadeRead,
+                  }) => {
+                    const isRead =
+                      readerId === "cj"
+                        ? cjRead
+                        : jadeRead;
+
+                    if (!isRead) {
+                      return false;
+                    }
+
+                    const catalogKey =
+                      book.catalogKey?.trim() ??
+                      "";
+
+                    if (!catalogKey) {
+                      return false;
+                    }
+
+                    const state =
+                      libraryStateByKey.get(
+                        makeLibraryStateKey(
+                          readerId,
+                          catalogKey
+                        )
+                      );
+
+                    return (
+                      state?.rating ===
+                      rating
+                    );
+                  }
+                )
+                .map(
+                  ({ book }) =>
+                    book.bookId
+                );
+
+            return {
+              key:
+                `rating-${rating}`,
+
+              label:
+                `★ ${formatRatingLabel(
+                  rating
+                )}`,
+
+              description:
+                `${readerName} rated ${formatRatingLabel(
+                  rating
+                )} out of 5`,
+
+              rating,
+
+              bookIds:
+                matchingBookIds,
+
+              count:
+                matchingBookIds.length,
+            };
+          }
+        );
+
+      const unratedBookIds =
+        statsBookFacts
+          .filter(
+            ({
+              book,
+              cjRead,
+              jadeRead,
+            }) => {
+              const isRead =
+                readerId === "cj"
+                  ? cjRead
+                  : jadeRead;
+
+              if (!isRead) {
+                return false;
+              }
+
+              const catalogKey =
+                book.catalogKey?.trim() ??
+                "";
+
+              if (!catalogKey) {
+                return true;
+              }
+
+              const state =
+                libraryStateByKey.get(
+                  makeLibraryStateKey(
+                    readerId,
+                    catalogKey
+                  )
+                );
+
+              return (
+                state?.rating ===
+                  null ||
+                state?.rating ===
+                  undefined
+              );
+            }
+          )
+          .map(
+            ({ book }) =>
+              book.bookId
+          );
+
+      return [
+        ...ratedRows,
+
+        {
+          key: "unrated",
+          label: "Unrated",
+          description:
+            `${readerName} has read but not rated`,
+
+          rating: null,
+
+          bookIds:
+            unratedBookIds,
+
+          count:
+            unratedBookIds.length,
+        },
+      ];
+    }, [
+      statsBookFacts,
+      statsRatingReader,
+      libraryStateByKey,
+    ]);
+
+  const statsRatedBookCount =
+    statsRatingRows
+      .filter(
+        (row) =>
+          row.rating !== null
+      )
+      .reduce(
+        (
+          total,
+          row
+        ) =>
+          total + row.count,
+        0
+      );
+
+  const statsRatingAverage =
+    statsRatedBookCount > 0
+      ? (
+          statsRatingRows
+            .filter(
+              (row) =>
+                row.rating !== null
+            )
+            .reduce(
+              (
+                total,
+                row
+              ) =>
+                total +
+                (
+                  row.rating ??
+                  0
+                ) *
+                  row.count,
+              0
+            ) /
+          statsRatedBookCount
+        ).toFixed(2)
+      : null;
+
+  const statsRatingMaxCount =
+    Math.max(
+      0,
+      ...statsRatingRows.map(
+        (row) => row.count
+      )
+    );
+
   const statsSummary =
     useMemo(() => {
       let totalPages = 0;
@@ -7035,6 +7292,30 @@ export default function App() {
 
         bookIds:
           matchingBookIds,
+      },
+    });
+  }
+
+  function openStatsRatingDrilldown(
+    row: {
+      label: string;
+      description: string;
+      bookIds: string[];
+      count: number;
+    }
+  ) {
+    const bookCountLabel =
+      row.count === 1
+        ? "1 book"
+        : `${row.count.toLocaleString()} books`;
+
+    openSearchWithFilters({
+      drilldown: {
+        label:
+          `Ratings · ${row.description} · ${bookCountLabel}`,
+
+        bookIds:
+          row.bookIds,
       },
     });
   }
@@ -14833,6 +15114,195 @@ export default function App() {
                 Sign in to CJade to
                 load live current
                 reads.
+              </p>
+            )}
+          </section>
+
+          <section
+            id="stats-ratings"
+            className="statsSection"
+          >
+            <div className="statsSectionHeader">
+              <div>
+                <h2>
+                  Ratings
+                </h2>
+
+                <p>
+                  {statsRatingReader === "cj"
+                    ? "CJ"
+                    : "Jade"}
+                  's rating distribution
+                </p>
+              </div>
+            </div>
+
+            <div className="statsDisplayControl">
+              <span className="statsDisplayLabel">
+                Reader
+              </span>
+
+              <div
+                className="statsDisplayOptions"
+                role="group"
+                aria-label="Choose whose ratings to view"
+              >
+                <button
+                  type="button"
+                  className={
+                    statsRatingReader === "cj"
+                      ? "statsDisplayButton statsDisplayButtonActive"
+                      : "statsDisplayButton"
+                  }
+                  aria-pressed={
+                    statsRatingReader === "cj"
+                  }
+                  onClick={() => {
+                    setStatsRatingReader(
+                      "cj"
+                    );
+                  }}
+                >
+                  CJ
+                </button>
+
+                <button
+                  type="button"
+                  className={
+                    statsRatingReader === "jc"
+                      ? "statsDisplayButton statsDisplayButtonActive"
+                      : "statsDisplayButton"
+                  }
+                  aria-pressed={
+                    statsRatingReader === "jc"
+                  }
+                  onClick={() => {
+                    setStatsRatingReader(
+                      "jc"
+                    );
+                  }}
+                >
+                  Jade
+                </button>
+              </div>
+            </div>
+
+            {sharedLibraryStateIsAuthoritative ? (
+              <>
+                <div className="statsRatingSummary">
+                  <article className="statsMetricCard">
+                    <span className="statsMetricLabel">
+                      Average rating
+                    </span>
+
+                    <AutoFitStatValue
+                      value={
+                        statsRatingAverage ===
+                        null
+                          ? "—"
+                          : `★ ${statsRatingAverage}`
+                      }
+                    />
+
+                    <span className="statsMetricMeta">
+                      Based on{" "}
+                      {statsRatedBookCount.toLocaleString()}{" "}
+                      rated{" "}
+                      {statsRatedBookCount === 1
+                        ? "book"
+                        : "books"}
+                    </span>
+                  </article>
+
+                  <article className="statsMetricCard">
+                    <span className="statsMetricLabel">
+                      Rated books
+                    </span>
+
+                    <AutoFitStatValue
+                      value={
+                        statsRatedBookCount.toLocaleString()
+                      }
+                    />
+
+                    <span className="statsMetricMeta">
+                      For{" "}
+                      {statsRatingReader === "cj"
+                        ? "CJ"
+                        : "Jade"}
+                    </span>
+                  </article>
+                </div>
+
+                <div className="statsBreakdownList">
+                  {statsRatingRows.map(
+                    (row) => {
+                      const relativeWidth =
+                        statsRatingMaxCount > 0
+                          ? Math.round(
+                              (row.count /
+                                statsRatingMaxCount) *
+                                100
+                            )
+                          : 0;
+
+                      return (
+                        <article
+                          key={row.key}
+                          className="statsBreakdownRow statsDrilldownTarget"
+                          role="button"
+                          tabIndex={0}
+                          aria-label={`View ${row.description} books in Search`}
+                          onClick={() => {
+                            openStatsRatingDrilldown(
+                              row
+                            );
+                          }}
+                          onKeyDown={(event) => {
+                            handleStatsDrilldownKeyDown(
+                              event,
+                              () => {
+                                openStatsRatingDrilldown(
+                                  row
+                                );
+                              }
+                            );
+                          }}
+                        >
+                          <div className="statsBreakdownHeading">
+                            <strong>
+                              {row.label}
+                            </strong>
+
+                            <span>
+                              {row.count.toLocaleString()}{" "}
+                              {row.count === 1
+                                ? "book"
+                                : "books"}
+                            </span>
+                          </div>
+
+                          <div
+                            className="statsBreakdownTrack"
+                            aria-hidden="true"
+                          >
+                            <span
+                              className="statsBreakdownFill"
+                              style={{
+                                width: `${relativeWidth}%`,
+                              }}
+                            />
+                          </div>
+                        </article>
+                      );
+                    }
+                  )}
+                </div>
+              </>
+            ) : (
+              <p className="statsNotice">
+                Sign in to CJade to load
+                household ratings.
               </p>
             )}
           </section>
