@@ -1690,6 +1690,11 @@ select {
   align-items: center;
 }
 
+.bookRatingStarSlot {
+  display: inline-flex;
+  align-items: center;
+}
+
 .bookRatingStar {
   display: grid;
   place-items: center;
@@ -1710,6 +1715,22 @@ select {
     background 120ms ease;
 }
 
+.bookRatingStarActive {
+  color: var(--gold);
+  text-shadow:
+    0 2px 5px
+    rgba(122, 77, 43, 0.18);
+}
+
+.bookRatingHalfMarker {
+  margin:
+    0 -0.08rem;
+  color: var(--gold);
+  font-size: 0.86rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
 .bookRatingStar:hover:not(:disabled) {
   transform:
     translateY(-2px)
@@ -1724,13 +1745,6 @@ select {
     3px solid
     rgba(201, 154, 69, 0.3);
   outline-offset: 1px;
-}
-
-.bookRatingStarActive {
-  color: var(--gold);
-  text-shadow:
-    0 2px 5px
-    rgba(122, 77, 43, 0.18);
 }
 
 .bookRatingStar:disabled {

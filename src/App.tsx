@@ -1238,6 +1238,23 @@ function BookRatingControl({
     isSaving ||
     !isRead;
 
+  function getNextRating(
+    starValue: number
+  ) {
+    if (value === starValue) {
+      return starValue - 0.5;
+    }
+
+    if (
+      value ===
+      starValue - 0.5
+    ) {
+      return starValue;
+    }
+
+    return starValue;
+  }
+
   return (
     <article className="bookRatingCard">
       <div className="bookRatingHeader">
@@ -1259,35 +1276,72 @@ function BookRatingControl({
       >
         {BOOK_RATING_VALUES.map(
           (starValue) => {
-            const isFilled =
+            const isFull =
               value !== null &&
-              starValue <= value;
+              value >= starValue;
+
+            const isHalf =
+              value !== null &&
+              value ===
+                starValue - 0.5;
+
+            const nextRating =
+              getNextRating(
+                starValue
+              );
+
+            const buttonLabel =
+              value === starValue
+                ? `Change ${readerName}'s rating to ${nextRating} out of 5`
+                : isHalf
+                  ? `Change ${readerName}'s rating to ${starValue} out of 5`
+                  : `Rate ${starValue} out of 5`;
 
             return (
-              <button
+              <span
                 key={starValue}
-                type="button"
-                className={
-                  isFilled
-                    ? "bookRatingStar bookRatingStarActive"
-                    : "bookRatingStar"
-                }
-                aria-label={`Rate ${starValue} out of 5`}
-                aria-pressed={
-                  value ===
-                  starValue
-                }
-                disabled={
-                  controlsDisabled
-                }
-                onClick={() => {
-                  onChange(
-                    starValue
-                  );
-                }}
+                className="bookRatingStarSlot"
               >
-                ★
-              </button>
+                <button
+                  type="button"
+                  className={
+                    isFull
+                      ? "bookRatingStar bookRatingStarActive"
+                      : "bookRatingStar"
+                  }
+                  aria-label={
+                    buttonLabel
+                  }
+                  aria-pressed={
+                    value ===
+                      starValue ||
+                    isHalf
+                  }
+                  disabled={
+                    controlsDisabled
+                  }
+                  onClick={() => {
+                    onChange(
+                      nextRating
+                    );
+                  }}
+                >
+                  <span
+                    aria-hidden="true"
+                  >
+                    ★
+                  </span>
+                </button>
+
+                {isHalf ? (
+                  <span
+                    className="bookRatingHalfMarker"
+                    aria-hidden="true"
+                  >
+                    ½
+                  </span>
+                ) : null}
+              </span>
             );
           }
         )}
@@ -1299,7 +1353,7 @@ function BookRatingControl({
             ? "Mark this book read before rating it."
             : isSaving
               ? "Saving rating…"
-              : "Tap a star to save your rating."}
+              : "Tap the last filled star again to switch between whole and half stars."}
         </span>
 
         {value !== null &&
