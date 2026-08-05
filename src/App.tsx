@@ -789,6 +789,10 @@ type StatsReturnPosition = {
   windowScrollY: number;
 };
 
+type SearchReturnPosition = {
+  windowScrollY: number;
+};
+
 type BookDetailDisclosureKey =
   | "readingActivity"
   | "challengeProgress"
@@ -3744,6 +3748,11 @@ export default function App() {
   const appMenuRef =
     useRef<HTMLDivElement | null>(null);
 
+  const searchReturnPositionRef =
+    useRef<SearchReturnPosition | null>(
+      null
+    );
+
   const bookMetadataByBookId =
     useMemo(
       () =>
@@ -4138,6 +4147,46 @@ export default function App() {
     };
 
     setSelectedBookId(bookId);
+  }
+
+  function openSearchBookDetail(
+    bookId: string
+  ) {
+    searchReturnPositionRef.current = {
+      windowScrollY:
+        window.scrollY,
+    };
+
+    setSelectedBookId(
+      bookId
+    );
+  }
+
+  function backToSearchFromDetail() {
+    const returnPosition =
+      searchReturnPositionRef.current;
+
+    setSelectedBookId(
+      null
+    );
+
+    window.requestAnimationFrame(
+      () => {
+        window.requestAnimationFrame(
+          () => {
+            window.scrollTo({
+              top:
+                returnPosition
+                  ?.windowScrollY ?? 0,
+              behavior: "auto",
+            });
+
+            searchReturnPositionRef.current =
+              null;
+          }
+        );
+      }
+    );
   }
 
   function backToUpdateFromDetail() {
@@ -12950,7 +12999,11 @@ export default function App() {
         </section>
       ) : activeTab === "search" ? (
         selectedBook ? (
-          renderBookDetail("Back to results", () => setSelectedBookId(null))
+          renderBookDetail(
+            "Back to results",
+            backToSearchFromDetail,
+            searchResultBooks
+          )
         ) : (
           <section className="searchPanel">
             <div
@@ -14228,11 +14281,11 @@ export default function App() {
                               }
                               type="button"
                               className="searchResultCard searchResultButton"
-                              onClick={() =>
-                                setSelectedBookId(
+                              onClick={() => {
+                                openSearchBookDetail(
                                   book.bookId
-                                )
-                              }
+                                );
+                              }}
                             >
                               <h3>
                                 {book.title}
