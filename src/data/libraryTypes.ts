@@ -21,6 +21,7 @@ export type Book = {
   format?: string;
   jc?: boolean;
   cj?: boolean;
+  bipoc?: boolean | null;
   lgbtq?: boolean;
   coverImage?: string | null;
   catalogKey?: string;

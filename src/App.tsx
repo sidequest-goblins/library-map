@@ -2082,6 +2082,49 @@ function filterSearchSuggestions(
   );
 }
 
+function getBookBipocStatus(
+  book: Book,
+  resolvedAuthors:
+    ResolvedBookAuthor[]
+): boolean | null {
+  /*
+   * Workbook BIPOC is a book-level decision. Never copy it onto
+   * every credited author, especially for mixed-author books.
+   */
+  if (
+    book.bipoc !== null &&
+    book.bipoc !== undefined
+  ) {
+    return book.bipoc;
+  }
+
+  if (
+    resolvedAuthors.some(
+      ({ metadata }) =>
+        metadata?.bipoc === true
+    )
+  ) {
+    return true;
+  }
+
+  /*
+   * Resolve Not BIPOC only when every credited author has been
+   * explicitly reviewed as not BIPOC. False + unreviewed remains
+   * unreviewed.
+   */
+  if (
+    resolvedAuthors.length > 0 &&
+    resolvedAuthors.every(
+      ({ metadata }) =>
+        metadata?.bipoc === false
+    )
+  ) {
+    return false;
+  }
+
+  return null;
+}
+
 function getWantedSearchText(item: WantedBook): string {
   return normalizeInlineSearchText([
     item.title,
@@ -4995,17 +5038,11 @@ export default function App() {
                   book.bookId
                 ) ?? [];
 
-              const hasBipocAuthor =
-                bookAuthors.some(
-                  ({
-                    metadata,
-                  }) =>
-                    metadata?.bipoc ===
-                    true
-                );
-
               if (
-                !hasBipocAuthor
+                getBookBipocStatus(
+                  book,
+                  bookAuthors
+                ) !== true
               ) {
                 return false;
               }
@@ -10291,10 +10328,10 @@ export default function App() {
         selectedBook.bookId
       ) ?? [];
 
-    const selectedBookHasBipocAuthor =
-      selectedBookAuthors.some(
-        ({ metadata }) =>
-          metadata?.bipoc === true
+    const selectedBookBipocStatus =
+      getBookBipocStatus(
+        selectedBook,
+        selectedBookAuthors
       );
 
     const selectedBookBipocAuthorCount =
@@ -10489,7 +10526,7 @@ export default function App() {
                   </span>
                 ) : null}
 
-                {selectedBookHasBipocAuthor ? (
+                {selectedBookBipocStatus === true ? (
                   <span className="detailChip">
                     BIPOC
                   </span>
@@ -10618,6 +10655,21 @@ export default function App() {
               </summary>
 
               <div className="authorMetadataDisclosureContent">
+                {selectedBook.bipoc !== null &&
+                selectedBook.bipoc !== undefined ? (
+                  <p className="authorMetadataStatus">
+                    Workbook book tag:{" "}
+                    <strong>
+                      {selectedBook.bipoc
+                        ? "BIPOC"
+                        : "Not BIPOC"}
+                    </strong>
+                    . Author choices below remain
+                    author-specific and do not
+                    inherit this book-level value.
+                  </p>
+                ) : null}
+
                 {authorMetadataLoadStatus ===
               "loading" ? (
                 <p className="authorMetadataStatus">
@@ -12891,7 +12943,7 @@ export default function App() {
                       <button
                         type="button"
                         className="searchFilterChip"
-                        aria-label="Remove BIPOC author filter"
+                        aria-label="Remove BIPOC book filter"
                         onClick={() => {
                           updateSearchFilter(
                             "bipocOnly",
@@ -12899,7 +12951,7 @@ export default function App() {
                           );
                         }}
                       >
-                        BIPOC authors
+                        BIPOC books
                         <span aria-hidden="true">
                           ×
                         </span>
@@ -13182,23 +13234,12 @@ export default function App() {
                         </span>
                       </label>
 
-                      <label
-                        className={
-                          authorMetadataLoadStatus ===
-                          "ready"
-                            ? "searchFilterBoolean"
-                            : "searchFilterBoolean searchFilterBooleanDisabled"
-                        }
-                      >
+                      <label className="searchFilterBoolean">
                         <input
                           type="checkbox"
                           checked={
                             searchFilters
                               .bipocOnly
-                          }
-                          disabled={
-                            authorMetadataLoadStatus !==
-                            "ready"
                           }
                           onChange={(
                             event
@@ -13213,14 +13254,13 @@ export default function App() {
 
                         <span className="searchFilterBooleanCopy">
                           <strong>
-                            BIPOC authors
+                            BIPOC books
                           </strong>
 
                           <span>
-                            {authorMetadataLoadStatus ===
-                            "ready"
-                              ? "At least one credited author is marked BIPOC."
-                              : "Available after shared author metadata loads."}
+                            Workbook book tag wins;
+                            blank rows fall back to
+                            reviewed author metadata.
                           </span>
                         </span>
                       </label>

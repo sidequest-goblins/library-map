@@ -20,6 +20,7 @@ REFERENCE_WORKBOOK_PATH = Path(
 LIST_VIEW_EXPECTED_HEADERS = (
     "CJ",
     "JC",
+    "BIPOC",
     "LGBTQ+",
     "ISBN",
     "Year",

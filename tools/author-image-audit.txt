@@ -1,14 +1,14 @@
 AUTHORS.xlsx IMAGE AUDIT
 ============================================================
 
-Audited: 2026-08-02 16:26:19
+Audited: 2026-08-04 20:05:54
 Workbook: C:\Users\cjade\OneDrive\Shared Workbooks\MyLibrary\AUTHORS.xlsx
 Worksheet: Authors
 
 Total authors: 604
-Authors with images: 251
-Authors missing images: 353
-Completion: 41.6%
+Authors with images: 268
+Authors missing images: 336
+Completion: 44.4%
 
 AUTHORS MISSING IMAGES
 ------------------------------------------------------------
@@ -241,16 +241,12 @@ Row 414: Jenny Nimmo [author-a3569129-0ed3-4fba-8305-7ee9a9abf6e7]
 Row 415: Garth Nix [author-52eee015-c1fd-41dd-b97b-1915625dd97f]
 Row 429: Jenni Olsen [author-f7273bbc-56bc-44bc-8950-8fe71ad23e51]
 Row 430: One [author-25275c5f-5ffa-41ac-a76f-24e3c17bfd77]
-Row 432: Tommy Orange [author-0ea1e797-ea91-4d6c-ba24-4cc208b7fcc0]
 Row 433: Carissa Orlando [author-79647332-e71c-45a6-bd27-b4b8cdb571c5]
 Row 434: George Orwell [author-03487fec-2369-4433-8a78-912e0976da1e]
 Row 435: Alice Oseman [author-0f106663-d862-438e-9ca1-af3667692ba7]
 Row 436: Claire Oshetsky [author-2d5b2cba-d073-42d1-b7bd-b640f87889a8]
-Row 437: Helen Oyeyemi [author-712734cc-e23c-482b-b295-bb2c8ca82e5b]
 Row 438: Shelly Page [author-ae002e94-3f4d-4ecc-ae57-6413d725f6b1]
-Row 439: Chuck Palahniuk [author-087aefea-12a5-44dc-b074-864c99de6fca]
 Row 440: Cathy Park Hong [author-8dad38f6-dadd-41c2-a9c6-01ddba6f3ab1]
-Row 441: Shelley Parker-Chan [author-85589826-df9c-4e5a-abb4-9245a96755f2]
 Row 443: Vaishnavi Patel [author-ffa50f2f-0e57-4240-85b0-95062fba588a]
 Row 444: James Patterson [author-7ade8d59-0121-4b11-97ba-6fef68f547c5]
 Row 445: Chris Pavon [author-4fb726f9-1def-4c7b-9c00-1235ea8793c8]
@@ -262,18 +258,11 @@ Row 450: Jodi Picoult [author-b8a1e8bd-1282-4c7f-823c-866a9fabcd92]
 Row 451: Tamora Pierce [author-cefde5c0-b7b0-4e9a-aecb-8bc3f47f2704]
 Row 452: Daniel Pinchbeck [author-8c084849-5691-499c-83d6-ba08de33e7f1]
 Row 453: Philip Plait [author-eb5538db-1117-40eb-86e2-42e65bc46964]
-Row 454: Carol Plum-Ucci [author-ddb0b6c2-9985-411c-9154-29aa8b3a7e89]
-Row 455: Ivy Pochoda [author-5e296acb-c8dd-449c-8940-96a36c3e0595]
-Row 456: Edgar Allen Poe [author-79604b67-2be6-4b06-8953-b118760cd057]
-Row 457: Rory Power [author-54a4916e-9dbb-4afe-987a-1cd00caee894]
-Row 458: Terry Pratchett [author-1d1ecd68-6a85-4fef-9081-618e9c9ca5f6]
 Row 459: Richard Preston [author-bb5d337a-416c-491a-bcf5-2d35c243cdfa]
 Row 460: Michelle Pretorius [author-13c673d6-043f-472f-ba83-c7cf6cf69a27]
 Row 461: Annie Proulx [author-714cea6e-11f0-4995-88bd-bf2575728517]
-Row 462: Kyle Prue [author-84c72817-34f5-4efe-9064-e51633da2514]
 Row 463: Publications International [author-5e272ab9-05d8-4700-be52-0f52614b4dea]
 Row 466: Peggy Ramundo [author-17b01120-f3b4-476b-b1df-3e602533aa9f]
-Row 467: Ron Rash [author-d2308d73-deb7-4bc1-8a32-9851b279912f]
 Row 468: Sigrid Rausing [author-3a19b9e4-0ef2-40d1-8fa2-b1e585fd2ca9]
 Row 469: Piers Paul Read [author-d90f3afa-31bf-49a4-b002-7984f070af47]
 Row 470: Pauline Reage [author-d8e11aa0-881d-4646-99b3-96e04218a7da]
@@ -283,9 +272,7 @@ Row 473: Rachel Reid [author-9fa721e3-03b8-410e-9fcd-dedf8f8abfff]
 Row 474: Anne Rice [author-ca4ad81a-ae51-418a-b374-3e731935333d]
 Row 475: Kim Michele Richardson [author-1a84606f-b07a-4cc7-88d5-f42da11770b3]
 Row 476: Wilbert Rideau [author-bbbc6d47-05b4-444e-ad31-c5297946ce04]
-Row 477: M.L. Rio [author-91911784-c22c-4404-9277-2b835fbed29f]
 Row 479: Rebecca Roanhorse [author-865ff29d-76d0-4f6b-a1fe-46bdaaf5fd21]
-Row 480: Katee Robert [author-c9e7217d-23f9-472c-a528-0856a9e006da]
 Row 481: Paul H. Robinson [author-0e32b1d2-bbf8-4038-ad1a-2a746ec3a98c]
 Row 483: Sophia Rokhlin [author-13c07340-f8f9-4a89-a435-9a95d053feb4]
 Row 484: Sally Rooney [author-5b6eaf72-f726-4df5-8daa-1cd54fe6d6c7]
@@ -296,7 +283,6 @@ Row 489: Alex S. Vitale [author-307a3aca-f965-4c39-84db-33a00fcda764]
 Row 492: Jonathan Safran Foer [author-2cb4c2c3-f943-4427-a0e4-131018daa913]
 Row 493: Claudio Sanchez [author-06e741c0-dda8-4bf5-8d00-97b0be06cdbe]
 Row 494: Andrzej Sapkowski [author-7fac0b59-0f96-422d-b389-57c810370024]
-Row 495: Marjane Satrapi [author-95328450-6319-4c61-922f-23a299cd07cd]
 Row 496: Eugene Savaiano [author-502f2d2a-68e2-4501-8df2-fc3cf5f6da4d]
 Row 497: Chris Scarre [author-f00206a6-fe37-4b67-830c-4492f3bd540d]
 Row 498: Kate Schatz [author-7434337d-7aa3-48cc-8569-064049fab783]
@@ -312,15 +298,12 @@ Row 509: Emma Sibley [author-7e3d432e-038d-41af-a9a2-d7c309d416cb]
 Row 510: Ben Sill [author-b27b125e-566d-474b-a63e-9f6b4a23e369]
 Row 511: Cathryn Sill [author-142e5afa-49a2-4805-98d9-90b7185bc8a1]
 Row 512: John Sill [author-e3342674-4ab8-42fd-ae0f-189012c69ef1]
-Row 515: Dan Simmons [author-2144cec1-0028-4470-b781-e0140bf12f08]
-Row 516: Sierra Simone [author-3f8317bb-be07-4ec0-836c-8b67a9479874]
 Row 517: Joe Simpson [author-8eb93ba7-84b9-4501-919a-365ff16ae188]
 Row 518: Bennett Singer [author-bd72954b-7f6e-4db2-8e8b-9560244da0c7]
 Row 519: Emily L. Sisley [author-8fca8abb-2ac0-476b-a6f2-e508ef298b33]
 Row 521: Scott Smith [author-d8b89fa2-9eb2-4b28-a573-76ba1769cd78]
 Row 523: Lemony Snicket [author-c069ac62-9db3-41e9-ba59-f2ac333f44a7]
 Row 525: Amy Sonnie [author-5324de92-10b8-455e-88dd-f00708d77d70]
-Row 526: Susan Sontag [author-b1690540-c0c3-4a20-8ab6-78ec97d8ed6a]
 Row 527: Christopher Soto [author-28148e69-4cf9-48aa-a506-718f63726f19]
 Row 529: Ron Stallworth [author-4481f5ca-e549-49c8-8b50-d9415321f0a8]
 Row 530: Max Stein [author-9224ea85-d3af-4ee1-9950-a330dcdb1f55]

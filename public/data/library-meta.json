@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-02T23:22:54.597789+00:00",
+  "generatedAt": "2026-08-05T03:21:29.444078+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY LIST VIEW.xlsx",
   "catalogWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "sourceSheet": "List View",
@@ -10,6 +10,7 @@
   "headers": [
     "CJ",
     "JC",
+    "BIPOC",
     "LGBTQ+",
     "ISBN",
     "Year",

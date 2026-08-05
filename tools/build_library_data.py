@@ -98,6 +98,30 @@ def checkbox_to_bool(value: Any) -> bool:
     text = clean(value).lower()
     return text in {"true", "yes", "y", "1", "checked", "x"}
 
+def checkbox_to_optional_bool(value: Any) -> bool | None:
+    # True/False are explicit workbook decisions. None means the app
+    # may fall back to author-specific Supabase metadata.
+    if value is None:
+        return None
+
+    if isinstance(value, bool):
+        return value
+
+    text = clean(value).lower()
+
+    if not text:
+        return None
+
+    if text in {"true", "yes", "y", "1", "checked", "x"}:
+        return True
+
+    if text in {"false", "no", "n", "0", "unchecked"}:
+        return False
+
+    raise ValueError(
+        f"Unrecognized optional checkbox value: {value!r}"
+    )
+
 def load_bookcase_rooms(workbook) -> dict[str, str]:
     if "Bookcases" not in workbook.sheetnames:
         raise ValueError("Could not find required sheet: Bookcases")
@@ -1877,6 +1901,7 @@ def main() -> None:
         required_headers={
             "cj",
             "jc",
+            "bipoc",
             "lgbtq+",
             "isbn",
             "year",
@@ -1911,6 +1936,7 @@ def main() -> None:
     required_headers = [
         "cj",
         "jc",
+        "bipoc",
         "lgbtq+",
         "isbn",
         "year",
@@ -2084,6 +2110,10 @@ def main() -> None:
             get("jc")
         )
 
+        bipoc = checkbox_to_optional_bool(
+            get("bipoc")
+        )
+
         lgbtq = checkbox_to_bool(
             get("lgbtq+")
         )
@@ -2140,6 +2170,7 @@ def main() -> None:
             ),
             "jc": jc,
             "cj": cj,
+            "bipoc": bipoc,
             "lgbtq": lgbtq,
             "coverImage": (
                 catalog_match.get("coverImage")

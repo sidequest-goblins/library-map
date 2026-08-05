@@ -26,6 +26,7 @@ $BookIdHeader = "Book ID"
 $ExpectedHeaders = @(
     "CJ",
     "JC",
+    "BIPOC",
     "LGBTQ+",
     "ISBN",
     "Year",
