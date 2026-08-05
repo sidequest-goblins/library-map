@@ -1690,11 +1690,6 @@ select {
   align-items: center;
 }
 
-.bookRatingStarSlot {
-  display: inline-flex;
-  align-items: center;
-}
-
 .bookRatingStar {
   display: grid;
   place-items: center;
@@ -1722,13 +1717,13 @@ select {
     rgba(122, 77, 43, 0.18);
 }
 
-.bookRatingHalfMarker {
-  margin:
-    0 -0.08rem;
+.bookRatingStarHalf {
   color: var(--gold);
-  font-size: 0.86rem;
+  font-size: 1.25rem;
   font-weight: 900;
-  line-height: 1;
+  text-shadow:
+    0 2px 5px
+    rgba(122, 77, 43, 0.18);
 }
 
 .bookRatingStar:hover:not(:disabled) {

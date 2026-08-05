@@ -1298,50 +1298,41 @@ function BookRatingControl({
                   : `Rate ${starValue} out of 5`;
 
             return (
-              <span
+              <button
                 key={starValue}
-                className="bookRatingStarSlot"
-              >
-                <button
-                  type="button"
-                  className={
-                    isFull
-                      ? "bookRatingStar bookRatingStarActive"
+                type="button"
+                className={
+                  isFull
+                    ? "bookRatingStar bookRatingStarActive"
+                    : isHalf
+                      ? "bookRatingStar bookRatingStarHalf"
                       : "bookRatingStar"
-                  }
-                  aria-label={
-                    buttonLabel
-                  }
-                  aria-pressed={
-                    value ===
-                      starValue ||
-                    isHalf
-                  }
-                  disabled={
-                    controlsDisabled
-                  }
-                  onClick={() => {
-                    onChange(
-                      nextRating
-                    );
-                  }}
+                }
+                aria-label={
+                  buttonLabel
+                }
+                aria-pressed={
+                  value ===
+                    starValue ||
+                  isHalf
+                }
+                disabled={
+                  controlsDisabled
+                }
+                onClick={() => {
+                  onChange(
+                    nextRating
+                  );
+                }}
+              >
+                <span
+                  aria-hidden="true"
                 >
-                  <span
-                    aria-hidden="true"
-                  >
-                    ★
-                  </span>
-                </button>
-
-                {isHalf ? (
-                  <span
-                    className="bookRatingHalfMarker"
-                    aria-hidden="true"
-                  >
-                    ½
-                  </span>
-                ) : null}
-              </span>
+                  {isHalf
+                    ? "½"
+                    : "★"}
+                </span>
+              </button>
             );
           }
         )}
