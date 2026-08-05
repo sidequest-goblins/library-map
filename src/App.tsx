@@ -7961,23 +7961,16 @@ export default function App() {
       return;
     }
 
-    const existingState =
-      libraryStateByKey.get(
-        stateKey
+    const readerHasReadBook =
+      getBookReaderIsRead(
+        book,
+        readerId,
+        readerId === "cj"
+          ? Boolean(book.cj)
+          : Boolean(book.jc)
       );
 
-    if (!existingState) {
-      setBookRatingFeedback({
-        stateKey,
-        kind: "error",
-        message:
-          "The shared reader record for this book is unavailable.",
-      });
-
-      return;
-    }
-
-    if (!existingState.is_read) {
+    if (!readerHasReadBook) {
       setBookRatingFeedback({
         stateKey,
         kind: "error",
@@ -8004,21 +7997,26 @@ export default function App() {
           .from(
             "library_reader_book_state"
           )
-          .update({
-            rating:
-              nextRating,
-          })
-          .eq(
-            "user_id",
-            householdSession.user.id
-          )
-          .eq(
-            "reader_id",
-            readerId
-          )
-          .eq(
-            "catalog_key",
-            catalogKey
+          .upsert(
+            {
+              user_id:
+                householdSession.user.id,
+
+              reader_id:
+                readerId,
+
+              catalog_key:
+                catalogKey,
+
+              is_read: true,
+
+              rating:
+                nextRating,
+            },
+            {
+              onConflict:
+                "user_id,reader_id,catalog_key",
+            }
           );
 
       if (error) {
