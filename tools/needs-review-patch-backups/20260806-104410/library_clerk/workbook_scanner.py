@@ -41,9 +41,6 @@ BOOK_ID_PATTERN = re.compile(
 
 
 KNOWN_DATA_HEADERS = (
-    "CJ",
-    "JC",
-    "BIPOC",
     "LGBTQ+",
     "ISBN",
     "Year",
@@ -63,7 +60,6 @@ KNOWN_DATA_HEADERS = (
 
 
 KNOWN_SYSTEM_HEADERS = (
-    "Needs Review",
     "Book ID",
     "Series Sort",
     "Volume Sort",
@@ -627,11 +623,6 @@ def scan_workbooks(
                 SYSTEM_BOUNDARY_HEADER,
             )
 
-            needs_review_index = get_header_index(
-                header_indexes,
-                "Needs Review",
-            )
-
             book_id_index = get_header_index(
                 header_indexes,
                 "Book ID",
@@ -682,43 +673,9 @@ def scan_workbooks(
 
             if (
                 boundary_index is not None
-                and needs_review_index is not None
-                and needs_review_index
-                != boundary_index + 1
-            ):
-                result.issues.append(
-                    ScanIssue(
-                        issue_id=(
-                            "system:needs-review-boundary"
-                        ),
-                        area="System integrity",
-                        category=(
-                            "Automation boundary"
-                        ),
-                        message=(
-                            "Needs Review must appear "
-                            "immediately after "
-                            f"'{SYSTEM_BOUNDARY_HEADER}'."
-                        ),
-                        workbook_path=(
-                            candidate.workbook_path
-                        ),
-                        sheet_name=(
-                            candidate.sheet_name
-                        ),
-                        row_number=1,
-                        column_name="Needs Review",
-                        column_number=(
-                            needs_review_index + 1
-                        ),
-                    )
-                )
-
-            if (
-                needs_review_index is not None
                 and book_id_index is not None
                 and book_id_index
-                != needs_review_index + 1
+                != boundary_index + 1
             ):
                 result.issues.append(
                     ScanIssue(
@@ -732,7 +689,7 @@ def scan_workbooks(
                         message=(
                             "Book ID must appear "
                             "immediately after "
-                            "'Needs Review'."
+                            f"'{SYSTEM_BOUNDARY_HEADER}'."
                         ),
                         workbook_path=(
                             candidate.workbook_path
@@ -743,7 +700,9 @@ def scan_workbooks(
                         row_number=1,
                         column_name="Book ID",
                         column_number=(
-                            book_id_index + 1
+                            None
+                            if book_id_index is None
+                            else book_id_index + 1
                         ),
                     )
                 )

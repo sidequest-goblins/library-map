@@ -37,7 +37,6 @@ LIST_VIEW_EXPECTED_HEADERS = (
     "Shelf",
     "Position",
     "SYSTEM COLUMNS - AUTOMATION ONLY",
-    "Needs Review",
     "Book ID",
     "Series Sort",
     "Volume Sort",
@@ -390,14 +389,6 @@ def main() -> None:
         )
     )
 
-    needs_review_header_index = (
-        get_header_index(
-            header_indexes,
-            "Needs Review",
-            "needsreview",
-        )
-    )
-
     book_id_header_index = (
         get_header_index(
             header_indexes,
@@ -430,12 +421,6 @@ def main() -> None:
             "boundary column in List View."
         )
 
-    if needs_review_header_index is None:
-        raise ValueError(
-            "Could not find the Needs Review column "
-            "in List View."
-        )
-
     if book_id_header_index is None:
         raise ValueError(
             "Could not find the Book ID column "
@@ -443,21 +428,12 @@ def main() -> None:
         )
 
     if (
-        needs_review_header_index
+        book_id_header_index
         != boundary_header_index + 1
     ):
         raise ValueError(
-            "Needs Review must appear immediately after "
-            "SYSTEM COLUMNS - AUTOMATION ONLY."
-        )
-
-    if (
-        book_id_header_index
-        != needs_review_header_index + 1
-    ):
-        raise ValueError(
             "Book ID must appear immediately after "
-            "Needs Review."
+            "SYSTEM COLUMNS - AUTOMATION ONLY."
         )
 
 

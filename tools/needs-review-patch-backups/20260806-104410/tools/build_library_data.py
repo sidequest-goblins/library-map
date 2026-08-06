@@ -1918,7 +1918,6 @@ def main() -> None:
             "shelf",
             "position",
             "systemcolumns-automationonly",
-            "needsreview",
             "bookid",
         },
         label="List View",
@@ -1954,7 +1953,6 @@ def main() -> None:
         "shelf",
         "position",
         "systemcolumns-automationonly",
-        "needsreview",
         "bookid",
     ]
 
@@ -1975,10 +1973,6 @@ def main() -> None:
         "systemcolumns-automationonly"
     ]
 
-    needs_review_header_index = header_indexes[
-        "needsreview"
-    ]
-
     book_id_header_index = header_indexes[
         "bookid"
     ]
@@ -1992,27 +1986,16 @@ def main() -> None:
             "exactly match: SYSTEM COLUMNS - AUTOMATION ONLY"
         )
 
-    if headers[needs_review_header_index] != "Needs Review":
-        raise ValueError(
-            "The List View Needs Review header does not exactly "
-            "match: Needs Review"
-        )
-
     if headers[book_id_header_index] != "Book ID":
         raise ValueError(
             "The List View Book ID header does not exactly "
             "match: Book ID"
         )
 
-    if needs_review_header_index != boundary_header_index + 1:
+    if book_id_header_index != boundary_header_index + 1:
         raise ValueError(
-            "Needs Review must be immediately after "
+            "Book ID must be immediately after "
             "SYSTEM COLUMNS - AUTOMATION ONLY."
-        )
-
-    if book_id_header_index != needs_review_header_index + 1:
-        raise ValueError(
-            "Book ID must be immediately after Needs Review."
         )
 
     books = []

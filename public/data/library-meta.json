@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-08-05T03:21:29.444078+00:00",
+  "generatedAt": "2026-08-06T19:04:26.788696+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY LIST VIEW.xlsx",
   "catalogWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "sourceSheet": "List View",
-  "bookCount": 1049,
-  "bookIdCount": 1049,
+  "bookCount": 1066,
+  "bookIdCount": 1066,
   "bookIdSource": "List View.Book ID",
-  "skippedBlankRows": 0,
+  "skippedBlankRows": 13,
   "headers": [
     "CJ",
     "JC",
@@ -27,6 +27,7 @@
     "Shelf",
     "Position",
     "SYSTEM COLUMNS - AUTOMATION ONLY",
+    "Needs Review",
     "Book ID",
     "Series Sort",
     "Volume Sort",
@@ -58,7 +59,110 @@
   "unusedBookcases": [],
   "unmappedBookcases": [],
   "catalogMatchFallbackRows": [],
-  "catalogUnmatchedRows": [],
+  "catalogUnmatchedRows": [
+    {
+      "row": 22,
+      "title": "Periodic Tales: A Cultural History of the Elements, from Arsenic to Zinc",
+      "author": "Hugh Aldersey-Williams",
+      "catalogKey": "aldersey-williams-hugh-periodic-tales-a-cultural-history-of-the-elements-from-arsenic-to-zinc"
+    },
+    {
+      "row": 30,
+      "title": "You Know Better",
+      "author": "Tina McElroy Ansa",
+      "catalogKey": "ansa-tina-mcelroy-you-know-better"
+    },
+    {
+      "row": 31,
+      "title": "The Spanish Love Deception",
+      "author": "Elena Armas",
+      "catalogKey": "armas-elena-the-spanish-love-deception"
+    },
+    {
+      "row": 52,
+      "title": "Too Wild to Tame",
+      "author": "Tessa Bailey",
+      "catalogKey": "bailey-tessa-too-wild-to-tame"
+    },
+    {
+      "row": 84,
+      "title": "Astrid Parker Doesn't Fail",
+      "author": "Ashley Herring Blake",
+      "catalogKey": "blake-ashley-herring-astrid-parker-doesn-t-fail"
+    },
+    {
+      "row": 100,
+      "title": "Twelfth Grade Kills",
+      "author": "Heather Brewer",
+      "catalogKey": "brewer-heather-twelfth-grade-kills"
+    },
+    {
+      "row": 191,
+      "title": "Wayward Witch",
+      "author": "Zoraida Córdova",
+      "catalogKey": "c-rdova-zoraida-wayward-witch"
+    },
+    {
+      "row": 433,
+      "title": "The God of Endings",
+      "author": "Jacqueline Holland",
+      "catalogKey": "holland-jacqueline-the-god-of-endings"
+    },
+    {
+      "row": 515,
+      "title": "We Have Always Lived in the Castle",
+      "author": "Shirley Jackson",
+      "catalogKey": "jackson-shirley-we-have-always-lived-in-the-castle"
+    },
+    {
+      "row": 649,
+      "title": "How the Gringos Stole Tequila",
+      "author": "Chantal Martineau",
+      "catalogKey": "martineau-chantal-how-the-gringos-stole-tequila"
+    },
+    {
+      "row": 680,
+      "title": "Our Shadows Have Claws: 15 Latin American Monster Stories",
+      "author": "Yamile Saled Méndez; Amparo Ortiz",
+      "catalogKey": "m-ndez-yamile-saled-our-shadows-have-claws-15-latin-american-monster-stories"
+    },
+    {
+      "row": 815,
+      "title": "Burning Bright",
+      "author": "Ron Rash",
+      "catalogKey": "rash-ron-burning-bright"
+    },
+    {
+      "row": 933,
+      "title": "Memphis",
+      "author": "Tara M. Stringfellow",
+      "catalogKey": "stringfellow-tara-m-memphis"
+    },
+    {
+      "row": 967,
+      "title": "Angelika Frankenstein Makes Her Match",
+      "author": "Sally Thorne",
+      "catalogKey": "thorne-sally-angelika-frankenstein-makes-her-match"
+    },
+    {
+      "row": 1037,
+      "title": "Black River Orchard",
+      "author": "Chuck Wendig",
+      "catalogKey": "wendig-chuck-black-river-orchard"
+    },
+    {
+      "row": 1040,
+      "title": "Weird Horror Short Stories",
+      "author": "Gillian Whitaker",
+      "catalogKey": "whitaker-gillian-weird-horror-short-stories"
+    },
+    {
+      "row": 1043,
+      "title": "The Intuitionist",
+      "author": "Colson Whitehead",
+      "catalogKey": "whitehead-colson-the-intuitionist"
+    }
+  ],
   "catalog": {
     "catalogBookCount": 1049,
     "catalogRowsWithTitles": 1049,

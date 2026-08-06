@@ -43,7 +43,6 @@ $ExpectedHeaders = @(
     "Shelf",
     "Position",
     "SYSTEM COLUMNS - AUTOMATION ONLY",
-    "Needs Review",
     "Book ID",
     "Series Sort",
     "Volume Sort",
