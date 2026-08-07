@@ -23,6 +23,11 @@ CATALOG_WORKBOOK_PATH = Path(
 LIST_VIEW_WORKBOOK_PATH = Path(
     "C:/Users/cjade/OneDrive/Shared Workbooks/MyLibrary/LIBRARY LIST VIEW.xlsx"
 )
+
+WORKS_WORKBOOK_PATH = Path(
+    "C:/Users/cjade/OneDrive/Shared Workbooks/MyLibrary/LIBRARY WORKS.xlsx"
+)
+
 OUTPUT_DIR = Path("C:/library_app/library-map/public/data")
 BOOKS_OUTPUT_PATH = OUTPUT_DIR / "library-books.json"
 CATALOG_OUTPUT_PATH = OUTPUT_DIR / "library-catalog.json"
@@ -1453,6 +1458,260 @@ def normalize_book_id(
 
     return f"book-{parsed_guid}"
 
+def normalize_work_id(
+    value: Any,
+    row_number: int,
+    title: str,
+) -> str:
+    work_id = clean(value).lower()
+
+    if not work_id:
+        raise ValueError(
+            f"Contained Works row {row_number} has a title but no Work ID: "
+            f"{title}"
+        )
+
+    if not work_id.startswith("work-"):
+        raise ValueError(
+            f"Contained Works row {row_number} has a malformed Work ID: "
+            f"{work_id!r} ({title})"
+        )
+
+    guid_text = work_id.removeprefix("work-")
+
+    try:
+        parsed_guid = UUID(guid_text)
+    except ValueError as error:
+        raise ValueError(
+            f"Contained Works row {row_number} has a malformed Work ID: "
+            f"{work_id!r} ({title})"
+        ) from error
+
+    if (
+        parsed_guid.version != 4
+        or str(parsed_guid) != guid_text
+    ):
+        raise ValueError(
+            f"Contained Works row {row_number} does not contain a canonical "
+            f"version-4 Work ID: {work_id!r} ({title})"
+        )
+
+    return f"work-{parsed_guid}"
+
+def load_contained_works(
+    workbook,
+) -> tuple[dict[str, list[dict[str, Any]]], dict[str, Any]]:
+    sheet = find_sheet_with_headers(
+        workbook,
+        required_headers={
+            "containerbookid",
+            "containerbooktitle",
+            "workid",
+            "order",
+            "title",
+            "worktype",
+            "totalpages",
+            "startpage",
+            "endpage",
+            "notes",
+        },
+        label="Contained Works",
+    )
+
+    rows = sheet.iter_rows(values_only=True)
+
+    try:
+        headers = [
+            clean(value)
+            for value in next(rows)
+        ]
+    except StopIteration:
+        raise ValueError(
+            "The Contained Works sheet is empty."
+        )
+
+    header_indexes = {
+        normalize_header(header): index
+        for index, header in enumerate(headers)
+    }
+
+    contained_works_by_book_id: dict[
+        str,
+        list[dict[str, Any]],
+    ] = {}
+
+    work_id_rows: dict[str, int] = {}
+    skipped_blank_rows = 0
+
+    for row_number, row in enumerate(
+        rows,
+        start=2,
+    ):
+        row_values = list(row)
+
+        if not any(
+            clean(value)
+            for value in row_values
+        ):
+            skipped_blank_rows += 1
+            continue
+
+        def get(header: str) -> Any:
+            index = header_indexes.get(
+                header
+            )
+
+            if (
+                index is None
+                or index >= len(row_values)
+            ):
+                return ""
+
+            return row_values[index]
+
+        title = clean(
+            get("title")
+        )
+
+        if not title:
+            raise ValueError(
+                f"Contained Works row {row_number} "
+                "has data but no Title."
+            )
+
+        container_book_id = clean(
+            get("containerbookid")
+        ).lower()
+
+        if not container_book_id:
+            raise ValueError(
+                f"Contained Works row {row_number} "
+                f"has no Container Book ID: {title}"
+            )
+
+        if not container_book_id.startswith(
+            "book-"
+        ):
+            raise ValueError(
+                f"Contained Works row {row_number} "
+                "has a malformed Container Book ID: "
+                f"{container_book_id!r} ({title})"
+            )
+
+        container_guid_text = (
+            container_book_id.removeprefix(
+                "book-"
+            )
+        )
+
+        try:
+            container_guid = UUID(
+                container_guid_text
+            )
+        except ValueError as error:
+            raise ValueError(
+                f"Contained Works row {row_number} "
+                "has a malformed Container Book ID: "
+                f"{container_book_id!r} ({title})"
+            ) from error
+
+        if (
+            container_guid.version != 4
+            or str(container_guid)
+            != container_guid_text
+        ):
+            raise ValueError(
+                f"Contained Works row {row_number} "
+                "does not contain a canonical "
+                "version-4 Container Book ID: "
+                f"{container_book_id!r} ({title})"
+            )
+
+        work_id = normalize_work_id(
+            get("workid"),
+            row_number,
+            title,
+        )
+
+        existing_work_id_row = (
+            work_id_rows.get(work_id)
+        )
+
+        if existing_work_id_row is not None:
+            raise ValueError(
+                f"Duplicate Work ID {work_id!r} "
+                "found in Contained Works rows "
+                f"{existing_work_id_row} "
+                f"and {row_number}."
+            )
+
+        work_id_rows[work_id] = row_number
+
+        order = parse_optional_series_number(
+            get("order")
+        )
+
+        if order is None:
+            raise ValueError(
+                f"Contained Works row {row_number} "
+                f"has no valid Order: {title}"
+            )
+
+        contained_work = {
+            "workId": work_id,
+            "order": order,
+            "title": title,
+            "workType": clean(
+                get("worktype")
+            ),
+            "totalPages": parse_optional_int(
+                get("totalpages")
+            ),
+            "startPage": parse_optional_int(
+                get("startpage")
+            ),
+            "endPage": parse_optional_int(
+                get("endpage")
+            ),
+            "notes": clean(
+                get("notes")
+            ),
+        }
+
+        contained_works_by_book_id.setdefault(
+            container_book_id,
+            [],
+        ).append(
+            contained_work
+        )
+
+    for contained_works in (
+        contained_works_by_book_id.values()
+    ):
+        contained_works.sort(
+            key=lambda work: (
+                float(work["order"]),
+                work["title"].lower(),
+            )
+        )
+
+    report = {
+        "sourceSheet": sheet.title,
+        "containedWorkCount": len(
+            work_id_rows
+        ),
+        "containerBookCount": len(
+            contained_works_by_book_id
+        ),
+        "skippedBlankRows":
+            skipped_blank_rows,
+    }
+
+    return (
+        contained_works_by_book_id,
+        report,
+    )
+
 def make_catalog_key(title: str, author_sort: str) -> str:
     slug_source = f"{author_sort}-{title}".lower()
     slug = re.sub(r"[^a-z0-9]+", "-", slug_source).strip("-")
@@ -1799,6 +2058,7 @@ def main() -> None:
     for workbook_path in (
         CATALOG_WORKBOOK_PATH,
         LIST_VIEW_WORKBOOK_PATH,
+        WORKS_WORKBOOK_PATH,
     ):
         if not workbook_path.exists():
             raise FileNotFoundError(
@@ -1829,6 +2089,30 @@ def main() -> None:
     list_view_workbook = load_workbook(
         LIST_VIEW_WORKBOOK_PATH,
         data_only=True,
+    )
+
+    print(
+        f"Loading Works workbook: "
+        f"{WORKS_WORKBOOK_PATH}"
+    )
+
+    works_workbook = load_workbook(
+        WORKS_WORKBOOK_PATH,
+        data_only=True,
+    )
+
+    contained_works_by_book_id, contained_works_report = (
+        load_contained_works(
+            works_workbook
+        )
+    )
+
+    print(
+        f"Found "
+        f"{contained_works_report['containedWorkCount']} "
+        "contained works across "
+        f"{contained_works_report['containerBookCount']} "
+        "container books"
     )
 
     bookcase_rooms = load_bookcase_rooms(
@@ -2199,10 +2483,30 @@ def main() -> None:
             "shelf": shelf,
             "row": row_name,
             "rawShelf": raw_shelf,
+            "containedWorks": (
+                contained_works_by_book_id.get(
+                    book_id,
+                    [],
+                )
+            ),
             "notes": "",
         }
 
         books.append(book)
+
+    unknown_contained_work_book_ids = sorted(
+        set(contained_works_by_book_id)
+        - set(book_id_rows)
+    )
+
+    if unknown_contained_work_book_ids:
+        raise ValueError(
+            "Contained Works contains Container Book IDs "
+            "that do not exist in List View:\n  - "
+            + "\n  - ".join(
+                unknown_contained_work_book_ids
+            )
+        )
 
     unusedBookcases = sorted(
         bookcase for bookcase in bookcase_rooms
@@ -2218,6 +2522,11 @@ def main() -> None:
         "catalogWorkbook": str(
             CATALOG_WORKBOOK_PATH
         ),
+        "worksWorkbook": str(
+            WORKS_WORKBOOK_PATH
+        ),
+        "containedWorks":
+            contained_works_report,
         "sourceSheet": sheet.title,
         "bookCount": len(books),
         "bookIdCount": len(book_id_rows),
@@ -2305,6 +2614,7 @@ def main() -> None:
 
     catalog_workbook.close()
     list_view_workbook.close()
+    works_workbook.close()
 
 
 if __name__ == "__main__":

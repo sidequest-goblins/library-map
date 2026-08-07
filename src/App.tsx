@@ -11213,6 +11213,82 @@ export default function App() {
             </div>
           </details>
 
+          {selectedBook.containedWorks &&
+          selectedBook.containedWorks.length > 0 ? (
+            <details
+              key={`contained-works-${selectedBook.bookId}`}
+              className="detailSection authorMetadataDisclosure"
+            >
+              <summary className="authorMetadataDisclosureSummary">
+                <span className="authorMetadataDisclosureHeading">
+                  <span className="detailLabel">
+                    Contained works
+                  </span>
+
+                  <span className="authorMetadataDisclosureMeta">
+                    {
+                      selectedBook.containedWorks
+                        .length
+                    }{" "}
+                    {selectedBook.containedWorks
+                      .length === 1
+                      ? "work"
+                      : "works"}
+                  </span>
+                </span>
+              </summary>
+
+              <div className="authorMetadataDisclosureContent">
+                <div className="authorMetadataList">
+                  {selectedBook.containedWorks.map(
+                    (work) => {
+                      const workDetails = [
+                        work.workType,
+
+                        work.totalPages != null
+                          ? `${work.totalPages} pages`
+                          : "",
+
+                        work.startPage != null &&
+                        work.endPage != null
+                          ? `pp. ${work.startPage}–${work.endPage}`
+                          : "",
+                      ].filter(Boolean);
+
+                      return (
+                        <article
+                          key={work.workId}
+                          className="authorMetadataCard"
+                        >
+                          <div className="authorMetadataHeading">
+                            <strong>
+                              {work.title}
+                            </strong>
+
+                            {workDetails.length >
+                            0 ? (
+                              <span>
+                                {workDetails.join(
+                                  " · "
+                                )}
+                              </span>
+                            ) : null}
+                          </div>
+
+                          {work.notes ? (
+                            <p className="authorMetadataStatus">
+                              {work.notes}
+                            </p>
+                          ) : null}
+                        </article>
+                      );
+                    }
+                  )}
+                </div>
+              </div>
+            </details>
+          ) : null}
+
             <section className="detailSection">
               <p className="detailLabel">
                 Read status

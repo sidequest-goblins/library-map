@@ -34,6 +34,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -71,6 +72,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -108,6 +110,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -145,6 +148,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -182,6 +186,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -219,6 +224,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -256,6 +262,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -293,6 +300,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -330,6 +338,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -367,6 +376,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -404,6 +414,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -441,6 +452,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -478,6 +490,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -515,6 +528,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -552,6 +566,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -589,6 +604,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -626,6 +642,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -663,6 +680,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -700,6 +718,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -737,6 +756,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -774,6 +794,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -811,6 +832,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -848,6 +870,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -885,6 +908,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -922,6 +946,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -959,6 +984,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -996,6 +1022,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1033,6 +1060,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1070,6 +1098,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1107,6 +1136,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1144,6 +1174,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1181,6 +1212,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1218,6 +1250,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1255,6 +1288,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1292,6 +1326,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1329,6 +1364,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1366,6 +1402,68 @@
     "shelf": "Shelf 0",
     "row": "Main",
     "rawShelf": "Shelf 0",
+    "containedWorks": [
+      {
+        "workId": "work-c54d7c64-53b8-4fb1-a74c-cbc54e37dce0",
+        "order": 1,
+        "title": "Sense & Sensibility",
+        "workType": "Novel",
+        "totalPages": 203,
+        "startPage": 1,
+        "endPage": 203,
+        "notes": ""
+      },
+      {
+        "workId": "work-d8fdc4af-f33e-416b-8997-e90d2242b7f5",
+        "order": 2,
+        "title": "Pride & Prejudice",
+        "workType": "Novel",
+        "totalPages": 210,
+        "startPage": 205,
+        "endPage": 415,
+        "notes": ""
+      },
+      {
+        "workId": "work-786cd356-52cc-4f88-9fe5-1a7ac92e1cd7",
+        "order": 3,
+        "title": "Mansfield Park",
+        "workType": "Novel",
+        "totalPages": 257,
+        "startPage": 417,
+        "endPage": 674,
+        "notes": ""
+      },
+      {
+        "workId": "work-7caf438e-df67-4df0-8602-d9de5a346544",
+        "order": 4,
+        "title": "Emma",
+        "workType": "Novel",
+        "totalPages": 265,
+        "startPage": 675,
+        "endPage": 940,
+        "notes": ""
+      },
+      {
+        "workId": "work-65ed3be2-de45-48c7-8773-050a100705bf",
+        "order": 5,
+        "title": "Northanger Abbey",
+        "workType": "Novel",
+        "totalPages": 130,
+        "startPage": 941,
+        "endPage": 1071,
+        "notes": ""
+      },
+      {
+        "workId": "work-629e63bb-c838-43aa-9643-cc281f230f1d",
+        "order": 6,
+        "title": "Persuasion",
+        "workType": "Novel",
+        "totalPages": 137,
+        "startPage": 1073,
+        "endPage": 1210,
+        "notes": ""
+      }
+    ],
     "notes": ""
   },
   {
@@ -1403,6 +1501,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1440,6 +1539,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1477,6 +1577,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1514,6 +1615,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1551,6 +1653,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1588,6 +1691,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1625,6 +1729,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1662,6 +1767,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1699,6 +1805,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1736,6 +1843,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1773,6 +1881,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1810,6 +1919,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1847,6 +1957,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1884,6 +1995,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1921,6 +2033,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1958,6 +2071,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -1995,6 +2109,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2032,6 +2147,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2069,6 +2185,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2106,6 +2223,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2143,6 +2261,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2180,6 +2299,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2217,6 +2337,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2254,6 +2375,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2291,6 +2413,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2328,6 +2451,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2365,6 +2489,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2402,6 +2527,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2439,6 +2565,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2476,6 +2603,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2513,6 +2641,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2550,6 +2679,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2587,6 +2717,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2624,6 +2755,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2661,6 +2793,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2698,6 +2831,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2735,6 +2869,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2772,6 +2907,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2809,6 +2945,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2846,6 +2983,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2883,6 +3021,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2920,6 +3059,38 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [
+      {
+        "workId": "work-8c5e864a-2eff-4ba0-b756-c26a9e3c6931",
+        "order": 1,
+        "title": "Daughter of the Blood",
+        "workType": "Novel",
+        "totalPages": 375,
+        "startPage": 1,
+        "endPage": 375,
+        "notes": ""
+      },
+      {
+        "workId": "work-513e6100-cdf0-4316-ad05-1b224a0e457f",
+        "order": 2,
+        "title": "Heir to the Shadows",
+        "workType": "Novel",
+        "totalPages": 420,
+        "startPage": 379,
+        "endPage": 799,
+        "notes": ""
+      },
+      {
+        "workId": "work-0e23f48b-8ae0-4c32-8ff9-8500d80a5680",
+        "order": 3,
+        "title": "Queen of the Darkness",
+        "workType": "Novel",
+        "totalPages": 399,
+        "startPage": 805,
+        "endPage": 1204,
+        "notes": ""
+      }
+    ],
     "notes": ""
   },
   {
@@ -2957,6 +3128,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -2994,6 +3166,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3031,6 +3204,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3068,6 +3242,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3105,6 +3280,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3142,6 +3318,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3179,6 +3356,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3216,6 +3394,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3253,6 +3432,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3290,6 +3470,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3327,6 +3508,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3364,6 +3546,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3401,6 +3584,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3438,6 +3622,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3475,6 +3660,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3512,6 +3698,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3549,6 +3736,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3586,6 +3774,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3623,6 +3812,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3660,6 +3850,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3697,6 +3888,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3734,6 +3926,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3771,6 +3964,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3808,6 +4002,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3845,6 +4040,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3882,6 +4078,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3919,6 +4116,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3956,6 +4154,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -3993,6 +4192,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4030,6 +4230,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4067,6 +4268,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4104,6 +4306,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4141,6 +4344,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4178,6 +4382,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4215,6 +4420,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4252,6 +4458,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4289,6 +4496,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4326,6 +4534,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4363,6 +4572,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4400,6 +4610,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4437,6 +4648,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4474,6 +4686,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4511,6 +4724,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4548,6 +4762,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4585,6 +4800,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4622,6 +4838,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4659,6 +4876,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4696,6 +4914,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4733,6 +4952,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4770,6 +4990,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4807,6 +5028,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4844,6 +5066,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4881,6 +5104,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4918,6 +5142,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4955,6 +5180,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -4992,6 +5218,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5029,6 +5256,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5066,6 +5294,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5103,6 +5332,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5140,6 +5370,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5177,6 +5408,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5214,6 +5446,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5251,6 +5484,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5288,6 +5522,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5325,6 +5560,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5362,6 +5598,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5399,6 +5636,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5436,6 +5674,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5473,6 +5712,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5510,6 +5750,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5547,6 +5788,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5584,6 +5826,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5621,6 +5864,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5658,6 +5902,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5695,6 +5940,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5732,6 +5978,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5769,6 +6016,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5806,6 +6054,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5843,6 +6092,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5880,6 +6130,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5917,6 +6168,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5954,6 +6206,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -5991,6 +6244,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6028,6 +6282,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6065,6 +6320,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6102,6 +6358,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6139,6 +6396,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6176,6 +6434,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6213,6 +6472,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6250,6 +6510,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6287,6 +6548,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6324,6 +6586,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6361,6 +6624,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6398,6 +6662,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6435,6 +6700,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6472,6 +6738,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6509,6 +6776,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6546,6 +6814,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6583,6 +6852,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6620,6 +6890,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6657,6 +6928,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6694,6 +6966,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6731,6 +7004,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6768,6 +7042,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6805,6 +7080,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6842,6 +7118,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6879,6 +7156,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6916,6 +7194,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6953,6 +7232,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -6990,6 +7270,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7027,6 +7308,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7064,6 +7346,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7101,6 +7384,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7138,6 +7422,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7175,6 +7460,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7212,6 +7498,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7249,6 +7536,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7286,6 +7574,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7323,6 +7612,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7360,6 +7650,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7397,6 +7688,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7434,6 +7726,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7471,6 +7764,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7508,6 +7802,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7545,6 +7840,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7582,6 +7878,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7619,6 +7916,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7656,6 +7954,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7693,6 +7992,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7730,6 +8030,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7767,6 +8068,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7804,6 +8106,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7841,6 +8144,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7878,6 +8182,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7915,6 +8220,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7952,6 +8258,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -7989,6 +8296,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8026,6 +8334,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8063,6 +8372,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8100,6 +8410,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8137,6 +8448,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8174,6 +8486,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8211,6 +8524,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8248,6 +8562,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8285,6 +8600,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8322,6 +8638,58 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [
+      {
+        "workId": "work-932057e1-d8e6-4e7c-8cfd-dbdab8837540",
+        "order": 1,
+        "title": "The Field Guide",
+        "workType": "Novel",
+        "totalPages": 109,
+        "startPage": 1,
+        "endPage": 109,
+        "notes": ""
+      },
+      {
+        "workId": "work-c53bebe6-029b-4213-b7ee-399f724adaec",
+        "order": 2,
+        "title": "The Seeing Stone",
+        "workType": "Novel",
+        "totalPages": 110,
+        "startPage": 111,
+        "endPage": 221,
+        "notes": ""
+      },
+      {
+        "workId": "work-13ab5472-5a81-465b-b0a7-aba96f958186",
+        "order": 3,
+        "title": "Lucinda's Secret",
+        "workType": "Novel",
+        "totalPages": 110,
+        "startPage": 223,
+        "endPage": 333,
+        "notes": ""
+      },
+      {
+        "workId": "work-22b39260-9d24-48cf-a682-843ad944b7f7",
+        "order": 4,
+        "title": "The Ironwood Tree",
+        "workType": "Novel",
+        "totalPages": 110,
+        "startPage": 335,
+        "endPage": 445,
+        "notes": ""
+      },
+      {
+        "workId": "work-4babf8f2-dfbd-4536-8f13-4ed760bb9d2d",
+        "order": 5,
+        "title": "The Wrath of Mulgarath",
+        "workType": "Novel",
+        "totalPages": 138,
+        "startPage": 447,
+        "endPage": 585,
+        "notes": ""
+      }
+    ],
     "notes": ""
   },
   {
@@ -8359,6 +8727,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8396,6 +8765,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8433,6 +8803,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8470,6 +8841,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8507,6 +8879,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8544,6 +8917,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8581,6 +8955,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8618,6 +8993,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8655,6 +9031,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8692,6 +9069,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8729,6 +9107,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8766,6 +9145,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8803,6 +9183,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8840,6 +9221,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8877,6 +9259,7 @@
     "shelf": "Shelf 0",
     "row": "Main",
     "rawShelf": "Shelf 0",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8914,6 +9297,7 @@
     "shelf": "Shelf 0",
     "row": "Main",
     "rawShelf": "Shelf 0",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8951,6 +9335,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -8988,6 +9373,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9025,6 +9411,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9062,6 +9449,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9099,6 +9487,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9136,6 +9525,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9173,6 +9563,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9210,6 +9601,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9247,6 +9639,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9284,6 +9677,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9321,6 +9715,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9358,6 +9753,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9395,6 +9791,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9432,6 +9829,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9469,6 +9867,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9506,6 +9905,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9543,6 +9943,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9580,6 +9981,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9617,6 +10019,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9654,6 +10057,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9691,6 +10095,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9728,6 +10133,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9765,6 +10171,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9802,6 +10209,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9839,6 +10247,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9876,6 +10285,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9913,6 +10323,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9950,6 +10361,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -9987,6 +10399,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10024,6 +10437,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10061,6 +10475,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10098,6 +10513,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10135,6 +10551,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10172,6 +10589,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10209,6 +10627,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10246,6 +10665,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10283,6 +10703,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10320,6 +10741,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10357,6 +10779,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10394,6 +10817,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10431,6 +10855,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10468,6 +10893,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10505,6 +10931,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10542,6 +10969,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10579,6 +11007,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10616,6 +11045,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10653,6 +11083,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10690,6 +11121,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10727,6 +11159,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10764,6 +11197,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10801,6 +11235,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10838,6 +11273,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10875,6 +11311,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10912,6 +11349,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10949,6 +11387,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -10986,6 +11425,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11023,6 +11463,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11060,6 +11501,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11097,6 +11539,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11134,6 +11577,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11171,6 +11615,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11208,6 +11653,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11245,6 +11691,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11282,6 +11729,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11319,6 +11767,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11356,6 +11805,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11393,6 +11843,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11430,6 +11881,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11467,6 +11919,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11504,6 +11957,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11541,6 +11995,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11578,6 +12033,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11615,6 +12071,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11652,6 +12109,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11689,6 +12147,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11726,6 +12185,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11763,6 +12223,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11800,6 +12261,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11837,6 +12299,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11874,6 +12337,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11911,6 +12375,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11948,6 +12413,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -11985,6 +12451,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12022,6 +12489,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12059,6 +12527,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12096,6 +12565,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12133,6 +12603,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12170,6 +12641,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12207,6 +12679,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12244,6 +12717,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12281,6 +12755,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12318,6 +12793,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12355,6 +12831,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12392,6 +12869,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12429,6 +12907,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12466,6 +12945,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12503,6 +12983,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12540,6 +13021,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12577,6 +13059,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12614,6 +13097,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12651,6 +13135,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12688,6 +13173,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12725,6 +13211,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12762,6 +13249,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12799,6 +13287,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12836,6 +13325,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12873,6 +13363,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12910,6 +13401,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12947,6 +13439,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -12984,6 +13477,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13021,6 +13515,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13058,6 +13553,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13095,6 +13591,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13132,6 +13629,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13169,6 +13667,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13206,6 +13705,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13243,6 +13743,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13280,6 +13781,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13317,6 +13819,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13354,6 +13857,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13391,6 +13895,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13428,6 +13933,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13465,6 +13971,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13502,6 +14009,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13539,6 +14047,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13576,6 +14085,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13613,6 +14123,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13650,6 +14161,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13687,6 +14199,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13724,6 +14237,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13761,6 +14275,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13798,6 +14313,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13835,6 +14351,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13872,6 +14389,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13909,6 +14427,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13946,6 +14465,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -13983,6 +14503,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14020,6 +14541,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14057,6 +14579,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14094,6 +14617,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14131,6 +14655,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14168,6 +14693,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14205,6 +14731,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14242,6 +14769,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14279,6 +14807,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14316,6 +14845,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14353,6 +14883,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14390,6 +14921,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14427,6 +14959,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14464,6 +14997,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14501,6 +15035,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14538,6 +15073,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14575,6 +15111,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14612,6 +15149,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14649,6 +15187,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14686,6 +15225,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14723,6 +15263,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14760,6 +15301,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14797,6 +15339,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14834,6 +15377,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14871,6 +15415,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14908,6 +15453,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14945,6 +15491,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -14982,6 +15529,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15019,6 +15567,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15056,6 +15605,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15093,6 +15643,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15130,6 +15681,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15167,6 +15719,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15204,6 +15757,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15241,6 +15795,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15278,6 +15833,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15315,6 +15871,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15352,6 +15909,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15389,6 +15947,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15426,6 +15985,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15463,6 +16023,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15500,6 +16061,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15537,6 +16099,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15574,6 +16137,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15611,6 +16175,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15648,6 +16213,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15685,6 +16251,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15722,6 +16289,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15759,6 +16327,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15796,6 +16365,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15833,6 +16403,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15870,6 +16441,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15907,6 +16479,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15944,6 +16517,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -15981,6 +16555,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16018,6 +16593,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16055,6 +16631,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16092,6 +16669,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16129,6 +16707,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16166,6 +16745,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16203,6 +16783,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16240,6 +16821,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16277,6 +16859,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16314,6 +16897,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16351,6 +16935,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16388,6 +16973,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16425,6 +17011,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16462,6 +17049,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16499,6 +17087,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16536,6 +17125,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16573,6 +17163,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16610,6 +17201,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16647,6 +17239,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16684,6 +17277,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16721,6 +17315,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16758,6 +17353,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16795,6 +17391,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16832,6 +17429,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16869,6 +17467,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16906,6 +17505,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16943,6 +17543,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -16980,6 +17581,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17017,6 +17619,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17054,6 +17657,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17091,6 +17695,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17128,6 +17733,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17165,6 +17771,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17202,6 +17809,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17239,6 +17847,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17276,6 +17885,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17313,6 +17923,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17350,6 +17961,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17387,6 +17999,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17424,6 +18037,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17461,6 +18075,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17498,6 +18113,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17535,6 +18151,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17572,6 +18189,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17609,6 +18227,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17646,6 +18265,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17683,6 +18303,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17720,6 +18341,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17757,6 +18379,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17794,6 +18417,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17831,6 +18455,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17868,6 +18493,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17905,6 +18531,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17942,6 +18569,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -17979,6 +18607,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18016,6 +18645,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18053,6 +18683,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18090,6 +18721,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18127,6 +18759,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18164,6 +18797,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18201,6 +18835,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18238,6 +18873,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18275,6 +18911,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18312,6 +18949,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18349,6 +18987,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18386,6 +19025,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18423,6 +19063,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18460,6 +19101,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18497,6 +19139,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18534,6 +19177,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18571,6 +19215,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18608,6 +19253,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18645,6 +19291,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18682,6 +19329,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18719,6 +19367,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18756,6 +19405,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18793,6 +19443,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18830,6 +19481,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18867,6 +19519,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18904,6 +19557,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18941,6 +19595,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -18978,6 +19633,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19015,6 +19671,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19052,6 +19709,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19089,6 +19747,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19126,6 +19785,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19163,6 +19823,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19200,6 +19861,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19237,6 +19899,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19274,6 +19937,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19311,6 +19975,28 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [
+      {
+        "workId": "work-930b022f-b6f0-4329-b5ff-0a08df565665",
+        "order": 1,
+        "title": "The Killing Moon",
+        "workType": "Novel",
+        "totalPages": 422,
+        "startPage": 1,
+        "endPage": 422,
+        "notes": ""
+      },
+      {
+        "workId": "work-2e9069e6-4094-4562-ab28-906a46650d26",
+        "order": 2,
+        "title": "The Shadowed Sun",
+        "workType": "Novel",
+        "totalPages": 491,
+        "startPage": 427,
+        "endPage": 918,
+        "notes": ""
+      }
+    ],
     "notes": ""
   },
   {
@@ -19348,6 +20034,7 @@
     "shelf": "Shelf 0",
     "row": "Main",
     "rawShelf": "Shelf 0",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19385,6 +20072,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19422,6 +20110,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19459,6 +20148,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19496,6 +20186,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19533,6 +20224,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19570,6 +20262,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19607,6 +20300,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19644,6 +20338,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19681,6 +20376,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19718,6 +20414,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19755,6 +20452,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19792,6 +20490,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19829,6 +20528,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19866,6 +20566,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19903,6 +20604,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19940,6 +20642,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -19977,6 +20680,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20014,6 +20718,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20051,6 +20756,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20088,6 +20794,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20125,6 +20832,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20162,6 +20870,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20199,6 +20908,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20236,6 +20946,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20273,6 +20984,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20310,6 +21022,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20347,6 +21060,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20384,6 +21098,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20421,6 +21136,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20458,6 +21174,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20495,6 +21212,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20532,6 +21250,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20569,6 +21288,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20606,6 +21326,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20643,6 +21364,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20680,6 +21402,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20717,6 +21440,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20754,6 +21478,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20791,6 +21516,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20828,6 +21554,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20865,6 +21592,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20902,6 +21630,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20939,6 +21668,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -20976,6 +21706,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21013,6 +21744,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21050,6 +21782,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21087,6 +21820,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21124,6 +21858,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21161,6 +21896,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21198,6 +21934,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21235,6 +21972,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21272,6 +22010,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21309,6 +22048,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21346,6 +22086,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21383,6 +22124,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21420,6 +22162,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21457,6 +22200,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21494,6 +22238,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21531,6 +22276,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21568,6 +22314,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21605,6 +22352,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21642,6 +22390,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21679,6 +22428,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21716,6 +22466,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21753,6 +22504,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21790,6 +22542,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21827,6 +22580,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21864,6 +22618,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21901,6 +22656,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21938,6 +22694,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -21975,6 +22732,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22012,6 +22770,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22049,6 +22808,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22086,6 +22846,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22123,6 +22884,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22160,6 +22922,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22197,6 +22960,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22234,6 +22998,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22271,6 +23036,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22308,6 +23074,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22345,6 +23112,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22382,6 +23150,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22419,6 +23188,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22456,6 +23226,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22493,6 +23264,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22530,6 +23302,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22567,6 +23340,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22604,6 +23378,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22641,6 +23416,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22678,6 +23454,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22715,6 +23492,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22752,6 +23530,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22789,6 +23568,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22826,6 +23606,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22863,6 +23644,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22900,6 +23682,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22937,6 +23720,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -22974,6 +23758,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23011,6 +23796,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23048,6 +23834,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23085,6 +23872,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23122,6 +23910,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23159,6 +23948,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23196,6 +23986,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23233,6 +24024,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23270,6 +24062,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23307,6 +24100,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23344,6 +24138,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23381,6 +24176,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23418,6 +24214,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23455,6 +24252,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23492,6 +24290,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23529,6 +24328,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23566,6 +24366,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23603,6 +24404,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23640,6 +24442,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23677,6 +24480,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23714,6 +24518,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23751,6 +24556,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23788,6 +24594,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23825,6 +24632,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23862,6 +24670,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23899,6 +24708,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23936,6 +24746,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -23973,6 +24784,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24010,6 +24822,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24047,6 +24860,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24084,6 +24898,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24121,6 +24936,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24158,6 +24974,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24195,6 +25012,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24232,6 +25050,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24269,6 +25088,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24306,6 +25126,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24343,6 +25164,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24380,6 +25202,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24417,6 +25240,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24454,6 +25278,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24491,6 +25316,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24528,6 +25354,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24565,6 +25392,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24602,6 +25430,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24639,6 +25468,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24676,6 +25506,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24713,6 +25544,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24750,6 +25582,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24787,6 +25620,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24824,6 +25658,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24861,6 +25696,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24898,6 +25734,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24935,6 +25772,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -24972,6 +25810,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25009,6 +25848,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25046,6 +25886,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25083,6 +25924,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25120,6 +25962,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25157,6 +26000,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25194,6 +26038,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25231,6 +26076,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25268,6 +26114,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25305,6 +26152,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25342,6 +26190,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25379,6 +26228,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25416,6 +26266,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25453,6 +26304,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25490,6 +26342,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25527,6 +26380,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25564,6 +26418,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25601,6 +26456,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25638,6 +26494,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25675,6 +26532,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25712,6 +26570,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25749,6 +26608,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25786,6 +26646,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25823,6 +26684,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25860,6 +26722,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25897,6 +26760,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25934,6 +26798,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -25971,6 +26836,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26008,6 +26874,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26045,6 +26912,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26082,6 +26950,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26119,6 +26988,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26156,6 +27026,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26193,6 +27064,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26230,6 +27102,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26267,6 +27140,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26304,6 +27178,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26341,6 +27216,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26378,6 +27254,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26415,6 +27292,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26452,6 +27330,7 @@
     "shelf": "Shelf 0",
     "row": "Main",
     "rawShelf": "Shelf 0",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26489,6 +27368,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26526,6 +27406,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26563,6 +27444,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26600,6 +27482,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26637,6 +27520,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26674,6 +27558,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26711,6 +27596,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26748,6 +27634,7 @@
     "shelf": "Shelf 0",
     "row": "Main",
     "rawShelf": "Shelf 0",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26785,6 +27672,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26822,6 +27710,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26859,6 +27748,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26896,6 +27786,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26933,6 +27824,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -26970,6 +27862,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27007,6 +27900,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27044,6 +27938,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27081,6 +27976,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27118,6 +28014,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27155,6 +28052,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27192,6 +28090,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27229,6 +28128,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27266,6 +28166,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27303,6 +28204,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27340,6 +28242,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27377,6 +28280,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27414,6 +28318,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27451,6 +28356,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27488,6 +28394,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27525,6 +28432,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27562,6 +28470,48 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [
+      {
+        "workId": "work-7770b898-a5f4-43f2-a81f-e56b0bf72ba2",
+        "order": 1,
+        "title": "Binti",
+        "workType": "Novel",
+        "totalPages": 56,
+        "startPage": 1,
+        "endPage": 56,
+        "notes": ""
+      },
+      {
+        "workId": "work-81968a72-7c7e-42d2-afc8-06a945c556ca",
+        "order": 1.5,
+        "title": "Sacred Fire",
+        "workType": "Novel",
+        "totalPages": 38,
+        "startPage": 57,
+        "endPage": 57,
+        "notes": ""
+      },
+      {
+        "workId": "work-08056d5b-c229-422e-8876-4eddad874cdf",
+        "order": 2,
+        "title": "Home",
+        "workType": "Novel",
+        "totalPages": 107,
+        "startPage": 97,
+        "endPage": 204,
+        "notes": ""
+      },
+      {
+        "workId": "work-fb44a0e5-412e-4676-9788-9ed874492b5a",
+        "order": 3,
+        "title": "The Night Masquerade",
+        "workType": "Novel",
+        "totalPages": 151,
+        "startPage": 205,
+        "endPage": 356,
+        "notes": ""
+      }
+    ],
     "notes": ""
   },
   {
@@ -27599,6 +28549,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27636,6 +28587,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27673,6 +28625,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27710,6 +28663,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27747,6 +28701,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27784,6 +28739,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27821,6 +28777,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27858,6 +28815,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27895,6 +28853,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27932,6 +28891,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -27969,6 +28929,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28006,6 +28967,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28043,6 +29005,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28080,6 +29043,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28117,6 +29081,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28154,6 +29119,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28191,6 +29157,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28228,6 +29195,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28265,6 +29233,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28302,6 +29271,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28339,6 +29309,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28376,6 +29347,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28413,6 +29385,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28450,6 +29423,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28487,6 +29461,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28524,6 +29499,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28561,6 +29537,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28598,6 +29575,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28635,6 +29613,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28672,6 +29651,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28709,6 +29689,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28746,6 +29727,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28783,6 +29765,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28820,6 +29803,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28857,6 +29841,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28894,6 +29879,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28931,6 +29917,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -28968,6 +29955,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29005,6 +29993,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29042,6 +30031,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29079,6 +30069,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29116,6 +30107,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29153,6 +30145,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29190,6 +30183,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29227,6 +30221,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29264,6 +30259,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29301,6 +30297,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29338,6 +30335,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29375,6 +30373,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29412,6 +30411,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29449,6 +30449,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29486,6 +30487,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29523,6 +30525,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29560,6 +30563,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29597,6 +30601,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29634,6 +30639,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29671,6 +30677,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29708,6 +30715,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29745,6 +30753,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29782,6 +30791,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29819,6 +30829,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29856,6 +30867,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29893,6 +30905,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29930,6 +30943,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -29967,6 +30981,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30004,6 +31019,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30041,6 +31057,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30078,6 +31095,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30115,6 +31133,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30152,6 +31171,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30189,6 +31209,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30226,6 +31247,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30263,6 +31285,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30300,6 +31323,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30337,6 +31361,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30374,6 +31399,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30411,6 +31437,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30448,6 +31475,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30485,6 +31513,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30522,6 +31551,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30559,6 +31589,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30596,6 +31627,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30633,6 +31665,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30670,6 +31703,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30707,6 +31741,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30744,6 +31779,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30781,6 +31817,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30818,6 +31855,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30855,6 +31893,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30892,6 +31931,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30929,6 +31969,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -30966,6 +32007,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31003,6 +32045,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31040,6 +32083,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31077,6 +32121,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31114,6 +32159,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31151,6 +32197,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31188,6 +32235,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31225,6 +32273,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31262,6 +32311,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31299,6 +32349,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31336,6 +32387,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31373,6 +32425,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31410,6 +32463,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31447,6 +32501,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31484,6 +32539,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31521,6 +32577,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31558,6 +32615,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31595,6 +32653,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31632,6 +32691,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31669,6 +32729,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31706,6 +32767,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31743,6 +32805,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31780,6 +32843,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31817,6 +32881,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31854,6 +32919,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31891,6 +32957,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31928,6 +32995,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -31965,6 +33033,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32002,6 +33071,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32039,6 +33109,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32076,6 +33147,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32113,6 +33185,7 @@
     "shelf": "Shelf 0",
     "row": "Main",
     "rawShelf": "Shelf 0",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32150,6 +33223,7 @@
     "shelf": "Shelf 0",
     "row": "Main",
     "rawShelf": "Shelf 0",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32187,6 +33261,7 @@
     "shelf": "Shelf 0",
     "row": "Main",
     "rawShelf": "Shelf 0",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32224,6 +33299,7 @@
     "shelf": "Shelf 0",
     "row": "Main",
     "rawShelf": "Shelf 0",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32261,6 +33337,7 @@
     "shelf": "Shelf 0",
     "row": "Main",
     "rawShelf": "Shelf 0",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32298,6 +33375,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32335,6 +33413,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32372,6 +33451,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32409,6 +33489,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32446,6 +33527,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32483,6 +33565,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32520,6 +33603,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32557,6 +33641,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32594,6 +33679,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32631,6 +33717,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32668,6 +33755,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32705,6 +33793,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32742,6 +33831,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32779,6 +33869,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32816,6 +33907,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32853,6 +33945,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32890,6 +33983,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32927,6 +34021,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -32964,6 +34059,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33001,6 +34097,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33038,6 +34135,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33075,6 +34173,7 @@
     "shelf": "Shelf 0",
     "row": "Main",
     "rawShelf": "Shelf 0",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33112,6 +34211,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33149,6 +34249,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33186,6 +34287,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33223,6 +34325,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33260,6 +34363,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33297,6 +34401,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33334,6 +34439,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33371,6 +34477,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33408,6 +34515,7 @@
     "shelf": "Shelf 3",
     "row": "Front",
     "rawShelf": "Shelf 3, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33445,6 +34553,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33482,6 +34591,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33519,6 +34629,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33556,6 +34667,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33593,6 +34705,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33630,6 +34743,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33667,6 +34781,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33704,6 +34819,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33741,6 +34857,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33778,6 +34895,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33815,6 +34933,7 @@
     "shelf": "Shelf 3",
     "row": "Back",
     "rawShelf": "Shelf 3, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33852,6 +34971,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33889,6 +35009,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33926,6 +35047,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -33963,6 +35085,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34000,6 +35123,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34037,6 +35161,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34074,6 +35199,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34111,6 +35237,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34148,6 +35275,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34185,6 +35313,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34222,6 +35351,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34259,6 +35389,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34296,6 +35427,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34333,6 +35465,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34370,6 +35503,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34407,6 +35541,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34444,6 +35579,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34481,6 +35617,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34518,6 +35655,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34555,6 +35693,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34592,6 +35731,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34629,6 +35769,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34666,6 +35807,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34703,6 +35845,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34740,6 +35883,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34777,6 +35921,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34814,6 +35959,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34851,6 +35997,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34888,6 +36035,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34925,6 +36073,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34962,6 +36111,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -34999,6 +36149,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35036,6 +36187,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35073,6 +36225,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35110,6 +36263,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35147,6 +36301,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35184,6 +36339,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35221,6 +36377,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35258,6 +36415,7 @@
     "shelf": "Shelf 1",
     "row": "Back",
     "rawShelf": "Shelf 1, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35295,6 +36453,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35332,6 +36491,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35369,6 +36529,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35406,6 +36567,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35443,6 +36605,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35480,6 +36643,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35517,6 +36681,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35554,6 +36719,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35591,6 +36757,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35628,6 +36795,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35665,6 +36833,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35702,6 +36871,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35739,6 +36909,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35776,6 +36947,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35813,6 +36985,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35850,6 +37023,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35887,6 +37061,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35924,6 +37099,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35961,6 +37137,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -35998,6 +37175,7 @@
     "shelf": "-",
     "row": "Main",
     "rawShelf": "-",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36035,6 +37213,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36072,6 +37251,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36109,6 +37289,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36146,6 +37327,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36183,6 +37365,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36220,6 +37403,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36257,6 +37441,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36294,6 +37479,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36331,6 +37517,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36368,6 +37555,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36405,6 +37593,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36442,6 +37631,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36479,6 +37669,7 @@
     "shelf": "Right Shelf",
     "row": "Main",
     "rawShelf": "Right Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36516,6 +37707,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36553,6 +37745,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36590,6 +37783,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36627,6 +37821,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36664,6 +37859,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36701,6 +37897,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36738,6 +37935,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36775,6 +37973,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36812,6 +38011,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36849,6 +38049,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36886,6 +38087,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36923,6 +38125,7 @@
     "shelf": "Shelf 1",
     "row": "Front",
     "rawShelf": "Shelf 1, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36960,6 +38163,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -36997,6 +38201,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37034,6 +38239,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37071,6 +38277,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37108,6 +38315,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37145,6 +38353,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37182,6 +38391,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37219,6 +38429,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37256,6 +38467,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37293,6 +38505,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37330,6 +38543,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37367,6 +38581,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37404,6 +38619,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37441,6 +38657,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37478,6 +38695,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37515,6 +38733,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37552,6 +38771,7 @@
     "shelf": "Shelf 2",
     "row": "Front",
     "rawShelf": "Shelf 2, Front",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37589,6 +38809,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37626,6 +38847,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37663,6 +38885,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37700,6 +38923,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37737,6 +38961,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37774,6 +38999,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37811,6 +39037,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37848,6 +39075,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37885,6 +39113,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37922,6 +39151,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37959,6 +39189,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -37996,6 +39227,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38033,6 +39265,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38070,6 +39303,7 @@
     "shelf": "Shelf 2",
     "row": "Back",
     "rawShelf": "Shelf 2, Back",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38107,6 +39341,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38144,6 +39379,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38181,6 +39417,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38218,6 +39455,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38255,6 +39493,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38292,6 +39531,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38329,6 +39569,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38366,6 +39607,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38403,6 +39645,7 @@
     "shelf": "Left Shelf",
     "row": "Main",
     "rawShelf": "Left Shelf",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38440,6 +39683,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38477,6 +39721,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38514,6 +39759,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38551,6 +39797,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38588,6 +39835,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38625,6 +39873,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38662,6 +39911,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38699,6 +39949,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38736,6 +39987,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38773,6 +40025,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38810,6 +40063,7 @@
     "shelf": "Shelf 7",
     "row": "Main",
     "rawShelf": "Shelf 7",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38847,6 +40101,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38884,6 +40139,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38921,6 +40177,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38958,6 +40215,7 @@
     "shelf": "",
     "row": "Main",
     "rawShelf": "",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -38995,6 +40253,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -39032,6 +40291,7 @@
     "shelf": "Shelf 1",
     "row": "Main",
     "rawShelf": "Shelf 1",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -39069,6 +40329,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -39106,6 +40367,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -39143,6 +40405,7 @@
     "shelf": "Shelf 4",
     "row": "Main",
     "rawShelf": "Shelf 4",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -39180,6 +40443,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -39217,6 +40481,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -39254,6 +40519,7 @@
     "shelf": "Shelf 3",
     "row": "Main",
     "rawShelf": "Shelf 3",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -39291,6 +40557,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -39328,6 +40595,7 @@
     "shelf": "Shelf 6",
     "row": "Main",
     "rawShelf": "Shelf 6",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -39365,6 +40633,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -39402,6 +40671,7 @@
     "shelf": "Shelf 5",
     "row": "Main",
     "rawShelf": "Shelf 5",
+    "containedWorks": [],
     "notes": ""
   },
   {
@@ -39439,6 +40709,7 @@
     "shelf": "Shelf 2",
     "row": "Main",
     "rawShelf": "Shelf 2",
+    "containedWorks": [],
     "notes": ""
   }
 ]

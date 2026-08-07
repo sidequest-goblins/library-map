@@ -1,5 +1,16 @@
 export type ShelfRow = "Main" | "Front" | "Back";
 
+export type ContainedWork = {
+  workId: string;
+  order: number;
+  title: string;
+  workType?: string;
+  totalPages?: number | null;
+  startPage?: number | null;
+  endPage?: number | null;
+  notes?: string;
+};
+
 export type Book = {
   bookId: string;
   title: string;
@@ -34,6 +45,7 @@ export type Book = {
   seriesNumber?: number | string | null;
   shelfPosition?: number | null;
   rawShelf?: string;
+  containedWorks?: ContainedWork[];
   notes?: string;
 };
 

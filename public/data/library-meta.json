@@ -1,7 +1,14 @@
 {
-  "generatedAt": "2026-08-06T19:04:26.788696+00:00",
+  "generatedAt": "2026-08-07T19:18:13.308563+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY LIST VIEW.xlsx",
   "catalogWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
+  "worksWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY WORKS.xlsx",
+  "containedWorks": {
+    "sourceSheet": "Contained Works",
+    "containedWorkCount": 20,
+    "containerBookCount": 5,
+    "skippedBlankRows": 3
+  },
   "sourceSheet": "List View",
   "bookCount": 1066,
   "bookIdCount": 1066,
