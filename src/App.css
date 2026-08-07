@@ -2033,6 +2033,103 @@ select {
   opacity: 0.5;
 }
 
+.containedWorkProgress {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.25rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(76, 48, 30, 0.1);
+}
+
+.containedWorkProgressHeader {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.containedWorkProgressLabel {
+  color: var(--greenDark);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.containedWorkProgressStatus {
+  width: fit-content;
+  border: 1px solid rgba(76, 48, 30, 0.18);
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem;
+  color: var(--muted);
+  background: rgba(255, 250, 240, 0.76);
+  font-size: 0.74rem;
+  font-weight: 850;
+}
+
+.containedWorkProgressStatus[data-status="in_progress"] {
+  color: var(--greenDark);
+  border-color: rgba(82, 111, 69, 0.32);
+  background: rgba(169, 183, 141, 0.3);
+}
+
+.containedWorkProgressStatus[data-status="paused"] {
+  color: var(--brownDark);
+  border-color: rgba(201, 154, 69, 0.38);
+  background: rgba(201, 154, 69, 0.16);
+}
+
+.containedWorkProgressStatus[data-status="read"] {
+  color: var(--greenDark);
+  border-color: rgba(82, 111, 69, 0.34);
+  background: rgba(169, 183, 141, 0.36);
+}
+
+.containedWorkProgressEditor {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(130px, 1fr)
+    );
+  gap: 0.55rem;
+}
+
+.containedWorkProgressField {
+  display: grid;
+  gap: 0.28rem;
+  color: var(--greenDark);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.containedWorkProgressField input,
+.containedWorkProgressField select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(76, 48, 30, 0.2);
+  border-radius: 10px;
+  padding: 0.5rem 0.6rem;
+  color: var(--brownDark);
+  background: rgba(255, 250, 240, 0.9);
+  font: inherit;
+  font-size: 0.9rem;
+}
+
+.containedWorkProgressField input:focus,
+.containedWorkProgressField select:focus {
+  outline: 3px solid rgba(201, 154, 69, 0.24);
+  outline-offset: 1px;
+  border-color: rgba(82, 111, 69, 0.45);
+}
+
+.containedWorkProgressField input:disabled,
+.containedWorkProgressField select:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
 .bookDetailSections {
   display: grid;
   gap: 1rem;

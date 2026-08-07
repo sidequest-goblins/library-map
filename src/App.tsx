@@ -21,9 +21,12 @@ import {
   buildLibraryStateSeedPreview,
   isLibraryReaderId,
   makeLibraryChallengeEntryKey,
+  makeLibraryContainedWorkStateKey,
   makeLibraryStateKey,
+  type LibraryContainedWorkStatus,
   type LibraryReaderBookState,
   type LibraryReaderChallengeAttemptLink,
+  type LibraryReaderContainedWorkState,
   type LibraryReaderId,
   type LibraryReaderReadingAttempt,
   type LibraryStateLoadStatus,
@@ -48,7 +51,8 @@ import type {
 import type { 
   Book,
   ChallengeData,
-  ChallengeEntry, 
+  ChallengeEntry,
+  ContainedWork,
   WantedBook, 
   WantedLists, 
 } from "./data/libraryTypes";
@@ -483,6 +487,45 @@ type BookRatingFeedback = {
   kind: "success" | "error";
   message: string;
 } | null;
+
+type ContainedWorkProgressFeedback = {
+  stateKey: string;
+  kind: "success" | "error";
+  message: string;
+} | null;
+
+const CONTAINED_WORK_STATUS_OPTIONS: Array<{
+  value: LibraryContainedWorkStatus;
+  label: string;
+}> = [
+  {
+    value: "unread",
+    label: "Not started",
+  },
+  {
+    value: "in_progress",
+    label: "Reading",
+  },
+  {
+    value: "paused",
+    label: "Paused",
+  },
+  {
+    value: "read",
+    label: "Read",
+  },
+];
+
+const CONTAINED_WORK_STATUS_LABELS:
+  Record<
+    LibraryContainedWorkStatus,
+    string
+  > = {
+  unread: "Not started",
+  in_progress: "Reading",
+  paused: "Paused",
+  read: "Read",
+};
 
 type BookMetadataFeedback = {
   bookId: string;
@@ -3100,6 +3143,52 @@ async function fetchLibraryStateRows(
   return data ?? [];
 }
 
+async function fetchContainedWorkStateRows(
+  userId: string
+): Promise<
+  LibraryReaderContainedWorkState[]
+> {
+  const { data, error } =
+    await supabase
+      .from(
+        "library_reader_contained_work_state"
+      )
+      .select(`
+        user_id,
+        reader_id,
+        work_id,
+        status,
+        current_page,
+        created_at,
+        updated_at
+      `)
+      .eq(
+        "user_id",
+        userId
+      )
+      .order(
+        "work_id",
+        {
+          ascending: true,
+        }
+      )
+      .order(
+        "reader_id",
+        {
+          ascending: true,
+        }
+      )
+      .overrideTypes<
+        LibraryReaderContainedWorkState[]
+      >();
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}
+
 const SUPABASE_PAGE_SIZE = 1000;
 
 async function fetchBookMetadataRows(
@@ -3392,6 +3481,56 @@ export default function App() {
     libraryStateLoadError,
     setLibraryStateLoadError,
   ] = useState("");
+
+  const [
+    containedWorkStateRows,
+    setContainedWorkStateRows,
+  ] = useState<
+    LibraryReaderContainedWorkState[]
+  >([]);
+
+  const [
+    containedWorkStateLoadStatus,
+    setContainedWorkStateLoadStatus,
+  ] = useState<
+    LibraryStateLoadStatus
+  >("idle");
+
+  const [
+    containedWorkStateLoadError,
+    setContainedWorkStateLoadError,
+  ] = useState("");
+
+  const [
+    containedWorkSavingKey,
+    setContainedWorkSavingKey,
+  ] = useState<string | null>(
+    null
+  );
+
+  const [
+    containedWorkProgressFeedback,
+    setContainedWorkProgressFeedback,
+  ] = useState<
+    ContainedWorkProgressFeedback
+  >(null);
+
+  const [
+    containedWorkStatusDrafts,
+    setContainedWorkStatusDrafts,
+  ] = useState<
+    Record<
+      string,
+      LibraryContainedWorkStatus
+    >
+  >({});
+
+  const [
+    containedWorkPageDrafts,
+    setContainedWorkPageDrafts,
+  ] = useState<
+    Record<string, string>
+  >({});
 
   const [
     isSeedingLibraryState,
@@ -4606,6 +4745,96 @@ export default function App() {
   useEffect(() => {
     let isActive = true;
 
+    async function loadContainedWorkState() {
+      if (!householdSession) {
+        setContainedWorkStateRows([]);
+
+        setContainedWorkStateLoadStatus(
+          "idle"
+        );
+
+        setContainedWorkStateLoadError(
+          ""
+        );
+
+        setContainedWorkSavingKey(
+          null
+        );
+
+        setContainedWorkProgressFeedback(
+          null
+        );
+
+        setContainedWorkStatusDrafts(
+          {}
+        );
+
+        setContainedWorkPageDrafts(
+          {}
+        );
+
+        return;
+      }
+
+      setContainedWorkStateLoadStatus(
+        "loading"
+      );
+
+      setContainedWorkStateLoadError(
+        ""
+      );
+
+      try {
+        const loadedRows =
+          await fetchContainedWorkStateRows(
+            householdSession.user.id
+          );
+
+        if (!isActive) {
+          return;
+        }
+
+        setContainedWorkStateRows(
+          loadedRows
+        );
+
+        setContainedWorkStateLoadStatus(
+          "ready"
+        );
+      } catch (error) {
+        if (!isActive) {
+          return;
+        }
+
+        console.error(
+          "Could not load contained work progress.",
+          error
+        );
+
+        setContainedWorkStateRows([]);
+
+        setContainedWorkStateLoadStatus(
+          "error"
+        );
+
+        setContainedWorkStateLoadError(
+          error instanceof Error
+            ? error.message
+            : "Unknown Supabase error"
+        );
+      }
+    }
+
+    void loadContainedWorkState();
+
+    return () => {
+      isActive = false;
+    };
+  }, [householdSession]);
+
+  useEffect(() => {
+    let isActive = true;
+
     async function loadReadingActivity() {
       if (!householdSession) {
         setReadingAttempts([]);
@@ -4703,6 +4932,23 @@ export default function App() {
       ),
     [libraryStateRows]
   );
+
+  const containedWorkStateByKey =
+    useMemo(
+      () =>
+        new Map(
+          containedWorkStateRows.map(
+            (stateRow) => [
+              makeLibraryContainedWorkStateKey(
+                stateRow.reader_id,
+                stateRow.work_id
+              ),
+              stateRow,
+            ]
+          )
+        ),
+      [containedWorkStateRows]
+    );
 
   const activeReadingAttempts =
     useMemo(
@@ -4969,6 +5215,239 @@ export default function App() {
       });
     } finally {
       setIsSeedingLibraryState(false);
+    }
+  }
+
+  async function saveContainedWorkProgress(
+    work: ContainedWork,
+    status: LibraryContainedWorkStatus,
+    currentPageValue: string
+  ) {
+    const readerId:
+      LibraryReaderId = "cj";
+
+    const stateKey =
+      makeLibraryContainedWorkStateKey(
+        readerId,
+        work.workId
+      );
+
+    if (
+      !householdSession ||
+      containedWorkStateLoadStatus !==
+        "ready"
+    ) {
+      setContainedWorkProgressFeedback({
+        stateKey,
+        kind: "error",
+        message:
+          "Contained work progress must finish loading before saving.",
+      });
+
+      return;
+    }
+
+    if (containedWorkSavingKey) {
+      return;
+    }
+
+    const trimmedPage =
+      currentPageValue.trim();
+
+    let currentPage:
+      number | null = null;
+
+    if (trimmedPage) {
+      const parsedPage =
+        Number(trimmedPage);
+
+      if (
+        !Number.isInteger(
+          parsedPage
+        ) ||
+        parsedPage < 0
+      ) {
+        setContainedWorkProgressFeedback({
+          stateKey,
+          kind: "error",
+          message:
+            "Current page must be a whole number of 0 or greater.",
+        });
+
+        return;
+      }
+
+      const totalPages =
+        Number(work.totalPages);
+
+      if (
+        Number.isFinite(
+          totalPages
+        ) &&
+        totalPages > 0 &&
+        parsedPage > totalPages
+      ) {
+        setContainedWorkProgressFeedback({
+          stateKey,
+          kind: "error",
+          message:
+            `Current page cannot be greater than ${totalPages}.`,
+        });
+
+        return;
+      }
+
+      currentPage =
+        parsedPage > 0
+          ? parsedPage
+          : null;
+    }
+
+    const totalPages =
+      Number(work.totalPages);
+
+    if (
+      status === "read" &&
+      Number.isFinite(totalPages) &&
+      totalPages > 0
+    ) {
+      currentPage =
+        Math.trunc(totalPages);
+    }
+
+    if (status === "unread") {
+      currentPage = null;
+    }
+
+    setContainedWorkSavingKey(
+      stateKey
+    );
+
+    setContainedWorkProgressFeedback(
+      null
+    );
+
+    try {
+      const { error } =
+        await supabase
+          .from(
+            "library_reader_contained_work_state"
+          )
+          .upsert(
+            {
+              user_id:
+                householdSession
+                  .user.id,
+
+              reader_id:
+                readerId,
+
+              work_id:
+                work.workId,
+
+              status,
+
+              current_page:
+                currentPage,
+            },
+            {
+              onConflict:
+                "user_id,reader_id,work_id",
+            }
+          );
+
+      if (error) {
+        throw error;
+      }
+
+      const refreshedRows =
+        await fetchContainedWorkStateRows(
+          householdSession.user.id
+        );
+
+      const refreshedState =
+        refreshedRows.find(
+          (stateRow) =>
+            stateRow.reader_id ===
+              readerId &&
+            stateRow.work_id ===
+              work.workId
+        );
+
+      if (
+        !refreshedState ||
+        refreshedState.status !==
+          status ||
+        (
+          refreshedState
+            .current_page ??
+          null
+        ) !== currentPage
+      ) {
+        throw new Error(
+          "Supabase did not return the saved contained work progress."
+        );
+      }
+
+      setContainedWorkStateRows(
+        refreshedRows
+      );
+
+      setContainedWorkStatusDrafts(
+        (currentDrafts) => {
+          const nextDrafts = {
+            ...currentDrafts,
+          };
+
+          delete nextDrafts[
+            stateKey
+          ];
+
+          return nextDrafts;
+        }
+      );
+
+      setContainedWorkPageDrafts(
+        (currentDrafts) => {
+          const nextDrafts = {
+            ...currentDrafts,
+          };
+
+          delete nextDrafts[
+            stateKey
+          ];
+
+          return nextDrafts;
+        }
+      );
+
+      setContainedWorkProgressFeedback({
+        stateKey,
+        kind: "success",
+        message:
+          `${work.title}: ` +
+          `${CONTAINED_WORK_STATUS_LABELS[
+            status
+          ]} saved.`,
+      });
+    } catch (error) {
+      console.error(
+        "Could not save contained work progress.",
+        error
+      );
+
+      setContainedWorkProgressFeedback({
+        stateKey,
+        kind: "error",
+        message:
+          error instanceof Error
+            ? `Progress failed to save: ${error.message}`
+            : "Progress failed to save because of an unknown Supabase error.",
+      });
+    } finally {
+      setContainedWorkSavingKey(
+        null
+      );
     }
   }
 
@@ -10285,6 +10764,11 @@ export default function App() {
     setReadStatusDrafts({});
     setReadingAttemptPageDrafts({});
     setAuthorMetadataFeedback(null);
+    setContainedWorkStatusDrafts({});
+    setContainedWorkPageDrafts({});
+    setContainedWorkProgressFeedback(
+      null
+    );
   }, [selectedBookId]);
 
   function runAfterBookDetailDiscardCheck(
@@ -11255,6 +11739,62 @@ export default function App() {
                           : "",
                       ].filter(Boolean);
 
+                      const stateKey =
+                        makeLibraryContainedWorkStateKey(
+                          "cj",
+                          work.workId
+                        );
+
+                      const persistedState =
+                        containedWorkStateByKey.get(
+                          stateKey
+                        );
+
+                      const persistedStatus:
+                        LibraryContainedWorkStatus =
+                        persistedState?.status ??
+                        "unread";
+
+                      const persistedPageValue =
+                        persistedState
+                          ?.current_page != null
+                          ? String(
+                              persistedState
+                                .current_page
+                            )
+                          : "";
+
+                      const statusValue =
+                        containedWorkStatusDrafts[
+                          stateKey
+                        ] ??
+                        persistedStatus;
+
+                      const pageValue =
+                        stateKey in
+                        containedWorkPageDrafts
+                          ? containedWorkPageDrafts[
+                              stateKey
+                            ]
+                          : persistedPageValue;
+
+                      const hasChanges =
+                        stateKey in
+                          containedWorkStatusDrafts ||
+                        stateKey in
+                          containedWorkPageDrafts;
+
+                      const isSaving =
+                        containedWorkSavingKey ===
+                        stateKey;
+
+                      const feedback =
+                        containedWorkProgressFeedback
+                          ?.stateKey ===
+                        stateKey
+                          ? containedWorkProgressFeedback
+                          : null;
+
                       return (
                         <article
                           key={work.workId}
@@ -11280,6 +11820,243 @@ export default function App() {
                               {work.notes}
                             </p>
                           ) : null}
+
+                          <div className="containedWorkProgress">
+                            <div className="containedWorkProgressHeader">
+                              <span className="containedWorkProgressLabel">
+                                CJ progress
+                              </span>
+
+                              <span
+                                className="containedWorkProgressStatus"
+                                data-status={
+                                  statusValue
+                                }
+                              >
+                                {
+                                  CONTAINED_WORK_STATUS_LABELS[
+                                    statusValue
+                                  ]
+                                }
+                              </span>
+                            </div>
+
+                            {containedWorkStateLoadStatus ===
+                            "loading" ? (
+                              <p className="detailMuted">
+                                Loading progress…
+                              </p>
+                            ) : containedWorkStateLoadStatus ===
+                              "error" ? (
+                              <p
+                                className="readingAttemptFeedback readingAttemptFeedbackError"
+                                role="alert"
+                              >
+                                Could not load
+                                contained work
+                                progress:{" "}
+                                {
+                                  containedWorkStateLoadError
+                                }
+                              </p>
+                            ) : !householdSession ? (
+                              <p className="detailMuted">
+                                Sign in to track
+                                CJ's progress.
+                              </p>
+                            ) : (
+                              <>
+                                <div className="containedWorkProgressEditor">
+                                  <label className="containedWorkProgressField">
+                                    <span>
+                                      Status
+                                    </span>
+
+                                    <select
+                                      value={
+                                        statusValue
+                                      }
+                                      disabled={
+                                        isSaving
+                                      }
+                                      onChange={(
+                                        event
+                                      ) => {
+                                        const nextStatus =
+                                          event
+                                            .target
+                                            .value as
+                                            LibraryContainedWorkStatus;
+
+                                        setContainedWorkStatusDrafts(
+                                          (
+                                            currentDrafts
+                                          ) => {
+                                            const nextDrafts =
+                                              {
+                                                ...currentDrafts,
+                                              };
+
+                                            if (
+                                              nextStatus ===
+                                              persistedStatus
+                                            ) {
+                                              delete nextDrafts[
+                                                stateKey
+                                              ];
+                                            } else {
+                                              nextDrafts[
+                                                stateKey
+                                              ] =
+                                                nextStatus;
+                                            }
+
+                                            return nextDrafts;
+                                          }
+                                        );
+
+                                        setContainedWorkProgressFeedback(
+                                          null
+                                        );
+                                      }}
+                                    >
+                                      {CONTAINED_WORK_STATUS_OPTIONS.map(
+                                        (
+                                          option
+                                        ) => (
+                                          <option
+                                            key={
+                                              option.value
+                                            }
+                                            value={
+                                              option.value
+                                            }
+                                          >
+                                            {
+                                              option.label
+                                            }
+                                          </option>
+                                        )
+                                      )}
+                                    </select>
+                                  </label>
+
+                                  <label className="containedWorkProgressField">
+                                    <span>
+                                      Current page
+                                    </span>
+
+                                    <input
+                                      type="number"
+                                      min={0}
+                                      max={
+                                        work.totalPages ??
+                                        undefined
+                                      }
+                                      step={1}
+                                      inputMode="numeric"
+                                      value={
+                                        pageValue
+                                      }
+                                      disabled={
+                                        isSaving ||
+                                        statusValue ===
+                                          "unread" ||
+                                        statusValue ===
+                                          "read"
+                                      }
+                                      onChange={(
+                                        event
+                                      ) => {
+                                        const nextValue =
+                                          event
+                                            .target
+                                            .value;
+
+                                        setContainedWorkPageDrafts(
+                                          (
+                                            currentDrafts
+                                          ) => {
+                                            const nextDrafts =
+                                              {
+                                                ...currentDrafts,
+                                              };
+
+                                            if (
+                                              nextValue ===
+                                              persistedPageValue
+                                            ) {
+                                              delete nextDrafts[
+                                                stateKey
+                                              ];
+                                            } else {
+                                              nextDrafts[
+                                                stateKey
+                                              ] =
+                                                nextValue;
+                                            }
+
+                                            return nextDrafts;
+                                          }
+                                        );
+
+                                        setContainedWorkProgressFeedback(
+                                          null
+                                        );
+                                      }}
+                                    />
+                                  </label>
+                                </div>
+
+                                <button
+                                  type="button"
+                                  className="readingAttemptStartButton"
+                                  disabled={
+                                    !hasChanges ||
+                                    isSaving
+                                  }
+                                  onClick={() => {
+                                    void saveContainedWorkProgress(
+                                      work,
+                                      statusValue,
+                                      pageValue
+                                    );
+                                  }}
+                                >
+                                  {isSaving
+                                    ? "Saving…"
+                                    : hasChanges
+                                      ? "Save CJ progress"
+                                      : "Saved"}
+                                </button>
+
+                                {feedback ? (
+                                  <p
+                                    className={[
+                                      "readingAttemptFeedback",
+
+                                      feedback.kind ===
+                                      "error"
+                                        ? "readingAttemptFeedbackError"
+                                        : "readingAttemptFeedbackSuccess",
+                                    ].join(
+                                      " "
+                                    )}
+                                    role={
+                                      feedback.kind ===
+                                      "error"
+                                        ? "alert"
+                                        : "status"
+                                    }
+                                  >
+                                    {
+                                      feedback.message
+                                    }
+                                  </p>
+                                ) : null}
+                              </>
+                            )}
+                          </div>
                         </article>
                       );
                     }

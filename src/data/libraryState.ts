@@ -19,6 +19,22 @@ export type LibraryReaderBookState = {
   updated_at: string;
 };
 
+export type LibraryContainedWorkStatus =
+  | "unread"
+  | "in_progress"
+  | "paused"
+  | "read";
+
+export type LibraryReaderContainedWorkState = {
+  user_id: string;
+  reader_id: LibraryReaderId;
+  work_id: string;
+  status: LibraryContainedWorkStatus;
+  current_page: number | null;
+  created_at: string;
+  updated_at: string;
+};
+
 export type LibraryReadingAttemptStatus =
   | "active"
   | "completed"
@@ -89,6 +105,13 @@ export function makeLibraryStateKey(
   catalogKey: string
 ): string {
   return `${readerId}:${catalogKey}`;
+}
+
+export function makeLibraryContainedWorkStateKey(
+  readerId: LibraryReaderId,
+  workId: string
+): string {
+  return `${readerId}:${workId}`;
 }
 
 export function makeLibraryChallengeEntryKey(
