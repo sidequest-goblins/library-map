@@ -3791,6 +3791,27 @@ select {
     rgba(169, 183, 141, 0.23);
 }
 
+.statsCurrentContainedWork {
+  border-left-color:
+    rgba(201, 154, 69, 0.58);
+  background:
+    rgba(201, 154, 69, 0.13);
+}
+
+.statsCurrentContainedWork:hover:not(:disabled) {
+  border-left-color:
+    var(--gold);
+  background:
+    rgba(201, 154, 69, 0.21);
+}
+
+.statsCurrentContainedWork[data-status="paused"] {
+  border-left-color:
+    rgba(138, 92, 42, 0.52);
+  background:
+    rgba(138, 92, 42, 0.11);
+}
+
 .statsCurrentBook:focus-visible {
   outline:
     3px solid

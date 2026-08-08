@@ -494,6 +494,17 @@ type ContainedWorkProgressFeedback = {
   message: string;
 } | null;
 
+type StatsCurrentReadingItem = {
+  key: string;
+  readerId: LibraryReaderId;
+  title: string;
+  subtitle: string;
+  progress: string;
+  bookId?: string;
+  source: "book" | "containedWork";
+  status?: LibraryContainedWorkStatus;
+};
+
 const CONTAINED_WORK_STATUS_OPTIONS: Array<{
   value: LibraryContainedWorkStatus;
   label: string;
@@ -1824,6 +1835,45 @@ function formatStatsReadingProgress(
 
   const totalPages = Number(
     book?.totalPages
+  );
+
+  if (currentPage > 0) {
+    parts.push(
+      Number.isFinite(totalPages) &&
+        totalPages > 0
+        ? `Page ${currentPage.toLocaleString()} of ${totalPages.toLocaleString()}`
+        : `Page ${currentPage.toLocaleString()}`
+    );
+  } else if (
+    Number.isFinite(totalPages) &&
+    totalPages > 0
+  ) {
+    parts.push(
+      `${totalPages.toLocaleString()} pages`
+    );
+  }
+
+  return parts.join(" · ");
+}
+
+function formatStatsContainedWorkProgress(
+  state: LibraryReaderContainedWorkState,
+  work?: ContainedWork
+): string {
+  const parts = [
+    CONTAINED_WORK_STATUS_LABELS[
+      state.status
+    ],
+    "Contained work",
+  ];
+
+  const currentPage = Math.max(
+    state.current_page ?? 0,
+    0
+  );
+
+  const totalPages = Number(
+    work?.totalPages
   );
 
   if (currentPage > 0) {
@@ -6340,6 +6390,34 @@ export default function App() {
       return nextBooksByCatalogKey;
     }, [books]);
 
+  const containedWorkContextsByWorkId =
+    useMemo(() => {
+      const nextContexts =
+        new Map<
+          string,
+          {
+            book: Book;
+            work: ContainedWork;
+          }
+        >();
+
+      books.forEach((book) => {
+        book.containedWorks?.forEach(
+          (work) => {
+            nextContexts.set(
+              work.workId,
+              {
+                book,
+                work,
+              }
+            );
+          }
+        );
+      });
+
+      return nextContexts;
+    }, [books]);
+
   const sharedLibraryStateIsAuthoritative =
     householdSession !== null &&
     libraryStateLoadStatus === "ready";
@@ -7475,21 +7553,103 @@ export default function App() {
     }, [statsBreakdownRows]);
 
   const currentReadingItems =
-    useMemo(
-      () =>
-        activeReadingAttempts.map(
-          (attempt) => ({
-            attempt,
+    useMemo<StatsCurrentReadingItem[]>(
+      () => {
+        const bookItems =
+          activeReadingAttempts.map(
+            (attempt) => {
+              const book =
+                booksByCatalogKey.get(
+                  attempt.catalog_key
+                );
 
-            book:
-              booksByCatalogKey.get(
-                attempt.catalog_key
-              ),
-          })
-        ),
+              return {
+                key:
+                  `attempt:${attempt.attempt_id}`,
+                readerId:
+                  attempt.reader_id,
+                title:
+                  book?.title ??
+                  attempt.catalog_key,
+                subtitle:
+                  book?.author ??
+                  "Library book",
+                progress:
+                  formatStatsReadingProgress(
+                    attempt,
+                    book
+                  ),
+                bookId:
+                  book?.bookId,
+                source:
+                  "book" as const,
+              };
+            }
+          );
+
+        const containedWorkItems =
+          containedWorkStateRows
+            .filter(
+              (stateRow) =>
+                stateRow.status ===
+                  "in_progress" ||
+                stateRow.status ===
+                  "paused"
+            )
+            .map((stateRow) => {
+              const context =
+                containedWorkContextsByWorkId.get(
+                  stateRow.work_id
+                );
+
+              return {
+                key:
+                  `contained:${stateRow.reader_id}:${stateRow.work_id}`,
+                readerId:
+                  stateRow.reader_id,
+                title:
+                  context?.work.title ??
+                  stateRow.work_id,
+                subtitle:
+                  context
+                    ? `Contained in ${context.book.title}`
+                    : "Contained work",
+                progress:
+                  formatStatsContainedWorkProgress(
+                    stateRow,
+                    context?.work
+                  ),
+                bookId:
+                  context?.book.bookId,
+                source:
+                  "containedWork" as const,
+                status:
+                  stateRow.status,
+              };
+            });
+
+        return [
+          ...bookItems,
+          ...containedWorkItems,
+        ].sort(
+          (firstItem, secondItem) =>
+            firstItem.readerId.localeCompare(
+              secondItem.readerId
+            ) ||
+            firstItem.title.localeCompare(
+              secondItem.title,
+              undefined,
+              {
+                numeric: true,
+              }
+            )
+        );
+      },
       [
         activeReadingAttempts,
         booksByCatalogKey,
+        containedWorkContextsByWorkId,
+        containedWorkStateRows,
       ]
     );
 
@@ -7500,9 +7660,8 @@ export default function App() {
 
       items:
         currentReadingItems.filter(
-          ({ attempt }) =>
-            attempt.reader_id ===
-            "cj"
+          (item) =>
+            item.readerId === "cj"
         ),
     },
     {
@@ -7511,9 +7670,8 @@ export default function App() {
 
       items:
         currentReadingItems.filter(
-          ({ attempt }) =>
-            attempt.reader_id ===
-            "jc"
+          (item) =>
+            item.readerId === "jc"
         ),
     },
   ];
@@ -15964,42 +16122,48 @@ export default function App() {
                       0 ? (
                         <div className="statsCurrentList">
                           {group.items.map(
-                            ({
-                              attempt,
-                              book,
-                            }) => (
+                            (item) => (
                               <button
                                 key={
-                                  attempt.attempt_id
+                                  item.key
                                 }
                                 type="button"
-                                className="statsCurrentBook"
-                                disabled={!book}
+                                className={[
+                                  "statsCurrentBook",
+
+                                  item.source ===
+                                  "containedWork"
+                                    ? "statsCurrentContainedWork"
+                                    : "",
+                                ]
+                                  .filter(Boolean)
+                                  .join(" ")}
+                                data-status={
+                                  item.status
+                                }
+                                disabled={
+                                  !item.bookId
+                                }
                                 onClick={() => {
-                                  if (!book) {
+                                  if (!item.bookId) {
                                     return;
                                   }
 
                                   openStatsBookDetail(
-                                    book.bookId
+                                    item.bookId
                                   );
                                 }}
                               >
                                 <strong>
-                                  {book?.title ??
-                                    attempt.catalog_key}
+                                  {item.title}
                                 </strong>
 
                                 <span>
-                                  {book?.author ??
-                                    "Library book"}
+                                  {item.subtitle}
                                 </span>
 
                                 <span className="statsCurrentProgress">
-                                  {formatStatsReadingProgress(
-                                    attempt,
-                                    book
-                                  )}
+                                  {item.progress}
                                 </span>
                               </button>
                             )
