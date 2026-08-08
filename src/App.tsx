@@ -5270,11 +5270,14 @@ export default function App() {
 
   async function saveContainedWorkProgress(
     work: ContainedWork,
+    readerId: LibraryReaderId,
     status: LibraryContainedWorkStatus,
     currentPageValue: string
   ) {
-    const readerId:
-      LibraryReaderId = "cj";
+    const readerName =
+      readerId === "cj"
+        ? "CJ"
+        : "Jade";
 
     const stateKey =
       makeLibraryContainedWorkStateKey(
@@ -5475,7 +5478,7 @@ export default function App() {
         stateKey,
         kind: "success",
         message:
-          `${work.title}: ` +
+          `${readerName}: ${work.title}: ` +
           `${CONTAINED_WORK_STATUS_LABELS[
             status
           ]} saved.`,
@@ -11433,6 +11436,347 @@ export default function App() {
     const selectedBookChallengeDetails =
       selectedBookChallengeMemberships;
 
+    function renderContainedWorkReaderProgress(
+      work: ContainedWork,
+      readerId: LibraryReaderId,
+      readerName: string
+    ) {
+      const stateKey =
+        makeLibraryContainedWorkStateKey(
+          readerId,
+          work.workId
+        );
+
+      const persistedState =
+        containedWorkStateByKey.get(
+          stateKey
+        );
+
+      const persistedStatus:
+        LibraryContainedWorkStatus =
+        persistedState?.status ?? "unread";
+
+      const persistedPageValue =
+        persistedState?.current_page != null
+          ? String(
+              persistedState.current_page
+            )
+          : "";
+
+      const statusValue =
+        containedWorkStatusDrafts[
+          stateKey
+        ] ?? persistedStatus;
+
+      const pageValue =
+        stateKey in
+        containedWorkPageDrafts
+          ? containedWorkPageDrafts[
+              stateKey
+            ]
+          : persistedPageValue;
+
+      const hasChanges =
+        stateKey in
+          containedWorkStatusDrafts ||
+        stateKey in
+          containedWorkPageDrafts;
+
+      const isSaving =
+        containedWorkSavingKey ===
+        stateKey;
+
+      const feedback =
+        containedWorkProgressFeedback
+          ?.stateKey === stateKey
+          ? containedWorkProgressFeedback
+          : null;
+
+      function setContainedWorkDraft(
+        nextStatus: LibraryContainedWorkStatus
+      ) {
+        const totalPages =
+          Number(work.totalPages);
+
+        const nextPageValue =
+          nextStatus === "read" &&
+          Number.isFinite(totalPages) &&
+          totalPages > 0
+            ? String(
+                Math.trunc(totalPages)
+              )
+            : nextStatus === "unread" ||
+                (
+                  persistedStatus ===
+                    "read" &&
+                  nextStatus ===
+                    "in_progress"
+                )
+              ? ""
+              : pageValue;
+
+        setContainedWorkStatusDrafts(
+          (currentDrafts) => {
+            const nextDrafts = {
+              ...currentDrafts,
+            };
+
+            if (
+              nextStatus ===
+              persistedStatus
+            ) {
+              delete nextDrafts[
+                stateKey
+              ];
+            } else {
+              nextDrafts[stateKey] =
+                nextStatus;
+            }
+
+            return nextDrafts;
+          }
+        );
+
+        setContainedWorkPageDrafts(
+          (currentDrafts) => {
+            const nextDrafts = {
+              ...currentDrafts,
+            };
+
+            if (
+              nextPageValue ===
+              persistedPageValue
+            ) {
+              delete nextDrafts[
+                stateKey
+              ];
+            } else {
+              nextDrafts[stateKey] =
+                nextPageValue;
+            }
+
+            return nextDrafts;
+          }
+        );
+
+        setContainedWorkProgressFeedback(
+          null
+        );
+      }
+
+      return (
+        <div
+          key={`${readerId}-${work.workId}`}
+          className="containedWorkReaderProgress"
+        >
+          <div className="containedWorkProgressHeader">
+            <span className="containedWorkProgressLabel">
+              {readerName} progress
+            </span>
+
+            <span
+              className="containedWorkProgressStatus"
+              data-status={statusValue}
+            >
+              {
+                CONTAINED_WORK_STATUS_LABELS[
+                  statusValue
+                ]
+              }
+            </span>
+          </div>
+
+          {containedWorkStateLoadStatus ===
+          "loading" ? (
+            <p className="detailMuted">
+              Loading progress...
+            </p>
+          ) : containedWorkStateLoadStatus ===
+            "error" ? (
+            <p
+              className="readingAttemptFeedback readingAttemptFeedbackError"
+              role="alert"
+            >
+              Could not load contained
+              work progress:{" "}
+              {containedWorkStateLoadError}
+            </p>
+          ) : !householdSession ? (
+            <p className="detailMuted">
+              Sign in to track{" "}
+              {readerName}'s progress.
+            </p>
+          ) : (
+            <>
+              <div
+                className="containedWorkQuickActions"
+                role="group"
+                aria-label={`Quick progress actions for ${readerName} on ${work.title}`}
+              >
+                {CONTAINED_WORK_STATUS_OPTIONS.map(
+                  (option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      className={[
+                        "containedWorkQuickAction",
+
+                        statusValue ===
+                        option.value
+                          ? "containedWorkQuickActionActive"
+                          : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      data-status={
+                        option.value
+                      }
+                      aria-pressed={
+                        statusValue ===
+                        option.value
+                      }
+                      disabled={isSaving}
+                      onClick={() => {
+                        setContainedWorkDraft(
+                          option.value
+                        );
+                      }}
+                    >
+                      {option.label}
+                    </button>
+                  )
+                )}
+              </div>
+
+              <div className="containedWorkProgressEditor">
+                <label className="containedWorkProgressField">
+                  <span>Status</span>
+
+                  <select
+                    value={statusValue}
+                    disabled={isSaving}
+                    onChange={(event) => {
+                      setContainedWorkDraft(
+                        event.target
+                          .value as LibraryContainedWorkStatus
+                      );
+                    }}
+                  >
+                    {CONTAINED_WORK_STATUS_OPTIONS.map(
+                      (option) => (
+                        <option
+                          key={option.value}
+                          value={option.value}
+                        >
+                          {option.label}
+                        </option>
+                      )
+                    )}
+                  </select>
+                </label>
+
+                <label className="containedWorkProgressField">
+                  <span>Current page</span>
+
+                  <input
+                    type="number"
+                    min={0}
+                    max={
+                      work.totalPages ??
+                      undefined
+                    }
+                    step={1}
+                    inputMode="numeric"
+                    value={pageValue}
+                    disabled={
+                      isSaving ||
+                      statusValue ===
+                        "unread" ||
+                      statusValue === "read"
+                    }
+                    onChange={(event) => {
+                      const nextValue =
+                        event.target.value;
+
+                      setContainedWorkPageDrafts(
+                        (currentDrafts) => {
+                          const nextDrafts = {
+                            ...currentDrafts,
+                          };
+
+                          if (
+                            nextValue ===
+                            persistedPageValue
+                          ) {
+                            delete nextDrafts[
+                              stateKey
+                            ];
+                          } else {
+                            nextDrafts[
+                              stateKey
+                            ] = nextValue;
+                          }
+
+                          return nextDrafts;
+                        }
+                      );
+
+                      setContainedWorkProgressFeedback(
+                        null
+                      );
+                    }}
+                  />
+                </label>
+              </div>
+
+              <button
+                type="button"
+                className="readingAttemptStartButton"
+                disabled={
+                  !hasChanges || isSaving
+                }
+                onClick={() => {
+                  void saveContainedWorkProgress(
+                    work,
+                    readerId,
+                    statusValue,
+                    pageValue
+                  );
+                }}
+              >
+                {isSaving
+                  ? "Saving..."
+                  : hasChanges
+                    ? `Save ${readerName} progress`
+                    : "Saved"}
+              </button>
+
+              {feedback ? (
+                <p
+                  className={[
+                    "readingAttemptFeedback",
+
+                    feedback.kind ===
+                    "error"
+                      ? "readingAttemptFeedbackError"
+                      : "readingAttemptFeedbackSuccess",
+                  ].join(" ")}
+                  role={
+                    feedback.kind ===
+                    "error"
+                      ? "alert"
+                      : "status"
+                  }
+                >
+                  {feedback.message}
+                </p>
+              ) : null}
+            </>
+          )}
+        </div>
+      );
+    }
+
     return (
       <section className="bookDetailPanel">
         <button
@@ -11563,7 +11907,7 @@ export default function App() {
 
           <div className="bookDetailSections">
 
-            <section className="detailSection">
+            <section className="detailSection detailTagsSection">
               <p className="detailLabel">
                 Tags
               </p>
@@ -11655,7 +11999,7 @@ export default function App() {
 
             <details
               key={`author-metadata-${selectedBook.bookId}`}
-              className="detailSection authorMetadataDisclosure"
+              className="detailSection authorMetadataDisclosure detailAuthorsSection"
             >
               <summary className="authorMetadataDisclosureSummary">
                 <span className="authorMetadataDisclosureHeading">
@@ -11859,7 +12203,7 @@ export default function App() {
           selectedBook.containedWorks.length > 0 ? (
             <details
               key={`contained-works-${selectedBook.bookId}`}
-              className="detailSection authorMetadataDisclosure"
+              className="detailSection authorMetadataDisclosure detailContainedStandaloneSection"
             >
               <summary className="authorMetadataDisclosureSummary">
                 <span className="authorMetadataDisclosureHeading">
@@ -11953,6 +12297,95 @@ export default function App() {
                           ? containedWorkProgressFeedback
                           : null;
 
+                      function setContainedWorkDraft(
+                        nextStatus: LibraryContainedWorkStatus
+                      ) {
+                        const nextPageValue =
+                          nextStatus === "read" &&
+                          Number.isFinite(
+                            Number(
+                              work.totalPages
+                            )
+                          ) &&
+                          Number(
+                            work.totalPages
+                          ) > 0
+                            ? String(
+                                Math.trunc(
+                                  Number(
+                                    work.totalPages
+                                  )
+                                )
+                              )
+                            : nextStatus === "unread" ||
+                                (
+                                  persistedStatus ===
+                                    "read" &&
+                                  nextStatus ===
+                                    "in_progress"
+                                )
+                              ? ""
+                              : pageValue;
+
+                        setContainedWorkStatusDrafts(
+                          (
+                            currentDrafts
+                          ) => {
+                            const nextDrafts =
+                              {
+                                ...currentDrafts,
+                              };
+
+                            if (
+                              nextStatus ===
+                              persistedStatus
+                            ) {
+                              delete nextDrafts[
+                                stateKey
+                              ];
+                            } else {
+                              nextDrafts[
+                                stateKey
+                              ] =
+                                nextStatus;
+                            }
+
+                            return nextDrafts;
+                          }
+                        );
+
+                        setContainedWorkPageDrafts(
+                          (
+                            currentDrafts
+                          ) => {
+                            const nextDrafts =
+                              {
+                                ...currentDrafts,
+                              };
+
+                            if (
+                              nextPageValue ===
+                              persistedPageValue
+                            ) {
+                              delete nextDrafts[
+                                stateKey
+                              ];
+                            } else {
+                              nextDrafts[
+                                stateKey
+                              ] =
+                                nextPageValue;
+                            }
+
+                            return nextDrafts;
+                          }
+                        );
+
+                        setContainedWorkProgressFeedback(
+                          null
+                        );
+                      }
+
                       return (
                         <article
                           key={work.workId}
@@ -12024,6 +12457,56 @@ export default function App() {
                               </p>
                             ) : (
                               <>
+                                <div
+                                  className="containedWorkQuickActions"
+                                  role="group"
+                                  aria-label={`Quick progress actions for ${work.title}`}
+                                >
+                                  {CONTAINED_WORK_STATUS_OPTIONS.map(
+                                    (
+                                      option
+                                    ) => (
+                                      <button
+                                        key={
+                                          option.value
+                                        }
+                                        type="button"
+                                        className={[
+                                          "containedWorkQuickAction",
+
+                                          statusValue ===
+                                          option.value
+                                            ? "containedWorkQuickActionActive"
+                                            : "",
+                                        ]
+                                          .filter(
+                                            Boolean
+                                          )
+                                          .join(" ")}
+                                        data-status={
+                                          option.value
+                                        }
+                                        aria-pressed={
+                                          statusValue ===
+                                          option.value
+                                        }
+                                        disabled={
+                                          isSaving
+                                        }
+                                        onClick={() => {
+                                          setContainedWorkDraft(
+                                            option.value
+                                          );
+                                        }}
+                                      >
+                                        {
+                                          option.label
+                                        }
+                                      </button>
+                                    )
+                                  )}
+                                </div>
+
                                 <div className="containedWorkProgressEditor">
                                   <label className="containedWorkProgressField">
                                     <span>
@@ -12176,6 +12659,7 @@ export default function App() {
                                   onClick={() => {
                                     void saveContainedWorkProgress(
                                       work,
+                                      "cj",
                                       statusValue,
                                       pageValue
                                     );
@@ -12224,7 +12708,7 @@ export default function App() {
             </details>
           ) : null}
 
-            <section className="detailSection">
+            <section className="detailSection detailReadStatusSection">
               <p className="detailLabel">
                 Read status
               </p>
@@ -12391,7 +12875,7 @@ export default function App() {
               ) : null}
             </section>
 
-            <section className="detailSection">
+            <section className="detailSection detailRatingsSection">
               <p className="detailLabel">
                 Ratings
               </p>
@@ -12479,7 +12963,7 @@ export default function App() {
               )}
             </section>
 
-            <section className="detailSection">
+            <section className="detailSection detailLocationSection">
               <p className="detailLabel">Location</p>
 
               <dl className="detailGrid">
@@ -12499,7 +12983,7 @@ export default function App() {
 
             {householdSession ? (
               <details
-                className="detailSection detailDisclosureSection"
+                className="detailSection detailDisclosureSection detailReadingActivitySection"
                 open={
                   bookDetailDisclosureState
                     .readingActivity
@@ -12551,6 +13035,7 @@ export default function App() {
                     {readingAttemptsLoadError}
                   </p>
                 ) : readingActivityCanEdit ? (
+                  <>
                   <div className="readingAttemptGrid">
                     {[
                       {
@@ -12849,6 +13334,94 @@ export default function App() {
                       }
                     )}
                   </div>
+                  {selectedBook.containedWorks &&
+                  selectedBook.containedWorks.length >
+                    0 ? (
+                    <section className="containedWorkActivitySection">
+                      <div className="containedWorkActivityHeader">
+                        <p className="detailLabel">
+                          Contained works
+                        </p>
+
+                        <span>
+                          {
+                            selectedBook
+                              .containedWorks
+                              .length
+                          }{" "}
+                          {selectedBook
+                            .containedWorks
+                            .length === 1
+                            ? "work"
+                            : "works"}
+                        </span>
+                      </div>
+
+                      <div className="containedWorkActivityList">
+                        {selectedBook.containedWorks.map(
+                          (work) => {
+                            const workDetails = [
+                              work.workType,
+
+                              work.totalPages !=
+                              null
+                                ? `${work.totalPages} pages`
+                                : "",
+
+                              work.startPage !=
+                                null &&
+                              work.endPage != null
+                                ? `pp. ${work.startPage}–${work.endPage}`
+                                : "",
+                            ].filter(Boolean);
+
+                            return (
+                              <article
+                                key={work.workId}
+                                className="containedWorkActivityCard"
+                              >
+                                <div className="authorMetadataHeading">
+                                  <strong>
+                                    {work.title}
+                                  </strong>
+
+                                  {workDetails.length >
+                                  0 ? (
+                                    <span>
+                                      {workDetails.join(
+                                        " · "
+                                      )}
+                                    </span>
+                                  ) : null}
+                                </div>
+
+                                {work.notes ? (
+                                  <p className="authorMetadataStatus">
+                                    {work.notes}
+                                  </p>
+                                ) : null}
+
+                                <div className="containedWorkReaderGrid">
+                                  {renderContainedWorkReaderProgress(
+                                    work,
+                                    "cj",
+                                    "CJ"
+                                  )}
+
+                                  {renderContainedWorkReaderProgress(
+                                    work,
+                                    "jc",
+                                    "Jade"
+                                  )}
+                                </div>
+                              </article>
+                            );
+                          }
+                        )}
+                      </div>
+                    </section>
+                  ) : null}
+                  </>
                 ) : (
                   <p className="detailMuted">
                     Reading activity is
@@ -12861,7 +13434,7 @@ export default function App() {
 
             {selectedBookChallengeDetails.length > 0 ? (
               <details
-                className="detailSection detailDisclosureSection"
+                className="detailSection detailDisclosureSection detailChallengeProgressSection"
                 open={
                   bookDetailDisclosureState
                     .challengeProgress
@@ -13472,7 +14045,7 @@ export default function App() {
             ) : null}
 
             <details
-              className="detailSection detailDisclosureSection"
+              className="detailSection detailDisclosureSection detailBookDetailsSection"
               open={
                 bookDetailDisclosureState
                   .bookDetails
