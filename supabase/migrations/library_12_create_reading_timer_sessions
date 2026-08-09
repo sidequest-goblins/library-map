@@ -1,0 +1,421 @@
+-- ============================================================
+-- MyLibrary 12 - Create Reading Timer Sessions
+--
+-- Creates stopwatch sessions for active reading attempts.
+-- A reading attempt answers "which book am I reading?"
+-- A timer session answers "how fast did this sitting go?"
+-- ============================================================
+
+
+create schema if not exists library_private;
+
+revoke all
+on schema library_private
+from public, anon, authenticated;
+
+
+create table if not exists
+public.library_reader_timer_sessions
+(
+  timer_session_id uuid
+    primary key
+    default gen_random_uuid(),
+
+  user_id uuid
+    not null
+    references auth.users(id)
+    on delete cascade,
+
+  reader_id text
+    not null
+    check (
+      reader_id in ('cj', 'jc')
+    ),
+
+  attempt_id uuid
+    references public.library_reader_reading_attempts(attempt_id)
+    on delete set null,
+
+  catalog_key text
+    not null
+    check (
+      btrim(catalog_key) <> ''
+    ),
+
+  start_page integer
+    not null
+    check (
+      start_page >= 0
+    ),
+
+  end_page integer
+    check (
+      end_page is null
+      or end_page >= start_page
+    ),
+
+  started_at timestamptz
+    not null
+    default now(),
+
+  stopped_at timestamptz,
+
+  duration_seconds integer
+    check (
+      duration_seconds is null
+      or duration_seconds > 0
+    ),
+
+  created_at timestamptz
+    not null
+    default now(),
+
+  updated_at timestamptz
+    not null
+    default now(),
+
+  constraint
+  library_reader_timer_sessions_lifecycle_check
+  check
+  (
+    (
+      stopped_at is null
+      and end_page is null
+      and duration_seconds is null
+    )
+
+    or
+
+    (
+      stopped_at is not null
+      and end_page is not null
+      and duration_seconds is not null
+      and stopped_at >= started_at
+    )
+  )
+);
+
+
+create unique index if not exists
+library_reader_timer_sessions_one_active_idx
+on public.library_reader_timer_sessions
+(
+  user_id,
+  reader_id
+)
+where stopped_at is null;
+
+
+create index if not exists
+library_reader_timer_sessions_reader_lookup_idx
+on public.library_reader_timer_sessions
+(
+  user_id,
+  reader_id,
+  started_at desc
+);
+
+
+create index if not exists
+library_reader_timer_sessions_attempt_lookup_idx
+on public.library_reader_timer_sessions
+(
+  attempt_id,
+  started_at desc
+);
+
+
+alter table
+public.library_reader_timer_sessions
+enable row level security;
+
+
+revoke all
+on table
+public.library_reader_timer_sessions
+from anon, authenticated;
+
+
+grant
+  select,
+  insert,
+  update
+on table
+public.library_reader_timer_sessions
+to authenticated;
+
+
+drop policy if exists
+"Household can view reading timer sessions"
+on public.library_reader_timer_sessions;
+
+
+create policy
+"Household can view reading timer sessions"
+on public.library_reader_timer_sessions
+for select
+to authenticated
+using
+(
+  (select auth.uid()) is not null
+
+  and
+  (select auth.uid()) = user_id
+
+  and
+  user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+
+drop policy if exists
+"Household can create reading timer sessions"
+on public.library_reader_timer_sessions;
+
+
+create policy
+"Household can create reading timer sessions"
+on public.library_reader_timer_sessions
+for insert
+to authenticated
+with check
+(
+  (select auth.uid()) is not null
+
+  and
+  (select auth.uid()) = user_id
+
+  and
+  user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+
+drop policy if exists
+"Household can update reading timer sessions"
+on public.library_reader_timer_sessions;
+
+
+create policy
+"Household can update reading timer sessions"
+on public.library_reader_timer_sessions
+for update
+to authenticated
+using
+(
+  (select auth.uid()) is not null
+
+  and
+  (select auth.uid()) = user_id
+
+  and
+  user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+)
+with check
+(
+  (select auth.uid()) is not null
+
+  and
+  (select auth.uid()) = user_id
+
+  and
+  user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);
+
+
+create or replace function
+library_private.prepare_library_reader_timer_session()
+returns trigger
+language plpgsql
+set search_path = pg_catalog
+as $$
+begin
+  if TG_OP = 'INSERT' then
+    if
+      NEW.catalog_key is null
+      or btrim(NEW.catalog_key) = ''
+    then
+      raise exception
+        'A reading timer session requires a catalog key';
+    end if;
+
+
+    NEW.catalog_key :=
+      btrim(NEW.catalog_key);
+
+
+    NEW.started_at :=
+      coalesce(
+        NEW.started_at,
+        clock_timestamp()
+      );
+
+
+    NEW.created_at :=
+      coalesce(
+        NEW.created_at,
+        clock_timestamp()
+      );
+
+
+    NEW.updated_at :=
+      NEW.created_at;
+
+
+    if NEW.stopped_at is null then
+      NEW.end_page := null;
+      NEW.duration_seconds := null;
+    end if;
+
+
+    return NEW;
+  end if;
+
+
+  if TG_OP = 'UPDATE' then
+    if
+      NEW.timer_session_id
+        is distinct from
+      OLD.timer_session_id
+
+      or
+
+      NEW.user_id
+        is distinct from
+      OLD.user_id
+
+      or
+
+      NEW.reader_id
+        is distinct from
+      OLD.reader_id
+
+      or
+
+      NEW.catalog_key
+        is distinct from
+      OLD.catalog_key
+
+      or
+
+      NEW.attempt_id
+        is distinct from
+      OLD.attempt_id
+
+      or
+
+      NEW.start_page
+        is distinct from
+      OLD.start_page
+
+      or
+
+      NEW.started_at
+        is distinct from
+      OLD.started_at
+
+      or
+
+      NEW.created_at
+        is distinct from
+      OLD.created_at
+    then
+      raise exception
+        'Reading timer session identity and starting state are immutable';
+    end if;
+
+
+    if OLD.stopped_at is not null then
+      raise exception
+        'Stopped reading timer sessions are immutable';
+    end if;
+
+
+    if NEW.stopped_at is null then
+      NEW.end_page := null;
+      NEW.duration_seconds := null;
+    else
+      NEW.duration_seconds :=
+        coalesce(
+          NEW.duration_seconds,
+          greatest(
+            1,
+            extract(
+              epoch from
+              (NEW.stopped_at - OLD.started_at)
+            )::integer
+          )
+        );
+    end if;
+
+
+    NEW.updated_at :=
+      clock_timestamp();
+
+
+    return NEW;
+  end if;
+
+
+  raise exception
+    'Unsupported reading timer session operation: %',
+    TG_OP;
+end;
+$$;
+
+
+revoke all
+on function
+library_private.prepare_library_reader_timer_session()
+from public, anon, authenticated;
+
+
+drop trigger if exists
+prepare_library_reader_timer_session
+on public.library_reader_timer_sessions;
+
+
+create trigger
+prepare_library_reader_timer_session
+before insert or update
+on public.library_reader_timer_sessions
+for each row
+execute function
+library_private.prepare_library_reader_timer_session();
+
+
+create or replace function
+library_private.reject_library_reader_timer_session_delete()
+returns trigger
+language plpgsql
+set search_path = pg_catalog
+as $$
+begin
+  raise exception
+    'Reading timer sessions cannot be deleted';
+
+  return null;
+end;
+$$;
+
+
+revoke all
+on function
+library_private.reject_library_reader_timer_session_delete()
+from public, anon, authenticated;
+
+
+drop trigger if exists
+protect_library_reader_timer_session_delete
+on public.library_reader_timer_sessions;
+
+
+create trigger
+protect_library_reader_timer_session_delete
+before delete
+on public.library_reader_timer_sessions
+for each row
+execute function
+library_private.reject_library_reader_timer_session_delete();

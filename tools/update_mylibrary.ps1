@@ -6,6 +6,10 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
+$env:GIT_PAGER = "cat"
+$env:PAGER = "cat"
+$env:LESS = "FRX"
+
 
 # -----------------------------------------------------------------------------
 # Configuration
@@ -121,6 +125,80 @@ function Test-GitPathChanged {
     return (
         $LASTEXITCODE -ne 0
     )
+}
+
+function Write-GitDiffCheckWarning {
+    $previousErrorActionPreference = $ErrorActionPreference
+    $nativePreferenceVariable = Get-Variable `
+        -Name PSNativeCommandUseErrorActionPreference `
+        -ErrorAction SilentlyContinue
+    $previousNativeCommandPreference = $null
+
+    if ($null -ne $nativePreferenceVariable) {
+        $previousNativeCommandPreference = $nativePreferenceVariable.Value
+    }
+
+    try {
+        $ErrorActionPreference = "Continue"
+
+        if ($null -ne $nativePreferenceVariable) {
+            Set-Variable `
+                -Name PSNativeCommandUseErrorActionPreference `
+                -Value $false `
+                -Scope Local
+        }
+
+        $diffCheckOutput = @(
+            & git `
+                --no-pager `
+                -c core.pager=cat `
+                diff `
+                --check `
+                2>&1 |
+                ForEach-Object {
+                    if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                        [string]$_.Exception.Message
+                    }
+                    else {
+                        [string]$_
+                    }
+                }
+        )
+
+        $diffCheckExitCode = $LASTEXITCODE
+    }
+    finally {
+        $ErrorActionPreference = $previousErrorActionPreference
+
+        if ($null -ne $nativePreferenceVariable) {
+            Set-Variable `
+                -Name PSNativeCommandUseErrorActionPreference `
+                -Value $previousNativeCommandPreference `
+                -Scope Local
+        }
+    }
+
+    if ($diffCheckOutput.Count -gt 0) {
+        $diffCheckOutput |
+            ForEach-Object {
+                Write-Host $_ `
+                    -ForegroundColor Yellow
+            }
+    }
+
+    if ($diffCheckExitCode -ne 0) {
+        Write-Host ""
+        Write-Host (
+            "Diff check found whitespace warnings. " +
+            "The update will continue."
+        ) -ForegroundColor Yellow
+    }
+    else {
+        Write-Host ""
+        Write-Host (
+            "Generated diff check passed."
+        ) -ForegroundColor Green
+    }
 }
 
 
@@ -454,10 +532,7 @@ Assert-LastExitCode `
 
     Write-Step "Checking generated diff"
 
-    & git diff --check
-
-    Assert-LastExitCode `
-        -StepName "Git diff check"
+    Write-GitDiffCheckWarning
 
 
     # -------------------------------------------------------------------------

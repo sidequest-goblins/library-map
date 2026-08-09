@@ -1,0 +1,205 @@
+-- ============================================================
+-- MyLibrary 13 - Allow Timer Stop Before End Page
+--
+-- Lets a timer stop immediately, then wait for the
+-- end page to be entered afterward.
+-- ============================================================
+
+
+alter table
+public.library_reader_timer_sessions
+drop constraint if exists
+library_reader_timer_sessions_lifecycle_check;
+
+
+alter table
+public.library_reader_timer_sessions
+add constraint
+library_reader_timer_sessions_lifecycle_check
+check
+(
+  (
+    stopped_at is null
+    and end_page is null
+    and duration_seconds is null
+  )
+
+  or
+
+  (
+    stopped_at is not null
+    and duration_seconds is not null
+    and stopped_at >= started_at
+    and
+    (
+      end_page is null
+      or end_page >= start_page
+    )
+  )
+);
+
+
+create or replace function
+library_private.prepare_library_reader_timer_session()
+returns trigger
+language plpgsql
+set search_path = pg_catalog
+as $$
+begin
+  if TG_OP = 'INSERT' then
+    if
+      NEW.catalog_key is null
+      or btrim(NEW.catalog_key) = ''
+    then
+      raise exception
+        'A reading timer session requires a catalog key';
+    end if;
+
+
+    NEW.catalog_key :=
+      btrim(NEW.catalog_key);
+
+
+    NEW.started_at :=
+      coalesce(
+        NEW.started_at,
+        clock_timestamp()
+      );
+
+
+    NEW.created_at :=
+      coalesce(
+        NEW.created_at,
+        clock_timestamp()
+      );
+
+
+    NEW.updated_at :=
+      NEW.created_at;
+
+
+    if NEW.stopped_at is null then
+      NEW.end_page := null;
+      NEW.duration_seconds := null;
+    end if;
+
+
+    return NEW;
+  end if;
+
+
+  if TG_OP = 'UPDATE' then
+    if
+      NEW.timer_session_id
+        is distinct from
+      OLD.timer_session_id
+
+      or
+
+      NEW.user_id
+        is distinct from
+      OLD.user_id
+
+      or
+
+      NEW.reader_id
+        is distinct from
+      OLD.reader_id
+
+      or
+
+      NEW.catalog_key
+        is distinct from
+      OLD.catalog_key
+
+      or
+
+      NEW.attempt_id
+        is distinct from
+      OLD.attempt_id
+
+      or
+
+      NEW.start_page
+        is distinct from
+      OLD.start_page
+
+      or
+
+      NEW.started_at
+        is distinct from
+      OLD.started_at
+
+      or
+
+      NEW.created_at
+        is distinct from
+      OLD.created_at
+    then
+      raise exception
+        'Reading timer session identity and starting state are immutable';
+    end if;
+
+
+    if OLD.stopped_at is not null then
+      if OLD.end_page is not null then
+        raise exception
+          'Completed reading timer sessions are immutable';
+      end if;
+
+
+      if
+        NEW.stopped_at
+          is distinct from
+        OLD.stopped_at
+
+        or
+
+        NEW.duration_seconds
+          is distinct from
+        OLD.duration_seconds
+      then
+        raise exception
+          'Stopped reading timer timing cannot be changed';
+      end if;
+
+
+      NEW.updated_at :=
+        clock_timestamp();
+
+
+      return NEW;
+    end if;
+
+
+    if NEW.stopped_at is null then
+      NEW.end_page := null;
+      NEW.duration_seconds := null;
+    else
+      NEW.duration_seconds :=
+        coalesce(
+          NEW.duration_seconds,
+          greatest(
+            1,
+            extract(
+              epoch from
+              (NEW.stopped_at - OLD.started_at)
+            )::integer
+          )
+        );
+    end if;
+
+
+    NEW.updated_at :=
+      clock_timestamp();
+
+
+    return NEW;
+  end if;
+
+
+  raise exception
+    'Unsupported reading timer session operation: %',
+    TG_OP;
+end;
+$$;

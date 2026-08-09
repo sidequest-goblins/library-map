@@ -1,0 +1,44 @@
+-- ============================================================
+-- MyLibrary 14 - Allow Timer Session Delete
+--
+-- Lets household users remove timer/session rows created by
+-- mistake, including test records and accidental starts.
+-- ============================================================
+
+
+drop trigger if exists
+protect_library_reader_timer_session_delete
+on public.library_reader_timer_sessions;
+
+
+drop function if exists
+library_private.reject_library_reader_timer_session_delete();
+
+
+grant delete
+on table
+public.library_reader_timer_sessions
+to authenticated;
+
+
+drop policy if exists
+"Household can delete reading timer sessions"
+on public.library_reader_timer_sessions;
+
+
+create policy
+"Household can delete reading timer sessions"
+on public.library_reader_timer_sessions
+for delete
+to authenticated
+using
+(
+  (select auth.uid()) is not null
+
+  and
+  (select auth.uid()) = user_id
+
+  and
+  user_id =
+    '2ffd4a75-0f05-41ca-bd69-fa035ee57e22'::uuid
+);

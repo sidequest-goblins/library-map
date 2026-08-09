@@ -55,6 +55,21 @@ export type LibraryReaderReadingAttempt = {
   updated_at: string;
 };
 
+export type LibraryReaderTimerSession = {
+  timer_session_id: string;
+  user_id: string;
+  reader_id: LibraryReaderId;
+  attempt_id: string | null;
+  catalog_key: string;
+  start_page: number;
+  end_page: number | null;
+  started_at: string;
+  stopped_at: string | null;
+  duration_seconds: number | null;
+  created_at: string;
+  updated_at: string;
+};
+
 export type LibraryReaderChallengeAttemptLink = {
   link_id: string;
   user_id: string;

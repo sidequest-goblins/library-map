@@ -29,6 +29,7 @@ import {
   type LibraryReaderContainedWorkState,
   type LibraryReaderId,
   type LibraryReaderReadingAttempt,
+  type LibraryReaderTimerSession,
   type LibraryStateLoadStatus,
   type LibraryStateSeedFeedback,
 } from "./data/libraryState";
@@ -78,6 +79,7 @@ type AppTab =
   | "search"
   | "map"
   | "challenges"
+  | "timer"
   | "wanted"
   | "stats"
   | "update";
@@ -380,6 +382,12 @@ const APP_NAV_ITEMS: Array<{
     description: "Track challenge books and reading progress.",
   },
   {
+    tab: "timer",
+    label: "Timer",
+    icon: "T",
+    description: "Log timed reading sessions.",
+  },
+  {
     tab: "wanted",
     label: "Wanted",
     icon: "📚",
@@ -478,6 +486,12 @@ type WantedMode =
 
 type ReadingAttemptFeedback = {
   stateKey: string;
+  kind: "success" | "error";
+  message: string;
+} | null;
+
+type ReadingTimerFeedback = {
+  key: string;
   kind: "success" | "error";
   message: string;
 } | null;
@@ -2529,6 +2543,95 @@ function formatReadingAttemptDate(
   ).format(date);
 }
 
+function formatTimerDuration(
+  totalSeconds: number
+): string {
+  const safeSeconds = Math.max(
+    0,
+    Math.floor(totalSeconds)
+  );
+
+  const hours = Math.floor(
+    safeSeconds / 3600
+  );
+
+  const minutes = Math.floor(
+    (safeSeconds % 3600) / 60
+  );
+
+  const seconds =
+    safeSeconds % 60;
+
+  if (hours > 0) {
+    return `${hours}:${String(
+      minutes
+    ).padStart(2, "0")}:${String(
+      seconds
+    ).padStart(2, "0")}`;
+  }
+
+  return `${minutes}:${String(
+    seconds
+  ).padStart(2, "0")}`;
+}
+
+function getTimerPagesRead(
+  session: LibraryReaderTimerSession
+): number {
+  if (session.end_page === null) {
+    return 0;
+  }
+
+  return Math.max(
+    0,
+    session.end_page -
+      session.start_page
+  );
+}
+
+function getTimerPagesPerHour(
+  pagesRead: number,
+  durationSeconds:
+    | number
+    | null
+): number | null {
+  if (
+    pagesRead <= 0 ||
+    !durationSeconds ||
+    durationSeconds <= 0
+  ) {
+    return null;
+  }
+
+  return (
+    pagesRead /
+    (durationSeconds / 3600)
+  );
+}
+
+function formatTimerPace(
+  pagesPerHour: number | null
+): string {
+  if (
+    pagesPerHour === null ||
+    !Number.isFinite(pagesPerHour)
+  ) {
+    return "Not enough page data";
+  }
+
+  return `${Math.round(
+    pagesPerHour
+  ).toLocaleString()} pages/hour`;
+}
+
+function getReaderName(
+  readerId: LibraryReaderId
+): string {
+  return readerId === "cj"
+    ? "CJ"
+    : "JC";
+}
+
 function getReadingAttemptStatusLabel(
   attempt: LibraryReaderReadingAttempt
 ): string {
@@ -3381,6 +3484,48 @@ async function fetchReadingAttempts(
   return data ?? [];
 }
 
+async function fetchReadingTimerSessions(
+  userId: string
+): Promise<LibraryReaderTimerSession[]> {
+  const { data, error } = await supabase
+    .from(
+      "library_reader_timer_sessions"
+    )
+    .select(`
+      timer_session_id,
+      user_id,
+      reader_id,
+      attempt_id,
+      catalog_key,
+      start_page,
+      end_page,
+      started_at,
+      stopped_at,
+      duration_seconds,
+      created_at,
+      updated_at
+    `)
+    .eq(
+      "user_id",
+      userId
+    )
+    .order(
+      "started_at",
+      {
+        ascending: false,
+      }
+    )
+    .overrideTypes<
+      LibraryReaderTimerSession[]
+    >();
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}
+
 async function fetchChallengeAttemptLinks(
   userId: string
 ): Promise<
@@ -3636,6 +3781,13 @@ export default function App() {
   >([]);
 
   const [
+    readingTimerSessions,
+    setReadingTimerSessions,
+  ] = useState<
+    LibraryReaderTimerSession[]
+  >([]);
+
+  const [
     challengeAttemptLinks,
     setChallengeAttemptLinks,
   ] = useState<
@@ -3672,6 +3824,52 @@ export default function App() {
   ] = useState<Record<string, string>>(
     {}
   );
+
+  const [
+    timerStartPageDrafts,
+    setTimerStartPageDrafts,
+  ] = useState<Record<string, string>>(
+    {}
+  );
+
+  const [
+    timerStopPageDrafts,
+    setTimerStopPageDrafts,
+  ] = useState<Record<string, string>>(
+    {}
+  );
+
+  const [
+    readingTimerSavingKey,
+    setReadingTimerSavingKey,
+  ] = useState<string | null>(null);
+
+  const [
+    readingTimerFeedback,
+    setReadingTimerFeedback,
+  ] = useState<ReadingTimerFeedback>(
+    null
+  );
+
+  const [
+    timerBookQuery,
+    setTimerBookQuery,
+  ] = useState("");
+
+  const [
+    timerReaderId,
+    setTimerReaderId,
+  ] = useState<LibraryReaderId>("cj");
+
+  const [
+    timerCurrentReadsReaderId,
+    setTimerCurrentReadsReaderId,
+  ] = useState<LibraryReaderId>("cj");
+
+  const [
+    currentTimerTick,
+    setCurrentTimerTick,
+  ] = useState(() => Date.now());
 
   const [
     challengeAttemptSavingKey,
@@ -4888,6 +5086,7 @@ export default function App() {
     async function loadReadingActivity() {
       if (!householdSession) {
         setReadingAttempts([]);
+        setReadingTimerSessions([]);
         setChallengeAttemptLinks([]);
 
         setReadingAttemptsLoadStatus(
@@ -4898,6 +5097,10 @@ export default function App() {
         setReadingAttemptSavingKey(null);
         setReadingAttemptFeedback(null);
         setReadingAttemptPageDrafts({});
+        setTimerStartPageDrafts({});
+        setTimerStopPageDrafts({});
+        setReadingTimerSavingKey(null);
+        setReadingTimerFeedback(null);
 
         return;
       }
@@ -4911,9 +5114,14 @@ export default function App() {
       try {
         const [
           loadedAttempts,
+          loadedTimerSessions,
           loadedChallengeLinks,
         ] = await Promise.all([
           fetchReadingAttempts(
+            householdSession.user.id
+          ),
+
+          fetchReadingTimerSessions(
             householdSession.user.id
           ),
 
@@ -4928,6 +5136,10 @@ export default function App() {
 
         setReadingAttempts(
           loadedAttempts
+        );
+
+        setReadingTimerSessions(
+          loadedTimerSessions
         );
 
         setChallengeAttemptLinks(
@@ -4948,6 +5160,7 @@ export default function App() {
         );
 
         setReadingAttempts([]);
+        setReadingTimerSessions([]);
         setChallengeAttemptLinks([]);
 
         setReadingAttemptsLoadStatus(
@@ -4968,6 +5181,21 @@ export default function App() {
       isActive = false;
     };
   }, [householdSession]);
+
+  useEffect(() => {
+    if (activeTab !== "timer") {
+      return;
+    }
+
+    const intervalId =
+      window.setInterval(() => {
+        setCurrentTimerTick(Date.now());
+      }, 1000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [activeTab]);
 
   const libraryStateByKey = useMemo(
     () =>
@@ -5062,6 +5290,56 @@ export default function App() {
           )
         ),
       [activeReadingAttempts]
+    );
+
+  const activeTimerSessions =
+    useMemo(
+      () =>
+        readingTimerSessions.filter(
+          (session) =>
+            session.stopped_at === null
+        ),
+      [readingTimerSessions]
+    );
+
+  const activeTimerSessionByReader =
+    useMemo(
+      () =>
+        new Map(
+          activeTimerSessions.map(
+            (session) => [
+              session.reader_id,
+              session,
+            ]
+          )
+        ),
+      [activeTimerSessions]
+    );
+
+  const stoppedTimerSessionsNeedingPage =
+    useMemo(
+      () =>
+        readingTimerSessions.filter(
+          (session) =>
+            session.stopped_at !== null &&
+            session.end_page === null &&
+            session.duration_seconds !==
+              null
+        ),
+      [readingTimerSessions]
+    );
+
+  const completedTimerSessions =
+    useMemo(
+      () =>
+        readingTimerSessions.filter(
+          (session) =>
+            session.stopped_at !== null &&
+            session.end_page !== null &&
+            session.duration_seconds !==
+              null
+        ),
+      [readingTimerSessions]
     );
 
   const libraryStateSeedPreview =
@@ -6392,6 +6670,164 @@ export default function App() {
 
       return nextBooksByCatalogKey;
     }, [books]);
+
+  const timerCurrentReads =
+    useMemo(
+      () =>
+        activeReadingAttempts
+          .map((attempt) => {
+            const book =
+              booksByCatalogKey.get(
+                attempt.catalog_key
+              );
+
+            return {
+              attempt,
+              book,
+              title:
+                book?.title ??
+                attempt.catalog_key,
+              author:
+                book?.author ??
+                "Unknown author",
+              activeTimer:
+                activeTimerSessionByReader.get(
+                  attempt.reader_id
+                ) ?? null,
+            };
+          })
+          .sort((a, b) => {
+            const readerComparison =
+              a.attempt.reader_id.localeCompare(
+                b.attempt.reader_id
+              );
+
+            if (readerComparison) {
+              return readerComparison;
+            }
+
+            return a.title.localeCompare(
+              b.title,
+              undefined,
+              {
+                numeric: true,
+                sensitivity: "base",
+              }
+            );
+          }),
+      [
+        activeReadingAttempts,
+        activeTimerSessionByReader,
+        booksByCatalogKey,
+      ]
+    );
+
+  const timerReaderSummaries =
+    useMemo(
+      () =>
+        (["cj", "jc"] as LibraryReaderId[]).map(
+          (readerId) => {
+            const readerSessions =
+              completedTimerSessions.filter(
+                (session) =>
+                  session.reader_id ===
+                  readerId
+              );
+
+            const pagesRead =
+              readerSessions.reduce(
+                (total, session) =>
+                  total +
+                  getTimerPagesRead(session),
+                0
+              );
+
+            const durationSeconds =
+              readerSessions.reduce(
+                (total, session) =>
+                  total +
+                  (session.duration_seconds ??
+                    0),
+                0
+              );
+
+            return {
+              readerId,
+              readerName:
+                getReaderName(readerId),
+              sessionCount:
+                readerSessions.length,
+              pagesRead,
+              durationSeconds,
+              pagesPerHour:
+                getTimerPagesPerHour(
+                  pagesRead,
+                  durationSeconds
+                ),
+            };
+          }
+        ),
+      [completedTimerSessions]
+    );
+
+  const timerSearchResults =
+    useMemo(() => {
+      const normalizedQuery =
+        normalizeInlineSearchText(
+          timerBookQuery
+        );
+
+      if (!normalizedQuery) {
+        return [];
+      }
+
+      return books
+        .filter((book) => {
+          if (!book.catalogKey?.trim()) {
+            return false;
+          }
+
+          const haystack =
+            normalizeInlineSearchText(
+              [
+                book.title,
+                book.author,
+                book.seriesTitle,
+                book.series,
+                book.isbn,
+              ].join(" ")
+            );
+
+          return haystack.includes(
+            normalizedQuery
+          );
+        })
+        .slice(0, 8);
+    }, [books, timerBookQuery]);
+
+  const recentTimerSessions =
+    useMemo(
+      () =>
+        completedTimerSessions.slice(
+          0,
+          8
+        ),
+      [completedTimerSessions]
+    );
+
+  const visibleTimerCurrentReads =
+    useMemo(
+      () =>
+        timerCurrentReads.filter(
+          ({ attempt }) =>
+            attempt.reader_id ===
+            timerCurrentReadsReaderId
+        ),
+      [
+        timerCurrentReads,
+        timerCurrentReadsReaderId,
+      ]
+    );
 
   const containedWorkContextsByWorkId =
     useMemo(() => {
@@ -8435,10 +8871,12 @@ export default function App() {
     const [
       refreshedLibraryStateRows,
       refreshedAttempts,
+      refreshedTimerSessions,
       refreshedChallengeLinks,
     ] = await Promise.all([
       fetchLibraryStateRows(userId),
       fetchReadingAttempts(userId),
+      fetchReadingTimerSessions(userId),
       fetchChallengeAttemptLinks(userId),
     ]);
 
@@ -8448,6 +8886,10 @@ export default function App() {
 
     setReadingAttempts(
       refreshedAttempts
+    );
+
+    setReadingTimerSessions(
+      refreshedTimerSessions
     );
 
     setChallengeAttemptLinks(
@@ -8460,6 +8902,7 @@ export default function App() {
     return {
       refreshedLibraryStateRows,
       refreshedAttempts,
+      refreshedTimerSessions,
       refreshedChallengeLinks,
     };
   }
@@ -9864,7 +10307,7 @@ export default function App() {
           "Household sync and reading activity must finish loading before starting a book.",
       });
 
-      return;
+      return null;
     }
 
     if (!catalogKey) {
@@ -9875,14 +10318,14 @@ export default function App() {
           "This book does not have a catalog key, so a reading attempt cannot be created safely.",
       });
 
-      return;
+      return null;
     }
 
     if (
       readStatusSavingKey ||
       readingAttemptSavingKey
     ) {
-      return;
+      return null;
     }
 
     const existingAttempt =
@@ -9898,7 +10341,7 @@ export default function App() {
           `${readerName} already has an active reading attempt for this book.`,
       });
 
-      return;
+      return existingAttempt;
     }
 
     setReadingAttemptSavingKey(
@@ -9957,6 +10400,8 @@ export default function App() {
             ? `${readerName}'s reread started.`
             : `${readerName}'s reading attempt started.`,
       });
+
+      return refreshedAttempt;
     } catch (error) {
       console.error(
         "Could not start reading attempt.",
@@ -9971,6 +10416,8 @@ export default function App() {
             ? `Reading attempt failed to start: ${error.message}`
             : "Reading attempt failed to start because of an unknown Supabase error.",
       });
+
+      return null;
     } finally {
       setReadingAttemptSavingKey(null);
     }
@@ -10290,6 +10737,571 @@ export default function App() {
       });
     } finally {
       setReadingAttemptSavingKey(null);
+    }
+  }
+
+  async function startReadingTimer(
+    attempt: LibraryReaderReadingAttempt
+  ) {
+    const timerKey = `start:${attempt.attempt_id}`;
+    const stateKey =
+      makeLibraryStateKey(
+        attempt.reader_id,
+        attempt.catalog_key
+      );
+
+    if (
+      !householdSession ||
+      readingAttemptsLoadStatus !==
+        "ready"
+    ) {
+      setReadingTimerFeedback({
+        key: timerKey,
+        kind: "error",
+        message:
+          "Reading activity must finish loading before starting a timer.",
+      });
+
+      return;
+    }
+
+    if (
+      readingTimerSavingKey ||
+      activeTimerSessionByReader.has(
+        attempt.reader_id
+      )
+    ) {
+      setReadingTimerFeedback({
+        key: timerKey,
+        kind: "error",
+        message:
+          `${getReaderName(
+            attempt.reader_id
+          )} already has a running timer.`,
+      });
+
+      return;
+    }
+
+    const draftValue =
+      timerStartPageDrafts[
+        stateKey
+      ]?.trim() ?? "";
+
+    const startPage =
+      draftValue
+        ? Number(draftValue)
+        : (attempt.current_page ?? 0);
+
+    if (
+      !Number.isInteger(startPage) ||
+      startPage < 0
+    ) {
+      setReadingTimerFeedback({
+        key: timerKey,
+        kind: "error",
+        message:
+          "Start page must be a whole number of 0 or greater.",
+      });
+
+      return;
+    }
+
+    setReadingTimerSavingKey(
+      timerKey
+    );
+
+    setReadingTimerFeedback(null);
+
+    try {
+      const { error } = await supabase
+        .from(
+          "library_reader_timer_sessions"
+        )
+        .insert({
+          user_id:
+            householdSession.user.id,
+          reader_id:
+            attempt.reader_id,
+          attempt_id:
+            attempt.attempt_id,
+          catalog_key:
+            attempt.catalog_key,
+          start_page: startPage,
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      const refreshedData =
+        await refreshSharedReadingData(
+          householdSession.user.id
+        );
+
+      const refreshedTimer =
+        refreshedData.refreshedTimerSessions.find(
+          (session) =>
+            session.reader_id ===
+              attempt.reader_id &&
+            session.stopped_at === null
+        );
+
+      if (!refreshedTimer) {
+        throw new Error(
+          "Supabase did not return the running timer."
+        );
+      }
+
+      setTimerStartPageDrafts(
+        (currentDrafts) => {
+          const nextDrafts = {
+            ...currentDrafts,
+          };
+
+          delete nextDrafts[stateKey];
+
+          return nextDrafts;
+        }
+      );
+
+      setCurrentTimerTick(Date.now());
+
+      setReadingTimerFeedback({
+        key: timerKey,
+        kind: "success",
+        message:
+          "Timer started.",
+      });
+    } catch (error) {
+      console.error(
+        "Could not start reading timer.",
+        error
+      );
+
+      setReadingTimerFeedback({
+        key: timerKey,
+        kind: "error",
+        message:
+          error instanceof Error
+            ? `Timer failed to start: ${error.message}`
+            : "Timer failed to start because of an unknown Supabase error.",
+      });
+    } finally {
+      setReadingTimerSavingKey(null);
+    }
+  }
+
+  async function stopReadingTimer(
+    session: LibraryReaderTimerSession
+  ) {
+    const timerKey = `stop:${session.timer_session_id}`;
+
+    if (
+      !householdSession ||
+      readingAttemptsLoadStatus !==
+        "ready"
+    ) {
+      setReadingTimerFeedback({
+        key: timerKey,
+        kind: "error",
+        message:
+          "Reading activity must finish loading before stopping a timer.",
+      });
+
+      return;
+    }
+
+    if (readingTimerSavingKey) {
+      return;
+    }
+
+    const stoppedAt = new Date();
+    const durationSeconds =
+      Math.max(
+        1,
+        Math.round(
+          (stoppedAt.getTime() -
+            new Date(
+              session.started_at
+            ).getTime()) /
+            1000
+        )
+      );
+
+    setReadingTimerSavingKey(
+      timerKey
+    );
+
+    setReadingTimerFeedback(null);
+
+    try {
+      const { error } = await supabase
+        .from(
+          "library_reader_timer_sessions"
+        )
+        .update({
+          stopped_at:
+            stoppedAt.toISOString(),
+          duration_seconds:
+            durationSeconds,
+        })
+        .eq(
+          "timer_session_id",
+          session.timer_session_id
+        )
+        .eq(
+          "user_id",
+          householdSession.user.id
+        )
+        .is(
+          "stopped_at",
+          null
+        );
+
+      if (error) {
+        throw error;
+      }
+
+      const refreshedData =
+        await refreshSharedReadingData(
+          householdSession.user.id
+        );
+
+      const refreshedTimer =
+        refreshedData.refreshedTimerSessions.find(
+          (candidate) =>
+            candidate.timer_session_id ===
+            session.timer_session_id
+        );
+
+      if (
+        !refreshedTimer ||
+        refreshedTimer.stopped_at === null ||
+        refreshedTimer.end_page !== null
+      ) {
+        throw new Error(
+          "Supabase did not return the stopped timer session."
+        );
+      }
+
+      setReadingTimerFeedback({
+        key: timerKey,
+        kind: "success",
+        message:
+          "Timer stopped. Add the end page when ready.",
+      });
+    } catch (error) {
+      console.error(
+        "Could not stop reading timer.",
+        error
+      );
+
+      setReadingTimerFeedback({
+        key: timerKey,
+        kind: "error",
+        message:
+          error instanceof Error
+            ? `Timer session failed to save: ${error.message}`
+            : "Timer session failed to save because of an unknown Supabase error.",
+      });
+    } finally {
+      setReadingTimerSavingKey(null);
+    }
+  }
+
+  async function saveStoppedTimerEndPage(
+    session: LibraryReaderTimerSession
+  ) {
+    const timerKey = `page:${session.timer_session_id}`;
+    const draftValue =
+      timerStopPageDrafts[
+        session.timer_session_id
+      ]?.trim() ?? "";
+
+    if (
+      !householdSession ||
+      readingAttemptsLoadStatus !==
+        "ready"
+    ) {
+      setReadingTimerFeedback({
+        key: timerKey,
+        kind: "error",
+        message:
+          "Reading activity must finish loading before saving the page.",
+      });
+
+      return;
+    }
+
+    if (readingTimerSavingKey) {
+      return;
+    }
+
+    if (!draftValue) {
+      setReadingTimerFeedback({
+        key: timerKey,
+        kind: "error",
+        message:
+          "End page is needed to save the session record.",
+      });
+
+      return;
+    }
+
+    const endPage = Number(draftValue);
+
+    if (
+      !Number.isInteger(endPage) ||
+      endPage < session.start_page
+    ) {
+      setReadingTimerFeedback({
+        key: timerKey,
+        kind: "error",
+        message:
+          "End page must be a whole number at or after the start page.",
+      });
+
+      return;
+    }
+
+    setReadingTimerSavingKey(
+      timerKey
+    );
+
+    setReadingTimerFeedback(null);
+
+    try {
+      const { error } = await supabase
+        .from(
+          "library_reader_timer_sessions"
+        )
+        .update({
+          end_page: endPage,
+        })
+        .eq(
+          "timer_session_id",
+          session.timer_session_id
+        )
+        .eq(
+          "user_id",
+          householdSession.user.id
+        );
+
+      if (error) {
+        throw error;
+      }
+
+      if (session.attempt_id) {
+        const { error: attemptError } =
+          await supabase
+            .from(
+              "library_reader_reading_attempts"
+            )
+            .update({
+              current_page:
+                endPage === 0
+                  ? null
+                  : endPage,
+            })
+            .eq(
+              "attempt_id",
+              session.attempt_id
+            )
+            .eq(
+              "user_id",
+              householdSession.user.id
+            )
+            .eq(
+              "status",
+              "active"
+            );
+
+        if (attemptError) {
+          throw attemptError;
+        }
+      }
+
+      const refreshedData =
+        await refreshSharedReadingData(
+          householdSession.user.id
+        );
+
+      const refreshedTimer =
+        refreshedData.refreshedTimerSessions.find(
+          (candidate) =>
+            candidate.timer_session_id ===
+            session.timer_session_id
+        );
+
+      if (
+        !refreshedTimer ||
+        refreshedTimer.end_page === null
+      ) {
+        throw new Error(
+          "Supabase did not return the saved timer session."
+        );
+      }
+
+      setTimerStopPageDrafts(
+        (currentDrafts) => {
+          const nextDrafts = {
+            ...currentDrafts,
+          };
+
+          delete nextDrafts[
+            session.timer_session_id
+          ];
+
+          return nextDrafts;
+        }
+      );
+
+      const pagesRead =
+        getTimerPagesRead(
+          refreshedTimer
+        );
+
+      setReadingTimerFeedback({
+        key: timerKey,
+        kind: "success",
+        message:
+          pagesRead === 1
+            ? "Session saved with 1 page logged."
+            : `Session saved with ${pagesRead.toLocaleString()} pages logged.`,
+      });
+    } catch (error) {
+      console.error(
+        "Could not save timer end page.",
+        error
+      );
+
+      setReadingTimerFeedback({
+        key: timerKey,
+        kind: "error",
+        message:
+          error instanceof Error
+            ? `Timer session failed to save: ${error.message}`
+            : "Timer session failed to save because of an unknown Supabase error.",
+      });
+    } finally {
+      setReadingTimerSavingKey(null);
+    }
+  }
+
+  async function deleteReadingTimerSession(
+    session: LibraryReaderTimerSession
+  ) {
+    const timerKey = `delete:${session.timer_session_id}`;
+    const confirmed = window.confirm(
+      "Delete this timer session record?"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    if (
+      !householdSession ||
+      readingAttemptsLoadStatus !==
+        "ready"
+    ) {
+      setReadingTimerFeedback({
+        key: timerKey,
+        kind: "error",
+        message:
+          "Reading activity must finish loading before deleting a session record.",
+      });
+
+      return;
+    }
+
+    if (readingTimerSavingKey) {
+      return;
+    }
+
+    setReadingTimerSavingKey(
+      timerKey
+    );
+
+    setReadingTimerFeedback(null);
+
+    try {
+      const { error } = await supabase
+        .from(
+          "library_reader_timer_sessions"
+        )
+        .delete()
+        .eq(
+          "timer_session_id",
+          session.timer_session_id
+        )
+        .eq(
+          "user_id",
+          householdSession.user.id
+        );
+
+      if (error) {
+        throw error;
+      }
+
+      const refreshedTimerSessions =
+        await fetchReadingTimerSessions(
+          householdSession.user.id
+        );
+
+      if (
+        refreshedTimerSessions.some(
+          (candidate) =>
+            candidate.timer_session_id ===
+            session.timer_session_id
+        )
+      ) {
+        throw new Error(
+          "Supabase still returned the timer session after delete."
+        );
+      }
+
+      setReadingTimerSessions(
+        refreshedTimerSessions
+      );
+
+      setTimerStopPageDrafts(
+        (currentDrafts) => {
+          const nextDrafts = {
+            ...currentDrafts,
+          };
+
+          delete nextDrafts[
+            session.timer_session_id
+          ];
+
+          return nextDrafts;
+        }
+      );
+
+      setReadingTimerFeedback({
+        key: timerKey,
+        kind: "success",
+        message:
+          "Timer session record deleted.",
+      });
+    } catch (error) {
+      console.error(
+        "Could not delete timer session.",
+        error
+      );
+
+      setReadingTimerFeedback({
+        key: timerKey,
+        kind: "error",
+        message:
+          error instanceof Error
+            ? `Timer session failed to delete: ${error.message}`
+            : "Timer session failed to delete because of an unknown Supabase error.",
+      });
+    } finally {
+      setReadingTimerSavingKey(null);
     }
   }
 
@@ -10783,7 +11795,7 @@ export default function App() {
   const nextMapShelfBooks =
     currentMapShelfIndex >= 0 && currentMapShelfIndex < mapShelfGroups.length - 1
       ? mapShelfGroups[currentMapShelfIndex + 1].books
-      : [];  
+      : [];
 
   useEffect(() => {
     if (activeTab !== "map") return;
@@ -12199,514 +13211,6 @@ export default function App() {
             </div>
           </details>
 
-          {selectedBook.containedWorks &&
-          selectedBook.containedWorks.length > 0 ? (
-            <details
-              key={`contained-works-${selectedBook.bookId}`}
-              className="detailSection authorMetadataDisclosure detailContainedStandaloneSection"
-            >
-              <summary className="authorMetadataDisclosureSummary">
-                <span className="authorMetadataDisclosureHeading">
-                  <span className="detailLabel">
-                    Contained works
-                  </span>
-
-                  <span className="authorMetadataDisclosureMeta">
-                    {
-                      selectedBook.containedWorks
-                        .length
-                    }{" "}
-                    {selectedBook.containedWorks
-                      .length === 1
-                      ? "work"
-                      : "works"}
-                  </span>
-                </span>
-              </summary>
-
-              <div className="authorMetadataDisclosureContent">
-                <div className="authorMetadataList">
-                  {selectedBook.containedWorks.map(
-                    (work) => {
-                      const workDetails = [
-                        work.workType,
-
-                        work.totalPages != null
-                          ? `${work.totalPages} pages`
-                          : "",
-
-                        work.startPage != null &&
-                        work.endPage != null
-                          ? `pp. ${work.startPage}–${work.endPage}`
-                          : "",
-                      ].filter(Boolean);
-
-                      const stateKey =
-                        makeLibraryContainedWorkStateKey(
-                          "cj",
-                          work.workId
-                        );
-
-                      const persistedState =
-                        containedWorkStateByKey.get(
-                          stateKey
-                        );
-
-                      const persistedStatus:
-                        LibraryContainedWorkStatus =
-                        persistedState?.status ??
-                        "unread";
-
-                      const persistedPageValue =
-                        persistedState
-                          ?.current_page != null
-                          ? String(
-                              persistedState
-                                .current_page
-                            )
-                          : "";
-
-                      const statusValue =
-                        containedWorkStatusDrafts[
-                          stateKey
-                        ] ??
-                        persistedStatus;
-
-                      const pageValue =
-                        stateKey in
-                        containedWorkPageDrafts
-                          ? containedWorkPageDrafts[
-                              stateKey
-                            ]
-                          : persistedPageValue;
-
-                      const hasChanges =
-                        stateKey in
-                          containedWorkStatusDrafts ||
-                        stateKey in
-                          containedWorkPageDrafts;
-
-                      const isSaving =
-                        containedWorkSavingKey ===
-                        stateKey;
-
-                      const feedback =
-                        containedWorkProgressFeedback
-                          ?.stateKey ===
-                        stateKey
-                          ? containedWorkProgressFeedback
-                          : null;
-
-                      function setContainedWorkDraft(
-                        nextStatus: LibraryContainedWorkStatus
-                      ) {
-                        const nextPageValue =
-                          nextStatus === "read" &&
-                          Number.isFinite(
-                            Number(
-                              work.totalPages
-                            )
-                          ) &&
-                          Number(
-                            work.totalPages
-                          ) > 0
-                            ? String(
-                                Math.trunc(
-                                  Number(
-                                    work.totalPages
-                                  )
-                                )
-                              )
-                            : nextStatus === "unread" ||
-                                (
-                                  persistedStatus ===
-                                    "read" &&
-                                  nextStatus ===
-                                    "in_progress"
-                                )
-                              ? ""
-                              : pageValue;
-
-                        setContainedWorkStatusDrafts(
-                          (
-                            currentDrafts
-                          ) => {
-                            const nextDrafts =
-                              {
-                                ...currentDrafts,
-                              };
-
-                            if (
-                              nextStatus ===
-                              persistedStatus
-                            ) {
-                              delete nextDrafts[
-                                stateKey
-                              ];
-                            } else {
-                              nextDrafts[
-                                stateKey
-                              ] =
-                                nextStatus;
-                            }
-
-                            return nextDrafts;
-                          }
-                        );
-
-                        setContainedWorkPageDrafts(
-                          (
-                            currentDrafts
-                          ) => {
-                            const nextDrafts =
-                              {
-                                ...currentDrafts,
-                              };
-
-                            if (
-                              nextPageValue ===
-                              persistedPageValue
-                            ) {
-                              delete nextDrafts[
-                                stateKey
-                              ];
-                            } else {
-                              nextDrafts[
-                                stateKey
-                              ] =
-                                nextPageValue;
-                            }
-
-                            return nextDrafts;
-                          }
-                        );
-
-                        setContainedWorkProgressFeedback(
-                          null
-                        );
-                      }
-
-                      return (
-                        <article
-                          key={work.workId}
-                          className="authorMetadataCard"
-                        >
-                          <div className="authorMetadataHeading">
-                            <strong>
-                              {work.title}
-                            </strong>
-
-                            {workDetails.length >
-                            0 ? (
-                              <span>
-                                {workDetails.join(
-                                  " · "
-                                )}
-                              </span>
-                            ) : null}
-                          </div>
-
-                          {work.notes ? (
-                            <p className="authorMetadataStatus">
-                              {work.notes}
-                            </p>
-                          ) : null}
-
-                          <div className="containedWorkProgress">
-                            <div className="containedWorkProgressHeader">
-                              <span className="containedWorkProgressLabel">
-                                CJ progress
-                              </span>
-
-                              <span
-                                className="containedWorkProgressStatus"
-                                data-status={
-                                  statusValue
-                                }
-                              >
-                                {
-                                  CONTAINED_WORK_STATUS_LABELS[
-                                    statusValue
-                                  ]
-                                }
-                              </span>
-                            </div>
-
-                            {containedWorkStateLoadStatus ===
-                            "loading" ? (
-                              <p className="detailMuted">
-                                Loading progress…
-                              </p>
-                            ) : containedWorkStateLoadStatus ===
-                              "error" ? (
-                              <p
-                                className="readingAttemptFeedback readingAttemptFeedbackError"
-                                role="alert"
-                              >
-                                Could not load
-                                contained work
-                                progress:{" "}
-                                {
-                                  containedWorkStateLoadError
-                                }
-                              </p>
-                            ) : !householdSession ? (
-                              <p className="detailMuted">
-                                Sign in to track
-                                CJ's progress.
-                              </p>
-                            ) : (
-                              <>
-                                <div
-                                  className="containedWorkQuickActions"
-                                  role="group"
-                                  aria-label={`Quick progress actions for ${work.title}`}
-                                >
-                                  {CONTAINED_WORK_STATUS_OPTIONS.map(
-                                    (
-                                      option
-                                    ) => (
-                                      <button
-                                        key={
-                                          option.value
-                                        }
-                                        type="button"
-                                        className={[
-                                          "containedWorkQuickAction",
-
-                                          statusValue ===
-                                          option.value
-                                            ? "containedWorkQuickActionActive"
-                                            : "",
-                                        ]
-                                          .filter(
-                                            Boolean
-                                          )
-                                          .join(" ")}
-                                        data-status={
-                                          option.value
-                                        }
-                                        aria-pressed={
-                                          statusValue ===
-                                          option.value
-                                        }
-                                        disabled={
-                                          isSaving
-                                        }
-                                        onClick={() => {
-                                          setContainedWorkDraft(
-                                            option.value
-                                          );
-                                        }}
-                                      >
-                                        {
-                                          option.label
-                                        }
-                                      </button>
-                                    )
-                                  )}
-                                </div>
-
-                                <div className="containedWorkProgressEditor">
-                                  <label className="containedWorkProgressField">
-                                    <span>
-                                      Status
-                                    </span>
-
-                                    <select
-                                      value={
-                                        statusValue
-                                      }
-                                      disabled={
-                                        isSaving
-                                      }
-                                      onChange={(
-                                        event
-                                      ) => {
-                                        const nextStatus =
-                                          event
-                                            .target
-                                            .value as
-                                            LibraryContainedWorkStatus;
-
-                                        setContainedWorkStatusDrafts(
-                                          (
-                                            currentDrafts
-                                          ) => {
-                                            const nextDrafts =
-                                              {
-                                                ...currentDrafts,
-                                              };
-
-                                            if (
-                                              nextStatus ===
-                                              persistedStatus
-                                            ) {
-                                              delete nextDrafts[
-                                                stateKey
-                                              ];
-                                            } else {
-                                              nextDrafts[
-                                                stateKey
-                                              ] =
-                                                nextStatus;
-                                            }
-
-                                            return nextDrafts;
-                                          }
-                                        );
-
-                                        setContainedWorkProgressFeedback(
-                                          null
-                                        );
-                                      }}
-                                    >
-                                      {CONTAINED_WORK_STATUS_OPTIONS.map(
-                                        (
-                                          option
-                                        ) => (
-                                          <option
-                                            key={
-                                              option.value
-                                            }
-                                            value={
-                                              option.value
-                                            }
-                                          >
-                                            {
-                                              option.label
-                                            }
-                                          </option>
-                                        )
-                                      )}
-                                    </select>
-                                  </label>
-
-                                  <label className="containedWorkProgressField">
-                                    <span>
-                                      Current page
-                                    </span>
-
-                                    <input
-                                      type="number"
-                                      min={0}
-                                      max={
-                                        work.totalPages ??
-                                        undefined
-                                      }
-                                      step={1}
-                                      inputMode="numeric"
-                                      value={
-                                        pageValue
-                                      }
-                                      disabled={
-                                        isSaving ||
-                                        statusValue ===
-                                          "unread" ||
-                                        statusValue ===
-                                          "read"
-                                      }
-                                      onChange={(
-                                        event
-                                      ) => {
-                                        const nextValue =
-                                          event
-                                            .target
-                                            .value;
-
-                                        setContainedWorkPageDrafts(
-                                          (
-                                            currentDrafts
-                                          ) => {
-                                            const nextDrafts =
-                                              {
-                                                ...currentDrafts,
-                                              };
-
-                                            if (
-                                              nextValue ===
-                                              persistedPageValue
-                                            ) {
-                                              delete nextDrafts[
-                                                stateKey
-                                              ];
-                                            } else {
-                                              nextDrafts[
-                                                stateKey
-                                              ] =
-                                                nextValue;
-                                            }
-
-                                            return nextDrafts;
-                                          }
-                                        );
-
-                                        setContainedWorkProgressFeedback(
-                                          null
-                                        );
-                                      }}
-                                    />
-                                  </label>
-                                </div>
-
-                                <button
-                                  type="button"
-                                  className="readingAttemptStartButton"
-                                  disabled={
-                                    !hasChanges ||
-                                    isSaving
-                                  }
-                                  onClick={() => {
-                                    void saveContainedWorkProgress(
-                                      work,
-                                      "cj",
-                                      statusValue,
-                                      pageValue
-                                    );
-                                  }}
-                                >
-                                  {isSaving
-                                    ? "Saving…"
-                                    : hasChanges
-                                      ? "Save CJ progress"
-                                      : "Saved"}
-                                </button>
-
-                                {feedback ? (
-                                  <p
-                                    className={[
-                                      "readingAttemptFeedback",
-
-                                      feedback.kind ===
-                                      "error"
-                                        ? "readingAttemptFeedbackError"
-                                        : "readingAttemptFeedbackSuccess",
-                                    ].join(
-                                      " "
-                                    )}
-                                    role={
-                                      feedback.kind ===
-                                      "error"
-                                        ? "alert"
-                                        : "status"
-                                    }
-                                  >
-                                    {
-                                      feedback.message
-                                    }
-                                  </p>
-                                ) : null}
-                              </>
-                            )}
-                          </div>
-                        </article>
-                      );
-                    }
-                  )}
-                </div>
-              </div>
-            </details>
-          ) : null}
 
             <section className="detailSection detailReadStatusSection">
               <p className="detailLabel">
@@ -14258,7 +14762,7 @@ export default function App() {
       </section>
     );
   }
-  
+
   function renderWantedSection(
     title: string,
     items: WantedBook[],
@@ -14339,7 +14843,9 @@ export default function App() {
               }`
           : activeTab === "stats"
             ? `${statsSummary.totalBooks.toLocaleString()} books · ${statsSummary.totalPages.toLocaleString()} known pages`
-            : activeTab === "update"
+            : activeTab === "timer"
+              ? `${activeTimerSessions.length} running / ${stoppedTimerSessionsNeedingPage.length} waiting / ${completedTimerSessions.length} saved`
+              : activeTab === "update"
               ? selectedUpdateFieldList.length > 0
                 ? `${updateBooks.length} ${
                     updateBooks.length === 1
@@ -15929,6 +16435,826 @@ export default function App() {
             )}
           </section>
         )
+      ) : activeTab === "timer" ? (
+        <section className="timerPanel">
+          <section className="timerIntro">
+            <div className="statsSectionHeader">
+              <h2>Reading timer</h2>
+
+              <p>
+                {completedTimerSessions.length ===
+                1
+                  ? "1 saved session"
+                  : `${completedTimerSessions.length} saved sessions`}
+              </p>
+            </div>
+          </section>
+
+          {readingAttemptsLoadStatus ===
+          "idle" ? (
+            <p className="emptySearch">
+              Sign in to use shared reading timers.
+            </p>
+          ) : readingAttemptsLoadStatus ===
+            "loading" ? (
+            <p className="emptySearch">
+              Loading reading activity...
+            </p>
+          ) : readingAttemptsLoadStatus ===
+            "error" ? (
+            <p className="readingAttemptFeedback readingAttemptFeedbackError">
+              {readingAttemptsLoadError}
+            </p>
+          ) : (
+            <>
+              {readingTimerFeedback ? (
+                <p
+                  className={
+                    readingTimerFeedback.kind ===
+                    "error"
+                      ? "readingAttemptFeedback readingAttemptFeedbackError"
+                      : "readingAttemptFeedback readingAttemptFeedbackSuccess"
+                  }
+                >
+                  {readingTimerFeedback.message}
+                </p>
+              ) : null}
+
+              <section className="timerSummaryGrid">
+                {timerReaderSummaries.map(
+                  (summary) => (
+                    <article
+                      key={summary.readerId}
+                      className="timerSummaryCard"
+                    >
+                      <span className="detailLabel">
+                        {summary.readerName}
+                      </span>
+
+                      <strong>
+                        {formatTimerPace(
+                          summary.pagesPerHour
+                        )}
+                      </strong>
+
+                      <p>
+                        {summary.pagesRead.toLocaleString()}{" "}
+                        pages logged across{" "}
+                        {summary.sessionCount.toLocaleString()}{" "}
+                        {summary.sessionCount ===
+                        1
+                          ? "session"
+                          : "sessions"}
+                      </p>
+
+                      <span className="timerSummaryMeta">
+                        {formatTimerDuration(
+                          summary.durationSeconds
+                        )}{" "}
+                        reading time
+                      </span>
+                    </article>
+                  )
+                )}
+              </section>
+
+              {activeTimerSessions.length >
+              0 ? (
+                <section className="timerSection">
+                  <div className="statsSectionHeader">
+                    <h2>Running timer</h2>
+
+                    <p>
+                      {activeTimerSessions.length ===
+                      1
+                        ? "1 active session"
+                        : `${activeTimerSessions.length} active sessions`}
+                    </p>
+                  </div>
+
+                  <div className="timerList">
+                    {activeTimerSessions.map(
+                      (session) => {
+                        const book =
+                          booksByCatalogKey.get(
+                            session.catalog_key
+                          );
+
+                        const stopKey = `stop:${session.timer_session_id}`;
+                        const deleteKey = `delete:${session.timer_session_id}`;
+                        const elapsedSeconds =
+                          Math.max(
+                            0,
+                            Math.round(
+                              (currentTimerTick -
+                                new Date(
+                                  session.started_at
+                                ).getTime()) /
+                                1000
+                            )
+                          );
+
+                        return (
+                          <article
+                            key={
+                              session.timer_session_id
+                            }
+                            className="timerCard timerCardActive"
+                          >
+                            <div className="timerCardHeader">
+                              <div>
+                                <span className="detailLabel">
+                                  {getReaderName(
+                                    session.reader_id
+                                  )}
+                                </span>
+
+                                <h3>
+                                  {book?.title ??
+                                    session.catalog_key}
+                                </h3>
+
+                                <p>
+                                  {book?.author ??
+                                    "Unknown author"}
+                                </p>
+                              </div>
+
+                              <strong className="timerClock">
+                                {formatTimerDuration(
+                                  elapsedSeconds
+                                )}
+                              </strong>
+                            </div>
+
+                            <div className="timerStopGrid">
+                              <span>
+                                Started at page{" "}
+                                {session.start_page.toLocaleString()}
+                              </span>
+
+                              <button
+                                type="button"
+                                className="readingAttemptStartButton"
+                                disabled={
+                                  readingTimerSavingKey !==
+                                  null
+                                }
+                                onClick={() => {
+                                  void stopReadingTimer(
+                                    session
+                                  );
+                                }}
+                              >
+                                Stop
+                              </button>
+
+                              <button
+                                type="button"
+                                className="readingAttemptCancelButton"
+                                disabled={
+                                  readingTimerSavingKey !==
+                                  null
+                                }
+                                onClick={() => {
+                                  void deleteReadingTimerSession(
+                                    session
+                                  );
+                                }}
+                              >
+                                Delete
+                              </button>
+                            </div>
+
+                            {readingTimerFeedback?.key ===
+                            stopKey ||
+                            readingTimerFeedback?.key ===
+                              deleteKey ? (
+                              <p
+                                className={
+                                  readingTimerFeedback.kind ===
+                                  "error"
+                                    ? "readingAttemptFeedback readingAttemptFeedbackError"
+                                    : "readingAttemptFeedback readingAttemptFeedbackSuccess"
+                                }
+                              >
+                                {
+                                  readingTimerFeedback.message
+                                }
+                              </p>
+                            ) : null}
+                          </article>
+                        );
+                      }
+                    )}
+                  </div>
+                </section>
+              ) : null}
+
+              {stoppedTimerSessionsNeedingPage.length >
+              0 ? (
+                <section className="timerSection">
+                  <div className="statsSectionHeader">
+                    <h2>End page</h2>
+
+                    <p>
+                      {stoppedTimerSessionsNeedingPage.length ===
+                      1
+                        ? "1 stopped session"
+                        : `${stoppedTimerSessionsNeedingPage.length} stopped sessions`}
+                    </p>
+                  </div>
+
+                  <div className="timerList">
+                    {stoppedTimerSessionsNeedingPage.map(
+                      (session) => {
+                        const book =
+                          booksByCatalogKey.get(
+                            session.catalog_key
+                          );
+
+                        const pageKey = `page:${session.timer_session_id}`;
+                        const deleteKey = `delete:${session.timer_session_id}`;
+
+                        return (
+                          <article
+                            key={
+                              session.timer_session_id
+                            }
+                            className="timerCard"
+                          >
+                            <div className="timerCardHeader">
+                              <div>
+                                <span className="detailLabel">
+                                  {getReaderName(
+                                    session.reader_id
+                                  )}
+                                </span>
+
+                                <h3>
+                                  {book?.title ??
+                                    session.catalog_key}
+                                </h3>
+
+                                <p>
+                                  {book?.author ??
+                                    "Unknown author"}
+                                </p>
+                              </div>
+
+                              <strong className="timerClock">
+                                {formatTimerDuration(
+                                  session.duration_seconds ??
+                                    0
+                                )}
+                              </strong>
+                            </div>
+
+                            <div className="timerStopGrid">
+                              <span>
+                                Started at page{" "}
+                                {session.start_page.toLocaleString()}
+                              </span>
+
+                              <label className="readingAttemptPageField">
+                                <span>End page</span>
+
+                                <input
+                                  type="number"
+                                  min={
+                                    session.start_page
+                                  }
+                                  step={1}
+                                  inputMode="numeric"
+                                  value={
+                                    timerStopPageDrafts[
+                                      session
+                                        .timer_session_id
+                                    ] ?? ""
+                                  }
+                                  onChange={(
+                                    event
+                                  ) => {
+                                    setTimerStopPageDrafts(
+                                      (
+                                        currentDrafts
+                                      ) => ({
+                                        ...currentDrafts,
+                                        [session.timer_session_id]:
+                                          event
+                                            .target
+                                            .value,
+                                      })
+                                    );
+                                  }}
+                                />
+                              </label>
+
+                              <button
+                                type="button"
+                                className="readingAttemptStartButton"
+                                disabled={
+                                  readingTimerSavingKey !==
+                                  null
+                                }
+                                onClick={() => {
+                                  void saveStoppedTimerEndPage(
+                                    session
+                                  );
+                                }}
+                              >
+                                Save page
+                              </button>
+
+                              <button
+                                type="button"
+                                className="readingAttemptCancelButton"
+                                disabled={
+                                  readingTimerSavingKey !==
+                                  null
+                                }
+                                onClick={() => {
+                                  void deleteReadingTimerSession(
+                                    session
+                                  );
+                                }}
+                              >
+                                Delete
+                              </button>
+                            </div>
+
+                            {readingTimerFeedback?.key ===
+                            pageKey ||
+                            readingTimerFeedback?.key ===
+                              deleteKey ? (
+                              <p
+                                className={
+                                  readingTimerFeedback.kind ===
+                                  "error"
+                                    ? "readingAttemptFeedback readingAttemptFeedbackError"
+                                    : "readingAttemptFeedback readingAttemptFeedbackSuccess"
+                                }
+                              >
+                                {
+                                  readingTimerFeedback.message
+                                }
+                              </p>
+                            ) : null}
+                          </article>
+                        );
+                      }
+                    )}
+                  </div>
+                </section>
+              ) : null}
+
+              <section className="timerSection">
+                <div className="statsSectionHeader timerSectionHeaderWithControls">
+                  <div>
+                    <h2>Current reads</h2>
+
+                    <p>
+                      {visibleTimerCurrentReads.length ===
+                      1
+                        ? "1 active read"
+                        : `${visibleTimerCurrentReads.length} active reads`}
+                    </p>
+                  </div>
+
+                  <div
+                    className="timerReaderPills"
+                    role="group"
+                    aria-label="Choose current reads reader"
+                  >
+                    {(["cj", "jc"] as LibraryReaderId[]).map(
+                      (readerId) => (
+                        <button
+                          key={readerId}
+                          type="button"
+                          className={
+                            timerCurrentReadsReaderId ===
+                            readerId
+                              ? "timerReaderPill timerReaderPillActive"
+                              : "timerReaderPill"
+                          }
+                          aria-pressed={
+                            timerCurrentReadsReaderId ===
+                            readerId
+                          }
+                          onClick={() => {
+                            setTimerCurrentReadsReaderId(
+                              readerId
+                            );
+                          }}
+                        >
+                          {getReaderName(
+                            readerId
+                          )}
+                        </button>
+                      )
+                    )}
+                  </div>
+                </div>
+
+                {visibleTimerCurrentReads.length >
+                0 ? (
+                  <div className="timerList">
+                    {visibleTimerCurrentReads.map(
+                      ({
+                        attempt,
+                        title,
+                        author,
+                        activeTimer,
+                      }) => {
+                        const stateKey =
+                          makeLibraryStateKey(
+                            attempt.reader_id,
+                            attempt.catalog_key
+                          );
+
+                        const startKey = `start:${attempt.attempt_id}`;
+                        const timerIsForThisAttempt =
+                          activeTimer?.attempt_id ===
+                          attempt.attempt_id;
+
+                        return (
+                          <article
+                            key={
+                              attempt.attempt_id
+                            }
+                            className="timerCard"
+                          >
+                            <div className="timerCardHeader">
+                              <div>
+                                <span className="detailLabel">
+                                  {getReaderName(
+                                    attempt.reader_id
+                                  )}
+                                </span>
+
+                                <h3>{title}</h3>
+
+                                <p>{author}</p>
+                              </div>
+
+                              <span className="readingAttemptBadge readingAttemptBadgeActive">
+                                {attempt.current_page
+                                  ? `Page ${attempt.current_page.toLocaleString()}`
+                                  : "Current read"}
+                              </span>
+                            </div>
+
+                            <div className="timerStartGrid">
+                              <label className="readingAttemptPageField">
+                                <span>Start page</span>
+
+                                <input
+                                  type="number"
+                                  min={0}
+                                  step={1}
+                                  inputMode="numeric"
+                                  value={
+                                    timerStartPageDrafts[
+                                      stateKey
+                                    ] ??
+                                    String(
+                                      attempt.current_page ??
+                                        0
+                                    )
+                                  }
+                                  disabled={
+                                    Boolean(
+                                      activeTimer
+                                    )
+                                  }
+                                  onChange={(
+                                    event
+                                  ) => {
+                                    setTimerStartPageDrafts(
+                                      (
+                                        currentDrafts
+                                      ) => ({
+                                        ...currentDrafts,
+                                        [stateKey]:
+                                          event
+                                            .target
+                                            .value,
+                                      })
+                                    );
+                                  }}
+                                />
+                              </label>
+
+                              <button
+                                type="button"
+                                className="readingAttemptStartButton"
+                                disabled={
+                                  Boolean(
+                                    activeTimer
+                                  ) ||
+                                  readingTimerSavingKey !==
+                                    null
+                                }
+                                onClick={() => {
+                                  void startReadingTimer(
+                                    attempt
+                                  );
+                                }}
+                              >
+                                {timerIsForThisAttempt
+                                  ? "Timing"
+                                  : activeTimer
+                                    ? "Timer running"
+                                    : "Start timer"}
+                              </button>
+                            </div>
+
+                            {readingTimerFeedback?.key ===
+                            startKey ? (
+                              <p
+                                className={
+                                  readingTimerFeedback.kind ===
+                                  "error"
+                                    ? "readingAttemptFeedback readingAttemptFeedbackError"
+                                    : "readingAttemptFeedback readingAttemptFeedbackSuccess"
+                                }
+                              >
+                                {
+                                  readingTimerFeedback.message
+                                }
+                              </p>
+                            ) : null}
+                          </article>
+                        );
+                      }
+                    )}
+                  </div>
+                ) : (
+                  <p className="emptySearch">
+                    No current reads are active yet.
+                  </p>
+                )}
+              </section>
+
+              <section className="timerSection">
+                <div className="statsSectionHeader">
+                  <h2>Start a current read</h2>
+
+                  <p>
+                    Choose a book to add it to current reads.
+                  </p>
+                </div>
+
+                <div className="timerStartReadControls">
+                  <label className="searchFilterField">
+                    <span>Reader</span>
+
+                    <select
+                      value={timerReaderId}
+                      onChange={(event) => {
+                        if (
+                          isLibraryReaderId(
+                            event.target.value
+                          )
+                        ) {
+                          setTimerReaderId(
+                            event.target.value
+                          );
+                        }
+                      }}
+                    >
+                      <option value="cj">
+                        CJ
+                      </option>
+                      <option value="jc">
+                        JC
+                      </option>
+                    </select>
+                  </label>
+
+                  <label className="librarySearch">
+                    <span>Book</span>
+
+                    <input
+                      type="search"
+                      value={timerBookQuery}
+                      placeholder="Search title, author, or series..."
+                      onChange={(event) => {
+                        setTimerBookQuery(
+                          event.target.value
+                        );
+                      }}
+                    />
+                  </label>
+                </div>
+
+                {readingAttemptFeedback ? (
+                  <p
+                    className={
+                      readingAttemptFeedback.kind ===
+                      "error"
+                        ? "readingAttemptFeedback readingAttemptFeedbackError"
+                        : "readingAttemptFeedback readingAttemptFeedbackSuccess"
+                    }
+                  >
+                    {
+                      readingAttemptFeedback.message
+                    }
+                  </p>
+                ) : null}
+
+                {timerBookQuery.trim() ? (
+                  timerSearchResults.length >
+                  0 ? (
+                    <div className="timerSearchResults">
+                      {timerSearchResults.map(
+                        (book) => {
+                          const catalogKey =
+                            book.catalogKey?.trim() ??
+                            "";
+                          const stateKey =
+                            makeLibraryStateKey(
+                              timerReaderId,
+                              catalogKey
+                            );
+                          const existingAttempt =
+                            activeReadingAttemptByKey.get(
+                              stateKey
+                            );
+
+                          return (
+                            <article
+                              key={
+                                book.bookId
+                              }
+                              className="timerSearchCard"
+                            >
+                              <div>
+                                <h3>
+                                  {book.title}
+                                </h3>
+
+                                <p>
+                                  {book.author}
+                                </p>
+                              </div>
+
+                              <button
+                                type="button"
+                                className="readingAttemptStartButton"
+                                disabled={
+                                  readingAttemptSavingKey !==
+                                    null ||
+                                  !catalogKey
+                                }
+                                onClick={() => {
+                                  void startBookReadingAttempt(
+                                    book,
+                                    timerReaderId
+                                  ).then(
+                                    (attempt) => {
+                                      if (attempt) {
+                                        setTimerBookQuery(
+                                          ""
+                                        );
+                                      }
+                                    }
+                                  );
+                                }}
+                              >
+                                {existingAttempt
+                                  ? "Current read"
+                                  : "Start read"}
+                              </button>
+                            </article>
+                          );
+                        }
+                      )}
+                    </div>
+                  ) : (
+                    <p className="emptySearch">
+                      No books match that search.
+                    </p>
+                  )
+                ) : null}
+              </section>
+
+              <section className="timerSection">
+                <div className="statsSectionHeader">
+                  <h2>Session records</h2>
+
+                  <p>
+                    Recent saved sessions
+                  </p>
+                </div>
+
+                {recentTimerSessions.length >
+                0 ? (
+                  <div className="timerRecordList">
+                    {recentTimerSessions.map(
+                      (session) => {
+                        const book =
+                          booksByCatalogKey.get(
+                            session.catalog_key
+                          );
+                        const pagesRead =
+                          getTimerPagesRead(
+                            session
+                          );
+                        const pagesPerHour =
+                          getTimerPagesPerHour(
+                            pagesRead,
+                            session.duration_seconds
+                          );
+                        const deleteKey = `delete:${session.timer_session_id}`;
+
+                        return (
+                          <article
+                            key={
+                              session.timer_session_id
+                            }
+                            className="timerRecord"
+                          >
+                            <div>
+                              <strong>
+                                {book?.title ??
+                                  session.catalog_key}
+                              </strong>
+
+                              <span>
+                                {getReaderName(
+                                  session.reader_id
+                                )}{" "}
+                                /{" "}
+                                {formatReadingAttemptDate(
+                                  session.started_at
+                                )}
+                              </span>
+                            </div>
+
+                            <span>
+                              {pagesRead.toLocaleString()}{" "}
+                              pages
+                            </span>
+
+                            <span>
+                              {formatTimerDuration(
+                                session.duration_seconds ??
+                                  0
+                              )}
+                            </span>
+
+                            <span>
+                              {formatTimerPace(
+                                pagesPerHour
+                              )}
+                            </span>
+
+                            <button
+                              type="button"
+                              className="readingAttemptCancelButton timerRecordDeleteButton"
+                              disabled={
+                                readingTimerSavingKey !==
+                                null
+                              }
+                              onClick={() => {
+                                void deleteReadingTimerSession(
+                                  session
+                                );
+                              }}
+                            >
+                              Delete
+                            </button>
+
+                            {readingTimerFeedback?.key ===
+                            deleteKey ? (
+                              <p
+                                className={
+                                  readingTimerFeedback.kind ===
+                                  "error"
+                                    ? "readingAttemptFeedback readingAttemptFeedbackError timerRecordFeedback"
+                                    : "readingAttemptFeedback readingAttemptFeedbackSuccess timerRecordFeedback"
+                                }
+                              >
+                                {
+                                  readingTimerFeedback.message
+                                }
+                              </p>
+                            ) : null}
+                          </article>
+                        );
+                      }
+                    )}
+                  </div>
+                ) : (
+                  <p className="emptySearch">
+                    No saved timer sessions yet.
+                  </p>
+                )}
+              </section>
+            </>
+          )}
+        </section>
       ) : activeTab === "wanted" ? (
         <section className="wantedPanel">
           <section className="wantedIntro">

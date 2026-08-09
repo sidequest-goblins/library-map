@@ -2287,10 +2287,6 @@ select {
   order: 100;
 }
 
-.detailContainedStandaloneSection {
-  display: none;
-}
-
 .bookDetailSections:has(
   .bookDetailSaveBarPending
 ) {
@@ -3403,6 +3399,318 @@ select {
 
 .detailChallengeActionFeedbackError {
   color: #8a3429;
+}
+
+/* ========================================================================== */
+/* READING TIMER */
+/* ========================================================================== */
+
+.timerPanel {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.timerIntro {
+  display: grid;
+  gap: 0.85rem;
+  min-width: 0;
+  padding: 1rem;
+  border:
+    1px solid
+    var(--border);
+  border-radius: 20px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 248, 233, 0.95),
+      rgba(247, 236, 215, 0.88)
+    ),
+    var(--paper);
+  box-shadow:
+    0 12px 30px
+    rgba(76, 48, 30, 0.1);
+}
+
+.timerSection {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.timerSectionHeaderWithControls {
+  align-items: center;
+}
+
+.timerSectionHeaderWithControls > div:first-child {
+  display: grid;
+  gap: 0.12rem;
+}
+
+.timerReaderPills {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.timerReaderPill {
+  min-width: 3rem;
+  border:
+    1px solid
+    rgba(76, 48, 30, 0.18);
+  border-radius: 999px;
+  padding: 0.42rem 0.7rem;
+  color: var(--brownDark);
+  background:
+    rgba(255, 250, 240, 0.76);
+  font-size: 0.78rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.timerReaderPill:hover {
+  border-color:
+    rgba(82, 111, 69, 0.38);
+  background:
+    rgba(169, 183, 141, 0.18);
+}
+
+.timerReaderPill:focus-visible {
+  outline:
+    3px solid
+    rgba(201, 154, 69, 0.28);
+  outline-offset: 2px;
+}
+
+.timerReaderPillActive {
+  color: #fff8e9;
+  border-color:
+    rgba(52, 72, 46, 0.38);
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--greenDark)
+    );
+}
+
+.timerSummaryGrid {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(220px, 1fr)
+    );
+  gap: 0.75rem;
+}
+
+.timerSummaryCard,
+.timerCard,
+.timerSearchCard,
+.timerRecord {
+  min-width: 0;
+  border:
+    1px solid
+    rgba(76, 48, 30, 0.16);
+  border-radius: 16px;
+  background:
+    rgba(255, 250, 240, 0.78);
+  box-shadow:
+    0 8px 18px
+    rgba(76, 48, 30, 0.08);
+}
+
+.timerSummaryCard {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.85rem;
+}
+
+.timerSummaryCard strong {
+  color: var(--brownDark);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: 1.18rem;
+}
+
+.timerSummaryCard p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+.timerSummaryMeta {
+  color: var(--greenDark);
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.timerList,
+.timerSearchResults,
+.timerRecordList {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.timerCard {
+  display: grid;
+  gap: 0.7rem;
+  padding: 0.85rem;
+}
+
+.timerCardActive {
+  border-color:
+    rgba(82, 111, 69, 0.34);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(169, 183, 141, 0.24),
+      rgba(255, 250, 240, 0.9)
+    );
+}
+
+.timerCardHeader {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.timerCardHeader h3,
+.timerCardHeader p {
+  margin: 0;
+}
+
+.timerCardHeader h3 {
+  color: var(--brownDark);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: 1.06rem;
+}
+
+.timerCardHeader p {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.timerClock {
+  color: var(--greenDark);
+  font-variant-numeric:
+    tabular-nums;
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.timerStartGrid,
+.timerStopGrid,
+.timerStartReadControls {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(150px, max-content)
+    );
+  gap: 0.65rem;
+  align-items: end;
+}
+
+.timerStartReadControls {
+  grid-template-columns:
+    minmax(120px, 180px)
+    minmax(0, 430px);
+  align-items: end;
+}
+
+.timerStopGrid > span {
+  align-self: center;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 750;
+}
+
+.timerSearchCard {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto;
+  gap: 0.7rem;
+  align-items: center;
+  padding: 0.8rem;
+}
+
+.timerSearchCard h3,
+.timerSearchCard p {
+  margin: 0;
+}
+
+.timerSearchCard h3 {
+  color: var(--brownDark);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: 1rem;
+}
+
+.timerSearchCard p {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.timerRecord {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.5fr)
+    repeat(3, minmax(90px, auto))
+    auto;
+  gap: 0.55rem 0.9rem;
+  align-items: center;
+  padding: 0.75rem 0.85rem;
+}
+
+.timerRecord div {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 0;
+}
+
+.timerRecord strong {
+  overflow: hidden;
+  color: var(--brownDark);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timerRecord span {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 750;
+}
+
+.timerRecordDeleteButton {
+  justify-self: end;
+}
+
+.timerRecordFeedback {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 640px) {
+  .timerStartReadControls,
+  .timerSearchCard,
+  .timerRecord {
+    grid-template-columns: 1fr;
+  }
+
+  .timerClock {
+    font-size: 1.35rem;
+  }
 }
 
 /* ========================================================================== */
