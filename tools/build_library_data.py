@@ -47,6 +47,7 @@ COVER_IMAGE_EXTENSION = "webp"
 COVER_WEBP_QUALITY = 76
 COVER_CACHE_PATH = OUTPUT_DIR / "library-cover-cache.json"
 COVER_CACHE_VERSION = 1
+ARCHIVE_INPUT_PATH = OUTPUT_DIR / "library-archive.json"
 
 def clean(value: Any) -> str:
     return str(value or "").strip()
@@ -1231,6 +1232,103 @@ def write_cover_cache(cache: dict[str, Any]) -> None:
         encoding="utf-8",
     )
 
+def load_archived_cover_filenames() -> set[str]:
+    if not ARCHIVE_INPUT_PATH.exists():
+        return set()
+
+    try:
+        archive_records = json.loads(
+            ARCHIVE_INPUT_PATH.read_text(
+                encoding="utf-8",
+            )
+        )
+    except (OSError, json.JSONDecodeError):
+        return set()
+
+    if not isinstance(archive_records, list):
+        return set()
+
+    cover_filenames: set[str] = set()
+
+    for record in archive_records:
+        if not isinstance(record, dict):
+            continue
+
+        cover_image = clean(
+            record.get("coverImage")
+        )
+
+        if not cover_image:
+            continue
+
+        cover_path = Path(
+            posixpath.basename(
+                cover_image
+            )
+        )
+
+        if (
+            cover_path.suffix
+            == f".{COVER_IMAGE_EXTENSION}"
+        ):
+            cover_filenames.add(
+                cover_path.name
+            )
+
+    return cover_filenames
+
+def load_archived_identity_maps() -> tuple[
+    dict[str, str],
+    dict[str, str],
+]:
+    if not ARCHIVE_INPUT_PATH.exists():
+        return ({}, {})
+
+    try:
+        archive_records = json.loads(
+            ARCHIVE_INPUT_PATH.read_text(
+                encoding="utf-8",
+            )
+        )
+    except (OSError, json.JSONDecodeError):
+        return ({}, {})
+
+    if not isinstance(archive_records, list):
+        return ({}, {})
+
+    archived_book_ids: dict[str, str] = {}
+    archived_catalog_keys: dict[str, str] = {}
+
+    for record in archive_records:
+        if not isinstance(record, dict):
+            continue
+
+        title = clean(record.get("title"))
+        author = clean(record.get("author"))
+        label = (
+            f"{title} — {author}"
+            if author
+            else title
+        )
+
+        book_id = clean(record.get("bookId"))
+        catalog_key = clean(
+            record.get("catalogKey")
+        )
+
+        if book_id:
+            archived_book_ids[book_id] = label
+
+        if catalog_key:
+            archived_catalog_keys[
+                catalog_key
+            ] = label
+
+    return (
+        archived_book_ids,
+        archived_catalog_keys,
+    )
+
 def extract_catalog_cover_images(
     workbook_path: Path,
     catalog_books: dict[str, dict[str, Any]],
@@ -1255,6 +1353,9 @@ def extract_catalog_cover_images(
     next_cached_covers: dict[str, Any] = {}
 
     active_cover_filenames: set[str] = set()
+    archived_cover_filenames = (
+        load_archived_cover_filenames()
+    )
 
     report: dict[str, Any] = {
         "outputDir": str(COVER_OUTPUT_DIR),
@@ -1383,7 +1484,10 @@ def extract_catalog_cover_images(
 
     # Delete stale covers after processing, instead of deleting everything upfront.
     for old_cover in COVER_OUTPUT_DIR.glob(f"*.{COVER_IMAGE_EXTENSION}"):
-        if old_cover.name not in active_cover_filenames:
+        if (
+            old_cover.name not in active_cover_filenames
+            and old_cover.name not in archived_cover_filenames
+        ):
             old_cover.unlink()
             report["deletedStaleCount"] += 1
 
@@ -2116,7 +2220,7 @@ def main() -> None:
     )
 
     bookcase_rooms = load_bookcase_rooms(
-        catalog_workbook
+        list_view_workbook
     )
 
     catalog_books, catalog_report = (
@@ -2134,7 +2238,7 @@ def main() -> None:
 
     wanted_lists, wanted_report = (
         load_wanted_lists(
-            catalog_workbook
+            list_view_workbook
         )
     )
 
@@ -2493,6 +2597,69 @@ def main() -> None:
         }
 
         books.append(book)
+
+    (
+        archived_book_ids,
+        archived_catalog_keys,
+    ) = load_archived_identity_maps()
+
+    reused_archived_book_ids = [
+        (
+            book["bookId"],
+            book["title"],
+            archived_book_ids[
+                book["bookId"]
+            ],
+        )
+        for book in books
+        if book["bookId"] in archived_book_ids
+    ]
+
+    reused_archived_catalog_keys = [
+        (
+            book["catalogKey"],
+            book["title"],
+            archived_catalog_keys[
+                book["catalogKey"]
+            ],
+        )
+        for book in books
+        if book["catalogKey"] in archived_catalog_keys
+    ]
+
+    if reused_archived_book_ids:
+        details = "\n  - ".join(
+            f"{book_id}: current {current_title} "
+            f"matches archived {archived_title}"
+            for (
+                book_id,
+                current_title,
+                archived_title,
+            ) in reused_archived_book_ids
+        )
+
+        raise ValueError(
+            "Current List View reuses archived Book IDs. "
+            "Unarchive the record deliberately before updating:\n  - "
+            + details
+        )
+
+    if reused_archived_catalog_keys:
+        details = "\n  - ".join(
+            f"{catalog_key}: current {current_title} "
+            f"matches archived {archived_title}"
+            for (
+                catalog_key,
+                current_title,
+                archived_title,
+            ) in reused_archived_catalog_keys
+        )
+
+        raise ValueError(
+            "Current List View matches archived catalog keys. "
+            "Review the archive before re-adding these books:\n  - "
+            + details
+        )
 
     unknown_contained_work_book_ids = sorted(
         set(contained_works_by_book_id)

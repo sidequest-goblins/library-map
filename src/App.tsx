@@ -17670,6 +17670,21 @@ export default function App() {
                               ? booksById.get(entry.bookId)
                               : undefined;
 
+                            const isArchivedChallengeEntry =
+                              entry.libraryStatus ===
+                              "archived";
+
+                            const isExternalChallengeEntry =
+                              entry.libraryStatus ===
+                                "external" ||
+                              (!linkedBook &&
+                                !isArchivedChallengeEntry);
+
+                            const unavailableChallengeBookLabel =
+                              isArchivedChallengeEntry
+                                ? "is archived/offloaded"
+                                : "is not linked to a library book";
+
                             const challengeSeriesLabel =
                               linkedBook
                                 ? formatSearchSeriesLabel(
@@ -17733,7 +17748,7 @@ export default function App() {
                                 aria-label={
                                   linkedBook
                                     ? `Open ${entry.title} book details`
-                                    : `${entry.title} is not linked to a library book`
+                                    : `${entry.title} ${unavailableChallengeBookLabel}`
                                 }
                               >
                                 <span className="challengeLetter">
@@ -17749,6 +17764,18 @@ export default function App() {
                                     {isRead ? (
                                       <span className="challengeBadge challengeReadBadge">
                                         Read ✓
+                                      </span>
+                                    ) : null}
+
+                                    {isExternalChallengeEntry ? (
+                                      <span className="challengeBadge">
+                                        Public library
+                                      </span>
+                                    ) : null}
+
+                                    {isArchivedChallengeEntry ? (
+                                      <span className="challengeBadge">
+                                        Offloaded
                                       </span>
                                     ) : null}
                                   </span>

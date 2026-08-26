@@ -88,6 +88,7 @@ export type ChallengeEntry = {
   authorLast: string;
   bookId: string | null;
   catalogKey?: string | null;
+  libraryStatus?: "owned" | "archived" | "external";
   read: boolean;
   currentPage: number | null;
   totalPages: number | null;

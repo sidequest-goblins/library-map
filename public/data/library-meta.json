@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-09T04:54:54.746973+00:00",
+  "generatedAt": "2026-08-26T02:44:03.680836+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY LIST VIEW.xlsx",
   "catalogWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "worksWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY WORKS.xlsx",
@@ -10,10 +10,10 @@
     "skippedBlankRows": 3
   },
   "sourceSheet": "List View",
-  "bookCount": 1066,
-  "bookIdCount": 1066,
+  "bookCount": 1029,
+  "bookIdCount": 1029,
   "bookIdSource": "List View.Book ID",
-  "skippedBlankRows": 13,
+  "skippedBlankRows": 0,
   "headers": [
     "CJ",
     "JC",
@@ -66,139 +66,32 @@
   "unusedBookcases": [],
   "unmappedBookcases": [],
   "catalogMatchFallbackRows": [],
-  "catalogUnmatchedRows": [
-    {
-      "row": 22,
-      "title": "Periodic Tales: A Cultural History of the Elements, from Arsenic to Zinc",
-      "author": "Hugh Aldersey-Williams",
-      "catalogKey": "aldersey-williams-hugh-periodic-tales-a-cultural-history-of-the-elements-from-arsenic-to-zinc"
-    },
-    {
-      "row": 30,
-      "title": "You Know Better",
-      "author": "Tina McElroy Ansa",
-      "catalogKey": "ansa-tina-mcelroy-you-know-better"
-    },
-    {
-      "row": 31,
-      "title": "The Spanish Love Deception",
-      "author": "Elena Armas",
-      "catalogKey": "armas-elena-the-spanish-love-deception"
-    },
-    {
-      "row": 52,
-      "title": "Too Wild to Tame",
-      "author": "Tessa Bailey",
-      "catalogKey": "bailey-tessa-too-wild-to-tame"
-    },
-    {
-      "row": 84,
-      "title": "Astrid Parker Doesn't Fail",
-      "author": "Ashley Herring Blake",
-      "catalogKey": "blake-ashley-herring-astrid-parker-doesn-t-fail"
-    },
-    {
-      "row": 100,
-      "title": "Twelfth Grade Kills",
-      "author": "Heather Brewer",
-      "catalogKey": "brewer-heather-twelfth-grade-kills"
-    },
-    {
-      "row": 191,
-      "title": "Wayward Witch",
-      "author": "Zoraida Córdova",
-      "catalogKey": "c-rdova-zoraida-wayward-witch"
-    },
-    {
-      "row": 433,
-      "title": "The God of Endings",
-      "author": "Jacqueline Holland",
-      "catalogKey": "holland-jacqueline-the-god-of-endings"
-    },
-    {
-      "row": 515,
-      "title": "We Have Always Lived in the Castle",
-      "author": "Shirley Jackson",
-      "catalogKey": "jackson-shirley-we-have-always-lived-in-the-castle"
-    },
-    {
-      "row": 649,
-      "title": "How the Gringos Stole Tequila",
-      "author": "Chantal Martineau",
-      "catalogKey": "martineau-chantal-how-the-gringos-stole-tequila"
-    },
-    {
-      "row": 680,
-      "title": "Our Shadows Have Claws: 15 Latin American Monster Stories",
-      "author": "Yamile Saled Méndez; Amparo Ortiz",
-      "catalogKey": "m-ndez-yamile-saled-our-shadows-have-claws-15-latin-american-monster-stories"
-    },
-    {
-      "row": 815,
-      "title": "Burning Bright",
-      "author": "Ron Rash",
-      "catalogKey": "rash-ron-burning-bright"
-    },
-    {
-      "row": 933,
-      "title": "Memphis",
-      "author": "Tara M. Stringfellow",
-      "catalogKey": "stringfellow-tara-m-memphis"
-    },
-    {
-      "row": 967,
-      "title": "Angelika Frankenstein Makes Her Match",
-      "author": "Sally Thorne",
-      "catalogKey": "thorne-sally-angelika-frankenstein-makes-her-match"
-    },
-    {
-      "row": 1037,
-      "title": "Black River Orchard",
-      "author": "Chuck Wendig",
-      "catalogKey": "wendig-chuck-black-river-orchard"
-    },
-    {
-      "row": 1040,
-      "title": "Weird Horror Short Stories",
-      "author": "Gillian Whitaker",
-      "catalogKey": "whitaker-gillian-weird-horror-short-stories"
-    },
-    {
-      "row": 1043,
-      "title": "The Intuitionist",
-      "author": "Colson Whitehead",
-      "catalogKey": "whitehead-colson-the-intuitionist"
-    }
-  ],
+  "catalogUnmatchedRows": [],
   "catalog": {
-    "catalogBookCount": 1049,
-    "catalogRowsWithTitles": 1049,
+    "catalogBookCount": 1029,
+    "catalogRowsWithTitles": 1029,
     "processedCatalogSheets": {
-      "A": 37,
-      "B": 71,
-      "C": 81,
-      "D": 38,
-      "E": 53,
-      "F": 41,
-      "G": 56,
-      "H": 81,
+      "A": 40,
+      "B": 72,
+      "C": 77,
+      "D": 36,
+      "E": 49,
+      "F": 42,
+      "G": 58,
+      "H": 83,
       "I-J": 70,
-      "K": 67,
-      "L": 26,
+      "K": 64,
+      "L": 21,
       "M": 83,
-      "N-O": 55,
-      "P-Q": 41,
-      "R": 49,
+      "N-O": 53,
+      "P-Q": 36,
+      "R": 48,
       "S": 78,
-      "T-V": 41,
-      "W-Z": 81
+      "T-V": 37,
+      "W-Z": 82
     },
     "skippedCatalogSheets": [
-      "Total",
-      "List View",
-      "To Buy",
-      "Series to Complete",
-      "Bookcases"
+      "Total"
     ],
     "duplicateCatalogKeys": {}
   },
@@ -212,7 +105,7 @@
         "Last"
       ],
       "headerMode": "headers",
-      "rowCount": 76,
+      "rowCount": 74,
       "skippedBlankRows": 0
     },
     "seriesToComplete": {
@@ -16605,10 +16498,10 @@
         ""
       ],
       "headerMode": "headers",
-      "rowCount": 276,
+      "rowCount": 274,
       "skippedBlankRows": 0
     },
-    "totalWantedCount": 352
+    "totalWantedCount": 348
   },
   "coverExtraction": {
     "outputDir": "C:\\library_app\\library-map\\public\\data\\covers",
@@ -16616,17 +16509,24 @@
     "imageExtension": "webp",
     "webpQuality": 76,
     "cachePath": "C:\\library_app\\library-map\\public\\data\\library-cover-cache.json",
-    "extractedCount": 1049,
+    "extractedCount": 1029,
     "convertedCount": 0,
-    "cachedCount": 1049,
+    "cachedCount": 1029,
     "deletedStaleCount": 0,
     "missingAnchors": [],
     "missingMediaFiles": [],
     "conversionErrors": [],
     "anchorReport": {
-      "totalAnchoredImages": 1049,
-      "mappedAnchoredImages": 1049,
-      "duplicateAnchorRows": [],
+      "totalAnchoredImages": 1030,
+      "mappedAnchoredImages": 1029,
+      "duplicateAnchorRows": [
+        {
+          "sheet": "E",
+          "row": 17,
+          "firstMediaPath": "xl/media/image241.jpeg",
+          "secondMediaPath": "xl/media/image1030.jpg"
+        }
+      ],
       "missingMediaTargets": [],
       "sheetsWithoutDrawings": [
         "A",
@@ -16648,8 +16548,8 @@
         "W-Z"
       ],
       "cellImageReport": {
-        "totalCellImages": 1048,
-        "mappedCellImages": 1048,
+        "totalCellImages": 1029,
+        "mappedCellImages": 1029,
         "duplicateCellRows": [],
         "missingRichDataFiles": [],
         "missingRichValueIndexes": [],
@@ -16657,8 +16557,8 @@
         "missingMediaTargets": []
       }
     },
-    "outputFileCount": 1049,
-    "outputTotalBytes": 82514466
+    "outputFileCount": 1092,
+    "outputTotalBytes": 85217838
   },
   "imageInspectionEnabled": false,
   "images": null,

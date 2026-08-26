@@ -754,19 +754,21 @@
       "aliases": []
     },
     {
+      "authorId": "author-bee1d85e-3653-4532-af5e-fef39ccdbd00",
+      "displayName": "Jessamine Chan",
+      "firstName": "Jessamine",
+      "lastName": "Chan",
+      "sortName": "Chan, Jessamine",
+      "aliases": [
+        "Jessamine Chang"
+      ]
+    },
+    {
       "authorId": "author-f9744509-54ff-4e28-9c0c-5d57919602ba",
       "displayName": "Iris Chang",
       "firstName": "Iris",
       "lastName": "Chang",
       "sortName": "Chang, Iris",
-      "aliases": []
-    },
-    {
-      "authorId": "author-bee1d85e-3653-4532-af5e-fef39ccdbd00",
-      "displayName": "Jessamine Chang",
-      "firstName": "Jessamine",
-      "lastName": "Chang",
-      "sortName": "Chang, Jessamine",
       "aliases": []
     },
     {
@@ -1087,6 +1089,14 @@
       "firstName": "Melissa",
       "lastName": "de la Cruz",
       "sortName": "de la Cruz, Melissa",
+      "aliases": []
+    },
+    {
+      "authorId": "author-89cb6e6c-6ea7-41ef-a6a8-4cbf71a1c918",
+      "displayName": "Guillermo del Toro",
+      "firstName": "Guillermo",
+      "lastName": "del Toro",
+      "sortName": "del Toro, Guillermo",
       "aliases": []
     },
     {
@@ -1551,6 +1561,14 @@
       "firstName": "Stephanie",
       "lastName": "Foo",
       "sortName": "Foo, Stephanie",
+      "aliases": []
+    },
+    {
+      "authorId": "author-d01efa65-27f6-4be8-a317-fcf5b4a03f6e",
+      "displayName": "Michael Dylan Foster",
+      "firstName": "Michael Dylan",
+      "lastName": "Foster",
+      "sortName": "Foster, Michael Dylan",
       "aliases": []
     },
     {
@@ -2186,6 +2204,14 @@
       "aliases": []
     },
     {
+      "authorId": "author-01b92026-a59a-4d4b-8e2a-c6b646a763ea",
+      "displayName": "Sabrina Imbler",
+      "firstName": "Sabrina",
+      "lastName": "Imbler",
+      "sortName": "Imbler, Sabrina",
+      "aliases": []
+    },
+    {
       "authorId": "author-76d4853d-f1fa-4392-915d-df75f160dcf8",
       "displayName": "Sui Ishida",
       "firstName": "Sui",
@@ -2370,6 +2396,14 @@
       "aliases": []
     },
     {
+      "authorId": "author-c9d89163-fab5-4a50-98f1-b1fa5f17736f",
+      "displayName": "Richard Kadrey",
+      "firstName": "Richard",
+      "lastName": "Kadrey",
+      "sortName": "Kadrey, Richard",
+      "aliases": []
+    },
+    {
       "authorId": "author-70685cfe-3210-4995-bee5-7483ed5972aa",
       "displayName": "Yuna Kagesaki",
       "firstName": "Yuna",
@@ -2482,11 +2516,27 @@
       "aliases": []
     },
     {
+      "authorId": "author-91102616-3028-4ca5-8dd6-0547a81a82b1",
+      "displayName": "Shinonome Kijin",
+      "firstName": "Shinonome",
+      "lastName": "Kijin",
+      "sortName": "Kijin, Shinonome",
+      "aliases": []
+    },
+    {
       "authorId": "author-6608d857-54c4-4aba-b107-deaa24868414",
       "displayName": "Stephen King",
       "firstName": "Stephen",
       "lastName": "King",
       "sortName": "King, Stephen",
+      "aliases": []
+    },
+    {
+      "authorId": "author-e22125d3-bc66-4691-aaa6-51e2691a0852",
+      "displayName": "T. Kingfisher",
+      "firstName": "T.",
+      "lastName": "Kingfisher",
+      "sortName": "Kingfisher, T.",
       "aliases": []
     },
     {
@@ -3194,6 +3244,14 @@
       "aliases": []
     },
     {
+      "authorId": "author-c791a650-c51a-4b08-b64f-0084b47816e9",
+      "displayName": "Bridget Morrissey",
+      "firstName": "Bridget",
+      "lastName": "Morrissey",
+      "sortName": "Morrissey, Bridget",
+      "aliases": []
+    },
+    {
       "authorId": "author-a9e57cb0-92db-4f27-975a-33fa26b987b1",
       "displayName": "Ottessa Moshfegh",
       "firstName": "Ottessa",
@@ -3235,11 +3293,13 @@
     },
     {
       "authorId": "author-2c8b1117-0ddf-42d8-aa2e-cd7cbefc849b",
-      "displayName": "Nell Murbager",
+      "displayName": "Nell Murbarger",
       "firstName": "Nell",
-      "lastName": "Murbager",
-      "sortName": "Murbager, Nell",
-      "aliases": []
+      "lastName": "Murbarger",
+      "sortName": "Murbarger, Nell",
+      "aliases": [
+        "Nell Murbager"
+      ]
     },
     {
       "authorId": "author-0eb455f2-89f8-4526-8380-81870c331e99",
@@ -3251,11 +3311,13 @@
     },
     {
       "authorId": "author-f2ebe9d0-4e93-4f2b-802c-8057035e9863",
-      "displayName": "Yamile Saled Méndez",
-      "firstName": "Yamile Saled",
+      "displayName": "Yamile Saied Méndez",
+      "firstName": "Yamile Saied",
       "lastName": "Méndez",
-      "sortName": "Méndez, Yamile Saled",
-      "aliases": []
+      "sortName": "Méndez, Yamile Saied",
+      "aliases": [
+        "Yamile Saled Méndez"
+      ]
     },
     {
       "authorId": "author-b5403364-f89f-4127-8ef4-93fca704777b",
@@ -3794,6 +3856,14 @@
       "aliases": []
     },
     {
+      "authorId": "author-7637283c-10ec-4452-a3ff-070be93e9d48",
+      "displayName": "Sara Raasch",
+      "firstName": "Sara",
+      "lastName": "Raasch",
+      "sortName": "Raasch, Sara",
+      "aliases": []
+    },
+    {
       "authorId": "author-17b01120-f3b4-476b-b1df-3e602533aa9f",
       "displayName": "Peggy Ramundo",
       "firstName": "Peggy",
@@ -3855,6 +3925,14 @@
       "firstName": "Rachel",
       "lastName": "Reid",
       "sortName": "Reid, Rachel",
+      "aliases": []
+    },
+    {
+      "authorId": "author-516effa3-0b80-4ca6-a866-22300cbb11dc",
+      "displayName": "Beth Revis",
+      "firstName": "Beth",
+      "lastName": "Revis",
+      "sortName": "Revis, Beth",
       "aliases": []
     },
     {
@@ -4567,6 +4645,14 @@
       "firstName": "Loung",
       "lastName": "Ung",
       "sortName": "Ung, Loung",
+      "aliases": []
+    },
+    {
+      "authorId": "author-337e51da-e654-4134-8d45-3010c05c850d",
+      "displayName": "Lena Valencia",
+      "firstName": "Lena",
+      "lastName": "Valencia",
+      "sortName": "Valencia, Lena",
       "aliases": []
     },
     {

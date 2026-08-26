@@ -19,6 +19,13 @@ BOOKS_PATH = (
     / "library-books.json"
 )
 
+ARCHIVE_PATH = (
+    REPO_ROOT
+    / "public"
+    / "data"
+    / "library-archive.json"
+)
+
 REGISTRY_PATH = (
     REPO_ROOT
     / "tools"
@@ -202,6 +209,23 @@ def load_json(path: Path) -> Any:
             encoding="utf-8"
         )
     )
+
+
+def load_optional_json_array(
+    path: Path,
+) -> list[Any]:
+    if not path.exists():
+        return []
+
+    value = load_json(path)
+
+    if not isinstance(value, list):
+        raise ValueError(
+            f"{path.name} must contain "
+            "a JSON array."
+        )
+
+    return value
 
 
 def write_json(
@@ -615,6 +639,10 @@ def main() -> None:
             "contain a JSON array."
         )
 
+    archived_books = load_optional_json_array(
+        ARCHIVE_PATH
+    )
+
     registry = load_registry()
 
     registry_authors = (
@@ -636,6 +664,8 @@ def main() -> None:
         dict[str, Any]
     ] = []
 
+    identity_credit_count = 0
+
     unbalanced_books: list[
         dict[str, Any]
     ] = []
@@ -646,123 +676,139 @@ def main() -> None:
 
     multi_author_book_count = 0
 
-    for book in books:
-        if not isinstance(
-            book,
-            dict,
-        ):
-            raise ValueError(
-                "Every book row must be "
-                "a JSON object."
+    for source_name, source_books in (
+        ("current", books),
+        ("archive", archived_books),
+    ):
+        for book in source_books:
+            if not isinstance(
+                book,
+                dict,
+            ):
+                raise ValueError(
+                    f"Every {source_name} "
+                    "book row must be a "
+                    "JSON object."
+                )
+
+            book_id = clean(
+                book.get("bookId")
             )
 
-        book_id = clean(
-            book.get("bookId")
-        )
-
-        validate_book_id(
-            book_id
-        )
-
-        credits, unbalanced = (
-            extract_book_credits(
-                book
-            )
-        )
-
-        if unbalanced:
-            unbalanced_books.append(
-                {
-                    "bookId":
-                        book_id,
-
-                    "title":
-                        clean(
-                            book.get(
-                                "title"
-                            )
-                        ),
-
-                    "firstName":
-                        clean(
-                            book.get(
-                                "firstName"
-                            )
-                        ),
-
-                    "lastName":
-                        clean(
-                            book.get(
-                                "lastName"
-                            )
-                        ),
-
-                    "author":
-                        clean(
-                            book.get(
-                                "author"
-                            )
-                        ),
-                }
+            validate_book_id(
+                book_id
             )
 
-        if not credits:
-            books_without_authors.append(
-                {
-                    "bookId":
-                        book_id,
-
-                    "title":
-                        clean(
-                            book.get(
-                                "title"
-                            )
-                        ),
-                }
-            )
-
-            continue
-
-        if len(credits) > 1:
-            multi_author_book_count += 1
-
-        for credit_order, credit in (
-            enumerate(
-                credits,
-                start=1,
-            )
-        ):
-            name_key = (
-                normalize_author_name(
-                    credit[
-                        "displayName"
-                    ]
+            credits, unbalanced = (
+                extract_book_credits(
+                    book
                 )
             )
 
-            credits_by_name[
-                name_key
-            ].append(
-                credit
-            )
+            if unbalanced:
+                unbalanced_books.append(
+                    {
+                        "bookId":
+                            book_id,
 
-            book_credit_rows.append(
-                {
-                    "bookId":
-                        book_id,
+                        "title":
+                            clean(
+                                book.get(
+                                    "title"
+                                )
+                            ),
 
-                    "creditOrder":
-                        credit_order,
+                        "firstName":
+                            clean(
+                                book.get(
+                                    "firstName"
+                                )
+                            ),
 
-                    "creditedName":
+                        "lastName":
+                            clean(
+                                book.get(
+                                    "lastName"
+                                )
+                            ),
+
+                        "author":
+                            clean(
+                                book.get(
+                                    "author"
+                                )
+                            ),
+
+                        "source":
+                            source_name,
+                    }
+                )
+
+            if not credits:
+                books_without_authors.append(
+                    {
+                        "bookId":
+                            book_id,
+
+                        "title":
+                            clean(
+                                book.get(
+                                    "title"
+                                )
+                            ),
+
+                        "source":
+                            source_name,
+                    }
+                )
+
+                continue
+
+            if len(credits) > 1:
+                multi_author_book_count += 1
+
+            for credit_order, credit in (
+                enumerate(
+                    credits,
+                    start=1,
+                )
+            ):
+                name_key = (
+                    normalize_author_name(
                         credit[
                             "displayName"
-                        ],
+                        ]
+                    )
+                )
 
-                    "_nameKey":
-                        name_key,
-                }
-            )
+                credits_by_name[
+                    name_key
+                ].append(
+                    credit
+                )
+
+                identity_credit_count += 1
+
+                if source_name != "current":
+                    continue
+
+                book_credit_rows.append(
+                    {
+                        "bookId":
+                            book_id,
+
+                        "creditOrder":
+                            credit_order,
+
+                        "creditedName":
+                            credit[
+                                "displayName"
+                            ],
+
+                        "_nameKey":
+                            name_key,
+                    }
+                )
 
     current_name_keys = sorted(
         credits_by_name
@@ -810,12 +856,25 @@ def main() -> None:
     )
 
     print(
-        "  Book-author credits: "
+        "  Archived books protecting "
+        "identities: "
+        f"{len(archived_books)}"
+    )
+
+    print(
+        "  Active book-author credits: "
         f"{len(book_credit_rows)}"
     )
 
     print(
-        "  Unique current authors: "
+        "  Current/archive "
+        "book-author credits: "
+        f"{identity_credit_count}"
+    )
+
+    print(
+        "  Unique current/archive "
+        "authors: "
         f"{len(current_name_keys)}"
     )
 

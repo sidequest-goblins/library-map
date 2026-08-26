@@ -1,5 +1,6 @@
 ﻿[CmdletBinding()]
 param(
+    [switch]$DryRun,
     [switch]$NoPush
 )
 
@@ -46,6 +47,10 @@ $AuthorWorkbookScript = Join-Path `
 $ChallengeScript = Join-Path `
     $PSScriptRoot `
     "build_challenges_data.py"
+
+$ArchiveDataPath = Join-Path `
+    $ProjectPath `
+    "public\data\library-archive.json"
 
 
 # -----------------------------------------------------------------------------
@@ -226,7 +231,8 @@ $requiredFiles = @(
     $LibraryBuildScript,
     $AuthorIdentityScript,
     $AuthorWorkbookScript,
-    $ChallengeScript
+    $ChallengeScript,
+    $ArchiveDataPath
 )
 
 foreach ($requiredFile in $requiredFiles) {
@@ -465,7 +471,13 @@ Assert-LastExitCode `
         }
     }
 
-    if (
+    if ($DryRun) {
+        Write-Host ""
+        Write-Host (
+            "Dry run: AUTHORS.xlsx synchronization write skipped."
+        ) -ForegroundColor Yellow
+    }
+    elseif (
         $authorDataChanged -or
         $newWorkbookRows -gt 0
     ) {
@@ -533,6 +545,29 @@ Assert-LastExitCode `
     Write-Step "Checking generated diff"
 
     Write-GitDiffCheckWarning
+
+    if ($DryRun) {
+        Write-Host ""
+        Write-Host (
+            "Dry run complete. Generated files were refreshed, " +
+            "but nothing was staged, committed, or pushed."
+        ) -ForegroundColor Yellow
+
+        Write-Host ""
+        Write-Host (
+            "Review the pending changes with:"
+        ) -ForegroundColor Yellow
+
+        Write-Host (
+            "  git status --short"
+        ) -ForegroundColor DarkGray
+
+        Write-Host (
+            "  git diff --stat"
+        ) -ForegroundColor DarkGray
+
+        return
+    }
 
 
     # -------------------------------------------------------------------------

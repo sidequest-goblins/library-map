@@ -324,7 +324,7 @@ def main() -> None:
 
     bookcase_rooms = (
         load_bookcase_rooms(
-            reference_workbook
+            list_view_workbook
         )
     )
 
@@ -335,7 +335,7 @@ def main() -> None:
 
     print(
         "Using Bookcases sheet from: "
-        f"{REFERENCE_WORKBOOK_PATH.name}"
+        f"{LIST_VIEW_WORKBOOK_PATH.name}"
     )
 
     rows = list_view_sheet.iter_rows(

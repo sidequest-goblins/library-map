@@ -10,9 +10,12 @@ Each challenge sheet must contain:
     Letter | Title | First | Last
 
 Extra workbook columns are allowed but ignored. The generator preserves workbook
-order and duplicate letters, links entries against public/data/library-books.json,
-and takes total page counts from the matched library book. Reading progress and
-completion are supplied by Supabase rather than CHALLENGES.xlsx.
+order and duplicate letters, links entries against public/data/library-books.json
+and public/data/library-archive.json, and takes total page counts from the
+matched library book. Challenge rows that do not match an owned or archived
+book are preserved as external/public-library entries.
+Reading progress and completion are supplied by Supabase rather than
+CHALLENGES.xlsx.
 
 This script intentionally uses only Python's standard library.
 """
@@ -33,7 +36,7 @@ from typing import Any, Iterable
 from xml.etree import ElementTree as ET
 
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 4
 SHEET_NAME_SEPARATOR = " - "
 LEADING_ARTICLES = {"a", "an", "the"}
 TITLE_SUBTITLE_SEPARATORS = (
@@ -812,7 +815,7 @@ def build_book_indexes(
             dict(by_title),
     }
 
-def match_book(
+def match_book_in_indexes(
     title: str,
     author_first: str,
     author_last: str,
@@ -921,12 +924,96 @@ def match_book(
         [],
     )
 
-def load_books(
+def match_book(
+    title: str,
+    author_first: str,
+    author_last: str,
+    owned_indexes: dict[
+        str,
+        dict[
+            Any,
+            list[
+                dict[str, Any]
+            ],
+        ],
+    ],
+    archived_indexes: dict[
+        str,
+        dict[
+            Any,
+            list[
+                dict[str, Any]
+            ],
+        ],
+    ],
+) -> tuple[
+    dict[str, Any] | None,
+    str,
+    list[str],
+]:
+    (
+        owned_book,
+        owned_status,
+        owned_candidate_keys,
+    ) = match_book_in_indexes(
+        title,
+        author_first,
+        author_last,
+        owned_indexes,
+    )
+
+    if (
+        owned_book
+        or owned_status == "ambiguous"
+    ):
+        return (
+            owned_book,
+            owned_status,
+            owned_candidate_keys,
+        )
+
+    (
+        archived_book,
+        archived_status,
+        archived_candidate_keys,
+    ) = match_book_in_indexes(
+        title,
+        author_first,
+        author_last,
+        archived_indexes,
+    )
+
+    if archived_book:
+        return (
+            archived_book,
+            "archived",
+            [],
+        )
+
+    if archived_status == "ambiguous":
+        return (
+            None,
+            "ambiguous-archived",
+            archived_candidate_keys,
+        )
+
+    return (
+        None,
+        "unmatched",
+        [],
+    )
+
+def load_book_records(
     path: Path,
+    label: str,
+    required: bool,
 ) -> list[dict[str, Any]]:
     if not path.exists():
+        if not required:
+            return []
+
         raise BuildError(
-            f"Library books JSON not found: "
+            f"{label} JSON not found: "
             f"{path}"
         )
 
@@ -986,7 +1073,7 @@ def load_books(
 
         if not book_id:
             raise BuildError(
-                f"Library book {json_index} "
+                f"{label} item {json_index} "
                 f"has no Book ID: "
                 f"{title or '[untitled]'}"
             )
@@ -995,7 +1082,7 @@ def load_books(
             book_id
         ):
             raise BuildError(
-                f"Library book {json_index} "
+                f"{label} item {json_index} "
                 f"has a malformed Book ID: "
                 f"{book_id!r} "
                 f"({title or '[untitled]'})"
@@ -1010,8 +1097,8 @@ def load_books(
         if existing_index is not None:
             raise BuildError(
                 f"Duplicate Book ID "
-                f"{book_id!r} in library "
-                f"books JSON items "
+                f"{book_id!r} in {label} "
+                f"JSON items "
                 f"{existing_index} and "
                 f"{json_index}."
             )
@@ -1024,6 +1111,24 @@ def load_books(
 
     return books
 
+def load_books(
+    path: Path,
+) -> list[dict[str, Any]]:
+    return load_book_records(
+        path,
+        "Library books",
+        True,
+    )
+
+def load_archived_books(
+    path: Path,
+) -> list[dict[str, Any]]:
+    return load_book_records(
+        path,
+        "Library archive",
+        False,
+    )
+
 # ---------------------------------------------------------------------------
 # Challenge JSON generation
 # ---------------------------------------------------------------------------
@@ -1031,6 +1136,7 @@ def load_books(
 def build_challenge_data(
     workbook_path: Path,
     books_path: Path,
+    archive_path: Path,
 ) -> tuple[
     dict[str, Any],
     list[str],
@@ -1045,8 +1151,16 @@ def build_challenge_data(
         books_path
     )
 
-    indexes = build_book_indexes(
+    archived_books = load_archived_books(
+        archive_path
+    )
+
+    owned_indexes = build_book_indexes(
         books
+    )
+
+    archived_indexes = build_book_indexes(
+        archived_books
     )
 
     challenges: dict[
@@ -1304,7 +1418,8 @@ def build_challenge_data(
                 title,
                 author_first,
                 author_last,
-                indexes,
+                owned_indexes,
+                archived_indexes,
             )
 
             matched_book_id = (
@@ -1324,11 +1439,10 @@ def build_challenge_data(
             )
 
             if (
-                match_status
-                == "unmatched"
+                match_status == "archived"
             ):
                 warnings.append(
-                    f"UNMATCHED: "
+                    f"ARCHIVED: "
                     f"{sheet_name} "
                     f"row {row_number}: "
                     f"{title} — "
@@ -1338,7 +1452,23 @@ def build_challenge_data(
 
             elif (
                 match_status
-                == "ambiguous"
+                == "unmatched"
+            ):
+                warnings.append(
+                    f"EXTERNAL: "
+                    f"{sheet_name} "
+                    f"row {row_number}: "
+                    f"{title} — "
+                    f"{author_first} "
+                    f"{author_last}"
+                )
+
+            elif (
+                match_status
+                in {
+                    "ambiguous",
+                    "ambiguous-archived",
+                }
             ):
                 warnings.append(
                     f"AMBIGUOUS: "
@@ -1436,6 +1566,17 @@ def build_challenge_data(
                         matched_book_id,
                     "catalogKey":
                         catalog_key,
+                    "libraryStatus":
+                        (
+                            "archived"
+                            if match_status
+                            == "archived"
+                            else (
+                                "owned"
+                                if matched_book
+                                else "external"
+                            )
+                        ),
                     "read":
                         False,
                     "currentPage":
@@ -1626,6 +1767,21 @@ def parse_args() -> argparse.Namespace:
     )
 
     parser.add_argument(
+        "--archive",
+        type=Path,
+        default=(
+            repo_root
+            / "public"
+            / "data"
+            / "library-archive.json"
+        ),
+        help=(
+            "Path to "
+            "library-archive.json"
+        ),
+    )
+
+    parser.add_argument(
         "--output",
         type=Path,
         default=(
@@ -1712,6 +1868,22 @@ def summarize(
             sum(
                 entry["bookId"]
                 is not None
+                for entry in entries
+            ),
+        "external":
+            sum(
+                entry.get(
+                    "libraryStatus"
+                )
+                == "external"
+                for entry in entries
+            ),
+        "archived":
+            sum(
+                entry.get(
+                    "libraryStatus"
+                )
+                == "archived"
                 for entry in entries
             ),
         "wildcards":
@@ -1822,6 +1994,12 @@ def main() -> int:
         .resolve()
     )
 
+    archive_path = (
+        args.archive
+        .expanduser()
+        .resolve()
+    )
+
     output_path = (
         args.output
         .expanduser()
@@ -1835,6 +2013,7 @@ def main() -> int:
         ) = build_challenge_data(
             workbook_path,
             books_path,
+            archive_path,
         )
 
     except (
@@ -1853,9 +2032,6 @@ def main() -> int:
         for warning in warnings
         if (
             warning.startswith(
-                "UNMATCHED:"
-            )
-            or warning.startswith(
                 "AMBIGUOUS:"
             )
         )
@@ -1890,6 +2066,16 @@ def main() -> int:
     )
 
     print(
+        f"External/library books: "
+        f"{summary['external']}"
+    )
+
+    print(
+        f"Archived/offloaded books: "
+        f"{summary['archived']}"
+    )
+
+    print(
         f"Wildcards: "
         f"{summary['wildcards']}"
     )
@@ -1900,7 +2086,7 @@ def main() -> int:
     ):
         print(
             "ERROR: Some challenge rows "
-            "were unmatched or ambiguous. "
+            "were ambiguous. "
             "Fix the workbook/library data, "
             "or rerun with "
             "--allow-unmatched.",

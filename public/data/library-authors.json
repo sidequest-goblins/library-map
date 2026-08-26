@@ -9,15 +9,6 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-cceb0373-f60d-48a8-ac5e-cd6fe21d15d1",
-    "displayName": "Chinua Achebe",
-    "firstName": "Chinua",
-    "lastName": "Achebe",
-    "sortName": "Achebe, Chinua",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-1f12c657-23b0-4841-91ce-7ff3a2ef8562",
     "displayName": "Benjamin Ajak",
     "firstName": "Benjamin",
@@ -33,7 +24,7 @@
     "lastName": "Akutami",
     "sortName": "Akutami, Gege",
     "aliases": [],
-    "bookCount": 16
+    "bookCount": 19
   },
   {
     "authorId": "author-ca44e33a-e26e-487b-826c-1eb37c4a53f4",
@@ -50,15 +41,6 @@
     "firstName": "Melissa",
     "lastName": "Albert",
     "sortName": "Albert, Melissa",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-cd51f1aa-2657-4545-8fd0-9922725954c3",
-    "displayName": "Peter Alden",
-    "firstName": "Peter",
-    "lastName": "Alden",
-    "sortName": "Alden, Peter",
     "aliases": [],
     "bookCount": 1
   },
@@ -86,15 +68,6 @@
     "firstName": "Caroline",
     "lastName": "Alexander",
     "sortName": "Alexander, Caroline",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-a455a1f5-4b15-4284-8402-a5f8abd9150b",
-    "displayName": "Sherman Alexie",
-    "firstName": "Sherman",
-    "lastName": "Alexie",
-    "sortName": "Alexie, Sherman",
     "aliases": [],
     "bookCount": 1
   },
@@ -261,15 +234,6 @@
     "bookCount": 5
   },
   {
-    "authorId": "author-359493bb-8ed6-421a-945a-ef8e45f8f262",
-    "displayName": "Christine K. Bailey",
-    "firstName": "Christine K.",
-    "lastName": "Bailey",
-    "sortName": "Bailey, Christine K.",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-aca14e52-ae3e-4eca-87e8-0ebd4d09dcfb",
     "displayName": "Fran Bailey",
     "firstName": "Fran",
@@ -294,7 +258,7 @@
     "lastName": "Baldree",
     "sortName": "Baldree, Travis",
     "aliases": [],
-    "bookCount": 2
+    "bookCount": 3
   },
   {
     "authorId": "author-7c90553e-f980-4816-ae9c-68b15eb9f5d5",
@@ -483,7 +447,7 @@
     "lastName": "Blake",
     "sortName": "Blake, Olivie",
     "aliases": [],
-    "bookCount": 1
+    "bookCount": 2
   },
   {
     "authorId": "author-8684e788-be2f-4416-b2ba-bbdb7ca09044",
@@ -513,29 +477,11 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-f5c7407f-a638-4fe4-9a15-a913c6643ada",
-    "displayName": "Nora & Rick Bowers",
-    "firstName": "Nora & Rick",
-    "lastName": "Bowers",
-    "sortName": "Bowers, Nora & Rick",
-    "aliases": [],
-    "bookCount": 2
-  },
-  {
     "authorId": "author-9bc73c21-de28-42f7-9294-7b29fbbdb137",
     "displayName": "Ray Bradbury",
     "firstName": "Ray",
     "lastName": "Bradbury",
     "sortName": "Bradbury, Ray",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-28111546-174f-4a9d-a412-4af91c584615",
-    "displayName": "Barbara Taylor Bradford",
-    "firstName": "Barbara Taylor",
-    "lastName": "Bradford",
-    "sortName": "Bradford, Barbara Taylor",
     "aliases": [],
     "bookCount": 1
   },
@@ -558,29 +504,11 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-79942ad4-9310-4967-a537-e07f71b4da89",
-    "displayName": "Laurel Braitman",
-    "firstName": "Laurel",
-    "lastName": "Braitman",
-    "sortName": "Braitman, Laurel",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-1f2cf46b-fc0f-4062-bbed-a7037e762d4f",
     "displayName": "Peter Brannen",
     "firstName": "Peter",
     "lastName": "Brannen",
     "sortName": "Brannen, Peter",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-e635be87-4382-416b-ad48-782635d4173a",
-    "displayName": "Jacob M. Braude",
-    "firstName": "Jacob M.",
-    "lastName": "Braude",
-    "sortName": "Braude, Jacob M.",
     "aliases": [],
     "bookCount": 1
   },
@@ -765,15 +693,6 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-43e5f9bf-36b8-4219-ae8e-d65c6df69583",
-    "displayName": "Edgar Cantero",
-    "firstName": "Edgar",
-    "lastName": "Cantero",
-    "sortName": "Cantero, Edgar",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-b96b2e2a-96e3-4a9e-b481-9ee1386addd8",
     "displayName": "Norman F. Cantor",
     "firstName": "Norman F.",
@@ -810,15 +729,6 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-a3c63063-a17a-45e9-8306-06aaa295de52",
-    "displayName": "Candice Carty-Williams",
-    "firstName": "Candice",
-    "lastName": "Carty-Williams",
-    "sortName": "Carty-Williams, Candice",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-0fac6b1b-a0a8-41a9-863c-4979ce0f7d0b",
     "displayName": "V. Castro",
     "firstName": "V.",
@@ -846,20 +756,22 @@
     "bookCount": 1
   },
   {
+    "authorId": "author-bee1d85e-3653-4532-af5e-fef39ccdbd00",
+    "displayName": "Jessamine Chan",
+    "firstName": "Jessamine",
+    "lastName": "Chan",
+    "sortName": "Chan, Jessamine",
+    "aliases": [
+      "Jessamine Chang"
+    ],
+    "bookCount": 1
+  },
+  {
     "authorId": "author-f9744509-54ff-4e28-9c0c-5d57919602ba",
     "displayName": "Iris Chang",
     "firstName": "Iris",
     "lastName": "Chang",
     "sortName": "Chang, Iris",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-bee1d85e-3653-4532-af5e-fef39ccdbd00",
-    "displayName": "Jessamine Chang",
-    "firstName": "Jessamine",
-    "lastName": "Chang",
-    "sortName": "Chang, Jessamine",
     "aliases": [],
     "bookCount": 1
   },
@@ -878,33 +790,6 @@
     "firstName": "RuPaul",
     "lastName": "Charles",
     "sortName": "Charles, RuPaul",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-56d7e344-30f2-4469-a6d3-3c377091cc1d",
-    "displayName": "Clifford Chase",
-    "firstName": "Clifford",
-    "lastName": "Chase",
-    "sortName": "Chase, Clifford",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-3baefaa1-70a4-4cff-a2b4-108a02664aed",
-    "displayName": "Stephen Chbosky",
-    "firstName": "Stephen",
-    "lastName": "Chbosky",
-    "sortName": "Chbosky, Stephen",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-31817598-efb2-4fe9-b9fc-d12a79f275c3",
-    "displayName": "Kristin Chen",
-    "firstName": "Kristin",
-    "lastName": "Chen",
-    "sortName": "Chen, Kristin",
     "aliases": [],
     "bookCount": 1
   },
@@ -987,7 +872,7 @@
     "lastName": "Clamp",
     "sortName": "Clamp",
     "aliases": [],
-    "bookCount": 8
+    "bookCount": 9
   },
   {
     "authorId": "author-16432331-1a41-486a-ab67-8f940ad13b34",
@@ -1116,15 +1001,6 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-77280b3a-28a9-4e51-91f3-a76d068f9996",
-    "displayName": "Dave Cullen",
-    "firstName": "Dave",
-    "lastName": "Cullen",
-    "sortName": "Cullen, Dave",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-0ac7e133-3b9d-4c10-a533-c7425504c420",
     "displayName": "Nick Cutter",
     "firstName": "Nick",
@@ -1206,15 +1082,6 @@
     "bookCount": 5
   },
   {
-    "authorId": "author-55833814-72b3-4a6f-b51b-59eeb8661d68",
-    "displayName": "Jane Sherron De Hart",
-    "firstName": "Jane Sherron",
-    "lastName": "De Hart",
-    "sortName": "De Hart, Jane Sherron",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-89e96f72-2108-4f4b-a677-11bc9fc25ade",
     "displayName": "Melissa de la Cruz",
     "firstName": "Melissa",
@@ -1222,6 +1089,15 @@
     "sortName": "de la Cruz, Melissa",
     "aliases": [],
     "bookCount": 5
+  },
+  {
+    "authorId": "author-89cb6e6c-6ea7-41ef-a6a8-4cbf71a1c918",
+    "displayName": "Guillermo del Toro",
+    "firstName": "Guillermo",
+    "lastName": "del Toro",
+    "sortName": "del Toro, Guillermo",
+    "aliases": [],
+    "bookCount": 1
   },
   {
     "authorId": "author-98e2bb28-b2bc-4641-aa8a-e888c79d525b",
@@ -1332,15 +1208,6 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-18d675e3-d45d-493e-9331-f5a420da2982",
-    "displayName": "Patricia Donegan",
-    "firstName": "Patricia",
-    "lastName": "Donegan",
-    "sortName": "Donegan, Patricia",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-0e749d82-862d-44e3-a7ef-c19158b1d63b",
     "displayName": "Emma Donoghue",
     "firstName": "Emma",
@@ -1375,15 +1242,6 @@
     "sortName": "Dubu",
     "aliases": [],
     "bookCount": 8
-  },
-  {
-    "authorId": "author-78f01d86-cddb-48b1-9af2-5c21c41eb2ae",
-    "displayName": "Georges Duby",
-    "firstName": "Georges",
-    "lastName": "Duby",
-    "sortName": "Duby, Georges",
-    "aliases": [],
-    "bookCount": 1
   },
   {
     "authorId": "author-408c7381-199a-4428-a706-cba63ea7db26",
@@ -1431,29 +1289,11 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-1babc3d5-064c-494d-80e9-aa7657c34945",
-    "displayName": "Elisabeth Eaves",
-    "firstName": "Elisabeth",
-    "lastName": "Eaves",
-    "sortName": "Eaves, Elisabeth",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-919b0bf0-11da-4386-87c5-79bc5a63f3fe",
     "displayName": "Jennifer Egan",
     "firstName": "Jennifer",
     "lastName": "Egan",
     "sortName": "Egan, Jennifer",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-14d70891-58cf-43a4-9062-2ca1fbb88511",
-    "displayName": "Dave Eggers",
-    "firstName": "Dave",
-    "lastName": "Eggers",
-    "sortName": "Eggers, Dave",
     "aliases": [],
     "bookCount": 1
   },
@@ -1508,15 +1348,6 @@
     "firstName": "Deena",
     "lastName": "Emera",
     "sortName": "Emera, Deena",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-3886d1a1-1e5d-4be5-a8ff-aa58bfb231ed",
-    "displayName": "Ramona Emerson",
-    "firstName": "Ramona",
-    "lastName": "Emerson",
-    "sortName": "Emerson, Ramona",
     "aliases": [],
     "bookCount": 1
   },
@@ -1580,15 +1411,6 @@
     "firstName": "Allie",
     "lastName": "Esiri",
     "sortName": "Esiri, Allie",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-14aa1ce1-b05e-4f3c-bfef-fdac5a2049ed",
-    "displayName": "Euripides",
-    "firstName": "",
-    "lastName": "Euripides",
-    "sortName": "Euripides",
     "aliases": [],
     "bookCount": 1
   },
@@ -1746,20 +1568,11 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-61e826b0-08eb-4c25-bcdf-56358dd4ffd2",
-    "displayName": "Philip Fracassi",
-    "firstName": "Philip",
-    "lastName": "Fracassi",
-    "sortName": "Fracassi, Philip",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-b6d975aa-cb87-46db-999b-2ff54bbf909d",
-    "displayName": "Peter Friederici",
-    "firstName": "Peter",
-    "lastName": "Friederici",
-    "sortName": "Friederici, Peter",
+    "authorId": "author-d01efa65-27f6-4be8-a317-fcf5b4a03f6e",
+    "displayName": "Michael Dylan Foster",
+    "firstName": "Michael Dylan",
+    "lastName": "Foster",
+    "sortName": "Foster, Michael Dylan",
     "aliases": [],
     "bookCount": 1
   },
@@ -1806,7 +1619,7 @@
     "lastName": "Funke",
     "sortName": "Funke, Cornelia",
     "aliases": [],
-    "bookCount": 3
+    "bookCount": 4
   },
   {
     "authorId": "author-fe84aa3f-bc24-4356-bffb-491c480a4bdc",
@@ -1824,7 +1637,7 @@
     "lastName": "Gailey",
     "sortName": "Gailey, Sarah",
     "aliases": [],
-    "bookCount": 1
+    "bookCount": 2
   },
   {
     "authorId": "author-08bf433f-0868-464c-91ef-82588ac5397f",
@@ -2013,7 +1826,7 @@
     "lastName": "Graham Jones",
     "sortName": "Graham Jones, Stephen",
     "aliases": [],
-    "bookCount": 1
+    "bookCount": 2
   },
   {
     "authorId": "author-bbf84400-9df6-4178-bb24-9260f7440a5a",
@@ -2193,7 +2006,7 @@
     "lastName": "Hazelwood",
     "sortName": "Hazelwood, Ali",
     "aliases": [],
-    "bookCount": 1
+    "bookCount": 3
   },
   {
     "authorId": "author-c16e0d67-3fff-44a0-997c-61f7335f2732",
@@ -2349,15 +2162,6 @@
     "bookCount": 2
   },
   {
-    "authorId": "author-5ed7e533-897c-4fb1-aa7b-9dcfc5f8fd2b",
-    "displayName": "bell hooks",
-    "firstName": "bell",
-    "lastName": "hooks",
-    "sortName": "hooks, bell",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-a3b8a1d1-7c85-451c-bf22-20a0b1aae0ac",
     "displayName": "Kay Hooper",
     "firstName": "Kay",
@@ -2453,6 +2257,15 @@
     "firstName": "Noelle W.",
     "lastName": "Ihli",
     "sortName": "Ihli, Noelle W.",
+    "aliases": [],
+    "bookCount": 2
+  },
+  {
+    "authorId": "author-01b92026-a59a-4d4b-8e2a-c6b646a763ea",
+    "displayName": "Sabrina Imbler",
+    "firstName": "Sabrina",
+    "lastName": "Imbler",
+    "sortName": "Imbler, Sabrina",
     "aliases": [],
     "bookCount": 1
   },
@@ -2574,15 +2387,6 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-b49263a3-e48f-4fa9-ae87-0650375b382f",
-    "displayName": "Faith Javane",
-    "firstName": "Faith",
-    "lastName": "Javane",
-    "sortName": "Javane, Faith",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-b0fc7447-28d6-4bf4-a7fb-24ffb2a39783",
     "displayName": "Jac Jemc",
     "firstName": "Jac",
@@ -2607,7 +2411,7 @@
     "lastName": "Jenkins Reid",
     "sortName": "Jenkins Reid, Taylor",
     "aliases": [],
-    "bookCount": 2
+    "bookCount": 1
   },
   {
     "authorId": "author-caa68749-3ad3-4c28-85c9-53c8e0f237da",
@@ -2637,15 +2441,6 @@
     "bookCount": 2
   },
   {
-    "authorId": "author-b0f666f3-a7b0-42f0-b42b-708ecfa5c7ef",
-    "displayName": "Richard Glen Jones",
-    "firstName": "Richard Glen",
-    "lastName": "Jones",
-    "sortName": "Jones, Richard Glen",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-0bfdb0cb-61a9-43fa-85dd-6cf40162af2b",
     "displayName": "Jamal Jordan",
     "firstName": "Jamal",
@@ -2655,11 +2450,11 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-a2fb953e-0969-44ff-bf09-4b1b4cc56ba9",
-    "displayName": "Juvenal",
-    "firstName": "",
-    "lastName": "Juvenal",
-    "sortName": "Juvenal",
+    "authorId": "author-c9d89163-fab5-4a50-98f1-b1fa5f17736f",
+    "displayName": "Richard Kadrey",
+    "firstName": "Richard",
+    "lastName": "Kadrey",
+    "sortName": "Kadrey, Richard",
     "aliases": [],
     "bookCount": 1
   },
@@ -2673,29 +2468,11 @@
     "bookCount": 8
   },
   {
-    "authorId": "author-e03e38da-3647-471e-97a7-45ccdef3532e",
-    "displayName": "Rachel Kapelke-Dale",
-    "firstName": "Rachel",
-    "lastName": "Kapelke-Dale",
-    "sortName": "Kapelke-Dale, Rachel",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-8336d442-c472-4e1e-871b-06e555cc9cd9",
     "displayName": "Sophia Kaplan",
     "firstName": "Sophia",
     "lastName": "Kaplan",
     "sortName": "Kaplan, Sophia",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-35dde28e-25d9-4d10-9f43-2e48649b8b80",
-    "displayName": "Ryszard Kapuściński",
-    "firstName": "Ryszard",
-    "lastName": "Kapuściński",
-    "sortName": "Kapuściński, Ryszard",
     "aliases": [],
     "bookCount": 1
   },
@@ -2745,15 +2522,6 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-93c93a71-1405-429f-923d-78257a06d38e",
-    "displayName": "Linda K. Kerber",
-    "firstName": "Linda K.",
-    "lastName": "Kerber",
-    "sortName": "Kerber, Linda K.",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-ec1a02bb-d1e9-4bbc-86de-345a814a3813",
     "displayName": "Piper Kerman",
     "firstName": "Piper",
@@ -2787,6 +2555,15 @@
     "lastName": "Khaw",
     "sortName": "Khaw, Cassandra",
     "aliases": [],
+    "bookCount": 2
+  },
+  {
+    "authorId": "author-91102616-3028-4ca5-8dd6-0547a81a82b1",
+    "displayName": "Shinonome Kijin",
+    "firstName": "Shinonome",
+    "lastName": "Kijin",
+    "sortName": "Kijin, Shinonome",
+    "aliases": [],
     "bookCount": 1
   },
   {
@@ -2796,7 +2573,16 @@
     "lastName": "King",
     "sortName": "King, Stephen",
     "aliases": [],
-    "bookCount": 6
+    "bookCount": 5
+  },
+  {
+    "authorId": "author-e22125d3-bc66-4691-aaa6-51e2691a0852",
+    "displayName": "T. Kingfisher",
+    "firstName": "T.",
+    "lastName": "Kingfisher",
+    "sortName": "Kingfisher, T.",
+    "aliases": [],
+    "bookCount": 1
   },
   {
     "authorId": "author-de35fd1d-1704-4e41-af31-09639e80b1c6",
@@ -2824,15 +2610,6 @@
     "sortName": "Kizu, Natsuki",
     "aliases": [],
     "bookCount": 6
-  },
-  {
-    "authorId": "author-7d17798e-4db8-4ed1-a37b-82cc9a540250",
-    "displayName": "Christiane Klapisch-Zuber",
-    "firstName": "Christiane",
-    "lastName": "Klapisch-Zuber",
-    "sortName": "Klapisch-Zuber, Christiane",
-    "aliases": [],
-    "bookCount": 1
   },
   {
     "authorId": "author-39cfa52c-76cb-4281-acda-7e0c1152746d",
@@ -2913,7 +2690,7 @@
     "lastName": "Krakauer",
     "sortName": "Krakauer, Jon",
     "aliases": [],
-    "bookCount": 4
+    "bookCount": 3
   },
   {
     "authorId": "author-938dd0a8-2bd4-46e4-a1ea-5c97e2e1f9de",
@@ -3033,15 +2810,6 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-06e1756e-3825-40de-9700-1ab7c7660ab2",
-    "displayName": "Richmond Lattimore",
-    "firstName": "Richmond",
-    "lastName": "Lattimore",
-    "sortName": "Lattimore, Richmond",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-239575a7-935e-4fcd-8f50-42b358d8ec75",
     "displayName": "Victor Lavalle",
     "firstName": "Victor",
@@ -3150,15 +2918,6 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-fe4e3fb6-f523-4cf3-8640-7026938d8910",
-    "displayName": "Stanley B. Lippman",
-    "firstName": "Stanley B.",
-    "lastName": "Lippman",
-    "sortName": "Lippman, Stanley B.",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-2259f367-f7ec-484e-9639-4ddb014c2f1b",
     "displayName": "Long Litt Woon",
     "firstName": "Long",
@@ -3168,38 +2927,11 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-fca4f5b8-042b-437d-a529-c0595e2bd5a5",
-    "displayName": "Livy",
-    "firstName": "",
-    "lastName": "Livy",
-    "sortName": "Livy",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-b3b6d383-787d-4466-9199-c15a16fe038c",
-    "displayName": "Peter Loewer",
-    "firstName": "Peter",
-    "lastName": "Loewer",
-    "sortName": "Loewer, Peter",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-ec2f1372-3fa8-4660-baa6-19189cd8f7f1",
     "displayName": "JoAnn Loulan",
     "firstName": "JoAnn",
     "lastName": "Loulan",
     "sortName": "Loulan, JoAnn",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-7c34d293-45c5-4247-bf1e-9c72258c55fc",
-    "displayName": "H.P. Lovecraft",
-    "firstName": "H.P.",
-    "lastName": "Lovecraft",
-    "sortName": "Lovecraft, H.P.",
     "aliases": [],
     "bookCount": 1
   },
@@ -3312,15 +3044,6 @@
     "bookCount": 7
   },
   {
-    "authorId": "author-3c3e01e0-ef95-4b5b-a173-0d024be3132d",
-    "displayName": "Emily McAuliffe",
-    "firstName": "Emily",
-    "lastName": "McAuliffe",
-    "sortName": "McAuliffe, Emily",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-54e1fb61-48f9-44ce-bf3f-ebd26b5b6974",
     "displayName": "Sam McBratney",
     "firstName": "Sam",
@@ -3375,22 +3098,13 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-bce3c9c7-1523-4c6a-8d79-2183d0f40983",
-    "displayName": "Freida McFadden",
-    "firstName": "Freida",
-    "lastName": "McFadden",
-    "sortName": "McFadden, Freida",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-7406f1b4-7532-4717-8ca1-e51b86ef546d",
     "displayName": "Adrian McKinty",
     "firstName": "Adrian",
     "lastName": "McKinty",
     "sortName": "McKinty, Adrian",
     "aliases": [],
-    "bookCount": 2
+    "bookCount": 1
   },
   {
     "authorId": "author-3a07bc65-973e-466f-9b1c-272049c7a2e3",
@@ -3399,7 +3113,7 @@
     "lastName": "McMahon",
     "sortName": "McMahon, Jennifer",
     "aliases": [],
-    "bookCount": 2
+    "bookCount": 3
   },
   {
     "authorId": "author-912a0b67-4456-45d1-a076-7d0428d70dd1",
@@ -3528,15 +3242,6 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-289f4c39-a793-4627-b294-702baf3e5f84",
-    "displayName": "Caitlin Moran",
-    "firstName": "Caitlin",
-    "lastName": "Moran",
-    "sortName": "Moran, Caitlin",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-1d67e6e7-d572-4402-8e8e-650f9c617417",
     "displayName": "Gus Moreno",
     "firstName": "Gus",
@@ -3591,6 +3296,15 @@
     "bookCount": 3
   },
   {
+    "authorId": "author-c791a650-c51a-4b08-b64f-0084b47816e9",
+    "displayName": "Bridget Morrissey",
+    "firstName": "Bridget",
+    "lastName": "Morrissey",
+    "sortName": "Morrissey, Bridget",
+    "aliases": [],
+    "bookCount": 1
+  },
+  {
     "authorId": "author-a9e57cb0-92db-4f27-975a-33fa26b987b1",
     "displayName": "Ottessa Moshfegh",
     "firstName": "Ottessa",
@@ -3637,11 +3351,13 @@
   },
   {
     "authorId": "author-2c8b1117-0ddf-42d8-aa2e-cd7cbefc849b",
-    "displayName": "Nell Murbager",
+    "displayName": "Nell Murbarger",
     "firstName": "Nell",
-    "lastName": "Murbager",
-    "sortName": "Murbager, Nell",
-    "aliases": [],
+    "lastName": "Murbarger",
+    "sortName": "Murbarger, Nell",
+    "aliases": [
+      "Nell Murbager"
+    ],
     "bookCount": 1
   },
   {
@@ -3655,11 +3371,13 @@
   },
   {
     "authorId": "author-f2ebe9d0-4e93-4f2b-802c-8057035e9863",
-    "displayName": "Yamile Saled Méndez",
-    "firstName": "Yamile Saled",
+    "displayName": "Yamile Saied Méndez",
+    "firstName": "Yamile Saied",
     "lastName": "Méndez",
-    "sortName": "Méndez, Yamile Saled",
-    "aliases": [],
+    "sortName": "Méndez, Yamile Saied",
+    "aliases": [
+      "Yamile Saled Méndez"
+    ],
     "bookCount": 1
   },
   {
@@ -3686,15 +3404,6 @@
     "firstName": "Emily",
     "lastName": "Nagoski",
     "sortName": "Nagoski, Emily",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-608f4069-06eb-4aba-8733-b92df8515a43",
-    "displayName": "James Napoli",
-    "firstName": "James",
-    "lastName": "Napoli",
-    "sortName": "Napoli, James",
     "aliases": [],
     "bookCount": 1
   },
@@ -3749,24 +3458,6 @@
     "firstName": "Aimee",
     "lastName": "Nezhukumatathil",
     "sortName": "Nezhukumatathil, Aimee",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-a15e486d-7f51-468b-9098-9460d0c2ccd8",
-    "displayName": "Celeste Ng",
-    "firstName": "Celeste",
-    "lastName": "Ng",
-    "sortName": "Ng, Celeste",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-bb108daa-f311-4863-9527-399ebeb7bbd9",
-    "displayName": "Chimamanda Ngozi Adichie",
-    "firstName": "Chimamanda",
-    "lastName": "Ngozi Adichie",
-    "sortName": "Ngozi Adichie, Chimamanda",
     "aliases": [],
     "bookCount": 1
   },
@@ -3903,7 +3594,7 @@
     "lastName": "Okorafor",
     "sortName": "Okorafor, Nnedi",
     "aliases": [],
-    "bookCount": 3
+    "bookCount": 4
   },
   {
     "authorId": "author-01ce5e14-3061-42ae-baa4-eb1bf0263f1f",
@@ -4077,38 +3768,11 @@
     "bookCount": 3
   },
   {
-    "authorId": "author-4fb726f9-1def-4c7b-9c00-1235ea8793c8",
-    "displayName": "Chris Pavon",
-    "firstName": "Chris",
-    "lastName": "Pavon",
-    "sortName": "Pavon, Chris",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-f6634a13-1344-432c-a968-1cb76cc310ba",
-    "displayName": "Michelle Perrott",
-    "firstName": "Michelle",
-    "lastName": "Perrott",
-    "sortName": "Perrott, Michelle",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-4631573a-9f03-4b19-819f-46018fb022e6",
     "displayName": "Torrey Peters",
     "firstName": "Torrey",
     "lastName": "Peters",
     "sortName": "Peters, Torrey",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-a1fc2487-7322-46a5-b037-d6a3720b95c7",
-    "displayName": "Roger Tory Peterson",
-    "firstName": "Roger Tory",
-    "lastName": "Peterson",
-    "sortName": "Peterson, Roger Tory",
     "aliases": [],
     "bookCount": 1
   },
@@ -4176,15 +3840,6 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-79604b67-2be6-4b06-8953-b118760cd057",
-    "displayName": "Edgar Allen Poe",
-    "firstName": "Edgar Allen",
-    "lastName": "Poe",
-    "sortName": "Poe, Edgar Allen",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-54a4916e-9dbb-4afe-987a-1cd00caee894",
     "displayName": "Rory Power",
     "firstName": "Rory",
@@ -4212,15 +3867,6 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-13c673d6-043f-472f-ba83-c7cf6cf69a27",
-    "displayName": "Michelle Pretorius",
-    "firstName": "Michelle",
-    "lastName": "Pretorius",
-    "sortName": "Pretorius, Michelle",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-714cea6e-11f0-4995-88bd-bf2575728517",
     "displayName": "Annie Proulx",
     "firstName": "Annie",
@@ -4235,15 +3881,6 @@
     "firstName": "Kyle",
     "lastName": "Prue",
     "sortName": "Prue, Kyle",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-5e272ab9-05d8-4700-be52-0f52614b4dea",
-    "displayName": "Publications International",
-    "firstName": "",
-    "lastName": "Publications International",
-    "sortName": "Publications International",
     "aliases": [],
     "bookCount": 1
   },
@@ -4266,6 +3903,15 @@
     "bookCount": 1
   },
   {
+    "authorId": "author-7637283c-10ec-4452-a3ff-070be93e9d48",
+    "displayName": "Sara Raasch",
+    "firstName": "Sara",
+    "lastName": "Raasch",
+    "sortName": "Raasch, Sara",
+    "aliases": [],
+    "bookCount": 1
+  },
+  {
     "authorId": "author-17b01120-f3b4-476b-b1df-3e602533aa9f",
     "displayName": "Peggy Ramundo",
     "firstName": "Peggy",
@@ -4281,7 +3927,7 @@
     "lastName": "Rash",
     "sortName": "Rash, Ron",
     "aliases": [],
-    "bookCount": 3
+    "bookCount": 2
   },
   {
     "authorId": "author-3a19b9e4-0ef2-40d1-8fa2-b1e585fd2ca9",
@@ -4338,20 +3984,20 @@
     "bookCount": 1
   },
   {
+    "authorId": "author-516effa3-0b80-4ca6-a866-22300cbb11dc",
+    "displayName": "Beth Revis",
+    "firstName": "Beth",
+    "lastName": "Revis",
+    "sortName": "Revis, Beth",
+    "aliases": [],
+    "bookCount": 1
+  },
+  {
     "authorId": "author-ca4ad81a-ae51-418a-b374-3e731935333d",
     "displayName": "Anne Rice",
     "firstName": "Anne",
     "lastName": "Rice",
     "sortName": "Rice, Anne",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-1a84606f-b07a-4cc7-88d5-f42da11770b3",
-    "displayName": "Kim Michele Richardson",
-    "firstName": "Kim Michele",
-    "lastName": "Richardson",
-    "sortName": "Richardson, Kim Michele",
     "aliases": [],
     "bookCount": 1
   },
@@ -4380,7 +4026,7 @@
     "lastName": "Roach",
     "sortName": "Roach, Mary",
     "aliases": [],
-    "bookCount": 3
+    "bookCount": 2
   },
   {
     "authorId": "author-865ff29d-76d0-4f6b-a1fe-46bdaaf5fd21",
@@ -4398,16 +4044,7 @@
     "lastName": "Robert",
     "sortName": "Robert, Katee",
     "aliases": [],
-    "bookCount": 10
-  },
-  {
-    "authorId": "author-0e32b1d2-bbf8-4038-ad1a-2a746ec3a98c",
-    "displayName": "Paul H. Robinson",
-    "firstName": "Paul H.",
-    "lastName": "Robinson",
-    "sortName": "Robinson, Paul H.",
-    "aliases": [],
-    "bookCount": 1
+    "bookCount": 12
   },
   {
     "authorId": "author-3af59111-1d58-4ebd-af44-0952ce27b380",
@@ -4460,15 +4097,6 @@
     "firstName": "Kate Elizabeth",
     "lastName": "Russell",
     "sortName": "Russell, Kate Elizabeth",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-2a01885d-3797-4c2a-b8af-d71b20037319",
-    "displayName": "Anne E. Russon",
-    "firstName": "Anne E.",
-    "lastName": "Russon",
-    "sortName": "Russon, Anne E.",
     "aliases": [],
     "bookCount": 1
   },
@@ -4541,15 +4169,6 @@
     "firstName": "Eugene",
     "lastName": "Savaiano",
     "sortName": "Savaiano, Eugene",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-f00206a6-fe37-4b67-830c-4492f3bd540d",
-    "displayName": "Chris Scarre",
-    "firstName": "Chris",
-    "lastName": "Scarre",
-    "sortName": "Scarre, Chris",
     "aliases": [],
     "bookCount": 1
   },
@@ -4662,33 +4281,6 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-b27b125e-566d-474b-a63e-9f6b4a23e369",
-    "displayName": "Ben Sill",
-    "firstName": "Ben",
-    "lastName": "Sill",
-    "sortName": "Sill, Ben",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-142e5afa-49a2-4805-98d9-90b7185bc8a1",
-    "displayName": "Cathryn Sill",
-    "firstName": "Cathryn",
-    "lastName": "Sill",
-    "sortName": "Sill, Cathryn",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-e3342674-4ab8-42fd-ae0f-189012c69ef1",
-    "displayName": "John Sill",
-    "firstName": "John",
-    "lastName": "Sill",
-    "sortName": "Sill, John",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-4409b911-f8d2-40a4-86e7-5ad646ad8d9b",
     "displayName": "Adam Silvera",
     "firstName": "Adam",
@@ -4776,7 +4368,7 @@
     "lastName": "Smythe",
     "sortName": "Smythe, Rachel",
     "aliases": [],
-    "bookCount": 7
+    "bookCount": 9
   },
   {
     "authorId": "author-c069ac62-9db3-41e9-ba59-f2ac333f44a7",
@@ -4914,15 +4506,6 @@
     "bookCount": 2
   },
   {
-    "authorId": "author-db9608d7-e704-4299-82af-b6a6b3190fc7",
-    "displayName": "Brian Swann",
-    "firstName": "Brian",
-    "lastName": "Swann",
-    "sortName": "Swann, Brian",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-914da910-77ce-4d37-8364-b25e4865d307",
     "displayName": "Peter Swanson",
     "firstName": "Peter",
@@ -4986,29 +4569,11 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-d0a53519-6b8c-4c22-8826-c0ea2a5ef8b1",
-    "displayName": "Stan Tekiela",
-    "firstName": "Stan",
-    "lastName": "Tekiela",
-    "sortName": "Tekiela, Stan",
-    "aliases": [],
-    "bookCount": 4
-  },
-  {
     "authorId": "author-61bfb28f-9878-4032-a8e1-5419398c65ad",
     "displayName": "The New York Times",
     "firstName": "",
     "lastName": "The New York Times",
     "sortName": "The New York Times",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-3e5ead81-9261-4e40-a523-da4a9336fa32",
-    "displayName": "Garen Thomas",
-    "firstName": "Garen",
-    "lastName": "Thomas",
-    "sortName": "Thomas, Garen",
     "aliases": [],
     "bookCount": 1
   },
@@ -5073,7 +4638,7 @@
     "lastName": "Tremblay",
     "sortName": "Tremblay, Paul",
     "aliases": [],
-    "bookCount": 1
+    "bookCount": 2
   },
   {
     "authorId": "author-948b4e21-78d9-4913-9b0f-a8f2c8d7cba1",
@@ -5139,6 +4704,15 @@
     "bookCount": 1
   },
   {
+    "authorId": "author-337e51da-e654-4134-8d45-3010c05c850d",
+    "displayName": "Lena Valencia",
+    "firstName": "Lena",
+    "lastName": "Valencia",
+    "sortName": "Valencia, Lena",
+    "aliases": [],
+    "bookCount": 1
+  },
+  {
     "authorId": "author-b3b131f3-b689-46ae-aee5-2c66a9f16bc3",
     "displayName": "Bessel van der Kolk",
     "firstName": "Bessel",
@@ -5166,29 +4740,11 @@
     "bookCount": 1
   },
   {
-    "authorId": "author-c2b3bfa8-b789-4ff8-9afc-68a4e6cc408d",
-    "displayName": "Sarah Vaughan",
-    "firstName": "Sarah",
-    "lastName": "Vaughan",
-    "sortName": "Vaughan, Sarah",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
     "authorId": "author-c13971c5-ef12-458b-ad99-e4ad89a2acd1",
     "displayName": "Inés Villafañe-León",
     "firstName": "Inés",
     "lastName": "Villafañe-León",
     "sortName": "Villafañe-León, Inés",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-60c78251-29d5-420e-b4c8-cf46ec11fd14",
-    "displayName": "Virgil",
-    "firstName": "",
-    "lastName": "Virgil",
-    "sortName": "Virgil",
     "aliases": [],
     "bookCount": 1
   },
@@ -5235,7 +4791,7 @@
     "lastName": "Walls",
     "sortName": "Walls, Jeannette",
     "aliases": [],
-    "bookCount": 3
+    "bookCount": 2
   },
   {
     "authorId": "author-05a89f54-37f4-4cf0-b99f-b5b7301b7757",
@@ -5405,15 +4961,6 @@
     "firstName": "Isabel",
     "lastName": "Wilkerson",
     "sortName": "Wilkerson, Isabel",
-    "aliases": [],
-    "bookCount": 1
-  },
-  {
-    "authorId": "author-26006221-8d67-4a8d-b04d-1cc27f38f022",
-    "displayName": "A. Susan Williams",
-    "firstName": "A. Susan",
-    "lastName": "Williams",
-    "sortName": "Williams, A. Susan",
     "aliases": [],
     "bookCount": 1
   },

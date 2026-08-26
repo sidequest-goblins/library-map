@@ -42,3 +42,4 @@ Library Clerk Files/
 
 # Local app debris
 *.log
+.codex-spreadsheet-work/
