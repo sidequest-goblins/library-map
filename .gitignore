@@ -25,6 +25,7 @@ dist-ssr
 
 tools/book-id-backups/
 tools/authors-workbook-backups/
+tools/author-identity-backups/
 
 .venv/
 

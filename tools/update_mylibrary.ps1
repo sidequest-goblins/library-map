@@ -28,6 +28,8 @@ $BookIdScript = Join-Path `
     $PSScriptRoot `
     "assign_library_book_ids.ps1"
 
+$ReturnedBookRepairScript = Join-Path $PSScriptRoot 'repair_returned_book.ps1'
+
 $InspectorScript = Join-Path `
     $PSScriptRoot `
     "inspect_library_workbook.py"
@@ -226,6 +228,7 @@ if (-not (Test-Path -LiteralPath $PythonPath)) {
 }
 
 $requiredFiles = @(
+    $ReturnedBookRepairScript,
     $BookIdScript,
     $InspectorScript,
     $LibraryBuildScript,
@@ -268,6 +271,9 @@ Assert-LastExitCode `
     # -------------------------------------------------------------------------
     # Assign permanent Book IDs
     # -------------------------------------------------------------------------
+
+    Write-Step "Reconciling confirmed original-copy repair"
+    & $ReturnedBookRepairScript -Apply
 
     Write-Step "Checking permanent Book IDs"
 
@@ -328,10 +334,6 @@ Assert-LastExitCode `
         )
     }
 
-    $newIdentityCount = Get-PreviewCount `
-        -Output $authorPreview `
-        -Label "New identities needed"
-
     $unbalancedAuthorCount = Get-PreviewCount `
         -Output $authorPreview `
         -Label "Mismatched populated First/Last rows"
@@ -339,10 +341,6 @@ Assert-LastExitCode `
     $missingAuthorCount = Get-PreviewCount `
         -Output $authorPreview `
         -Label "Books without an author"
-
-    $orphanedIdentityCount = Get-PreviewCount `
-        -Output $authorPreview `
-        -Label "Registry identities no longer credited"
 
     if ($unbalancedAuthorCount -gt 0) {
         throw (
@@ -358,31 +356,11 @@ Assert-LastExitCode `
         )
     }
 
-    if (
-        $newIdentityCount -gt 0 -and
-        $orphanedIdentityCount -gt 0
-    ) {
-        throw (
-            "AUTHOR IDENTITY REVIEW REQUIRED.`n`n" +
-            "The preview found both new author identities and " +
-            "previous identities that are no longer credited.`n" +
-            "This can indicate a corrected or misspelled author " +
-            "name that must retain its permanent Author ID.`n`n" +
-            "Review tools\library-author-identities.json before " +
-            "running the update again."
-        )
-    }
+    # Keep this invocation interactive: prompts must reach the user's terminal.
+    # Authors without credits remain in the registry; unfamiliar names are reviewed.
+    Write-Step "Reconciling and writing author identities"
 
-
-    # -------------------------------------------------------------------------
-    # Write author JSON
-    # -------------------------------------------------------------------------
-
-    Write-Step "Writing author identity data"
-
-    & $PythonPath `
-        $AuthorIdentityScript `
-        --write
+    & $PythonPath $AuthorIdentityScript --write --reconcile
 
     Assert-LastExitCode `
         -StepName "Author identity write"

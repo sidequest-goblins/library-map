@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
-    [switch]$Apply
+    [switch]$Apply,
+    [switch]$LibraryOnly
 )
 
 Set-StrictMode -Version Latest
@@ -896,6 +897,8 @@ function Assert-InspectionHasNoFatalIssues {
 # -----------------------------------------------------------------------------
 # Preview
 # -----------------------------------------------------------------------------
+
+if ($LibraryOnly) { return }
 
 Assert-WorkbookIsAvailable
 

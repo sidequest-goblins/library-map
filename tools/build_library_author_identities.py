@@ -9,6 +9,10 @@ from pathlib import Path
 from typing import Any
 from uuid import UUID, uuid4
 
+from reconcile_library_authors import (
+    apply_decisions, build_review, collect_decisions, print_review, save_author_outputs,
+)
+
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -618,7 +622,14 @@ def main() -> None:
         ),
     )
 
+    parser.add_argument('--reconcile', action='store_true',
+                        help='Interactively review unfamiliar names before writing author identities.')
     args = parser.parse_args()
+    if args.reconcile and not args.write:
+        parser.error('--reconcile requires --write')
+    source_snapshot = {p: p.read_bytes() if p.exists() else None for p in (
+        BOOKS_PATH, ARCHIVE_PATH, REGISTRY_PATH, AUTHORS_OUTPUT_PATH, BOOK_AUTHORS_OUTPUT_PATH,
+    )}
 
     if not BOOKS_PATH.exists():
         raise FileNotFoundError(
@@ -665,6 +676,7 @@ def main() -> None:
     ] = []
 
     identity_credit_count = 0
+    review_rows = []
 
     unbalanced_books: list[
         dict[str, Any]
@@ -788,6 +800,7 @@ def main() -> None:
                 )
 
                 identity_credit_count += 1
+                review_rows.append({'bookId': book_id, '_nameKey': name_key})
 
                 if source_name != "current":
                     continue
@@ -940,6 +953,15 @@ def main() -> None:
                 f"({row['bookId']})"
             )
 
+    review = build_review(
+        registry_authors, credits_by_name, review_rows,
+        load_optional_json_array(BOOK_AUTHORS_OUTPUT_PATH),
+        {b['bookId']: b['title'] for b in [*archived_books, *books]},
+        normalize_author_name, choose_preferred_credit,
+    )
+    if review['new'] or review['retained']:
+        print_review(review)
+
     if not args.write:
         print(
             "\nPreview only. No files "
@@ -947,11 +969,22 @@ def main() -> None:
         )
 
         print(
-            "Run again with --write "
-            "after reviewing this summary."
+            "Run again with --write --reconcile "
+            "to review names and save author identities."
         )
 
         return
+
+    if unbalanced_books or books_without_authors:
+        raise ValueError('Fix missing or unbalanced author credits before writing identities.')
+    decisions = {}
+    if new_name_keys:
+        if not args.reconcile:
+            raise ValueError('Unfamiliar author names require review. Run with --write --reconcile.')
+        decisions = collect_decisions(review, registry_authors)
+        apply_decisions(review, registry_authors, decisions, normalize_author_name)
+        registry_lookup = build_registry_lookup(registry_authors)
+        new_name_keys = [k for k in current_name_keys if k not in registry_lookup]
 
     author_by_name_key = dict(
         registry_lookup
@@ -1107,23 +1140,11 @@ def main() -> None:
         )
     )
 
-    write_json(
-        REGISTRY_PATH,
-        {
-            "version": 1,
-            "authors":
-                registry_authors,
-        },
-    )
-
-    write_json(
-        AUTHORS_OUTPUT_PATH,
-        generated_authors,
-    )
-
-    write_json(
-        BOOK_AUTHORS_OUTPUT_PATH,
-        generated_book_authors,
+    save_author_outputs(
+        {REGISTRY_PATH: {'version': 1, 'authors': registry_authors},
+         AUTHORS_OUTPUT_PATH: generated_authors,
+         BOOK_AUTHORS_OUTPUT_PATH: generated_book_authors},
+        source_snapshot, REGISTRY_PATH.parent / 'author-identity-backups', decisions,
     )
 
     print(

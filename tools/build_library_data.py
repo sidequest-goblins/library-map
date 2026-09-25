@@ -11,6 +11,8 @@ from pathlib import Path
 from typing import Any
 from uuid import UUID
 
+from library_archive_policy import archive_conflicts
+
 from openpyxl import load_workbook
 from PIL import Image, ImageFile, UnidentifiedImageError
 
@@ -1277,57 +1279,13 @@ def load_archived_cover_filenames() -> set[str]:
 
     return cover_filenames
 
-def load_archived_identity_maps() -> tuple[
-    dict[str, str],
-    dict[str, str],
-]:
+def load_archive_records() -> list[dict[str, Any]]:
     if not ARCHIVE_INPUT_PATH.exists():
-        return ({}, {})
-
-    try:
-        archive_records = json.loads(
-            ARCHIVE_INPUT_PATH.read_text(
-                encoding="utf-8",
-            )
-        )
-    except (OSError, json.JSONDecodeError):
-        return ({}, {})
-
-    if not isinstance(archive_records, list):
-        return ({}, {})
-
-    archived_book_ids: dict[str, str] = {}
-    archived_catalog_keys: dict[str, str] = {}
-
-    for record in archive_records:
-        if not isinstance(record, dict):
-            continue
-
-        title = clean(record.get("title"))
-        author = clean(record.get("author"))
-        label = (
-            f"{title} — {author}"
-            if author
-            else title
-        )
-
-        book_id = clean(record.get("bookId"))
-        catalog_key = clean(
-            record.get("catalogKey")
-        )
-
-        if book_id:
-            archived_book_ids[book_id] = label
-
-        if catalog_key:
-            archived_catalog_keys[
-                catalog_key
-            ] = label
-
-    return (
-        archived_book_ids,
-        archived_catalog_keys,
-    )
+        raise ValueError("Library archive is missing; cannot verify book identities.")
+    records = json.loads(ARCHIVE_INPUT_PATH.read_text(encoding="utf-8"))
+    if not isinstance(records, list) or any(not isinstance(r, dict) for r in records):
+        raise ValueError("Library archive must contain a list of book records.")
+    return records
 
 def extract_catalog_cover_images(
     workbook_path: Path,
@@ -2598,67 +2556,11 @@ def main() -> None:
 
         books.append(book)
 
-    (
-        archived_book_ids,
-        archived_catalog_keys,
-    ) = load_archived_identity_maps()
-
-    reused_archived_book_ids = [
-        (
-            book["bookId"],
-            book["title"],
-            archived_book_ids[
-                book["bookId"]
-            ],
-        )
-        for book in books
-        if book["bookId"] in archived_book_ids
-    ]
-
-    reused_archived_catalog_keys = [
-        (
-            book["catalogKey"],
-            book["title"],
-            archived_catalog_keys[
-                book["catalogKey"]
-            ],
-        )
-        for book in books
-        if book["catalogKey"] in archived_catalog_keys
-    ]
-
-    if reused_archived_book_ids:
-        details = "\n  - ".join(
-            f"{book_id}: current {current_title} "
-            f"matches archived {archived_title}"
-            for (
-                book_id,
-                current_title,
-                archived_title,
-            ) in reused_archived_book_ids
-        )
-
+    conflicts = archive_conflicts(books, load_archive_records())
+    if conflicts:
         raise ValueError(
-            "Current List View reuses archived Book IDs. "
-            "Unarchive the record deliberately before updating:\n  - "
-            + details
-        )
-
-    if reused_archived_catalog_keys:
-        details = "\n  - ".join(
-            f"{catalog_key}: current {current_title} "
-            f"matches archived {archived_title}"
-            for (
-                catalog_key,
-                current_title,
-                archived_title,
-            ) in reused_archived_catalog_keys
-        )
-
-        raise ValueError(
-            "Current List View matches archived catalog keys. "
-            "Review the archive before re-adding these books:\n  - "
-            + details
+            "Current List View conflicts with archived copies. Review before updating:\n  - "
+            + "\n  - ".join(conflicts)
         )
 
     unknown_contained_work_book_ids = sorted(
