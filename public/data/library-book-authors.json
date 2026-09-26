@@ -414,6 +414,12 @@
     "creditedName": "Max Brooks"
   },
   {
+    "bookId": "book-0dce5ed0-e2bf-45eb-93b2-038f80b2934f",
+    "authorId": "author-2144cec1-0028-4470-b781-e0140bf12f08",
+    "creditOrder": 1,
+    "creditedName": "Dan Simmons"
+  },
+  {
     "bookId": "book-0decd445-d0dc-47b5-b848-37bb8885dcec",
     "authorId": "author-df1f90a1-9865-4585-aa99-9925ceb1f392",
     "creditOrder": 1,
@@ -430,6 +436,12 @@
     "authorId": "author-3f8317bb-be07-4ec0-836c-8b67a9479874",
     "creditOrder": 1,
     "creditedName": "Sierra Simone"
+  },
+  {
+    "bookId": "book-0ebabdb9-33c5-4a6c-aa42-9f87c454ae9f",
+    "authorId": "author-a352bc8c-9630-47b1-bc49-5518187d3e38",
+    "creditOrder": 1,
+    "creditedName": "Mariana Enriquez"
   },
   {
     "bookId": "book-105143b7-ad48-42ab-a98e-d19d42bd61c4",
@@ -474,6 +486,12 @@
     "creditedName": "Emily Rodda"
   },
   {
+    "bookId": "book-11dfb1a6-454b-406b-a760-4ff931709a96",
+    "authorId": "author-aee3d286-2a6c-4611-9217-56c5624dcd90",
+    "creditOrder": 1,
+    "creditedName": "Janet Evanovich"
+  },
+  {
     "bookId": "book-12445b12-dab6-4b8d-9029-b70bd9a95995",
     "authorId": "author-3af59111-1d58-4ebd-af44-0952ce27b380",
     "creditOrder": 1,
@@ -490,6 +508,12 @@
     "authorId": "author-be50452c-ece4-4ff8-b059-6ec2668c4bab",
     "creditOrder": 1,
     "creditedName": "Natsuki Takaya"
+  },
+  {
+    "bookId": "book-12e7f755-5cd1-465e-add2-62fb06f359c1",
+    "authorId": "author-5df538b0-f892-4754-837a-08a34b534bd1",
+    "creditOrder": 1,
+    "creditedName": "Stephen Graham Jones"
   },
   {
     "bookId": "book-12fd699a-2581-447a-ac16-fd623a2a7441",
@@ -802,6 +826,12 @@
     "authorId": "author-c791a650-c51a-4b08-b64f-0084b47816e9",
     "creditOrder": 1,
     "creditedName": "Bridget Morrissey"
+  },
+  {
+    "bookId": "book-1df2741d-b806-40b3-bc27-71af6a6a2b5c",
+    "authorId": "author-dea1f676-1db1-43cb-9204-b6764994a0c8",
+    "creditOrder": 1,
+    "creditedName": "Jenny Lawson"
   },
   {
     "bookId": "book-1e3b709f-7d44-4154-ae2c-fdd4d64a9f09",
@@ -1290,6 +1320,12 @@
     "creditedName": "Svetlana Chmakova"
   },
   {
+    "bookId": "book-2cf7aa65-4f95-4ad8-9ee7-aeb0d681723b",
+    "authorId": "author-36e6cb24-6a80-4001-8a34-1e0254a5648e",
+    "creditOrder": 1,
+    "creditedName": "Michael Crichton"
+  },
+  {
     "bookId": "book-2d8f8bad-0b7c-4c1f-bd01-292a6a70e67f",
     "authorId": "author-3b11969b-bf81-40f0-b880-f67ba02de2ff",
     "creditOrder": 1,
@@ -1536,6 +1572,12 @@
     "creditedName": "Talia Gryphon"
   },
   {
+    "bookId": "book-3833a411-b41a-4c26-95d1-08faeebf6412",
+    "authorId": "author-f38d0346-21ce-4107-998b-e15c8bc89863",
+    "creditOrder": 1,
+    "creditedName": "Katrina Monroe"
+  },
+  {
     "bookId": "book-38cbd389-7bcd-496a-8eb0-035c04a58cbe",
     "authorId": "author-51aba32d-a215-4b69-9e9d-802be3e825b1",
     "creditOrder": 1,
@@ -1774,6 +1816,24 @@
     "authorId": "author-0c721403-ed1f-498b-9f56-d6aac7ae516f",
     "creditOrder": 1,
     "creditedName": "Aliya Whiteley"
+  },
+  {
+    "bookId": "book-41212974-fa40-4e5b-a029-7b6d37c59c15",
+    "authorId": "author-a56e9e7b-4513-4d47-b6e9-422c76ebe92b",
+    "creditOrder": 1,
+    "creditedName": "Bruce Owens Grimm"
+  },
+  {
+    "bookId": "book-41212974-fa40-4e5b-a029-7b6d37c59c15",
+    "authorId": "author-043d97c9-e129-4b26-9612-2a0dd7ef20c4",
+    "creditOrder": 2,
+    "creditedName": "Miguel M. Morales"
+  },
+  {
+    "bookId": "book-41212974-fa40-4e5b-a029-7b6d37c59c15",
+    "authorId": "author-bd44e7f6-0739-4b33-85c1-9bbd244e82db",
+    "creditOrder": 3,
+    "creditedName": "Tiff Joshua \"TJ\" Ferentini"
   },
   {
     "bookId": "book-41e8ac41-11e7-499c-9510-2c84570cdb4c",
@@ -2340,6 +2400,12 @@
     "creditedName": "Lili'uokalani"
   },
   {
+    "bookId": "book-5b86ba1a-afc9-4603-a3ba-12e46528b6f0",
+    "authorId": "author-52911407-a1a5-47ab-aac6-0c744d15501b",
+    "creditOrder": 1,
+    "creditedName": "Yaa Gyasi"
+  },
+  {
     "bookId": "book-5bb199f1-6380-470b-9e2a-82208db857c2",
     "authorId": "author-9a48f1ad-227d-4a0b-9832-a066c034aa61",
     "creditOrder": 1,
@@ -2398,6 +2464,12 @@
     "authorId": "author-35c9591f-756b-4964-9240-25be38f0aecc",
     "creditOrder": 1,
     "creditedName": "Chuck Wendig"
+  },
+  {
+    "bookId": "book-5dc99d7d-7826-4ef7-98de-4affc6bad40c",
+    "authorId": "author-d86a20cd-6068-4258-8adf-5c839a9c8433",
+    "creditOrder": 1,
+    "creditedName": "Han Kang"
   },
   {
     "bookId": "book-5df0c419-abac-40e9-80c0-e06df1337c41",
@@ -3018,6 +3090,12 @@
     "creditedName": "Gilles Néret"
   },
   {
+    "bookId": "book-75b0bdb2-0fcb-435a-8822-18db368087cc",
+    "authorId": "author-cc2f0884-b368-426a-aace-6ede54aaa13a",
+    "creditOrder": 1,
+    "creditedName": "Kelly Barnhill"
+  },
+  {
     "bookId": "book-75b2607a-5b08-4d1f-8408-76a97c00a124",
     "authorId": "author-018504fc-3113-4d0b-bcf6-e94a5f91b38a",
     "creditOrder": 1,
@@ -3534,6 +3612,12 @@
     "creditedName": "Shou Harusono"
   },
   {
+    "bookId": "book-87b8f123-781f-4a2c-bda1-7d8fa55fa491",
+    "authorId": "author-8ae9612c-ddf1-46f6-b582-92514d82552d",
+    "creditOrder": 1,
+    "creditedName": "Jessica Knoll"
+  },
+  {
     "bookId": "book-87d39f8b-2584-4f05-8591-6a1ab5a69eef",
     "authorId": "author-cd2f5bd5-333a-418f-8563-e23142fab356",
     "creditOrder": 1,
@@ -3700,6 +3784,12 @@
     "authorId": "author-f59f0c09-207a-4c00-ad5c-ac92e754714d",
     "creditOrder": 1,
     "creditedName": "Jacqueline Holland"
+  },
+  {
+    "bookId": "book-8d905cbf-71cd-476e-a6db-c057bd3bece4",
+    "authorId": "author-3a42cc97-03b0-43e2-a90b-ae997b289ad0",
+    "creditOrder": 1,
+    "creditedName": "Sydney J. Shields"
   },
   {
     "bookId": "book-8dc3af4f-7a08-42bd-bc07-448703c0aeda",
@@ -4000,6 +4090,12 @@
     "authorId": "author-caa68749-3ad3-4c28-85c9-53c8e0f237da",
     "creditOrder": 1,
     "creditedName": "Abby Jimenez"
+  },
+  {
+    "bookId": "book-982a1fab-4cfc-4817-8178-94b9e98ae28f",
+    "authorId": "author-6dc55574-9f32-4cca-8ba6-bd5d103c8af1",
+    "creditOrder": 1,
+    "creditedName": "Brynne Weaver"
   },
   {
     "bookId": "book-9873478c-49b8-4bce-bdaa-fc8de790a25a",
@@ -4626,6 +4722,18 @@
     "creditedName": "Beth Revis"
   },
   {
+    "bookId": "book-b2487e61-8ebd-4454-b34c-946c8928d447",
+    "authorId": "author-eb6d28e9-bbea-42d5-b541-5856ce3a6dc3",
+    "creditOrder": 1,
+    "creditedName": "Marlon James"
+  },
+  {
+    "bookId": "book-b270e242-27db-4a49-a796-a8c7486c7e81",
+    "authorId": "author-b7225331-f6f4-4e2a-a29a-62abf407f737",
+    "creditOrder": 1,
+    "creditedName": "Mona Awad"
+  },
+  {
     "bookId": "book-b280afe3-3e46-44d5-a902-fbeaf9b4cb2c",
     "authorId": "author-86996912-1ba1-4deb-b84a-66ef96023859",
     "creditOrder": 1,
@@ -4806,6 +4914,12 @@
     "creditedName": "Emily Bronte"
   },
   {
+    "bookId": "book-ba60fd5c-d260-4fa8-bbda-b17261c13409",
+    "authorId": "author-6dc55574-9f32-4cca-8ba6-bd5d103c8af1",
+    "creditOrder": 1,
+    "creditedName": "Brynne Weaver"
+  },
+  {
     "bookId": "book-ba66d3e9-c9bc-4b7e-a19c-0f9ecf92f2e3",
     "authorId": "author-3af59111-1d58-4ebd-af44-0952ce27b380",
     "creditOrder": 1,
@@ -4840,6 +4954,12 @@
     "authorId": "author-9224ea85-d3af-4ee1-9950-a330dcdb1f55",
     "creditOrder": 1,
     "creditedName": "Max Stein"
+  },
+  {
+    "bookId": "book-bb67f834-cb36-40ed-b05a-4fd6733508df",
+    "authorId": "author-39f1aaed-9906-4f88-8f0c-3194fbb6a350",
+    "creditOrder": 1,
+    "creditedName": "Clare Pooley"
   },
   {
     "bookId": "book-bb7e415d-1274-4a38-9567-c2d4894b92b0",
@@ -5118,6 +5238,12 @@
     "creditedName": "Christopher Hitchens"
   },
   {
+    "bookId": "book-c568b6b2-8229-4d39-a34b-705e162ca04d",
+    "authorId": "author-2636ea99-5394-4e53-9aec-fe86b5f7ae5a",
+    "creditOrder": 1,
+    "creditedName": "Ray Nayler"
+  },
+  {
     "bookId": "book-c59743d5-f31b-491e-86da-5a48ad188a57",
     "authorId": "author-bb5d337a-416c-491a-bcf5-2d35c243cdfa",
     "creditOrder": 1,
@@ -5296,6 +5422,12 @@
     "authorId": "author-2cfd28f5-5023-403a-8715-c003985840dc",
     "creditOrder": 1,
     "creditedName": "Ryoko Kui"
+  },
+  {
+    "bookId": "book-ca46ab3e-9f42-402b-b871-98d6aa5aba52",
+    "authorId": "author-a4666117-7f95-4e93-98ac-6f0f63cc3b64",
+    "creditOrder": 1,
+    "creditedName": "Dustin Thao"
   },
   {
     "bookId": "book-ca4a4367-234d-47e7-9348-d1ac79392ac0",
@@ -6342,6 +6474,12 @@
     "creditedName": "Ashley Herring Blake"
   },
   {
+    "bookId": "book-ee29a2a9-ca8b-435a-ad92-8e21e54cc782",
+    "authorId": "author-44456e41-9c87-4e7c-85b3-d7bc1531a9a3",
+    "creditOrder": 1,
+    "creditedName": "Jennifer Saint"
+  },
+  {
     "bookId": "book-ee3e8cc9-dd11-49bd-9385-a0b847b45a8a",
     "authorId": "author-bcb2fe71-6c92-41d0-a4df-85cad83f148f",
     "creditOrder": 1,
@@ -6376,6 +6514,12 @@
     "authorId": "author-69cb630e-58f3-4278-b78b-51c4f5f0d479",
     "creditOrder": 1,
     "creditedName": "Nikki Marmery"
+  },
+  {
+    "bookId": "book-ef568a97-efc3-4243-80b5-ee73dad3264e",
+    "authorId": "author-a4858b6c-14e0-4b00-bd99-970f06603c4f",
+    "creditOrder": 1,
+    "creditedName": "Emma Denny"
   },
   {
     "bookId": "book-ef6b7dfb-c39a-47f4-9e18-a8db83a00a36",
@@ -6618,6 +6762,12 @@
     "creditedName": "Natsuki Takaya"
   },
   {
+    "bookId": "book-f7f399c0-0889-4f64-bf30-ac7e7772467e",
+    "authorId": "author-aeeae5fd-b3d1-4c47-9411-73233c9f1e6c",
+    "creditOrder": 1,
+    "creditedName": "Seanan McGuire"
+  },
+  {
     "bookId": "book-f8e274ee-5bd5-449c-809b-c72a8a6c3951",
     "authorId": "author-70685cfe-3210-4995-bee5-7483ed5972aa",
     "creditOrder": 1,
@@ -6628,6 +6778,12 @@
     "authorId": "author-36e1674d-5a34-4cb0-9dee-cde1c7bdd148",
     "creditOrder": 1,
     "creditedName": "Cornelia Funke"
+  },
+  {
+    "bookId": "book-f9191f08-d5ec-4106-846e-b92b115e16af",
+    "authorId": "author-c539d846-1bbf-4ddf-aaf7-1d371acae825",
+    "creditOrder": 1,
+    "creditedName": "Rachel Gillig"
   },
   {
     "bookId": "book-f9390b4b-f6cd-4f5b-853b-ce8bf809b982",
@@ -6766,6 +6922,12 @@
     "authorId": "author-c9e7217d-23f9-472c-a528-0856a9e006da",
     "creditOrder": 1,
     "creditedName": "Katee Robert"
+  },
+  {
+    "bookId": "book-fdb9c9ee-4e7d-4d62-8d11-cd02fa508cee",
+    "authorId": "author-cc6c63d5-f6a5-464b-8975-4a796e2475eb",
+    "creditOrder": 1,
+    "creditedName": "Trang Thanh Tran"
   },
   {
     "bookId": "book-fe0d8576-b823-4498-bfb7-6aaa12ab4d4c",

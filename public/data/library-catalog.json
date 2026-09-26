@@ -4113,7 +4113,7 @@
     "firstName": "Michael",
     "lastName": "Crichton",
     "format": "Paperback",
-    "jc": true,
+    "jc": false,
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "C",

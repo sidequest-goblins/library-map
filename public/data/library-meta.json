@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-25T20:51:48.391181+00:00",
+  "generatedAt": "2026-09-26T16:22:42.643429+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY LIST VIEW.xlsx",
   "catalogWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "worksWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY WORKS.xlsx",
@@ -10,8 +10,8 @@
     "skippedBlankRows": 3
   },
   "sourceSheet": "List View",
-  "bookCount": 1086,
-  "bookIdCount": 1086,
+  "bookCount": 1111,
+  "bookIdCount": 1111,
   "bookIdSource": "List View.Book ID",
   "skippedBlankRows": 0,
   "headers": [
@@ -66,7 +66,158 @@
   "unusedBookcases": [],
   "unmappedBookcases": [],
   "catalogMatchFallbackRows": [],
-  "catalogUnmatchedRows": [],
+  "catalogUnmatchedRows": [
+    {
+      "row": 51,
+      "title": "Rouge",
+      "author": "Mona Awad",
+      "catalogKey": "awad-mona-rouge"
+    },
+    {
+      "row": 77,
+      "title": "The Girl Who Drank the Moon",
+      "author": "Kelly Barnhill",
+      "catalogKey": "barnhill-kelly-the-girl-who-drank-the-moon"
+    },
+    {
+      "row": 210,
+      "title": "Jurassic Park",
+      "author": "Michael Crichton",
+      "catalogKey": "crichton-michael-jurassic-park"
+    },
+    {
+      "row": 232,
+      "title": "A Vow Made Twice",
+      "author": "Emma Denny",
+      "catalogKey": "denny-emma-a-vow-made-twice"
+    },
+    {
+      "row": 264,
+      "title": "Things We Lost in the Fire",
+      "author": "Mariana Enriquez",
+      "catalogKey": "enriquez-mariana-things-we-lost-in-the-fire"
+    },
+    {
+      "row": 277,
+      "title": "Visions of Sugar Plums",
+      "author": "Janet Evanovich",
+      "catalogKey": "evanovich-janet-visions-of-sugar-plums"
+    },
+    {
+      "row": 358,
+      "title": "One Dark Window",
+      "author": "Rachel Gillig",
+      "catalogKey": "gillig-rachel-one-dark-window"
+    },
+    {
+      "row": 398,
+      "title": "The Ones Who Got Away",
+      "author": "Stephen Graham Jones",
+      "catalogKey": "graham-jones-stephen-the-ones-who-got-away"
+    },
+    {
+      "row": 406,
+      "title": "Fat and Queer: An Anthology of Queer and Trans Bodies and Lives",
+      "author": "Bruce Owens Grimm; Miguel M. Morales; Tiff Joshua \"TJ\" Ferentini",
+      "catalogKey": "grimm-bruce-owens-fat-and-queer-an-anthology-of-queer-and-trans-bodies-and-lives"
+    },
+    {
+      "row": 410,
+      "title": "Transcendent Kingdom",
+      "author": "Yaa Gyasi",
+      "catalogKey": "gyasi-yaa-transcendent-kingdom"
+    },
+    {
+      "row": 555,
+      "title": "A Brief History of Seven Killings",
+      "author": "Marlon James",
+      "catalogKey": "james-marlon-a-brief-history-of-seven-killings"
+    },
+    {
+      "row": 584,
+      "title": "The Vegetarian",
+      "author": "Han Kang",
+      "catalogKey": "kang-han-the-vegetarian"
+    },
+    {
+      "row": 619,
+      "title": "Bright Young Women",
+      "author": "Jessica Knoll",
+      "catalogKey": "knoll-jessica-bright-young-women"
+    },
+    {
+      "row": 652,
+      "title": "Let's Pretend This Never Happened: A Mostly True Memoir",
+      "author": "Jenny Lawson",
+      "catalogKey": "lawson-jenny-let-s-pretend-this-never-happened-a-mostly-true-memoir"
+    },
+    {
+      "row": 703,
+      "title": "Middlegame",
+      "author": "Seanan McGuire",
+      "catalogKey": "mcguire-seanan-middlegame"
+    },
+    {
+      "row": 724,
+      "title": "They Drown Our Daughters",
+      "author": "Katrina Monroe",
+      "catalogKey": "monroe-katrina-they-drown-our-daughters"
+    },
+    {
+      "row": 763,
+      "title": "The Mountain in the Sea",
+      "author": "Ray Nayler",
+      "catalogKey": "nayler-ray-the-mountain-in-the-sea"
+    },
+    {
+      "row": 845,
+      "title": "Iona Iverson's Rules for Commuting",
+      "author": "Clare Pooley",
+      "catalogKey": "pooley-clare-iona-iverson-s-rules-for-commuting"
+    },
+    {
+      "row": 907,
+      "title": "Ariadne",
+      "author": "Jennifer Saint",
+      "catalogKey": "saint-jennifer-ariadne"
+    },
+    {
+      "row": 932,
+      "title": "The Honey Witch",
+      "author": "Sydney J. Shields",
+      "catalogKey": "shields-sydney-j-the-honey-witch"
+    },
+    {
+      "row": 939,
+      "title": "The Abominable",
+      "author": "Dan Simmons",
+      "catalogKey": "simmons-dan-the-abominable"
+    },
+    {
+      "row": 1002,
+      "title": "You've Found Oliver",
+      "author": "Dustin Thao",
+      "catalogKey": "thao-dustin-you-ve-found-oliver"
+    },
+    {
+      "row": 1010,
+      "title": "She is a Haunting",
+      "author": "Trang Thanh Tran",
+      "catalogKey": "tran-trang-thanh-she-is-a-haunting"
+    },
+    {
+      "row": 1074,
+      "title": "Leather & Lark",
+      "author": "Brynne Weaver",
+      "catalogKey": "weaver-brynne-leather-lark"
+    },
+    {
+      "row": 1075,
+      "title": "Scythe & Sparrow",
+      "author": "Brynne Weaver",
+      "catalogKey": "weaver-brynne-scythe-sparrow"
+    }
+  ],
   "catalog": {
     "catalogBookCount": 1087,
     "catalogRowsWithTitles": 1087,
@@ -105,7 +256,7 @@
         "Last"
       ],
       "headerMode": "headers",
-      "rowCount": 66,
+      "rowCount": 64,
       "skippedBlankRows": 0
     },
     "seriesToComplete": {
@@ -16498,10 +16649,10 @@
         ""
       ],
       "headerMode": "headers",
-      "rowCount": 256,
+      "rowCount": 262,
       "skippedBlankRows": 0
     },
-    "totalWantedCount": 322
+    "totalWantedCount": 326
   },
   "coverExtraction": {
     "outputDir": "C:\\library_app\\library-map\\public\\data\\covers",
@@ -16510,8 +16661,8 @@
     "webpQuality": 76,
     "cachePath": "C:\\library_app\\library-map\\public\\data\\library-cover-cache.json",
     "extractedCount": 1087,
-    "convertedCount": 2,
-    "cachedCount": 1085,
+    "convertedCount": 0,
+    "cachedCount": 1087,
     "deletedStaleCount": 0,
     "missingAnchors": [],
     "missingMediaFiles": [],
