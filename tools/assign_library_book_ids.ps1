@@ -362,8 +362,19 @@ function Open-WorkbookContext {
     $excel = $null
     $workbook = $null
     $sheet = $null
+    $snapshotPath = $null
+    $excelPath = $WorkbookPath
 
     try {
+        if ($ReadOnly) {
+            # Excel redirects OneDrive paths to cloud URLs, even for local reads.
+            # Inspect a disposable local snapshot without saving the source.
+            $snapshotDirectory = Join-Path $PSScriptRoot 'book-id-backups'
+            New-Item -ItemType Directory -Path $snapshotDirectory -Force | Out-Null
+            $snapshotPath = Join-Path $snapshotDirectory "inspection-$([guid]::NewGuid()).xlsx"
+            Copy-Item -LiteralPath $WorkbookPath -Destination $snapshotPath -ErrorAction Stop
+            $excelPath = $snapshotPath
+        }
         $excel = New-Object `
             -ComObject Excel.Application
 
@@ -382,11 +393,26 @@ function Open-WorkbookContext {
             # this optional property is not fatal.
         }
 
-        $workbook = $excel.Workbooks.Open(
-            $WorkbookPath,
-            0,
-            $ReadOnly
-        )
+        for ($openAttempt = 1; $openAttempt -le 4; $openAttempt++) {
+            try {
+                $workbook = $excel.Workbooks.Open(
+                    $excelPath,
+                    0,
+                    $ReadOnly
+                )
+                break
+            }
+            catch {
+                # Excel/OneDrive can briefly retain access after a close/save.
+                # Retry only opening; never repeat cell writes or saves here.
+                if ($openAttempt -eq 4 -or $_.Exception.Message -notmatch 'cannot access the file') {
+                    throw
+                }
+                Write-Host 'Excel could not access the file; retrying open in 2 seconds...' -ForegroundColor Yellow
+                Start-Sleep -Seconds 2
+                Assert-WorkbookIsAvailable
+            }
+        }
 
         if (
             -not $ReadOnly -and
@@ -414,6 +440,7 @@ function Open-WorkbookContext {
             Excel = $excel
             Workbook = $workbook
             Sheet = $sheet
+            SnapshotPath = $snapshotPath
         }
     }
     catch {
@@ -440,6 +467,9 @@ function Open-WorkbookContext {
         [GC]::Collect()
         [GC]::WaitForPendingFinalizers()
 
+        if ($snapshotPath) {
+            Remove-Item -LiteralPath $snapshotPath -ErrorAction SilentlyContinue
+        }
         throw
     }
 }
@@ -483,6 +513,9 @@ function Close-WorkbookContext {
 
     [GC]::Collect()
     [GC]::WaitForPendingFinalizers()
+    if ($Context.PSObject.Properties['SnapshotPath'] -and $Context.SnapshotPath) {
+        Remove-Item -LiteralPath $Context.SnapshotPath -ErrorAction SilentlyContinue
+    }
 }
 
 
@@ -1095,6 +1128,7 @@ $writeContext = $null
 $writeStarted = $false
 $writeFailure = $null
 $assignedCount = 0
+$operationStage = 'opening the workbook for writing'
 
 try {
     Assert-WorkbookIsAvailable
@@ -1102,6 +1136,7 @@ try {
     $writeContext = Open-WorkbookContext `
         -ReadOnly $false
 
+    $operationStage = 'checking the workbook before assigning IDs'
     $beforeWrite = Get-WorkbookInspection `
         -Sheet $writeContext.Sheet
 
@@ -1124,6 +1159,7 @@ try {
         )
     )
 
+    $operationStage = 'assigning IDs to blank cells'
     foreach (
         $missingRow in
         $beforeWrite.MissingRows
@@ -1184,8 +1220,11 @@ try {
         }
     }
 
+    $operationStage = 'saving the assigned IDs'
+    Write-Host 'Saving assigned Book IDs...'
     $writeContext.Workbook.Save()
 
+    $operationStage = 'checking the saved workbook in Excel'
     $afterWrite = Get-WorkbookInspection `
         -Sheet $writeContext.Sheet
 
@@ -1241,6 +1280,8 @@ finally {
 
 if ($null -eq $writeFailure) {
     $verifyContext = $null
+    $operationStage = 'reopening the saved workbook for verification'
+    Write-Host 'Reopening the saved workbook to verify Book IDs...'
 
     try {
         Start-Sleep `
@@ -1251,6 +1292,7 @@ if ($null -eq $writeFailure) {
         $verifyContext = Open-WorkbookContext `
             -ReadOnly $true
 
+        $operationStage = 'verifying persisted Book IDs'
         $verification = Get-WorkbookInspection `
             -Sheet $verifyContext.Sheet
 
@@ -1321,7 +1363,7 @@ if ($null -ne $writeFailure) {
         ) -ForegroundColor Yellow
     }
 
-    throw $writeFailure
+    throw "Book ID update failed while ${operationStage}: $($writeFailure.Exception.Message)"
 }
 
 

@@ -272,15 +272,32 @@ Assert-LastExitCode `
     # Assign permanent Book IDs
     # -------------------------------------------------------------------------
 
-    Write-Step "Reconciling confirmed original-copy repair"
-    & $ReturnedBookRepairScript -Apply
-
     Write-Step "Checking permanent Book IDs"
 
     & $BookIdScript -Apply
 
     Assert-LastExitCode `
         -StepName "Book ID assignment"
+
+    Write-Step "Checking for returning books"
+    $returnJson = & $PythonPath (Join-Path $PSScriptRoot 'find_returned_books.py')
+    Assert-LastExitCode -StepName 'Returned-book inspection'
+    $returnCandidates = @((($returnJson -join "`n") | ConvertFrom-Json))
+    foreach ($candidate in $returnCandidates) {
+        Write-Host "Archived copy matches: $($candidate.title) (ISBN $($candidate.isbn))"
+        if (-not $candidate.repairable) {
+            throw 'This archive match needs manual review before a safe original-copy restore.'
+        }
+        do {
+            $answer = (Read-Host 'Is this the SAME physical copy returning? [yes/no]').Trim().ToLowerInvariant()
+        } while ($answer -notin @('yes', 'y', 'no', 'n'))
+        if ($answer -in @('no', 'n')) {
+            throw 'Copy left unchanged. Review this as a replacement copy before updating; the archived original was preserved.'
+        }
+        & $ReturnedBookRepairScript -Apply `
+            -ReplacementId $candidate.replacementId -OriginalId $candidate.originalId `
+            -ExpectedTitle $candidate.title -ExpectedIsbn $candidate.isbn
+    }
 
 
     # -------------------------------------------------------------------------
