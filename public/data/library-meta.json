@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T03:13:48.830705+00:00",
+  "generatedAt": "2026-11-11T03:27:13.829476+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY LIST VIEW.xlsx",
   "catalogWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "worksWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY WORKS.xlsx",
@@ -66,14 +66,7 @@
   "unusedBookcases": [],
   "unmappedBookcases": [],
   "catalogMatchFallbackRows": [],
-  "catalogUnmatchedRows": [
-    {
-      "row": 1099,
-      "title": "Skein Island",
-      "author": "Aliya Whiteley",
-      "catalogKey": "whiteley-aliya-skein-island"
-    }
-  ],
+  "catalogUnmatchedRows": [],
   "catalog": {
     "catalogBookCount": 1121,
     "catalogRowsWithTitles": 1121,
@@ -16517,9 +16510,9 @@
     "webpQuality": 76,
     "cachePath": "C:\\library_app\\library-map\\public\\data\\library-cover-cache.json",
     "extractedCount": 1121,
-    "convertedCount": 0,
-    "cachedCount": 1121,
-    "deletedStaleCount": 0,
+    "convertedCount": 1,
+    "cachedCount": 1120,
+    "deletedStaleCount": 1,
     "missingAnchors": [],
     "missingMediaFiles": [],
     "conversionErrors": [],

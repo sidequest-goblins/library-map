@@ -14261,14 +14261,14 @@
       "title": "The Underground Railroad",
       "webpQuality": 76
     },
-    "whiteleey-aliya-skein-island": {
-      "author": "Aliya Whiteleey",
-      "catalogKey": "whiteleey-aliya-skein-island",
+    "whiteley-aliya-skein-island": {
+      "author": "Aliya Whiteley",
+      "catalogKey": "whiteley-aliya-skein-island",
       "imageExtension": "webp",
       "imageHash": "60e866d9cf1bfb13e9086be6d94e03710a7a3d5682770ce6134712d1d5cafa6b",
       "mediaPath": "xl/media/image1097.jpeg",
-      "outputFilename": "whiteleey-aliya-skein-island.webp",
-      "publicPath": "/data/covers/whiteleey-aliya-skein-island.webp",
+      "outputFilename": "whiteley-aliya-skein-island.webp",
+      "publicPath": "/data/covers/whiteley-aliya-skein-island.webp",
       "sourceRow": 68,
       "sourceSheet": "W-Z",
       "title": "Skein Island",
@@ -14574,6 +14574,6 @@
       "webpQuality": 76
     }
   },
-  "generatedAt": "2026-10-15T03:13:48.486409+00:00",
+  "generatedAt": "2026-11-11T03:27:13.436470+00:00",
   "version": 1
 }
