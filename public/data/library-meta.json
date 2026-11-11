@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-11T03:27:13.829476+00:00",
+  "generatedAt": "2026-11-11T03:32:47.564935+00:00",
   "sourceWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY LIST VIEW.xlsx",
   "catalogWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY.xlsx",
   "worksWorkbook": "C:\\Users\\cjade\\OneDrive\\Shared Workbooks\\MyLibrary\\LIBRARY WORKS.xlsx",
@@ -10,8 +10,8 @@
     "skippedBlankRows": 3
   },
   "sourceSheet": "List View",
-  "bookCount": 1121,
-  "bookIdCount": 1121,
+  "bookCount": 1143,
+  "bookIdCount": 1143,
   "bookIdSource": "List View.Book ID",
   "skippedBlankRows": 0,
   "headers": [
@@ -39,7 +39,11 @@
     "Series Sort",
     "Volume Sort",
     "Last Sort",
-    "First Sort"
+    "First Sort",
+    "",
+    "",
+    "",
+    ""
   ],
   "bookcaseRooms": {
     "Office": "Office",
@@ -68,27 +72,27 @@
   "catalogMatchFallbackRows": [],
   "catalogUnmatchedRows": [],
   "catalog": {
-    "catalogBookCount": 1121,
-    "catalogRowsWithTitles": 1121,
+    "catalogBookCount": 1143,
+    "catalogRowsWithTitles": 1143,
     "processedCatalogSheets": {
-      "A": 48,
+      "A": 49,
       "B": 78,
-      "C": 87,
+      "C": 89,
       "D": 37,
-      "E": 53,
-      "F": 42,
-      "G": 60,
-      "H": 96,
+      "E": 54,
+      "F": 44,
+      "G": 63,
+      "H": 97,
       "I-J": 75,
-      "K": 63,
-      "L": 27,
-      "M": 91,
-      "N-O": 55,
-      "P-Q": 39,
-      "R": 52,
+      "K": 66,
+      "L": 29,
+      "M": 94,
+      "N-O": 56,
+      "P-Q": 40,
+      "R": 53,
       "S": 85,
       "T-V": 43,
-      "W-Z": 90
+      "W-Z": 91
     },
     "skippedCatalogSheets": [
       "Total"
@@ -105,7 +109,7 @@
         "Last"
       ],
       "headerMode": "headers",
-      "rowCount": 61,
+      "rowCount": 59,
       "skippedBlankRows": 0
     },
     "seriesToComplete": {
@@ -16498,10 +16502,10 @@
         ""
       ],
       "headerMode": "headers",
-      "rowCount": 280,
+      "rowCount": 270,
       "skippedBlankRows": 0
     },
-    "totalWantedCount": 341
+    "totalWantedCount": 329
   },
   "coverExtraction": {
     "outputDir": "C:\\library_app\\library-map\\public\\data\\covers",
@@ -16509,16 +16513,16 @@
     "imageExtension": "webp",
     "webpQuality": 76,
     "cachePath": "C:\\library_app\\library-map\\public\\data\\library-cover-cache.json",
-    "extractedCount": 1121,
-    "convertedCount": 1,
+    "extractedCount": 1143,
+    "convertedCount": 23,
     "cachedCount": 1120,
-    "deletedStaleCount": 1,
+    "deletedStaleCount": 0,
     "missingAnchors": [],
     "missingMediaFiles": [],
     "conversionErrors": [],
     "anchorReport": {
-      "totalAnchoredImages": 1121,
-      "mappedAnchoredImages": 1121,
+      "totalAnchoredImages": 1143,
+      "mappedAnchoredImages": 1143,
       "duplicateAnchorRows": [],
       "missingMediaTargets": [],
       "sheetsWithoutDrawings": [
@@ -16542,8 +16546,8 @@
         "W-Z"
       ],
       "cellImageReport": {
-        "totalCellImages": 1121,
-        "mappedCellImages": 1121,
+        "totalCellImages": 1143,
+        "mappedCellImages": 1143,
         "duplicateCellRows": [],
         "missingRichDataFiles": [],
         "missingRichValueIndexes": [],
@@ -16551,8 +16555,8 @@
         "missingMediaTargets": []
       }
     },
-    "outputFileCount": 1181,
-    "outputTotalBytes": 98182188
+    "outputFileCount": 1203,
+    "outputTotalBytes": 101509774
   },
   "imageInspectionEnabled": false,
   "images": null,
