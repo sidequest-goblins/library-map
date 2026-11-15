@@ -16100,6 +16100,26 @@
     "sourceRow": 32
   },
   {
+    "catalogKey": "o-malley-tricia-love-s-a-witch",
+    "title": "Love's a Witch",
+    "rawTitle": "Love's a Witch",
+    "coverImage": "/data/covers/o-malley-tricia-love-s-a-witch.webp",
+    "series": "The Scottish Charms",
+    "seriesTitle": "The Scottish Charms",
+    "seriesFormat": null,
+    "seriesNumber": 1,
+    "author": "Tricia O'Malley",
+    "authorSort": "O'Malley, Tricia",
+    "firstName": "Tricia",
+    "lastName": "O'Malley",
+    "format": "Paperback",
+    "jc": false,
+    "cj": false,
+    "lgbtq": false,
+    "sourceSheet": "N-O",
+    "sourceRow": 40
+  },
+  {
     "catalogKey": "o-neill-tom-chaos-charles-manson-the-cia-and-the-secret-history-of-the-sixties",
     "title": "Chaos: Charles Manson, The CIA, and the Secret History of the Sixties",
     "rawTitle": "Chaos: Charles Manson, The CIA, and the Secret History of the Sixties",
@@ -16117,7 +16137,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 41
+    "sourceRow": 42
   },
   {
     "catalogKey": "odell-jenny-how-to-do-nothing-resisting-the-attention-economy",
@@ -16297,7 +16317,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 40
+    "sourceRow": 41
   },
   {
     "catalogKey": "orange-tommy-there-there",
@@ -16317,7 +16337,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 42
+    "sourceRow": 43
   },
   {
     "catalogKey": "orlando-carissa-the-september-house",
@@ -16337,7 +16357,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 43
+    "sourceRow": 44
   },
   {
     "catalogKey": "orwell-george-animal-farm",
@@ -16357,7 +16377,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 44
+    "sourceRow": 45
   },
   {
     "catalogKey": "oseman-alice-heartstopper-vol-1",
@@ -16377,7 +16397,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 45
+    "sourceRow": 46
   },
   {
     "catalogKey": "oseman-alice-heartstopper-vol-2",
@@ -16397,7 +16417,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 46
+    "sourceRow": 47
   },
   {
     "catalogKey": "oseman-alice-heartstopper-vol-3",
@@ -16417,7 +16437,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 47
+    "sourceRow": 48
   },
   {
     "catalogKey": "oseman-alice-heartstopper-vol-4",
@@ -16437,7 +16457,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 48
+    "sourceRow": 49
   },
   {
     "catalogKey": "oseman-alice-heartstopper-vol-5",
@@ -16457,7 +16477,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 49
+    "sourceRow": 50
   },
   {
     "catalogKey": "oseman-alice-loveless",
@@ -16477,7 +16497,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 50
+    "sourceRow": 51
   },
   {
     "catalogKey": "oseman-alice-nick-and-charlie",
@@ -16497,7 +16517,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 51
+    "sourceRow": 52
   },
   {
     "catalogKey": "oseman-alice-radio-silence",
@@ -16517,7 +16537,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 52
+    "sourceRow": 53
   },
   {
     "catalogKey": "oseman-alice-solitaire",
@@ -16537,7 +16557,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 53
+    "sourceRow": 54
   },
   {
     "catalogKey": "oshetsky-claire-poor-deer",
@@ -16557,7 +16577,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 54
+    "sourceRow": 55
   },
   {
     "catalogKey": "oyeyemi-helen-mr-fox",
@@ -16577,7 +16597,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 55
+    "sourceRow": 56
   },
   {
     "catalogKey": "oyeyemi-helen-the-icarus-girl",
@@ -16597,7 +16617,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "N-O",
-    "sourceRow": 56
+    "sourceRow": 57
   },
   {
     "catalogKey": "oyeyemi-helen-white-is-for-witching",
@@ -16617,7 +16637,7 @@
     "cj": true,
     "lgbtq": true,
     "sourceSheet": "N-O",
-    "sourceRow": 57
+    "sourceRow": 58
   },
   {
     "catalogKey": "page-shelly-night-of-the-living-queers-13-tales-of-terror-delight",
@@ -20060,6 +20080,26 @@
     "sourceRow": 80
   },
   {
+    "catalogKey": "suri-tasha-the-jasmine-throne",
+    "title": "The Jasmine Throne",
+    "rawTitle": "The Jasmine Throne",
+    "coverImage": "/data/covers/suri-tasha-the-jasmine-throne.webp",
+    "series": "The Burning Kingdoms",
+    "seriesTitle": "The Burning Kingdoms",
+    "seriesFormat": null,
+    "seriesNumber": 1,
+    "author": "Tasha Suri",
+    "authorSort": "Suri, Tasha",
+    "firstName": "Tasha",
+    "lastName": "Suri",
+    "format": "Paperback",
+    "jc": false,
+    "cj": false,
+    "lgbtq": true,
+    "sourceSheet": "S",
+    "sourceRow": 81
+  },
+  {
     "catalogKey": "sussman-elissa-once-more-with-feeling",
     "title": "Once More with Feeling",
     "rawTitle": "Once More with Feeling",
@@ -20077,7 +20117,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 81
+    "sourceRow": 82
   },
   {
     "catalogKey": "sutanto-jesse-q-didn-t-see-that-coming",
@@ -20097,7 +20137,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 83
+    "sourceRow": 84
   },
   {
     "catalogKey": "sutanto-jesse-q-vera-wong-s-unsolicited-advice-for-murderers",
@@ -20117,7 +20157,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 82
+    "sourceRow": 83
   },
   {
     "catalogKey": "sutherland-krystal-house-of-hollow",
@@ -20137,7 +20177,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 84
+    "sourceRow": 85
   },
   {
     "catalogKey": "sutherland-krystal-the-invocations",
@@ -20157,7 +20197,7 @@
     "cj": false,
     "lgbtq": true,
     "sourceSheet": "S",
-    "sourceRow": 85
+    "sourceRow": 86
   },
   {
     "catalogKey": "swanson-peter-the-kind-worth-killing",
@@ -20177,7 +20217,7 @@
     "cj": false,
     "lgbtq": false,
     "sourceSheet": "S",
-    "sourceRow": 86
+    "sourceRow": 87
   },
   {
     "catalogKey": "tahir-sabaa-all-my-rage",

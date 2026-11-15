@@ -1056,6 +1056,12 @@
     "creditedName": "Victor Lavalle"
   },
   {
+    "bookId": "book-23b247db-c821-48fb-af0b-6f748c838ee0",
+    "authorId": "author-0d3900f1-b4f2-49c4-aaae-f9822abbe23c",
+    "creditOrder": 1,
+    "creditedName": "Tricia O'Malley"
+  },
+  {
     "bookId": "book-23ca1973-a93d-48af-9121-cb729da2c6e4",
     "authorId": "author-aee3d286-2a6c-4611-9217-56c5624dcd90",
     "creditOrder": 1,
@@ -2344,6 +2350,12 @@
     "authorId": "author-aee3d286-2a6c-4611-9217-56c5624dcd90",
     "creditOrder": 1,
     "creditedName": "Janet Evanovich"
+  },
+  {
+    "bookId": "book-5644f194-4f11-42a8-91de-a882b2731fee",
+    "authorId": "author-56326760-3527-42c9-9831-f0f0407299fa",
+    "creditOrder": 1,
+    "creditedName": "Tasha Suri"
   },
   {
     "bookId": "book-56929976-821b-4a92-a3e9-a75bdb57fa41",

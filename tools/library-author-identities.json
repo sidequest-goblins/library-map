@@ -4008,6 +4008,14 @@
       "aliases": []
     },
     {
+      "authorId": "author-0d3900f1-b4f2-49c4-aaae-f9822abbe23c",
+      "displayName": "Tricia O'Malley",
+      "firstName": "Tricia",
+      "lastName": "O'Malley",
+      "sortName": "O'Malley, Tricia",
+      "aliases": []
+    },
+    {
       "authorId": "author-1ec21a14-fac0-4291-9e0a-763ead4117ed",
       "displayName": "Tom O'Neill",
       "firstName": "Tom",
@@ -5039,6 +5047,14 @@
       "firstName": "Chelsea G.",
       "lastName": "Summers",
       "sortName": "Summers, Chelsea G.",
+      "aliases": []
+    },
+    {
+      "authorId": "author-56326760-3527-42c9-9831-f0f0407299fa",
+      "displayName": "Tasha Suri",
+      "firstName": "Tasha",
+      "lastName": "Suri",
+      "sortName": "Suri, Tasha",
       "aliases": []
     },
     {
